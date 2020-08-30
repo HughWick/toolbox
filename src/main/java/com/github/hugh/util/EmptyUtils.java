@@ -26,7 +26,7 @@ public class EmptyUtils {
      * </ul>
      *
      * @param obj 待检查对象
-     *  @return boolean {@code true}空
+     *            @return boolean {@code true}空
      */
     public static boolean isEmpty(Object obj) {
         if (obj == null || obj == "") {
@@ -50,12 +50,13 @@ public class EmptyUtils {
      *
      * @param obj 待检查对象
      * @return boolean {@code true}不为空
-     *
-     * <p>null   = false</p>
-     * <p>"null" = false</p>
-     * <p>""     = false</p>
-     * <p>" "    = true</p>
-     * <p>"abc"  = true</p>
+     * <ul>
+     * <li>isNotEmpty(null)     = false</li>
+     * <li>isNotEmpty("null")   = false</li>
+     * <li>isNotEmpty("")       = false</li>
+     * <li>isNotEmpty(" ")      = true</li>
+     * <li>isNotEmpty("abc")    = true</li>
+     * </ul>
      */
     public static boolean isNotEmpty(Object obj) {
         return !isEmpty(obj);

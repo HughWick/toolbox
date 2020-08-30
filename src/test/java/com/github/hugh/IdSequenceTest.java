@@ -21,8 +21,11 @@ public class IdSequenceTest {
     @Test
     public void test02() {
         Snowflake snowflake = new Snowflake(1, 2);
-        System.out.println(snowflake.nextId());
-        Map dec = Snowflake.decompile(snowflake.nextId());
-        System.out.println("--->" + dec);
+        for (int i = 0; i < 1 << 12; i++) {
+            System.out.println(snowflake.nextId());
+            Map dec = Snowflake.decompile(snowflake.nextId());
+            System.out.println("--->" + dec);
+
+        }
     }
 }

@@ -13,7 +13,7 @@ import java.time.temporal.TemporalAdjusters;
  * <p>如需使用Date类工具 @see {@link  com.github.hugh.util.DateUtils} </p>
  *
  * @author hugh
- * @since 1.8
+ * @since java 1.8
  */
 public class TimeUtils extends DateCode {
     private TimeUtils() {
