@@ -2,6 +2,7 @@
 收集日常工作中常用的工具类
 
 [![Build Status](https://travis-ci.com/HughWick/toolbox.svg?branch=master)](https://travis-ci.com/HughWick/toolbox)
+[![codecov](https://codecov.io/gh/HughWick/toolbox/branch/master/graph/badge.svg)](https://codecov.io/gh/HughWick/toolbox)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.hughwick/toolbox/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.hughwick/toolbox)
 
 
