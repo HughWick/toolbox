@@ -10,7 +10,7 @@ import com.github.hugh.id.Snowflake;
  */
 public class IdSequence {
 
-    public IdSequence() {
+    private IdSequence() {
     }
 
     private static volatile Snowflake snowflake;

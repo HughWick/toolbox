@@ -1,6 +1,9 @@
 package com.github.hugh;
 
+import com.github.hugh.id.Snowflake;
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * @author hugh
@@ -13,5 +16,13 @@ public class IdSequenceTest {
     public void test() {
         String unique = IdSequence.snowflake();
         System.out.println("-->" + unique);
+    }
+
+    @Test
+    public void test02() {
+        Snowflake snowflake = new Snowflake(1, 2);
+        System.out.println(snowflake.nextId());
+        Map dec = Snowflake.decompile(snowflake.nextId());
+        System.out.println("--->" + dec);
     }
 }

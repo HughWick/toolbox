@@ -209,15 +209,4 @@ public class Snowflake {
         DateTimeFormatter ftf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return ftf.format(LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault()));
     }
-
-//    public static void main(String[] args) {
-//        SnowFlake snowFlake = new SnowFlake();
-//        for (int i = 0; i < (1 << 12); i++) {
-//            System.out.println(snowFlake.nextId());
-//        }
-//        for (int i = 0; i < 22; i++) {
-//            long random = ThreadLocalRandom.current().nextLong(1, 20);
-//            System.out.println("--->" + random);
-//        }
-//    }
 }
