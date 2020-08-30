@@ -1,5 +1,10 @@
-package com.github.hugh.core;
+package com.github.hugh.constant;
 
+/**
+ * 常用日期格式
+ *
+ * @author hugh
+ */
 public class DateCode {
 
     /**

@@ -12,10 +12,11 @@ import java.util.Map;
  * @since 0.0.1
  */
 public class EmptyUtils {
-    private EmptyUtils(){}
+    private EmptyUtils() {
+    }
 
     /**
-     * 判断对象是否Empty(null或元素为0)<br>
+     * 判断对象是否Empty(null或元素为0)
      *
      * <ul>
      * <li>isEmpty(null) = true</li>
@@ -25,10 +26,10 @@ public class EmptyUtils {
      * </ul>
      *
      * @param obj 待检查对象
-     * @return boolean 返回的布尔值
+     *  @return boolean {@code true}空
      */
     public static boolean isEmpty(Object obj) {
-        if (obj == null || obj == "" ) {
+        if (obj == null || obj == "") {
             return true;
         } else if (obj instanceof String) {
             String str = (String) obj;
@@ -44,18 +45,17 @@ public class EmptyUtils {
     }
 
     /**
-     * 判断对象是否为NotEmpty(!null或元素>0)<br>
-     * 实用于对String Collection及其子类 Map及其子类
+     * 判断对象是否为NotEmpty
+     * <p>实用于对String Collection及其子类 Map及其子类</p>
      *
      * @param obj 待检查对象
-     * @return boolean 不为空返回true
-     * <p>
+     * @return boolean {@code true}不为空
+     *
      * <p>null   = false</p>
      * <p>"null" = false</p>
      * <p>""     = false</p>
      * <p>" "    = true</p>
      * <p>"abc"  = true</p>
-     * </p>
      */
     public static boolean isNotEmpty(Object obj) {
         return !isEmpty(obj);

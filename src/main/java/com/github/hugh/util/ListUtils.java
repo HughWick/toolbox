@@ -9,8 +9,8 @@ import java.util.List;
 /**
  * List工具类
  *
- * @author Lenovo
- * @date 2019-04-13
+ * @author hugh
+ * @version 1.0.0
  */
 public class ListUtils {
 
@@ -27,7 +27,7 @@ public class ListUtils {
     /**
      * 判断集合不是空集合
      *
-     * @param collection
+     * @param collection 集合
      * @return boolean {@code true} 有元素
      */
     public static boolean isNotEmpty(Collection<?> collection) {
@@ -35,7 +35,12 @@ public class ListUtils {
     }
 
     /**
-     * list分页展示
+     * list数据分页
+     *
+     * @param list 数据
+     * @param page 页数
+     * @param size 条数
+     * @return List
      */
     public static List<?> listDatas(List<?> list, int page, int size) {
         if (isEmpty(list)) {
@@ -58,8 +63,8 @@ public class ListUtils {
     /**
      * 返回总页数
      *
-     * @param list
-     * @param size
+     * @param list 总集合
+     * @param size 条数
      * @return int 总页数
      */
     public static int getPages(Collection<?> list, Integer size) {
@@ -76,6 +81,13 @@ public class ListUtils {
         }
     }
 
+    /**
+     * 根据第二集合中的值，删除源中对应的元素
+     *
+     * @param source 源集合
+     * @param del    需删除的元素
+     * @return List
+     */
     public static List<?> remove(List<?> source, List<?> del) {
         List cache = new ArrayList<>();   // 将需要删除的集合合并至缓存中
         cache.addAll(del);
@@ -88,6 +100,7 @@ public class ListUtils {
     /**
      * 将一个list均分成n个list,主要通过偏移量来实现的
      *
+     * @param <T>    泛型
      * @param source 数据源
      * @param n      切割条数
      * @return List

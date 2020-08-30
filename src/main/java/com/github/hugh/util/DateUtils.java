@@ -1,6 +1,6 @@
 package com.github.hugh.util;
 
-import com.github.hugh.core.DateCode;
+import com.github.hugh.constant.DateCode;
 import org.apache.commons.lang.StringUtils;
 
 import java.text.ParseException;
@@ -23,10 +23,9 @@ public class DateUtils extends DateCode {
 
     /**
      * 格式化日期
-     * <li>默认转换格式为：yyyy-MM-dd</li>
      *
-     * @param date
-     * @return
+     * @param date 日期对象
+     * @return String  格式为：yyyy-MM-dd
      */
     public static final String format(Object date) {
         return format(date, YEAR_MONTH_DAY);
@@ -35,9 +34,9 @@ public class DateUtils extends DateCode {
     /**
      * 格式化日期
      *
-     * @param date
-     * @param pattern
-     * @return
+     * @param date    日期对象
+     * @param pattern 格式
+     * @return String 日期格式字符串
      */
     public static final String format(Object date, String pattern) {
         if (date == null) {
@@ -50,17 +49,18 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 获取日期
+     * 获取日期{@code yyyy-MM-dd}
      *
-     * @return 返回当前时间，格式为：yyyy-MM-dd
+     * @return String 当前时间
      */
     public static final String getDate() {
         return format(new Date());
     }
 
     /**
-     * 获取年月日的日期
-     * <li>格式为yyyyMMdd</li>
+     * 获取年月日
+     *
+     * @return String  yyyyMMdd
      */
     public static String getDateSign() {
         return format(YEAR_MONTH_DAY_SIMPLE);
@@ -80,8 +80,8 @@ public class DateUtils extends DateCode {
     /**
      * 获取当前时间前后N天的起始日期
      *
-     * @param day
-     * @return Date
+     * @param day 指定天输(正数 or 负数)
+     * @return Date 日期对象
      */
     public static Date getDate(int day) {
         Calendar c = Calendar.getInstance();
@@ -111,7 +111,7 @@ public class DateUtils extends DateCode {
      * 将字符串yyyy-MM-dd HH:mm:ss转换为yyyyMMddHHmmss 如果传入的字符串为null,则返回空值
      *
      * @param dateTime 日期格式的字符串
-     * @return 日期格式字符串
+     * @return String 日期格式字符串
      */
     public static String toStringTime(String dateTime) {
         if (dateTime == null) {
@@ -124,7 +124,7 @@ public class DateUtils extends DateCode {
      * 将字符串yyyyMMddhhmmss 转换成yyyy-MM-dd HH:mm:ss字符串格式 如果传入的字符串为null,则返回空值
      *
      * @param strDate 字符串yyyyMMddhhmmss
-     * @return 日期格式字符串
+     * @return String 日期格式字符串
      */
     public static String toStringDate(String strDate) {
         if (strDate == null) {
@@ -298,8 +298,8 @@ public class DateUtils extends DateCode {
     /**
      * 设置日期的月份开始时间
      *
-     * @param date
-     * @return
+     * @param date 日期对象
+     * @return String
      */
     public static String setMonthFirstDay(Date date) {
         // 获取前月的第一天
@@ -316,10 +316,9 @@ public class DateUtils extends DateCode {
 
     /**
      * 设置月份的最后一天时间
-     * <li>注：默认为最后一天的23:59:59</li>
      *
-     * @param date
-     * @return
+     * @param date 日期对象
+     * @return String {@code yyyy-MM-dd 23:59:59}
      */
     public static String setMonthLastDay(Date date) {
         Calendar calendar = Calendar.getInstance();
@@ -374,7 +373,7 @@ public class DateUtils extends DateCode {
      * 获取某一天开始时间，不传日期则获取今日
      *
      * @param dateStr 字符串日期格式 yyyy-MM-dd
-     * @return
+     * @return Date
      */
     public static Date getStartTime(String dateStr) {
         Date date = null;
@@ -438,8 +437,8 @@ public class DateUtils extends DateCode {
     /**
      * 获取一小时前的时间日期，null时默认当前时间的一小时前
      *
-     * @param date
-     * @return
+     * @param date 日期对象
+     * @return Date
      */
     public static Date getHourAgo(Date date) {
         Calendar calendar = Calendar.getInstance();
@@ -563,8 +562,8 @@ public class DateUtils extends DateCode {
     /**
      * 将字符串的 yyyyMMdd、截取成yyyyMM
      *
-     * @param strDate
-     * @return
+     * @param strDate yyyyMMdd的字符串
+     * @return String yyyyMM
      */
     public static String substring(String strDate) {
         if (StringUtils.isEmpty(strDate)) {
@@ -670,10 +669,9 @@ public class DateUtils extends DateCode {
 
     /**
      * 转换日期
-     * <li>注：该方法默认转换为日期全格式:yyyy-MM-dd HH:mm:ss</li>
      *
-     * @param value
-     * @return Date
+     * @param value 字符串日期 or 日期对象
+     * @return Date 默认日期对象格式:yyyy-MM-dd HH:mm:ss
      */
     public static Date changeDate(Object value) {
         return changeDate(value, YEAR_MONTH_DAY_HOUR_MIN_SEC);
@@ -758,8 +756,8 @@ public class DateUtils extends DateCode {
     /**
      * 获取日期月份开始时间
      *
-     * @param date
-     * @return
+     * @param date 日期对象
+     * @return Date
      */
     public static Date getMonthStartTime(Date date) {
         if (date == null) {
@@ -776,10 +774,9 @@ public class DateUtils extends DateCode {
 
     /**
      * 获取日期中月底时间
-     * <li>例：2019-09-30 23:59:59</li>
      *
-     * @param date
-     * @return
+     * @param date 日期对象
+     * @return Date 日期对象{@code 2019-09-30 23:59:59}
      */
     public static Date getMonthEndTime(Date date) {
         if (date == null) {
@@ -795,6 +792,12 @@ public class DateUtils extends DateCode {
         return calendar.getTime();
     }
 
+    /**
+     * 校验日期是否是今天
+     *
+     * @param date 日期对象
+     * @return boolean {@code true}今天
+     */
     public static boolean isToday(Date date) {
         if (date == null) {
             return false;
@@ -805,10 +808,10 @@ public class DateUtils extends DateCode {
 
     /**
      * 校验日期是否是今天
-     * <li>默认格式：yyyy-MM-dd HH:mm:ss</li>
+     * <p>默认格式：yyyy-MM-dd HH:mm:ss</p>
      *
      * @param time 日期字符串
-     * @return
+     * @return boolean
      */
     public static boolean isToday(String time) {
         return isToday(time, YEAR_MONTH_DAY_HOUR_MIN_SEC);
@@ -819,7 +822,7 @@ public class DateUtils extends DateCode {
      *
      * @param time      字符串日期
      * @param formatStr 格式
-     * @return Boolean 是今天true、
+     * @return Boolean {@code true}今天
      */
     public static boolean isToday(String time, String formatStr) {
         SimpleDateFormat format = new SimpleDateFormat(formatStr);
@@ -868,9 +871,9 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 获取小时整点时间，如：2019-07-25 14:00:00
+     * 获取小时整点时间
      *
-     * @return
+     * @return Date 日期对象 {@code 2019-07-25 14:00:00}
      */
     public static Date getIniHour() {
         Calendar calendar = Calendar.getInstance();
@@ -883,9 +886,8 @@ public class DateUtils extends DateCode {
 
     /**
      * 获取当前小时的结束时间点
-     * <li>例：2019-09-06 09:59:59</li>
      *
-     * @return
+     * @return Date 日期对象 {@code 2019-07-25 09:59:59}
      */
     public static Date getEndHour() {
         Calendar calendar = Calendar.getInstance();
@@ -897,17 +899,15 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 小于当前系统时间
+     * 校验日期对象是否小于当前系统时间
      *
-     * @param date
-     * @return boolean
+     * @param date 日期对象
+     * @return boolean {@code true} 小于当前系统时间
      */
     public static boolean belowSystem(Date date) {
         if (date == null) {
-            // 空直接返回true
-            return true;
+            return true;  // 空直接返回true
         }
-        // 当前系统日期
         Date current = new Date();
         return date.getTime() < current.getTime();
     }
@@ -931,15 +931,22 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 判断是否是日期的格式：yyyy-MM-dd HH:mm:ss
+     * 判断是否是日期的格式
      *
-     * @param timeStr
-     * @return
+     * @param timeStr 日期格式字符串：yyyy-MM-dd HH:mm:ss
+     * @return boolean
      */
     public static boolean isDateFormat(String timeStr) {
         return isDateFormat(timeStr, YEAR_MONTH_DAY_HOUR_MIN_SEC);
     }
 
+    /**
+     * 判断是否是日期的格式
+     *
+     * @param timeStr 日期字符串
+     * @param format  日期格式
+     * @return boolean
+     */
     public static boolean isDateFormat(String timeStr, String format) {
         if (timeStr == null) {
             return false;
@@ -988,8 +995,8 @@ public class DateUtils extends DateCode {
     /**
      * 校验日期对象是否在某个范围天之内
      *
-     * @param date
-     * @param day
+     * @param date 日期对象
+     * @param day  天数
      * @return boolean 在范围内返回true、其他返回false
      */
     public static boolean isValidDate(Date date, int day) {

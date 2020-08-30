@@ -1,6 +1,6 @@
 package com.github.hugh.util;
 
-import com.github.hugh.core.DateCode;
+import com.github.hugh.constant.DateCode;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,7 +13,6 @@ import java.time.temporal.TemporalAdjusters;
  * <p>如需使用Date类工具 @see {@link  com.github.hugh.util.DateUtils} </p>
  *
  * @author hugh
- * @date 2020年4月2日
  * @since 1.8
  */
 public class TimeUtils extends DateCode {
@@ -75,7 +74,9 @@ public class TimeUtils extends DateCode {
 
     /**
      * 获取当前日期字符串
-     * <li>格式：yyyy-MM-dd HH:mm:ss</li>
+     * <ul>
+     *     <li>格式：yyyy-MM-dd HH:mm:ss</li>
+     * </ul>
      *
      * @return String
      */
@@ -96,7 +97,7 @@ public class TimeUtils extends DateCode {
     /**
      * 获取当前月份第一天的起始时间
      *
-     * @return
+     * @return String
      */
     public static String firstDayOfMonth() {
         LocalDate localDate = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());// 设置月初起始日期
@@ -107,7 +108,7 @@ public class TimeUtils extends DateCode {
     /**
      * 获取月份最后一天
      *
-     * @return
+     * @return String
      */
     public static String lastDayOfMonth() {
         LocalDate localDate = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());// 设置月末日期
@@ -118,7 +119,7 @@ public class TimeUtils extends DateCode {
     /**
      * 获取上月末日期时间点
      *
-     * @return
+     * @return String
      */
     public static String endOfLastMonth() {
         return endOfLastMonth(YEAR_MONTH_DAY_HOUR_MIN_SEC);
@@ -193,6 +194,4 @@ public class TimeUtils extends DateCode {
         LocalDateTime t = LocalDateTime.parse(time, DateTimeFormatter.ofPattern(YEAR_MONTH_DAY_HOUR_MIN_SEC));
         return t.isBefore(LocalDateTime.now());
     }
-
-
 }
