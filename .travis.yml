@@ -6,4 +6,9 @@ script: mvn test cobertura:cobertura
 after_success:
   - mvn clean cobertura:cobertura coveralls:report
   - bash <(curl -s https://codecov.io/bash)
-
+odecov:
+  disable_default_path_fixes: false
+fixes:
+  - "before/::after/"  # move path   e.g., "before/path" => "after/path"
+  - "::after/"         # move root   e.g., "path/" => "after/path/"
+  - "before/::"        # reduce root e.g., "before/path/" => "path/"
