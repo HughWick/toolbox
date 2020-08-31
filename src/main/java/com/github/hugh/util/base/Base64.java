@@ -4,6 +4,8 @@ import com.github.hugh.exception.ToolBoxException;
 import com.github.hugh.util.EmptyUtils;
 
 /**
+ * base64处理工具
+ *
  * @author hugh
  * @version 1.0.0
  */
@@ -84,7 +86,6 @@ public class Base64 {
      */
     public static char[] encode(byte[] data) {
         char[] out = new char[((data.length + 2) / 3) * 4];
-
         for (int i = 0, index = 0; i < data.length; i += 3, index += 4) {
             boolean quad = false;
             boolean trip = false;
@@ -160,7 +161,7 @@ public class Base64 {
     }
 
     /**
-     * 解码
+     * 将原base64的字符串解码
      *
      * @param text 文本
      * @return String 结果

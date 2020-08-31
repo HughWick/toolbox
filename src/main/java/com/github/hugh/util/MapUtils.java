@@ -5,6 +5,15 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * Map 工具类
+ * <ul>
+ * <li>该类使用了apache MapUtil进行二次封装</li>
+ * </ul>
+ *
+ * @author hugh
+ * @since 1.0.2
+ */
 public class MapUtils {
 
     /**
@@ -13,7 +22,7 @@ public class MapUtils {
      * @param map  Map
      * @param key  map中的key
      * @param code 需要验证的code码
-     * @return
+     * @return boolean @code true} 一致
      */
     public static boolean isSuccess(Map<?, ?> map, String key, String code) {
         if (map == null) {
@@ -26,10 +35,12 @@ public class MapUtils {
     }
 
     /**
-     * 校验map中code状态不是0000(成功状态)
+     * 根据key与code码、校验与map中一致
      *
-     * @param map
-     * @return boolean code值不为0000 返回true
+     * @param map  参数
+     * @param key  键
+     * @param code 值
+     * @return boolean {@code true} 不一致
      */
     public static boolean isFailure(Map<?, ?> map, String key, String code) {
         return !isSuccess(map, key, code);
@@ -38,7 +49,7 @@ public class MapUtils {
     /**
      * 校验map是否为空
      *
-     * @param map
+     * @param map 参数
      * @return boolean {@code true} 空
      */
     public static boolean isEmpty(Map<?, ?> map) {
@@ -92,7 +103,9 @@ public class MapUtils {
 
     /**
      * 将map转换为实体对象,并赋值
+     * <ul>
      * <li>map中的key必须与实体中的常量key一致</li>
+     * </ul>
      *
      * @param bean   实体对象
      * @param params 参数
