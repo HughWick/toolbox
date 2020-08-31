@@ -75,7 +75,7 @@ public class TimeUtils extends DateCode {
     /**
      * 获取当前日期字符串
      * <ul>
-     *     <li>格式：yyyy-MM-dd HH:mm:ss</li>
+     * <li>格式：yyyy-MM-dd HH:mm:ss</li>
      * </ul>
      *
      * @return String
@@ -193,5 +193,28 @@ public class TimeUtils extends DateCode {
     public static boolean ex(String time) {
         LocalDateTime t = LocalDateTime.parse(time, DateTimeFormatter.ofPattern(YEAR_MONTH_DAY_HOUR_MIN_SEC));
         return t.isBefore(LocalDateTime.now());
+    }
+
+    /**
+     * 校验时间戳是否超过设定
+     *
+     * @param clientTime 客户端时间戳
+     * @param max_allow  允许的最大误差时间 毫秒
+     * @return boolean {@code true} 在范围内
+     */
+    public static boolean checkTimestamp(String clientTime, long max_allow) {
+        if (clientTime.length() != 13) {
+            return false;
+        }
+        long time, sys = System.currentTimeMillis();
+        try {
+            time = Long.parseLong(clientTime);
+            if (!((sys - time) <= max_allow && (time - sys) <= max_allow)) {
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 }

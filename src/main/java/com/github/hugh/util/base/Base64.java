@@ -1,4 +1,4 @@
-package com.github.hugh.util.secrect;
+package com.github.hugh.util.base;
 
 import com.github.hugh.exception.ToolBoxException;
 import com.github.hugh.util.EmptyUtils;
@@ -8,7 +8,8 @@ import com.github.hugh.util.EmptyUtils;
  * @version 1.0.0
  */
 public class Base64 {
-    private Base64(){}
+    private Base64() {
+    }
 
     /**
      * hex 数组
@@ -46,10 +47,11 @@ public class Base64 {
      * 将字节数组转换成十六进制，并以字符串的形式返回
      * 128位是指二进制位。二进制太长，所以一般都改写成16进制，
      * 每一位16进制数可以代替4位二进制数，所以128位二进制数写成16进制就变成了128/4=32位。
+     *
      * @param bytes 字节流
      * @return 字符串
      */
-    public static String toBase64String(byte[] bytes){
+    public static String toBase64String(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
         for (byte b : bytes) {
             sb.append(byteToHex(b));
@@ -59,6 +61,7 @@ public class Base64 {
 
     /**
      * 将一个字节转换成十六进制，并以字符串的形式返回
+     *
      * @param b 比特
      */
     private static String byteToHex(byte b) {
@@ -70,11 +73,12 @@ public class Base64 {
         int d2 = n % 16;
         final String charOne = String.valueOf(HEX_ARRAY[d1]);
         final String charTwo = String.valueOf(HEX_ARRAY[d2]);
-        return charOne+charTwo;
+        return charOne + charTwo;
     }
 
     /**
      * 将原始数据编码为base64编码
+     *
      * @param data 数据信息
      * @return 结果
      */
@@ -108,16 +112,16 @@ public class Base64 {
 
     /**
      * 将base64编码的数据解码成原始数据
+     *
      * @param data 数据
      * @return 结果
      */
-    public static byte[] decode(char[] data)
-    {
+    public static byte[] decode(char[] data) {
         int len = ((data.length + 3) / 4) * 3;
-        if(data.length > 0 && data[data.length - 1] == '=') {
+        if (data.length > 0 && data[data.length - 1] == '=') {
             --len;
         }
-        if(data.length > 1 && data[data.length - 2] == '=') {
+        if (data.length > 1 && data[data.length - 2] == '=') {
             --len;
         }
         byte[] out = new byte[len];
@@ -136,19 +140,20 @@ public class Base64 {
                 }
             }
         }
-        if(index != out.length) {
+        if (index != out.length) {
             throw new ToolBoxException("miscalculated data length!");
         }
         return out;
     }
 
     /**
-     * 编码
+     * 将字符串转换成base64 编码
+     *
      * @param text 文本
-     * @return 结果
+     * @return String 结果
      */
     public static String encode(final String text) {
-        if(EmptyUtils.isEmpty(text)) {
+        if (EmptyUtils.isEmpty(text)) {
             return text;
         }
         return new String(encode(text.getBytes()));
@@ -156,11 +161,12 @@ public class Base64 {
 
     /**
      * 解码
+     *
      * @param text 文本
-     * @return 结果
+     * @return String 结果
      */
     public static String decode(final String text) {
-        if(EmptyUtils.isEmpty(text)) {
+        if (EmptyUtils.isEmpty(text)) {
             return text;
         }
         return new String(decode(text.toCharArray()));

@@ -1,6 +1,7 @@
 package com.github.hugh.util.secrect;
 
 import com.github.hugh.util.EmptyUtils;
+import com.github.hugh.util.base.Base64;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
