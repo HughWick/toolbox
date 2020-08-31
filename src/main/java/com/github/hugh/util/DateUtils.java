@@ -1,7 +1,6 @@
 package com.github.hugh.util;
 
 import com.github.hugh.constant.DateCode;
-import org.apache.commons.lang.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -153,7 +152,7 @@ public class DateUtils extends DateCode {
      * @return 日期类型对象
      */
     public static Date parseDate(String dateStr, String format) {
-        if (StringUtils.isEmpty(dateStr)) {
+        if (com.github.hugh.util.EmptyUtils.isEmpty(dateStr)) {
             return null;
         }
         SimpleDateFormat formater = new SimpleDateFormat(format);
@@ -377,7 +376,7 @@ public class DateUtils extends DateCode {
      */
     public static Date getStartTime(String dateStr) {
         Date date = null;
-        if (StringUtils.isEmpty(dateStr)) {
+        if (com.github.hugh.util.EmptyUtils.isEmpty(dateStr)) {
             date = new Date();
         } else {
             date = parseDate(dateStr, YEAR_MONTH_DAY);
@@ -405,7 +404,7 @@ public class DateUtils extends DateCode {
      */
     public static Date getEndTime(String dateStr) {
         Date date = null;
-        if (StringUtils.isEmpty(dateStr)) {
+        if (com.github.hugh.util.EmptyUtils.isEmpty(dateStr)) {
             date = new Date();
         } else {
             date = parseDate(dateStr, YEAR_MONTH_DAY);
@@ -566,7 +565,7 @@ public class DateUtils extends DateCode {
      * @return String yyyyMM
      */
     public static String substring(String strDate) {
-        if (StringUtils.isEmpty(strDate)) {
+        if (com.github.hugh.util.EmptyUtils.isEmpty(strDate)) {
             return null;
         }
         return strDate.substring(0, 6);
@@ -738,7 +737,7 @@ public class DateUtils extends DateCode {
      * @return Date
      */
     public static Date strToDate(String value) {
-        if (StringUtils.isEmpty(value)) {
+        if (com.github.hugh.util.EmptyUtils.isEmpty(value)) {
             return null;
         }
         return parseDate(value, YEAR_MONTH_DAY_HOUR_MIN_SEC);
@@ -857,7 +856,7 @@ public class DateUtils extends DateCode {
      * @return boolean 正确返回true、其他返回false
      */
     public static boolean isValidDate(String time, String format) {
-        if (StringUtils.isEmpty(time) || StringUtils.isEmpty(format)) {
+        if (com.github.hugh.util.EmptyUtils.isEmpty(time) || com.github.hugh.util.EmptyUtils.isEmpty(format)) {
             return false;
         }
         try {
@@ -944,24 +943,30 @@ public class DateUtils extends DateCode {
      * 判断是否是日期的格式
      *
      * @param timeStr 日期字符串
-     * @param format  日期格式
+     * @param pattern  日期格式
      * @return boolean
      */
-    public static boolean isDateFormat(String timeStr, String format) {
-        if (timeStr == null) {
+    public static boolean isDateFormat(String timeStr, String pattern) {
+        if (timeStr == null || "".equals(timeStr)) {
             return false;
         }
-        String regex = "";
-        if (YEAR_MONTH_DAY.equals(format)) {
-            regex = "\\d{4}-\\d{2}-\\d{2}";
-        } else {// 默认校验yyyy-MM-dd HH:mm:ss
-            regex = "\\d{4}-\\d{2}-\\d{2}\\s{1}\\d{2}:\\d{2}:\\d{2}";
-        }
-        Pattern pattern = Pattern.compile(regex);// 编译正则表达式
-        Matcher matcher = pattern.matcher(timeStr);// 忽略大小写的写法
-        if (matcher.matches()) {// 先验证格式
-            Date date = parseDate(timeStr, format);
-            return timeStr.equals(format(date, format));// 验证时间
+        try {
+            String regex;
+            if (YEAR_MONTH.equals(pattern)) {//年-月
+                regex = "\\d{4}-\\d{2}";
+            } else if (YEAR_MONTH_DAY.equals(pattern)) {//年-月-日
+                regex = "\\d{4}-\\d{2}-\\d{2}";
+            } else {// 默认校验yyyy-MM-dd HH:mm:ss
+                regex = "\\d{4}-\\d{2}-\\d{2}\\s{1}\\d{2}:\\d{2}:\\d{2}";
+            }
+            Pattern pat = Pattern.compile(regex);// 编译正则表达式
+            Matcher matcher = pat.matcher(timeStr);// 忽略大小写的写法
+            if (matcher.matches()) {// 先验证格式
+                Date date = parseDate(timeStr, pattern);//转换格式
+                return timeStr.equals(format(date, pattern));// 验证时间
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }
