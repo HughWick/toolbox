@@ -21,6 +21,7 @@ public class MapTest {
         map.put("name", "sd");
         map.put("amouont", 10.14);
         map.put("birthday", new Date());
+        map.put("create", "2019-04-06 12:11:20");
         try {
             main.java.com.github.hugh.util.MapUtils.toEntity(new Student(), map);
         } catch (Exception e) {
@@ -29,6 +30,11 @@ public class MapTest {
         System.out.println("--1->>" + main.java.com.github.hugh.util.MapUtils.isEmpty(map));
         map.clear();
         System.out.println("--2->>" + main.java.com.github.hugh.util.MapUtils.isEmpty(map));
+        System.out.println("-0--isSuccess-=>" + main.java.com.github.hugh.util.MapUtils.isSuccess(map, "code", null));
+        System.out.println("-1--isSuccess-=>" + main.java.com.github.hugh.util.MapUtils.isSuccess(null, "code", null));
+        map.put("code", "0000");
+        System.out.println("2-isSuccess---=>" + main.java.com.github.hugh.util.MapUtils.isSuccess(map, "code", "0000"));
+        System.out.println("-isFailure---=>" + main.java.com.github.hugh.util.MapUtils.isFailure(map, "code", "00100"));
     }
 }
 

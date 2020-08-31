@@ -52,4 +52,14 @@ public class Student {
     private String name;
     private double amouont;
     private Date birthday;
+
+    public Date getCreate() {
+        return create;
+    }
+
+    public void setCreate(Date create) {
+        this.create = create;
+    }
+
+    private Date create;
 }
