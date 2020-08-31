@@ -1,4 +1,4 @@
-package main.java.com.github.hugh.util;
+package com.github.hugh.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -39,10 +39,20 @@ public class MapUtils {
      * 校验map是否为空
      *
      * @param map
-     * @return boolean 空返回true
+     * @return boolean {@code true} 空
      */
     public static boolean isEmpty(Map<?, ?> map) {
         return map == null || map.size() == 0;
+    }
+
+    /**
+     * 校验Map不为空
+     *
+     * @param map 参数
+     * @return boolean {@code true} 不为空
+     */
+    public static boolean isNotEmpty(Map<?, ?> map) {
+        return !isEmpty(map);
     }
 
     /**
@@ -116,4 +126,60 @@ public class MapUtils {
         }
         return bean;
     }
+
+    /**
+     * get参数后转换为String
+     *
+     * @param map 参数
+     * @param key 键
+     * @return String
+     */
+    public static String getString(Map map, String key) {
+        return org.apache.commons.collections4.MapUtils.getString(map, key);
+    }
+
+    /**
+     * get参数后转换为Long
+     *
+     * @param map 参数
+     * @param key 键
+     * @return String
+     */
+    public static Long getLong(Map map, String key) {
+        return org.apache.commons.collections4.MapUtils.getLong(map, key);
+    }
+
+    /**
+     * get参数后转换为Int
+     *
+     * @param map 参数
+     * @param key 键
+     * @return String
+     */
+    public static Integer getInt(Map map, String key) {
+        return org.apache.commons.collections4.MapUtils.getInteger(map, key);
+    }
+
+    /**
+     * get参数后转换为Double
+     *
+     * @param map 参数
+     * @param key 键
+     * @return String
+     */
+    public static Double getDouble(Map map, String key) {
+        return org.apache.commons.collections4.MapUtils.getDouble(map, key);
+    }
+
+    /**
+     * get参数后转换为Map
+     *
+     * @param map 参数
+     * @param key 键
+     * @return String
+     */
+    public static Map getMap(Map map, String key) {
+        return org.apache.commons.collections4.MapUtils.getMap(map, key);
+    }
+
 }

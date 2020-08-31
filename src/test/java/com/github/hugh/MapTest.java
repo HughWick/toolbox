@@ -1,6 +1,7 @@
 package com.github.hugh;
 
 import com.github.hugh.model.Student;
+import com.github.hugh.util.MapUtils;
 import org.junit.Test;
 
 import java.util.Date;
@@ -23,19 +24,31 @@ public class MapTest {
         map.put("birthday", new Date());
         map.put("create", "2019-04-06 12:11:20");
         try {
-            main.java.com.github.hugh.util.MapUtils.toEntity(new Student(), map);
+           MapUtils.toEntity(new Student(), map);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("--1->>" + main.java.com.github.hugh.util.MapUtils.isEmpty(map));
+        System.out.println("--1->>" + MapUtils.isEmpty(map));
         map.clear();
-        System.out.println("--2->>" + main.java.com.github.hugh.util.MapUtils.isEmpty(map));
-        System.out.println("-0--isSuccess-=>" + main.java.com.github.hugh.util.MapUtils.isSuccess(map, "code", null));
-        System.out.println("-1--isSuccess-=>" + main.java.com.github.hugh.util.MapUtils.isSuccess(null, "code", null));
+        System.out.println("--2->>" + MapUtils.isEmpty(map));
+        System.out.println("--2->>" + MapUtils.isNotEmpty(map));
+        System.out.println("-0--isSuccess-=>" + MapUtils.isSuccess(map, "code", null));
+        System.out.println("-1--isSuccess-=>" + MapUtils.isSuccess(null, "code", null));
         map.put("code", "0000");
-        System.out.println("2-isSuccess---=>" + main.java.com.github.hugh.util.MapUtils.isSuccess(map, "code", "0000"));
-        System.out.println("-isFailure---=>" + main.java.com.github.hugh.util.MapUtils.isFailure(map, "code", "00100"));
+        System.out.println("2-isSuccess---=>" + MapUtils.isSuccess(map, "code", "0000"));
+        System.out.println("-isFailure---=>" + MapUtils.isFailure(map, "code", "00100"));
     }
+
+    @Test
+    public void test02() {
+        Map map = new HashMap();
+        System.out.println("--1->"+ MapUtils.getMap(map, "data"));
+        System.out.println("-2-->"+ MapUtils.getString(map, "data"));
+        System.out.println("-3-->"+ MapUtils.getInt(map, "data"));
+        System.out.println("-4-->"+ MapUtils.getLong(map, "data"));
+        System.out.println("-5-->"+ MapUtils.getDouble(map, "data"));
+    }
+
 }
 
 
