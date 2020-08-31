@@ -16,5 +16,6 @@ public class TimeTest {
         System.out.println("-2-->>" + TimeUtils.checkTimestamp(start + "1528858736043", 1800000));
 //        System.out.println("-3-->>" + TimeUtils.checkTimestamp(start + "1528858736043", 1800000));
         System.out.println("-4-->>" + TimeUtils.checkTimestamp( "1528858736043", 1800000));
+        System.out.println("--->>"+ TimeUtils.getTime());
     }
 }
