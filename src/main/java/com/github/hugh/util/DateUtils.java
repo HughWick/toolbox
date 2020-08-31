@@ -1,6 +1,7 @@
 package com.github.hugh.util;
 
 import com.github.hugh.constant.DateCode;
+import com.github.hugh.exception.ToolBoxException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,7 +27,7 @@ public class DateUtils extends DateCode {
      * @param date 日期对象
      * @return String  格式为：yyyy-MM-dd
      */
-    public static final String format(Object date) {
+    public static String format(Date date) {
         return format(date, YEAR_MONTH_DAY);
     }
 
@@ -37,7 +38,7 @@ public class DateUtils extends DateCode {
      * @param pattern 格式
      * @return String 日期格式字符串
      */
-    public static final String format(Object date, String pattern) {
+    public static String format(Date date, String pattern) {
         if (date == null) {
             return null;
         }
@@ -52,7 +53,7 @@ public class DateUtils extends DateCode {
      *
      * @return String 当前时间
      */
-    public static final String getDate() {
+    public static String getDate() {
         return format(new Date());
     }
 
@@ -62,7 +63,7 @@ public class DateUtils extends DateCode {
      * @return String  yyyyMMdd
      */
     public static String getDateSign() {
-        return format(YEAR_MONTH_DAY_SIMPLE);
+        return format(new Date(), YEAR_MONTH_DAY_SIMPLE);
     }
 
     /**
@@ -155,9 +156,9 @@ public class DateUtils extends DateCode {
         if (com.github.hugh.util.EmptyUtils.isEmpty(dateStr)) {
             return null;
         }
-        SimpleDateFormat formater = new SimpleDateFormat(format);
+        SimpleDateFormat formats = new SimpleDateFormat(format);
         try {
-            return formater.parse(dateStr);
+            return formats.parse(dateStr);
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
@@ -174,8 +175,8 @@ public class DateUtils extends DateCode {
         if (timestamp < 0) {
             return null;
         }
-        SimpleDateFormat formater = new SimpleDateFormat(YEAR_MONTH_DAY_HOUR_MIN_SEC);
-        return formater.format(timestamp);
+        SimpleDateFormat format = new SimpleDateFormat(YEAR_MONTH_DAY_HOUR_MIN_SEC);
+        return format.format(timestamp);
     }
 
     /**
@@ -364,6 +365,11 @@ public class DateUtils extends DateCode {
         return calendar.getTime();
     }
 
+    /**
+     * 获取今天的开始日期
+     *
+     * @return Date
+     */
     public static Date getStartTime() {
         return getStartTime(null);
     }
@@ -375,8 +381,8 @@ public class DateUtils extends DateCode {
      * @return Date
      */
     public static Date getStartTime(String dateStr) {
-        Date date = null;
-        if (com.github.hugh.util.EmptyUtils.isEmpty(dateStr)) {
+        Date date;
+        if (EmptyUtils.isEmpty(dateStr)) {
             date = new Date();
         } else {
             date = parseDate(dateStr, YEAR_MONTH_DAY);
@@ -404,7 +410,7 @@ public class DateUtils extends DateCode {
      */
     public static Date getEndTime(String dateStr) {
         Date date = null;
-        if (com.github.hugh.util.EmptyUtils.isEmpty(dateStr)) {
+        if (EmptyUtils.isEmpty(dateStr)) {
             date = new Date();
         } else {
             date = parseDate(dateStr, YEAR_MONTH_DAY);
@@ -498,11 +504,14 @@ public class DateUtils extends DateCode {
      */
     public static Date setStartHouMinSec(String dateStr) {
         Date date = parseDate(dateStr, YEAR_MONTH_DAY);
+        if (date == null) {
+            throw new ToolBoxException("data is null");
+        }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY, 00);
-        calendar.set(Calendar.MINUTE, 00);
-        calendar.set(Calendar.SECOND, 00);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
         return calendar.getTime();
     }
 
@@ -514,6 +523,9 @@ public class DateUtils extends DateCode {
      */
     public static Date setEndHouMinSec(String dateStr) {
         Date date = parseDate(dateStr, YEAR_MONTH_DAY);
+        if (date == null) {
+            throw new ToolBoxException("data is null");
+        }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(Calendar.HOUR_OF_DAY, 23);
@@ -943,7 +955,7 @@ public class DateUtils extends DateCode {
      * 判断是否是日期的格式
      *
      * @param timeStr 日期字符串
-     * @param pattern  日期格式
+     * @param pattern 日期格式
      * @return boolean
      */
     public static boolean isDateFormat(String timeStr, String pattern) {

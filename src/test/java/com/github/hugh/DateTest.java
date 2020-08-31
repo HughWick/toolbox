@@ -4,6 +4,8 @@ import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.TimeUtils;
 import org.junit.Test;
 
+import java.util.Date;
+
 public class DateTest {
 
     public static void main(String[] args) {
@@ -21,5 +23,19 @@ public class DateTest {
         String str = "2020-06-04 13:00:21";
         System.out.println("--->" + DateUtils.isDateFormat(str));
         System.out.println("--->" + DateUtils.parseDate(str));
+        System.out.println("--->" + DateUtils.getDate("yyyy-MM-dd"));
+        System.out.println("--->" + DateUtils.getDate(1));
+        System.out.println("--->" + DateUtils.getDate(DateUtils.toStringTime(str)));
+        System.out.println("--->" + DateUtils.getDateSign());
     }
+
+    @Test
+    public void test02() {
+//        String str = "2020-06-04 13:00:21";
+        System.out.println("--->" + DateUtils.setMonthFirstDay(new Date()));
+        System.out.println("--->" + DateUtils.setMonthLastDay(new Date()));
+    }
+
+
+
 }
