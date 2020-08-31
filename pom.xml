@@ -16,7 +16,6 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <!--============================== MAIN ==============================-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.compiler.level>1.7</project.compiler.level>
 
         <!--========================== All Plugins START =====================-->
         <plugin.compiler.version>3.2</plugin.compiler.version>
@@ -69,6 +68,7 @@
                     <source>8</source>
                     <target>8</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
             <plugin>
@@ -78,6 +78,7 @@
                 <configuration>
                     <skipTests>${plugin.surefire.skip-it}</skipTests>
                     <testFailureIgnore>${plugin.surefire.ignore-failure}</testFailureIgnore>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
             <!--mvn cobertura:cobertura coveralls:report -DrepoToken=yourcoverallsprojectrepositorytoken-->
@@ -150,10 +151,10 @@
     </licenses>
     <!-- SCM信息 -->
     <scm>
-        <connection>scm:git:https://github.com/HughWick/id.git</connection>
-        <developerConnection>scm:git:https://github.com/HughWick/id.git</developerConnection>
-        <url>https://github.com/HughWick/id</url>
-        <tag>1.0.0</tag>
+        <connection>scm:git:https://github.com/HughWick/toolbox.git</connection>
+        <developerConnection>scm:git:https://github.com/HughWick/toolbox.git</developerConnection>
+        <url>https://github.com/HughWick/toolbox</url>
+        <tag>1.0.1</tag>
     </scm>
     <!-- 开发者信息 -->
     <developers>
