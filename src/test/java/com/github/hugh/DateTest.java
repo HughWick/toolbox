@@ -34,6 +34,8 @@ public class DateTest {
 //        String str = "2020-06-04 13:00:21";
         System.out.println("--->" + DateUtils.setMonthFirstDay(new Date()));
         System.out.println("--->" + DateUtils.setMonthLastDay(new Date()));
+        System.out.println("--->" + DateUtils.getMonthBeforeStartTime());
+        System.out.println("--->" + DateUtils.getMonthBeforeEndTime());
     }
 
 
