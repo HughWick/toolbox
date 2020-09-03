@@ -16,7 +16,6 @@ public class GzipUtilsTest {
             System.out.println("压缩后字符串：" + GzipUtils.compress(str).length());
             System.out.println("压缩后字符串：" + GzipUtils.compress(null).length());
             System.out.println("解压缩后字符串：" + GzipUtils.uncompress(GzipUtils.compress(str)));
-//            System.out.println("解压缩后字符串：" + uncompressToString(GZIPUtils.compress(str)));
         } catch (Exception e) {
             e.printStackTrace();
         }
