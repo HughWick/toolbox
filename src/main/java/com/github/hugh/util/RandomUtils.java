@@ -9,8 +9,9 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * @author AS
- * @date 2020/9/3 14:45
+ * 随机工具类
+ *
+ * @author hugh
  */
 public class RandomUtils {
     private RandomUtils() {
@@ -36,7 +37,6 @@ public class RandomUtils {
      * ThreadLocalRandom是JDK 7之后提供并发产生随机数，能够解决多个线程发生的竞争争夺。
      *
      * @return {@link ThreadLocalRandom}
-     * @since 0.1.13
      */
     public static ThreadLocalRandom getRandom() {
         return ThreadLocalRandom.current();
@@ -46,7 +46,6 @@ public class RandomUtils {
      * 获取{@link SecureRandom}，类提供加密的强随机数生成器 (RNG)
      *
      * @return {@link SecureRandom}
-     * @since 0.1.13
      */
     public static SecureRandom getSecureRandom() {
         try {
@@ -63,7 +62,6 @@ public class RandomUtils {
      * @return {@link Random}
      * @see #getSecureRandom()
      * @see #getRandom()
-     * @since 0.1.13
      */
     public static Random getRandom(boolean isSecure) {
         return isSecure ? getSecureRandom() : getRandom();
