@@ -89,12 +89,34 @@ public class RandomUtils {
 
     /**
      * 随机的数字
+     * <p>该方法返回为字符串类型数字</p>
+     * <p>注：当长度为2时、会产生01这种长度的数字字符串</p>
      *
      * @param length 长度
      * @return String 随机的数字
      */
     public static String randomNumber(final int length) {
         return randomString(BASE_NUMBER, length);
+    }
+
+    /**
+     * 根据需要的数字长度来生成随机数
+     * <p>由于{@link com.github.hugh.util.RandomUtils#randomNumber} 会生成补0的两位随机数 例：04</p>
+     * <p>该方法不会产生补0的两位随机数</p>
+     *
+     * @param length 长度
+     * @return int 随机数
+     */
+    public static int number(int length) {
+        int num = 1;
+        double random = Math.random();
+        if (random < 0.1D) {
+            random += 0.1D;
+        }
+        for (int i = 0; i < length; i++) {
+            num *= 10;
+        }
+        return (int) (random * num);
     }
 
     /**
