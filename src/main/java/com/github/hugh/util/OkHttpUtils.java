@@ -30,12 +30,12 @@ public class OkHttpUtils {
     /**
      * 表单形式提交类型
      */
-    public static final String APPLICATION_FORM_URLENCODED_VALUE = "application/x-www-form-urlencoded";
+    private static final String APPLICATION_FORM_URLENCODED_VALUE = "application/x-www-form-urlencoded";
 
     /**
      * json形式提交类型
      */
-    public static final String APPLICATION_JSON_UTF8_VALUE = "application/json;charset=UTF-8";
+    private static final String APPLICATION_JSON_UTF8_VALUE = "application/json;charset=UTF-8";
 
     /**
      * 统一编码
@@ -72,7 +72,25 @@ public class OkHttpUtils {
     }
 
     /**
-     * 发送POST
+     * 发送json形式参数的post请求
+     * <p>Content-Type:application/x-www-form-urlencoded</p>
+     *
+     * @param url  请求URL
+     * @param json 参数
+     * @return String
+     */
+    public static String postJson(String url, JSONObject json) {
+        String params = jsonParse(json);
+        try {
+            return post(url, params, JSON_TYPE);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 发送POST 后返回结果转换为JSON
      * <p>Content-Type:application/x-www-form-urlencoded</p>
      *
      * @param url  请求URL
@@ -91,23 +109,6 @@ public class OkHttpUtils {
         }
     }
 
-    /**
-     * 发送json形式参数的post请求
-     * <p>Content-Type:application/x-www-form-urlencoded</p>
-     *
-     * @param url  请求URL
-     * @param json 参数
-     * @return String
-     */
-    public static String postJson(String url, JSONObject json) {
-        String params = jsonParse(json);
-        try {
-            return post(url, params, JSON_TYPE);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     /**
      * 将json中键值对拼接为url对应的参数
