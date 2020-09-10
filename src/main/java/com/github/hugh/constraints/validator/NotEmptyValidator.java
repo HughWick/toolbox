@@ -11,7 +11,7 @@ import javax.validation.ConstraintValidatorContext;
  * 不为空注解校验实现类
  *
  * @author hugh
- * @see 1.0.5
+ * @since 1.0.5
  */
 public class NotEmptyValidator implements ConstraintValidator<NotEmpty, String> {
 
@@ -27,7 +27,6 @@ public class NotEmptyValidator implements ConstraintValidator<NotEmpty, String> 
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-//        System.out.println("-=-isValid-==" + value);
         return EmptyUtils.isNotEmpty(value);
     }
 }

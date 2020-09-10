@@ -6,13 +6,12 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.concurrent.Delayed;
 
 /**
  * 文件工具类
  *
  * @author hugh
- * @see 1.0.5
+ * @since 1.0.5
  */
 public class FileUtils {
 

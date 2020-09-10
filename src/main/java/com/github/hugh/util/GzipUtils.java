@@ -23,7 +23,7 @@ public class GzipUtils {
      *
      * @param str：正常的字符串
      * @return 压缩字符串 结果：³)°K,NIc i£_`Çe#  c¦%ÂXHòjyIÅÖ`
-     * @throws IOException
+     * @throws IOException IO异常
      */
     public static String compress(String str) throws IOException {
         if (str == null || str.length() == 0) {
@@ -42,7 +42,7 @@ public class GzipUtils {
      *
      * @param str 已压缩后的字符串
      * @return String
-     * @throws IOException
+     * @throws IOException IO异常
      */
     public static String uncompress(String str) throws IOException {
         if (str == null || str.length() == 0) {

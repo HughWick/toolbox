@@ -10,7 +10,7 @@ import javax.validation.ConstraintValidatorContext;
  * 日期格式验证拦截
  *
  * @author hugh
- * @see 1.0.5
+ * @since  1.0.5
  */
 public class DateFormatValidator implements ConstraintValidator<DateFormat, String> {
 
@@ -26,7 +26,4 @@ public class DateFormatValidator implements ConstraintValidator<DateFormat, Stri
         return DateUtils.isDateFormat(value, pattern);
     }
 
-//    public static void main(String[] args) {
-//        System.out.println("--->>" + DateUtils.isDateFormat("2020-07-29", "yyyy-MM-dd"));
-//    }
 }

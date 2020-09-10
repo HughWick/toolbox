@@ -16,7 +16,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *  自定义的不为空验证注解
  *
  * @author hugh
- * @see 1.0.5 
+ * @since  1.0.5 
  */
 @Target({METHOD, FIELD, PARAMETER})
 @Retention(RUNTIME)
@@ -24,11 +24,31 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = NotEmptyValidator.class)//指向自定义验证类
 public @interface NotEmpty {
 
-    String message() default ""; //这边可以标注默认的验证失败消息
+    /**
+     * 失败消息
+     *
+     * @return String
+     */
+    String message() default "";
 
+    /**
+     * 值
+     *
+     * @return String
+     */
     String value() default "";
 
+    /**
+     * 默认参数
+     *
+     * @return Class
+     */
     Class<?>[] groups() default {};
 
+    /**
+     * 默认参数
+     *
+     * @return Class
+     */
     Class<? extends Payload>[] payload() default {};
 }

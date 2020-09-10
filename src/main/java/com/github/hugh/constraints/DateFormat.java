@@ -16,7 +16,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * 日期格式验证注解类
  *
  * @author hugh
- * @see 1.0.5 
+ * @since  1.0.5 
  */
 @Target({METHOD, FIELD, PARAMETER})
 @Retention(RUNTIME)
@@ -24,12 +24,32 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = DateFormatValidator.class)//指向自定义验证类
 public @interface DateFormat {
 
+    /**
+     * 说明
+     *
+     * @return String
+     */
     String message() default "日期格式不正确！"; //这边可以标注默认的验证失败消息
 
+    /**
+     * 日期格式
+     *
+     * @return String
+     */
     String pattern() default "yyyy-MM-dd HH:mm:ss";
 
+    /**
+     * 默认参数
+     *
+     * @return Class
+     */
     Class<?>[] groups() default {};
 
+    /**
+     * 默认参数
+     *
+     * @return Class
+     */
     Class<? extends Payload>[] payload() default {};
 
 }
