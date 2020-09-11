@@ -1,6 +1,6 @@
 package com.github.hugh;
 
-import com.github.hugh.util.Regex.EmojiUtils;
+import com.github.hugh.util.regex.EmojiUtils;
 import org.junit.Test;
 
 

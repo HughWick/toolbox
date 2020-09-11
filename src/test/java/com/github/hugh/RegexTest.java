@@ -1,6 +1,6 @@
 package com.github.hugh;
 
-import com.github.hugh.util.Regex.RegexUtils;
+import com.github.hugh.util.regex.RegexUtils;
 import org.junit.Test;
 
 /**

@@ -1,4 +1,4 @@
-package com.github.hugh.util.Regex;
+package com.github.hugh.util.regex;
 
 import com.github.hugh.util.EmptyUtils;
 
