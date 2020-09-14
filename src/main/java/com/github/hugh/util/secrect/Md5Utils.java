@@ -19,6 +19,7 @@ public class Md5Utils {
 
     /**
      * 获取字符串的 md5 值 小写
+     *
      * @param string
      * @return String
      */
@@ -43,7 +44,7 @@ public class Md5Utils {
      * @param lowerCase 大小写表示,true为小写
      * @return String
      */
-    public static String generate(final String string, boolean lowerCase) {
+    private static String generate(final String string, boolean lowerCase) {
         try {
             if (EmptyUtils.isEmpty(string)) {
                 return string;

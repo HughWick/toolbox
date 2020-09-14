@@ -1,8 +1,8 @@
 package com.github.hugh.util;
 
 import com.github.hugh.exception.ToolBoxException;
+import com.google.common.collect.Lists;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -35,65 +35,42 @@ public class ListUtils {
     }
 
     /**
-     * list数据分页
+     * Google guava list数据分页
+     * <li>注:切割后是根据总集合内的下标获取值、所以page是从0开始</li>
      *
-     * @param list 数据
-     * @param page 页数
-     * @param size 条数
-     * @return List
+     * @param originList 数据
+     * @param page       页数
+     * @param size       条数
+     * @return Object
+     * @since 1.0.7
      */
-    public static List<?> listDatas(List<?> list, int page, int size) {
-        if (isEmpty(list)) {
+    public static Object guavaPartitionList(List<?> originList, int page, int size) {
+        if (isEmpty(originList)) {
             throw new ToolBoxException("数据不能为空!");
         }
-        int totalCount = list.size();
-        page = page - 1;
-        int fromIndex = page * size;
-        // 分页不能大于总数
-        if (fromIndex > totalCount) {
-            throw new ToolBoxException("页数或分页大小不正确!");
-        }
-        int toIndex = ((page + 1) * size);
-        if (toIndex > totalCount) {
-            toIndex = totalCount;
-        }
-        return list.subList(fromIndex, toIndex);
+        List pagedList = Lists.partition(originList, size);//根据条数切割成多个list
+        return pagedList.get(page);//根据下标(分页)对应的数据
     }
 
     /**
-     * 返回总页数
+     * Google guava 数组转 List
      *
-     * @param list 总集合
-     * @param size 条数
-     * @return int 总页数
-     */
-    public static int getPages(Collection<?> list, Integer size) {
-        int count = list.size() / size;
-        if (list.isEmpty()) {
-            return 0;
-        }
-        if (list.size() <= size) {
-            return 1;
-        } else if (count % size == 0) {
-            return count;
-        } else {
-            return count + 1;
-        }
-    }
-
-    /**
-     * 根据第二集合中的值，删除源中对应的元素
-     *
-     * @param source 源集合
-     * @param del    需删除的元素
+     * @param array 数组
      * @return List
+     * @since 1.0.7
      */
-    public static List<?> remove(List<?> source, List<?> del) {
-        List cache = new ArrayList<>();   // 将需要删除的集合合并至缓存中
-        cache.addAll(del);
-        for (int i = 0; i < cache.size(); i++) {// 遍历需要删除的集合缓存
-            source.remove(cache.get(i)); // 移除掉对应的元素
-        }
-        return source; // 返回已移除的结果集
+    public static List guavaArrToList(String[] array) {
+        return Lists.newArrayList(array);
+    }
+
+    /**
+     * Google guava 字符串转 List
+     *
+     * @param string 字符串
+     * @return List
+     * @since 1.0.7
+     */
+    public static List guavaStringToList(String string) {
+        return Lists.newArrayList(string);
     }
 }

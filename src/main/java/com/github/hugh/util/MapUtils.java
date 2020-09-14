@@ -1,14 +1,17 @@
 package com.github.hugh.util;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Map 工具类
  * <ul>
- * <li>该类使用了apache MapUtil进行二次封装</li>
+ * <li>该类获取map中的值使用了apache MapUtil进行二次封装</li>
  * </ul>
  *
  * @author hugh
@@ -69,75 +72,98 @@ public class MapUtils {
     /**
      * 循环所有request中的参数放入至map
      *
-     * @param request
+     * @param request 客户端的请求
      * @return Map
+     * @since 1.0.7
      */
-//    public static Map<String, Object> cyclePar(HttpServletRequest request) {
-//        Map<String, Object> map = new HashMap<>();
-//        if (request == null) {
-//            return map;
-//        }
-//        Enumeration<String> isKey = request.getParameterNames();
-//        while (isKey.hasMoreElements()) {
-//            String key = isKey.nextElement();
-//            String value = request.getParameter(key);
-//            map.put(key, value);
-//        }
-//        return map;
-//    }
+    public static Map<String, Object> cyclePar(HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<>();
+        if (request == null) {
+            return map;
+        }
+        Enumeration<String> isKey = request.getParameterNames();
+        while (isKey.hasMoreElements()) {
+            String key = isKey.nextElement();
+            String value = request.getParameter(key);
+            map.put(key, value);
+        }
+        return map;
+    }
 
     /**
      * 遍历查询参数
      * <li>并且移除其中的page、size键</li>
      *
-     * @param request
+     * @param request 客户端的请求
      * @return Map
+     * @since 1.0.7
      */
-//    public static Map<String, Object> cycleQueryPar(HttpServletRequest request) {
-//        Map<String, Object> map = cyclePar(request);
-//        map.remove("page");
-//        map.remove("size");
-//        return map;
-//    }
+    public static Map<String, Object> cycleQueryPar(HttpServletRequest request) {
+        return cycleQueryPar(request, "page", "size");
+    }
+
+    /**
+     * 遍历查询参数、并且移除其中指定多余键
+     *
+     * @param request 客户端的请求
+     * @return Map
+     * @since 1.0.7
+     */
+    public static Map<String, Object> cycleQueryPar(HttpServletRequest request, String... keys) {
+        Map<String, Object> map = cyclePar(request);
+        for (String key : keys) {
+            map.remove(key);
+        }
+        return map;
+    }
 
 
     /**
      * 将map转换为实体对象,并赋值
      * <ul>
-     * <li>map中的key必须与实体中的常量key一致</li>
+     * <li>map中的key必须与实体中的常量key一致,且命名规范为驼峰</li>
      * </ul>
      *
      * @param bean   实体对象
      * @param params 参数
-     * @return Object 实体结果
      * @throws Exception
      */
-    public static Object toEntity(Object bean, Map<String, Object> params) throws Exception {
+    public static void toEntity(Object bean, Map<String, Object> params) throws Exception {
+        if (bean == null) {
+            throw new RuntimeException("bean is null");
+        }
         for (Field field : bean.getClass().getDeclaredFields()) {
-            field.setAccessible(true);
+            field.setAccessible(true);// 不会去检查Java语言权限控制（private之类的）
             String key = field.getName();
             String upperCaseKey = key.substring(0, 1).toUpperCase() + key.substring(1);// 将属性的首字符大写，方便构造get，set方法
             Method method = bean.getClass().getDeclaredMethod("set" + upperCaseKey, field.getType());
             String type = field.getType().getSimpleName();// 获取类型
-            if (params.get(key) != null) {
-                Object value = params.get(key);
-                if (type.equals("int") || type.equals("Integer")) {
-                    value = Integer.parseInt(String.valueOf(value));
-                } else if (type.equals("long") || type.equals("Long")) {
-                    value = Long.parseLong(String.valueOf(value));
-                } else if (type.equals("double") || type.equals("Double")) {
-                    value = Double.parseDouble(String.valueOf(value));
-                } else if (type.equals("Date")) {// 当时日期类型时，进行格式校验
-                    if (value instanceof Date) {
-                        //日期类型不处理
-                    } else if (com.github.hugh.util.DateUtils.isDateFormat(String.valueOf(value))) {
-                        value = com.github.hugh.util.DateUtils.parseDate(String.valueOf(value));
-                    }
+            Object value = params.get(key);
+            if (EmptyUtils.isNotEmpty(value)) {
+                switch (type) {
+                    case "int":
+                    case "Integer":
+                        value = Integer.parseInt(String.valueOf(value));
+                        break;
+                    case "long":
+                    case "Long":
+                        value = Long.parseLong(String.valueOf(value));
+                        break;
+                    case "double":
+                    case "Double":
+                        value = Double.parseDouble(String.valueOf(value));
+                        break;
+                    case "Date": // 当时日期类型时，进行格式校验
+                        if (value instanceof Date) {
+                            //日期类型不处理
+                        } else if (DateUtils.isDateFormat(String.valueOf(value))) {
+                            value = DateUtils.parseDate(String.valueOf(value));
+                        }
+                        break;
                 }
                 method.invoke(bean, value);
             }
         }
-        return bean;
     }
 
     /**

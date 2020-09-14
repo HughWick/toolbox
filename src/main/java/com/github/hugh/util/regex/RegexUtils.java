@@ -146,8 +146,14 @@ public class RegexUtils {
     /**
      * IP正则表达式
      */
-    private static final Pattern IP_PATTERN =  Pattern.compile("^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\." + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\." + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
+    private static final Pattern IP_PATTERN = Pattern.compile("^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\." + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\." + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
             + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$");
+
+
+    /**
+     * 端口正则表达式
+     */
+    private static final Pattern PORT_PATTERN = Pattern.compile("([0-9]|[1-9]\\d{1,3}|[1-5]\\d{4}|6[0-5]{2}[0-3][0-5])");
 
     /**
      * 对特殊字符转译
@@ -294,6 +300,31 @@ public class RegexUtils {
     public static boolean isNotIp(String string) {
         return !isIp(string);
     }
+
+
+    /**
+     * 校验字符串是否为正确的端口
+     *
+     * @param string 字符串
+     * @return boolean {@code true} 正确
+     */
+    public static boolean isPort(String string) {
+        if (EmptyUtils.isEmpty(string)) {
+            return false;
+        }
+        return PORT_PATTERN.matcher(string).matches();
+    }
+
+    /**
+     * 校验字符串为不正确的端口
+     *
+     * @param string 字符串
+     * @return boolean {@code true} 错误端口
+     */
+    public static boolean isNotPort(String string) {
+        return !isPort(string);
+    }
+
 
     /**
      * 验证字符串是否匹配正则表达式

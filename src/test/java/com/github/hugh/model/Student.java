@@ -31,13 +31,6 @@ public class Student {
         this.name = name;
     }
 
-    public double getAmouont() {
-        return amouont;
-    }
-
-    public void setAmouont(double amouont) {
-        this.amouont = amouont;
-    }
 
     public Date getBirthday() {
         return birthday;
@@ -50,7 +43,7 @@ public class Student {
     private long id;
     private int age;
     private String name;
-    private double amouont;
+    private double amount;
     private Date birthday;
 
     public Date getCreate() {
@@ -62,4 +55,12 @@ public class Student {
     }
 
     private Date create;
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
 }

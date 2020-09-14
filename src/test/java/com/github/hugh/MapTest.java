@@ -2,6 +2,7 @@ package com.github.hugh;
 
 import com.github.hugh.model.Student;
 import com.github.hugh.util.MapUtils;
+import net.sf.json.JSONObject;
 import org.junit.Test;
 
 import java.util.Date;
@@ -19,15 +20,17 @@ public class MapTest {
         Map map = new HashMap();
         map.put("id", 1);
         map.put("age", 2);
-        map.put("name", "sd");
-        map.put("amouont", 10.14);
+        map.put("name", "null");
+        map.put("amount", 10.14);
         map.put("birthday", new Date());
         map.put("create", "2019-04-06 12:11:20");
+        Student student = new Student();
         try {
-           MapUtils.toEntity(new Student(), map);
+           MapUtils.toEntity(student, map);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println(JSONObject.fromObject(student));
         System.out.println("--1->>" + MapUtils.isEmpty(map));
         map.clear();
         System.out.println("--2->>" + MapUtils.isEmpty(map));

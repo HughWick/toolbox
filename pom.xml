@@ -32,6 +32,8 @@
         <commons-collections4.version>4.4</commons-collections4.version>
         <servlet-api.version>4.0.1</servlet-api.version>
         <json-lib.version>2.4</json-lib.version>
+        <google-guava.version>29.0-jre</google-guava.version>
+        <emoji-converter.version>1.0.1</emoji-converter.version>
         <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
     </properties>
 
@@ -72,7 +74,14 @@
         <dependency>
             <groupId>com.github.binarywang</groupId>
             <artifactId>java-emoji-converter</artifactId>
-            <version>1.0.1</version>
+            <version>${emoji-converter.version}</version>
+        </dependency>
+        <!-- 谷歌套件 -->
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${google-guava.version}</version>
         </dependency>
     </dependencies>
 
