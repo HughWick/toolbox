@@ -17,6 +17,7 @@ public class RegexTest {
         System.out.println("-1-->>"+ RegexUtils.escapeWord(str));
         System.out.println("-2-->>"+ RegexUtils.isPunctuation(str2));
         System.out.println("-3-->>"+ RegexUtils.isSql(str3));
+        System.out.println("-3-->>"+ RegexUtils.isNotIp(str3));
 
     }
 
