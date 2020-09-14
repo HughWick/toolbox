@@ -1,6 +1,6 @@
 package com.github.hugh.util;
 
-import com.github.hugh.exception.ToolBoxException;
+import com.github.hugh.exception.ToolboxException;
 import net.sf.json.JSONObject;
 import okhttp3.*;
 
@@ -151,7 +151,7 @@ public class OkHttpUtils {
         try (Response response = client.newCall(request).execute()) {
             ResponseBody body1 = response.body();
             if (body1 == null) {
-                throw new ToolBoxException("result params is null ");
+                throw new ToolboxException("result params is null ");
             }
             return body1.string();
         } catch (SocketTimeoutException timeEx) {
@@ -193,7 +193,7 @@ public class OkHttpUtils {
         try (Response response = client.newCall(request).execute()) {
             ResponseBody body1 = response.body();
             if (body1 == null) {
-                throw new ToolBoxException("result params is null ");
+                throw new ToolboxException("result params is null ");
             }
             return body1.string();
         } catch (IOException e) {

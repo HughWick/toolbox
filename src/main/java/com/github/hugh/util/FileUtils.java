@@ -1,6 +1,6 @@
 package com.github.hugh.util;
 
-import com.github.hugh.exception.ToolBoxException;
+import com.github.hugh.exception.ToolboxException;
 
 import java.io.File;
 import java.io.InputStream;
@@ -78,7 +78,7 @@ public class FileUtils {
      */
     public static void deleteDir(File file) {
         if (file == null) {
-            throw new ToolBoxException("file is null ");
+            throw new ToolboxException("file is null ");
         }
         if (file.isDirectory()) {//文件为目录
             File[] files = file.listFiles();

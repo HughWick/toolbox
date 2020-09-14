@@ -1,6 +1,6 @@
 package com.github.hugh.util;
 
-import com.github.hugh.exception.ToolBoxException;
+import com.github.hugh.exception.ToolboxException;
 import com.google.common.collect.Lists;
 
 import java.util.Collection;
@@ -46,7 +46,7 @@ public class ListUtils {
      */
     public static Object guavaPartitionList(List<?> originList, int page, int size) {
         if (isEmpty(originList)) {
-            throw new ToolBoxException("数据不能为空!");
+            throw new ToolboxException("数据不能为空!");
         }
         List pagedList = Lists.partition(originList, size);//根据条数切割成多个list
         return pagedList.get(page);//根据下标(分页)对应的数据

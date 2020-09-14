@@ -1,6 +1,7 @@
 package com.github.hugh.util;
 
-import com.github.hugh.exception.ToolBoxException;
+
+import com.github.hugh.exception.ToolboxException;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -51,7 +52,7 @@ public class RandomUtils {
         try {
             return SecureRandom.getInstance("SHA1PRNG");
         } catch (NoSuchAlgorithmException e) {
-            throw new ToolBoxException(e);
+            throw new ToolboxException(e);
         }
     }
 

@@ -1,6 +1,6 @@
 package com.github.hugh.util.base;
 
-import com.github.hugh.exception.ToolBoxException;
+import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.EmptyUtils;
 
 /**
@@ -142,7 +142,7 @@ public class Base64 {
             }
         }
         if (index != out.length) {
-            throw new ToolBoxException("miscalculated data length!");
+            throw new ToolboxException("miscalculated data length!");
         }
         return out;
     }

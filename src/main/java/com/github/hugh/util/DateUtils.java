@@ -1,7 +1,7 @@
 package com.github.hugh.util;
 
 import com.github.hugh.constant.DateCode;
-import com.github.hugh.exception.ToolBoxException;
+import com.github.hugh.exception.ToolboxException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -505,7 +505,7 @@ public class DateUtils extends DateCode {
     public static Date setStartHouMinSec(String dateStr) {
         Date date = parseDate(dateStr, YEAR_MONTH_DAY);
         if (date == null) {
-            throw new ToolBoxException("data is null");
+            throw new ToolboxException("data is null");
         }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -524,7 +524,7 @@ public class DateUtils extends DateCode {
     public static Date setEndHouMinSec(String dateStr) {
         Date date = parseDate(dateStr, YEAR_MONTH_DAY);
         if (date == null) {
-            throw new ToolBoxException("data is null");
+            throw new ToolboxException("data is null");
         }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
