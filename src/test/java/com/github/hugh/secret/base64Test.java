@@ -1,4 +1,4 @@
-package com.github.hugh;
+package com.github.hugh.secret;
 
 import com.github.hugh.util.base.Base64;
 import org.junit.Test;
