@@ -4,32 +4,14 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Random;
 import java.util.regex.Pattern;
 
+/**
+ * IP工具类
+ *
+ * @author hugh
+ */
 public class IpUtils {
 
-    /**
-     * 校验ip地址格式是否正确
-     *
-     * @param ip
-     * @return boolean
-     */
-    public static boolean ver(String ip) {
-        if (ip == null || "".equals(ip)) {
-            return false;
-        }
-        String ipReg = "^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\." + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\." + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
-                + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$";
-        Pattern ipPattern = Pattern.compile(ipReg);
-        return ipPattern.matcher(ip).matches();
-    }
-
-    /**
-     * 校验IP是否错误
-     *
-     * @param ip IP地址
-     * @return boolean 错误返回true
-     */
-    public static boolean isError(String ip) {
-        return !ver(ip);
+    private IpUtils() {
     }
 
     /**
@@ -42,7 +24,7 @@ public class IpUtils {
      * <p>
      * 用户真实IP为： 192.168.1.110
      *
-     * @param request
+     * @param request http请求
      * @return String ip
      */
     public static String get(HttpServletRequest request) {

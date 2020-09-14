@@ -140,9 +140,14 @@ public class RegexUtils {
      * <li>\\b  表示 限定单词边界  比如  select 不通过   1select则是可以的</li>
      * </ul>
      **/
-    private static String SQL_PATTERN = "(?:')|(?:--)|(/\\*(?:.|[\\n\\r])*?\\*/)|"
+    private static final String SQL_PATTERN = "(?:')|(?:--)|(/\\*(?:.|[\\n\\r])*?\\*/)|"
             + "(\\b(select|update|union|and|or|delete|insert|trancate|char|into|substr|ascii|declare|exec|count|master|drop|execute)\\b)";
 
+    /**
+     * IP正则表达式
+     */
+    private static final Pattern IP_PATTERN =  Pattern.compile("^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\." + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\." + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
+            + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$");
 
     /**
      * 对特殊字符转译
@@ -245,14 +250,14 @@ public class RegexUtils {
     /**
      * 验证字符串是否为手机号码
      *
-     * @param phone 手机号码
+     * @param string 手机号码
      * @return boolean {@code true} 正确
      */
-    public static boolean isPhone(String phone) {
-        if (EmptyUtils.isEmpty(phone) || phone.length() != 11) {
+    public static boolean isPhone(String string) {
+        if (EmptyUtils.isEmpty(string) || string.length() != 11) {
             return false;
         } else {
-            Matcher m = PHONE_PATTERN.matcher(phone);
+            Matcher m = PHONE_PATTERN.matcher(string);
             return m.matches();
         }
     }
@@ -265,6 +270,29 @@ public class RegexUtils {
      */
     public static boolean isSql(String str) {
         return isPatternMatch(str, Pattern.compile(SQL_PATTERN, Pattern.CASE_INSENSITIVE));
+    }
+
+    /**
+     * 校验ip地址格式是否正确
+     *
+     * @param string 字符串
+     * @return boolean {@code true} 正确
+     */
+    public static boolean isIp(String string) {
+        if (EmptyUtils.isEmpty(string)) {
+            return false;
+        }
+        return IP_PATTERN.matcher(string).matches();
+    }
+
+    /**
+     * 不是IP地址
+     *
+     * @param string 字符串
+     * @return boolean {@code true} 不是IP
+     */
+    public static boolean isNotIp(String string) {
+        return !isIp(string);
     }
 
     /**
