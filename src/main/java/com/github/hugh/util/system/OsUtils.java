@@ -1,4 +1,4 @@
-package com.github.hugh.util.systen;
+package com.github.hugh.util.system;
 
 /**
  * 系统工具
