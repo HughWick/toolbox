@@ -2,7 +2,6 @@ package com.github.hugh.util;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Random;
-import java.util.regex.Pattern;
 
 /**
  * IP工具类
@@ -56,8 +55,10 @@ public class IpUtils {
         return ip;
     }
 
+
     /**
      * 随机生成国内IP地址
+     * @return String ip
      */
     public static String random() {
         // ip范围

@@ -36,7 +36,9 @@ public class ListUtils {
 
     /**
      * Google guava list数据分页
+     * <ul>
      * <li>注:切割后是根据总集合内的下标获取值、所以page是从0开始</li>
+     * </ul>
      *
      * @param originList 数据
      * @param page       页数

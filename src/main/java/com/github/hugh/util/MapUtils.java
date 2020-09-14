@@ -92,7 +92,9 @@ public class MapUtils {
 
     /**
      * 遍历查询参数
+     * <ul>
      * <li>并且移除其中的page、size键</li>
+     * </ul>
      *
      * @param request 客户端的请求
      * @return Map
@@ -106,6 +108,7 @@ public class MapUtils {
      * 遍历查询参数、并且移除其中指定多余键
      *
      * @param request 客户端的请求
+     * @param keys  需要删除的key
      * @return Map
      * @since 1.1.0
      */
