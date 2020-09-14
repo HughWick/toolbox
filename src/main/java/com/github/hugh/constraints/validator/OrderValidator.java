@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * order 字段校验
  *
- * @author huhg
+ * @author hugh
  * @since 1.0.7
  */
 public class OrderValidator implements ConstraintValidator<Order, String> {
