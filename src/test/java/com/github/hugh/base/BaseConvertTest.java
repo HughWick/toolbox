@@ -1,6 +1,7 @@
 package com.github.hugh.base;
 
 import com.github.hugh.util.base.BaseConvertUtils;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**

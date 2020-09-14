@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  * <p>该类型主要使用java 1.8之前没有LocalDateTime 类的处理方式</p>
  *
  * @author hugh
- * @since 1.7
+ * @since java 1.7
  */
 public class DateUtils extends DateCode {
     private DateUtils() {
@@ -1020,7 +1020,6 @@ public class DateUtils extends DateCode {
         if (date == null) {
             return false;
         }
-        boolean convertSuccess = true;
         SimpleDateFormat format = new SimpleDateFormat(YEAR_MONTH_DAY_HOUR_MIN_SEC);// 时间格式定义
         String nowDate = format.format(new Date());// 获取当前时间日期--nowDate
         Calendar calc = Calendar.getInstance();// 获取30天前的时间日期--minDate
@@ -1031,16 +1030,11 @@ public class DateUtils extends DateCode {
             format.setLenient(false);
             // 获取字符串转换后的时间--strDate
             String strDate = format.format(date);
-            if (nowDate.compareTo(strDate) >= 0 && strDate.compareTo(minDate) >= 0) {
-                convertSuccess = true;
-            } else {
-                convertSuccess = false;
-            }
+            return nowDate.compareTo(strDate) >= 0 && strDate.compareTo(minDate) >= 0;
         } catch (Exception e) {
-            convertSuccess = false;
             e.printStackTrace();
         }
-        return convertSuccess;
+        return false;
     }
 
     /**
@@ -1051,7 +1045,7 @@ public class DateUtils extends DateCode {
      * @return boolean 不是同一年返回true
      */
     public static boolean isAcrossYear(String s, String e) {
-        Date start = null;
+        Date start;
         if (isDateFormat(s)) {
             start = parseDate(s, YEAR_MONTH_DAY_HOUR_MIN_SEC);
         } else if (isDateFormat(s, YEAR_MONTH_DAY)) {
@@ -1059,7 +1053,7 @@ public class DateUtils extends DateCode {
         } else {
             return true;
         }
-        Date end = null;
+        Date end;
         if (isDateFormat(e)) {
             end = parseDate(e, YEAR_MONTH_DAY_HOUR_MIN_SEC);
         } else if (isDateFormat(e, YEAR_MONTH_DAY)) {
