@@ -42,7 +42,7 @@ public class ListUtils {
      * @param page       页数
      * @param size       条数
      * @return Object
-     * @since 1.0.7
+     * @since 1.1.0
      */
     public static Object guavaPartitionList(List<?> originList, int page, int size) {
         if (isEmpty(originList)) {
@@ -57,7 +57,7 @@ public class ListUtils {
      *
      * @param array 数组
      * @return List
-     * @since 1.0.7
+     * @since 1.1.0
      */
     public static List guavaArrToList(String[] array) {
         return Lists.newArrayList(array);
@@ -68,7 +68,7 @@ public class ListUtils {
      *
      * @param string 字符串
      * @return List
-     * @since 1.0.7
+     * @since 1.1.0
      */
     public static List guavaStringToList(String string) {
         return Lists.newArrayList(string);

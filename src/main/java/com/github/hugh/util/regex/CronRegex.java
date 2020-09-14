@@ -10,7 +10,7 @@ import static com.github.hugh.util.regex.CronRegex.Field.*;
  * quartz 定时任务corn表达式正则校验
  *
  * @author hugh
- * @since 1.0.7
+ * @since 1.1.0
  */
 public class CronRegex {
 

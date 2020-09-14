@@ -11,7 +11,7 @@ import java.util.List;
  * order 字段校验
  *
  * @author hugh
- * @since 1.0.7
+ * @since 1.1.0
  */
 public class OrderValidator implements ConstraintValidator<Order, String> {
     private List<String> valueList;

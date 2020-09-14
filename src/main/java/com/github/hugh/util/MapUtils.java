@@ -74,7 +74,7 @@ public class MapUtils {
      *
      * @param request 客户端的请求
      * @return Map
-     * @since 1.0.7
+     * @since 1.1.0
      */
     public static Map<String, Object> cyclePar(HttpServletRequest request) {
         Map<String, Object> map = new HashMap<>();
@@ -96,7 +96,7 @@ public class MapUtils {
      *
      * @param request 客户端的请求
      * @return Map
-     * @since 1.0.7
+     * @since 1.1.0
      */
     public static Map<String, Object> cycleQueryPar(HttpServletRequest request) {
         return cycleQueryPar(request, "page", "size");
@@ -107,7 +107,7 @@ public class MapUtils {
      *
      * @param request 客户端的请求
      * @return Map
-     * @since 1.0.7
+     * @since 1.1.0
      */
     public static Map<String, Object> cycleQueryPar(HttpServletRequest request, String... keys) {
         Map<String, Object> map = cyclePar(request);
