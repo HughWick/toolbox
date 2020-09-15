@@ -320,6 +320,7 @@ public class RegexUtils {
      *
      * @param string 字符串
      * @return boolean {@code true} 错误端口
+     * @since 1.1.2
      */
     public static boolean isNotPort(String string) {
         return !isPort(string);
