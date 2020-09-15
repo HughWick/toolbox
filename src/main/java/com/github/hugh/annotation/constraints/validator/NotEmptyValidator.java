@@ -1,7 +1,7 @@
-package com.github.hugh.constraints.validator;
+package com.github.hugh.annotation.constraints.validator;
 
 
-import com.github.hugh.constraints.NotEmpty;
+import com.github.hugh.annotation.constraints.NotEmpty;
 import com.github.hugh.util.EmptyUtils;
 
 import javax.validation.ConstraintValidator;

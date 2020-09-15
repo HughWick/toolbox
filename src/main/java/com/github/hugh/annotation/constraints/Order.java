@@ -1,6 +1,6 @@
-package com.github.hugh.constraints;
+package com.github.hugh.annotation.constraints;
 
-import com.github.hugh.constraints.validator.NotEmptyValidator;
+import com.github.hugh.annotation.constraints.validator.OrderValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -11,43 +11,38 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-
 /**
- *  自定义的不为空验证注解
+ * order 校验注解
  *
  * @author hugh
- * @since  1.0.5 
+ * @since 1.1.0
  */
 @Target({METHOD, FIELD, PARAMETER})
 @Retention(RUNTIME)
 @Documented
-@Constraint(validatedBy = NotEmptyValidator.class)//指向自定义验证类
-public @interface NotEmpty {
+@Constraint(validatedBy = OrderValidator.class)
+public @interface Order {
 
     /**
-     * 失败消息
-     *
+     * 错误信息
      * @return String
      */
-    String message() default "";
+    String message() default "排序类型不支持";
 
     /**
-     * 值
-     *
-     * @return String
+     * 接收字段
+     * @return String[]
      */
-    String value() default "";
+    String[] accepts() default {"desc", "asc"};
 
     /**
-     * 默认参数
-     *
+     * 默认值
      * @return Class
      */
     Class<?>[] groups() default {};
 
     /**
-     * 默认参数
-     *
+     * 默认值
      * @return Class
      */
     Class<? extends Payload>[] payload() default {};

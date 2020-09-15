@@ -62,7 +62,7 @@ public class CronRegex {
      * 验证字符串是否为Cron表达式
      *
      * @param string Cron表达式
-     * @return boolean {@code true} 正确的调度表达式
+     * @return boolean {@code true} 是
      */
     public static boolean isCron(String string) {
         if (EmptyUtils.isEmpty(string)) {
@@ -72,6 +72,15 @@ public class CronRegex {
         return string.matches(cronRegex);
     }
 
+    /**
+     * 校验字符串是否为cron 调度任务表达式
+     *
+     * @param string 字符串
+     * @return boolean {@code true} 不是
+     */
+    public static boolean isNotCron(String string) {
+        return !isCron(string);
+    }
 
     /**
      * 创建Cron表达式验证规则
