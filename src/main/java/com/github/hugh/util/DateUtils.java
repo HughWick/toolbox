@@ -1100,4 +1100,6 @@ public class DateUtils extends DateCode {
         // 当前时间 距离当天晚上23:59:59 秒数 也就是今天还剩多少秒
         return 24 * 60 * 60 - overTime;
     }
+
+
 }

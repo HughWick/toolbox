@@ -125,6 +125,12 @@ public class TimeUtils extends DateCode {
         return endOfLastMonth(YEAR_MONTH_DAY_HOUR_MIN_SEC);
     }
 
+    /**
+     * 获取上个月末的最后一天时间
+     *
+     * @param pattern 日期格式
+     * @return String
+     */
     public static String endOfLastMonth(String pattern) {
         LocalDate earlyLastMonth = LocalDate.now().minusMonths(1)// 设置提前月数
                 .with(TemporalAdjusters.lastDayOfMonth());// 设置月末最后一天
@@ -132,6 +138,11 @@ public class TimeUtils extends DateCode {
         return ofPattern(pattern, localDateTime);
     }
 
+    /**
+     * 上个月月末时间
+     *
+     * @return String 日期格式：yyyy-MM-dd HH:mm:ss
+     */
     public static String earlyLastMonth() {
         return earlyLastMonth(YEAR_MONTH_DAY_HOUR_MIN_SEC);
     }
@@ -216,5 +227,39 @@ public class TimeUtils extends DateCode {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 获取昨天开始日期
+     * <ul>
+     * <li>格式：yyyy-MM-dd 23:59:59</li>
+     * </ul>
+     *
+     * @return String 日期
+     * @since 1.1.3
+     */
+    public static String getYesterdayStartTime() {
+        LocalDateTime localDateTime = LocalDateTime.now()
+                .withHour(0)//小时
+                .withMinute(0)//分钟
+                .withSecond(0)//秒
+                .withNano(0)//毫秒
+                .plusDays(-1);//前一天
+        return ofPattern(YEAR_MONTH_DAY_HOUR_MIN_SEC, localDateTime);
+    }
+
+    /**
+     * 获取昨日结束日期
+     * <ul>
+     * <li>格式：yyyy-MM-dd 23:59:59</li>
+     * </ul>
+     *
+     * @return String 日期
+     * @since 1.1.3
+     */
+    public static String getYesterdayEndTime() {
+        LocalDateTime localDateTime = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999)
+                .plusDays(-1);
+        return ofPattern(YEAR_MONTH_DAY_HOUR_MIN_SEC, localDateTime);
     }
 }

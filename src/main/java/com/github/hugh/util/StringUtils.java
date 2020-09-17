@@ -63,7 +63,7 @@ public class StringUtils {
      * 截取字符最后一个之前的所有字符串
      * <ul>
      * <li>例：字符串：https://github.com/HughWick/toolbox</li>
-     * <li>截取后返回字符串：https://github.com/HughWick</li>
+     * <li>返回字符串：https://github.com/HughWick</li>
      * </ul>
      *
      * @param value 字符串
@@ -79,5 +79,29 @@ public class StringUtils {
             return value.substring(0, lastIndexOf);
         }
         return value;
+    }
+
+    /**
+     * 查询字符串中的对应varchar的长度
+     * <ul>
+     * <li>由于旧的Mysql数据库一个中文算2个字节、本方法将字符串中的中文按2个长度进行合计</li>
+     * </ul>
+     *
+     * @param value 字符串
+     * @return int 长度
+     * @since 1.1.3
+     */
+    public static int varcharSize(String value) {
+        int length = 0;
+        String chinese = "[\u0391-\uFFE5]";
+        for (int i = 0; i < value.length(); i++) {  /* 获取字段值的长度，如果含中文字符，则每个中文字符长度为2，否则为1 */
+            String temp = value.substring(i, i + 1);  /* 获取一个字符 */
+            if (temp.matches(chinese)) {     /* 判断是否为中文字符 */
+                length += 2;  /* 中文字符长度为2 */
+            } else {
+                length += 1;  /* 其他字符长度为1 */
+            }
+        }
+        return length;
     }
 }
