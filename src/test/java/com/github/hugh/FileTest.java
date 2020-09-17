@@ -1,6 +1,6 @@
 package com.github.hugh;
 
-import com.github.hugh.util.FileUtils;
+import com.github.hugh.util.file.FileUtils;
 
 import java.io.File;
 

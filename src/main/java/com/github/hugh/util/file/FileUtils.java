@@ -1,6 +1,7 @@
-package com.github.hugh.util;
+package com.github.hugh.util.file;
 
 import com.github.hugh.exception.ToolboxException;
+import com.github.hugh.util.EmptyUtils;
 
 import java.io.File;
 import java.io.InputStream;

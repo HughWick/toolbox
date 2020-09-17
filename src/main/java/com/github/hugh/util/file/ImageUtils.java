@@ -1,4 +1,4 @@
-package com.github.hugh.util;
+package com.github.hugh.util.file;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
