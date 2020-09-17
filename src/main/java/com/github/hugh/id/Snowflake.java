@@ -20,7 +20,6 @@ import java.util.Map;
  *
  * @author hugh
  * @since 1.0.2
- * @since java 1.8
  */
 public class Snowflake {
     /**
@@ -33,12 +32,12 @@ public class Snowflake {
      */
     private static final long SEQUENCE_BIT = 12; // 序列号占用的位数
     private static final long MACHINE_BIT = 5; // 机器标识占用的位数
-    private static final long DATACENTER_BIT = 5;// 数据中心占用的位数
+    private static final long DATA_CENTER_BIT = 5;// 数据中心占用的位数
 
     /**
      * 每一部分的最大值
      */
-    private static final long MAX_DATACENTER_NUM = -1L ^ (-1L << DATACENTER_BIT);
+    private static final long MAX_DATA_CENTER_NUM = -1L ^ (-1L << DATA_CENTER_BIT);
     private static final long MAX_MACHINE_NUM = -1L ^ (-1L << MACHINE_BIT);
     private static final long MAX_SEQUENCE = -1L ^ (-1L << SEQUENCE_BIT);
 
@@ -46,44 +45,44 @@ public class Snowflake {
      * 每一部分向左的位移
      */
     private static final long MACHINE_LEFT = SEQUENCE_BIT;
-    private static final long DATACENTER_LEFT = SEQUENCE_BIT + MACHINE_BIT;
-    private static final long TIMESTMP_LEFT = DATACENTER_LEFT + DATACENTER_BIT;
+    private static final long DATA_CENTER_LEFT = SEQUENCE_BIT + MACHINE_BIT;
+    private static final long TIMESTMP_LEFT = DATA_CENTER_LEFT + DATA_CENTER_BIT;
 
-    private long datacenterId; // 数据中心
+    private long dataCenterId; // 数据中心
     private long machineId; // 机器标识
     private long sequence = 0L; // 序列号
     private long lastStmp = -1L;// 上一次时间戳
 
     public Snowflake() {
-        this.datacenterId = getDatacenterId(MAX_DATACENTER_NUM);
-        this.machineId = getMaxWorkerId(datacenterId, MAX_MACHINE_NUM);
+        this.dataCenterId = getDataCenterId(MAX_DATA_CENTER_NUM);
+        this.machineId = getMaxWorkerId(dataCenterId, MAX_MACHINE_NUM);
     }
 
     /**
      * @param machineId    工作机器ID
-     * @param datacenterId 序列号
+     * @param dataCenterId 序列号
      */
-    public Snowflake(long datacenterId, long machineId) {
-        if (datacenterId > MAX_DATACENTER_NUM || datacenterId < 0) {
-            throw new IllegalArgumentException("datacenterId can't be greater than MAX_DATACENTER_NUM or less than 0");
+    public Snowflake(long dataCenterId, long machineId) {
+        if (dataCenterId > MAX_DATA_CENTER_NUM || dataCenterId < 0) {
+            throw new IllegalArgumentException("dataCenterId can't be greater than MAX_DATA_CENTER_NUM or less than 0");
         }
         if (machineId > MAX_MACHINE_NUM || machineId < 0) {
             throw new IllegalArgumentException("machineId can't be greater than MAX_MACHINE_NUM or less than 0");
         }
-        this.datacenterId = datacenterId;
+        this.dataCenterId = dataCenterId;
         this.machineId = machineId;
     }
 
     /**
      * 获取 maxWorkerId
      *
-     * @param datacenterId 客户端编号
+     * @param dataCenterId 客户端编号
      * @param maxWorkerId  机器标识
      * @return 最大机器标识
      */
-    protected static long getMaxWorkerId(long datacenterId, long maxWorkerId) {
+    protected static long getMaxWorkerId(long dataCenterId, long maxWorkerId) {
         StringBuilder mpid = new StringBuilder();
-        mpid.append(datacenterId);
+        mpid.append(dataCenterId);
         String name = ManagementFactory.getRuntimeMXBean().getName();
         if (EmptyUtils.isNotEmpty(name)) {
             /*
@@ -100,10 +99,10 @@ public class Snowflake {
     /**
      * 数据标识id部分
      *
-     * @param maxDatacenterId 最大标识
+     * @param maxDataCenterId 最大标识
      * @return 最大标识
      */
-    protected static long getDatacenterId(long maxDatacenterId) {
+    protected static long getDataCenterId(long maxDataCenterId) {
         long id = 0L;
         try {
             InetAddress ip = InetAddress.getLocalHost();
@@ -114,7 +113,7 @@ public class Snowflake {
                 byte[] mac = network.getHardwareAddress();
                 if (null != mac) {
                     id = ((0x000000FF & (long) mac[mac.length - 1]) | (0x0000FF00 & (((long) mac[mac.length - 2]) << 8))) >> 6;
-                    id = id % (maxDatacenterId + 1);
+                    id = id % (maxDataCenterId + 1);
                 }
             }
         } catch (Exception e) {
@@ -144,7 +143,7 @@ public class Snowflake {
         }
         lastStmp = currStmp;
         long time = (currStmp - START_STMP) << TIMESTMP_LEFT;// 时间戳部分
-        return time | datacenterId << DATACENTER_LEFT // 数据中心部分
+        return time | dataCenterId << DATA_CENTER_LEFT // 数据中心部分
                 | machineId << MACHINE_LEFT // 机器标识部分
                 | sequence; // 序列号部分
     }
@@ -182,7 +181,7 @@ public class Snowflake {
         String binaryId = Long.toBinaryString(id);// ID转二进制字符串
         int len = binaryId.length();// 长度
         int sequenceStart = (int) (len < SEQUENCE_BIT ? 0 : len - SEQUENCE_BIT);
-        int workerStart = (int) (len < DATACENTER_LEFT ? 0 : len - DATACENTER_LEFT);
+        int workerStart = (int) (len < DATA_CENTER_LEFT ? 0 : len - DATA_CENTER_LEFT);
         int timeStart = (int) (len < TIMESTMP_LEFT ? 0 : len - TIMESTMP_LEFT);
         String sequence = binaryId.substring(sequenceStart, len);// 自增序号
         String workerId = sequenceStart == 0 ? "0" : binaryId.substring(workerStart, sequenceStart);
