@@ -17,7 +17,7 @@ public class MapTest {
 
     @Test
     public void test01() {
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("id", 1);
         map.put("age", 2);
         map.put("name", "null");
@@ -26,7 +26,7 @@ public class MapTest {
         map.put("create", "2019-04-06 12:11:20");
         Student student = new Student();
         try {
-           MapUtils.toEntity(student, map);
+            MapUtils.toEntity(student, map);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -44,12 +44,14 @@ public class MapTest {
 
     @Test
     public void test02() {
-        Map map = new HashMap();
-        System.out.println("--1->"+ MapUtils.getMap(map, "data"));
-        System.out.println("-2-->"+ MapUtils.getString(map, "data"));
-        System.out.println("-3-->"+ MapUtils.getInt(map, "data"));
-        System.out.println("-4-->"+ MapUtils.getLong(map, "data"));
-        System.out.println("-5-->"+ MapUtils.getDouble(map, "data"));
+        Map<String, Object> map = new HashMap<>();
+        Map<String,Object> data = MapUtils.getMap(map, "data");
+        System.out.println("--1->" + data);
+        String str = MapUtils.getString(map, "data");
+        System.out.println("-2-->" + str);
+        System.out.println("-3-->" + MapUtils.getInt(map, "data"));
+        System.out.println("-4-->" + MapUtils.getLong(map, "data"));
+        System.out.println("-5-->" + MapUtils.getDouble(map, "data"));
     }
 
 }

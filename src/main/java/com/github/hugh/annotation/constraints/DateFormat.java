@@ -39,14 +39,14 @@ public @interface DateFormat {
     String pattern() default "yyyy-MM-dd HH:mm:ss";
 
     /**
-     * 默认参数
+     * 约束注解在验证时所属的组别
      *
      * @return Class
      */
     Class<?>[] groups() default {};
 
     /**
-     * 默认参数
+     * 负载
      *
      * @return Class
      */
