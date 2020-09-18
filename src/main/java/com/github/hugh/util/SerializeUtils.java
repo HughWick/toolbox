@@ -50,7 +50,6 @@ public final class SerializeUtils {
         return byteArrayOutputStream.toByteArray();
     }
 
-
     /**
      * 反序列化
      *
