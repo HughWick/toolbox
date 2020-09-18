@@ -1,4 +1,4 @@
-package com.github.hugh;
+package com.github.hugh.time;
 
 import com.github.hugh.util.TimeUtils;
 import org.junit.Test;
