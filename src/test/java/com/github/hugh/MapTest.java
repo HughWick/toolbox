@@ -1,6 +1,7 @@
 package com.github.hugh;
 
 import com.github.hugh.model.Student;
+import com.github.hugh.util.EntityUtils;
 import com.github.hugh.util.MapUtils;
 import net.sf.json.JSONObject;
 import org.junit.Test;
@@ -24,13 +25,17 @@ public class MapTest {
         map.put("amount", 10.14);
         map.put("birthday", new Date());
         map.put("create", "2019-04-06 12:11:20");
-        Student student = new Student();
         try {
-            MapUtils.toEntity(student, map);
+//            MapUtils.toEntity(student, map);
+            Object o = MapUtils.toEntity(Student.class, map);
+            System.out.println(JSONObject.fromObject(o));
+            Student student = new Student();
+            EntityUtils.copy(o, student);
+            student.setName("张三");
+            System.out.println(JSONObject.fromObject(student));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(JSONObject.fromObject(student));
         System.out.println("--1->>" + MapUtils.isEmpty(map));
         map.clear();
         System.out.println("--2->>" + MapUtils.isEmpty(map));
@@ -45,7 +50,7 @@ public class MapTest {
     @Test
     public void test02() {
         Map<String, Object> map = new HashMap<>();
-        Map<String,Object> data = MapUtils.getMap(map, "data");
+        Map<String, Object> data = MapUtils.getMap(map, "data");
         System.out.println("--1->" + data);
         String str = MapUtils.getString(map, "data");
         System.out.println("-2-->" + str);

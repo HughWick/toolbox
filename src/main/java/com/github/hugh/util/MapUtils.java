@@ -1,5 +1,7 @@
 package com.github.hugh.util;
 
+import com.github.hugh.util.common.AssertUtils;
+
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -108,7 +110,7 @@ public class MapUtils {
      * 遍历查询参数、并且移除其中指定多余键
      *
      * @param request 客户端的请求
-     * @param keys  需要删除的key
+     * @param keys    需要删除的key
      * @return Map
      * @since 1.1.0
      */
@@ -122,6 +124,22 @@ public class MapUtils {
 
 
     /**
+     * 通过Class类创建实体、并赋值
+     *
+     * @param cls    Class
+     * @param params 参数
+     * @return Object 赋值后的实体
+     * @throws Exception
+     * @since 1.1.4
+     */
+    public static Object toEntity(Class<?> cls, Map<?, ?> params) throws Exception {
+        AssertUtils.notNull(cls, "class");
+        Object object = cls.newInstance();
+        toEntity(object, params);
+        return object;
+    }
+
+    /**
      * 将map转换为实体对象,并赋值
      * <ul>
      * <li>map中的key必须与实体中的常量key一致,且命名规范为驼峰</li>
@@ -131,7 +149,7 @@ public class MapUtils {
      * @param params 参数
      * @throws Exception
      */
-    public static void toEntity(Object bean, Map<String, Object> params) throws Exception {
+    public static void toEntity(Object bean, Map<?, ?> params) throws Exception {
         if (bean == null) {
             throw new RuntimeException("bean is null");
         }
