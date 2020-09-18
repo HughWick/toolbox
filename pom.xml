@@ -46,6 +46,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.3</version>
+        </dependency>
+        <dependency>
             <groupId>net.sf.json-lib</groupId>
             <artifactId>json-lib</artifactId>
             <version>${json-lib.version}</version>
@@ -123,33 +128,32 @@
             </plugin>
             <!--=================================== coveralls START ===================================-->
             <!--mvn  coveralls:report -DrepoToken=yourcoverallsprojectrepositorytoken-->
-            <plugin>
-                <groupId>org.eluder.coveralls</groupId>
-                <artifactId>coveralls-maven-plugin</artifactId>
-                <version>4.3.0</version>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.eluder.coveralls</groupId>-->
+<!--                <artifactId>coveralls-maven-plugin</artifactId>-->
+<!--                <version>4.3.0</version>-->
+<!--            </plugin>-->
             <!-- Codecov -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.7</version>
-                <configuration>
-                    <format>html</format>
-                    <format>xml</format>
-                    <maxmem>256m</maxmem>
-                    <!-- aggregated reports for multi-module projects -->
-                    <aggregate>true</aggregate>
-                    <instrumentation>
-                        <excludes>
-                            <exclude>**/*Test.class</exclude>
-                            <exclude>**/HelpMojo.class</exclude>
-                            <exclude>**/*Vo.class</exclude>
-                        </excludes>
-                    </instrumentation>
-                    <check/>
-                </configuration>
-            </plugin>
-
+<!--            <plugin>-->
+<!--                <groupId>org.codehaus.mojo</groupId>-->
+<!--                <artifactId>cobertura-maven-plugin</artifactId>-->
+<!--                <version>2.7</version>-->
+<!--                <configuration>-->
+<!--                    <format>html</format>-->
+<!--                    <format>xml</format>-->
+<!--                    <maxmem>256m</maxmem>-->
+<!--                    &lt;!&ndash; aggregated reports for multi-module projects &ndash;&gt;-->
+<!--                    <aggregate>true</aggregate>-->
+<!--                    <instrumentation>-->
+<!--                        <excludes>-->
+<!--                            <exclude>**/*Test.class</exclude>-->
+<!--                            <exclude>**/HelpMojo.class</exclude>-->
+<!--                            <exclude>**/*Vo.class</exclude>-->
+<!--                        </excludes>-->
+<!--                    </instrumentation>-->
+<!--                    <check/>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
             <!--=================================== coveralls END ===================================-->
             <!--mvn clean install sonar:sonar -Dmaven.test.skip=true -Dsonar.host.url=http://localhost:9000-->
             <!--sonar-->

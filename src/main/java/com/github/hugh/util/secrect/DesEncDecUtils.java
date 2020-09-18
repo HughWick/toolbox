@@ -69,8 +69,8 @@ public class DesEncDecUtils {
     /**
      * 解密
      *
-     * @param str
-     * @return
+     * @param str 加密后的字符串
+     * @return String  源字符串
      * @throws Exception
      */
     public String decrypt(String str) throws Exception {
