@@ -14,7 +14,7 @@ import javax.crypto.spec.DESKeySpec;
  * DES加密工具
  *
  * @author hugh
- * @since 1.1.4
+ * @since 1.2.0
  */
 public class DesEncDecUtils {
     private DesEncDecUtils() {

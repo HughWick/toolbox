@@ -10,7 +10,7 @@ import java.beans.PropertyDescriptor;
  * 实体操作工具类
  *
  * @author hugh
- * @since 1.1.4
+ * @since 1.2.0
  */
 public class EntityUtils {
 
@@ -39,6 +39,7 @@ public class EntityUtils {
 
     /**
      * 通过Kryo框架深拷贝
+     *
      * @param source 拷贝对象
      * @return T 实体对象
      */

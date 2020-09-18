@@ -39,7 +39,7 @@ public final class SerializeUtils {
      *
      * @param object 参数
      * @return byte[]
-     * @since 1.1.4
+     * @since 1.2.0
      */
     public static <T> byte[] toBytes(T object) {
         Kryo kryo = kryoLocal.get();
@@ -55,7 +55,7 @@ public final class SerializeUtils {
      *
      * @param bytes 序列化后的字节数组
      * @return T 对象
-     * @since 1.1.4
+     * @since 1.2.0
      */
     public static Object toObject(byte[] bytes) {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
