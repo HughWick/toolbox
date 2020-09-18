@@ -27,7 +27,7 @@ public class SerializeTest {
     public void test02() {
         Map<String, Object> map = new HashMap<>();
         map.put("id", 1);
-        map.put("age", 2);
+        map.put("age", "2");
         map.put("name", "null");
         map.put("amount", 10.14);
         map.put("birthday", new Date());
