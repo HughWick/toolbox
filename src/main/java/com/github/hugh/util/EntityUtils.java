@@ -1,5 +1,7 @@
 package com.github.hugh.util;
 
+import com.esotericsoftware.kryo.Kryo;
+
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -33,5 +35,14 @@ public class EntityUtils {
                 }
             }
         }
+    }
+
+    /**
+     * 通过Kryo框架深拷贝
+     * @param source 拷贝对象
+     * @return T 实体对象
+     */
+    public static <T> T deepClone(T source) {
+        return new Kryo().copy(source);
     }
 }
