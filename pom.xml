@@ -97,6 +97,7 @@
     </dependencyManagement>
 
     <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
             <!--compiler plugin -->
             <plugin>
