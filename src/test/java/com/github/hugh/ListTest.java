@@ -21,9 +21,11 @@ public class ListTest {
     @Test
     public void test02() {
         String[] array = {"1", "2", "3", "4", "5", "6", "7"};
+        String strings = "[\"Saab\", \"Volvo\", \"BMW\"]";
         String str = "{\"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\"}";
         String str2 = "1,2,3,4,5,6,7";
-        System.out.println("-1-->>"+ ListUtils.guavaArrToList(array));
-        System.out.println("--2->>"+ ListUtils.guavaStringToList(str2).size());
+//        System.out.println("-1-->>" + ListUtils.guavaArrToList(array));
+        System.out.println("-2-->>" + ListUtils.guavaStringToList(strings));
+        System.out.println("--3->>" + ListUtils.guavaStringToList(str2).size());
     }
 }

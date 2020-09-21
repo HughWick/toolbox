@@ -8,5 +8,7 @@ public class IdTest {
 
     public static void main(String[] args) {
         System.out.println("-1-->" + IdSequence.snowflake());
+        System.out.println("-2-->" + IdSequence.snowflake());
+        System.out.println("-3-->" + IdSequence.snowflake());
     }
 }
