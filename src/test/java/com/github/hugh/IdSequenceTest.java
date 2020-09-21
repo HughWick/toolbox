@@ -28,4 +28,11 @@ public class IdSequenceTest {
 
         }
     }
+
+    public static void main(String[] args) {
+//        Instance.getInstance().singleton(null);
+        System.out.println("-1-->" + IdSequence.snowflake());
+        System.out.println("-2-->" + IdSequence.snowflake());
+        System.out.println("-3-->" + IdSequence.snowflake());
+    }
 }
