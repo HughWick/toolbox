@@ -19,6 +19,7 @@ public class Instance {
 
     /**
      * 懒汉式获取单例对象
+     * @return Instance 实例
      */
     public static Instance getInstance() {
         if (instance == null) {//懒汉式

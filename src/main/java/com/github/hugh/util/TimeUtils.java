@@ -38,7 +38,9 @@ public class TimeUtils extends DateCode {
 
     /**
      * 当字符串日期转换为 LocalDateTime
+     * <ul>
      * <li>默认格式为：yyyy-MM-dd HH:mm:ss</li>
+     * </ul>
      *
      * @param timeStr 字符串日期
      * @return LocalDateTime
