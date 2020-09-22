@@ -13,7 +13,8 @@ import java.time.temporal.TemporalAdjusters;
  * <p>如需使用Date类工具 @see {@link  com.github.hugh.util.DateUtils} </p>
  *
  * @author hugh
- * @since java 1.8
+ * @since 1.0.0
+ * @version  java 1.8
  */
 public class TimeUtils extends DateCode {
     private TimeUtils() {
@@ -33,6 +34,35 @@ public class TimeUtils extends DateCode {
             format = YEAR_MONTH_DAY_HOUR_MIN_SEC;
         }
         return DateTimeFormatter.ofPattern(format).format(time);
+    }
+
+    /**
+     * 当字符串日期转换为 LocalDateTime
+     * <li>默认格式为：yyyy-MM-dd HH:mm:ss</li>
+     *
+     * @param timeStr 字符串日期
+     * @return LocalDateTime
+     * @since 1.2.2
+     */
+    public static LocalDateTime parseTime(String timeStr) {
+        return parseTime(timeStr, YEAR_MONTH_DAY_HOUR_MIN_SEC);
+    }
+
+    /**
+     * 将字符串日期转换为指定格式的日期对象
+     *
+     * @param strTime 字符串的日期
+     * @param format  日期格式
+     * @return LocalDateTime
+     * @since 1.2.2
+     */
+    private static LocalDateTime parseTime(String strTime, String format) {
+        try {
+            return LocalDateTime.parse(strTime, DateTimeFormatter.ofPattern(format));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -200,8 +230,9 @@ public class TimeUtils extends DateCode {
      *
      * @param time 日期字符串
      * @return {@code true} 系统时间之前
+     * @since 1.2.2
      */
-    public static boolean ex(String time) {
+    public static boolean exceedSystem(String time) {
         LocalDateTime t = LocalDateTime.parse(time, DateTimeFormatter.ofPattern(YEAR_MONTH_DAY_HOUR_MIN_SEC));
         return t.isBefore(LocalDateTime.now());
     }

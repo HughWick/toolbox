@@ -10,10 +10,18 @@ import org.junit.Test;
 public class StringTest {
 
     @Test
-    public void test01(){
-        String str = "https://github.com/HughWick/toolbox";
-        System.out.println("---1>>>"+ StringUtils.before(str,"/"));
-        System.out.println("--2->>>"+ StringUtils.isChinese(str));
-        System.out.println("--3->>>"+ StringUtils.getNumber(str));
+    public void test01() {
+//        String str = "https://github.com/HughWick/toolbox";
+        String fName = "C:\\Users\\Lenovo\\Desktop\\0e9f4beeb6a5423585c6eabda21a63ee.jpg";
+        //或者
+//        String fileName = fName.substring(fName.lastIndexOf("\\") + 1);
+
+//        System.out.println("fileName = " + fileName);
+        System.out.println("---1>>>" + StringUtils.after(fName, "\\"));
+
+
+        System.out.println("---1>>>" + StringUtils.before(fName, "\\"));
+        System.out.println("--2->>>" + StringUtils.isChinese(fName));
+        System.out.println("--3->>>" + StringUtils.getNumber(fName));
     }
 }

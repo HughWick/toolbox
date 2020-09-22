@@ -1,4 +1,4 @@
-package com.github.hugh;
+package com.github.hugh.secret;
 
 import com.github.hugh.util.secrect.Md5Utils;
 import org.junit.Test;
