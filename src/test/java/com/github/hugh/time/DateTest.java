@@ -15,7 +15,7 @@ public class DateTest {
         System.out.println("----最后1天----->>" + TimeUtils.lastDayOfMonth());
         System.out.println("---上个月的第1天------>>" + TimeUtils.earlyLastMonth());
         System.out.println("---上个月的最后1天------>>" + TimeUtils.endOfLastMonth());
-        System.out.println("--在当前系统时间之后-->>" + TimeUtils.ex("2020-04-17 13:59:59"));
+        System.out.println("--在当前系统时间之后-->>" + TimeUtils.exceedSystem("2020-04-17 13:59:59"));
     }
 
     @Test

@@ -82,6 +82,30 @@ public class StringUtils {
     }
 
     /**
+     * 截取字符最后一个之后的所有字符串
+     * <ul>
+     * <li>例：字符串：C:\\Users\\Lenovo\\Desktop\\0e9f4beeb6a5423585c6eabda21a63ee.jpg</li>
+     * <li>返回字符串：0e9f4beeb6a5423585c6eabda21a63ee.jpg</li>
+     * </ul>
+     *
+     * @param value 字符串
+     * @param cha   拼接的字符
+     * @return String 获取指定最后一个字符之后所有字符串
+     * @since 1.2.2
+     */
+    public static String after(String value, String cha) {
+        if (EmptyUtils.isEmpty(value)) {
+            return value;
+        }
+        if (value.contains(cha)) {
+            int lastIndexOf = value.lastIndexOf(cha) + 1;
+            return value.substring(lastIndexOf);
+        }
+        return value;
+    }
+
+
+    /**
      * 查询字符串中的对应varchar的长度
      * <ul>
      * <li>由于旧的Mysql数据库一个中文算2个字节、本方法将字符串中的中文按2个长度进行合计</li>
