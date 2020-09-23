@@ -5,5 +5,5 @@ jdk:
 #script: mvn test cobertura:cobertura
 #script: mvnw clean install
 after_success:
-#  - mvn clean cobertura:cobertura coveralls:report
+  - mvn clean cobertura:cobertura coveralls:report
   - bash <(curl -s https://codecov.io/bash)
