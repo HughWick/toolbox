@@ -3,6 +3,9 @@ package com.github.hugh.util;
 import com.github.hugh.util.common.AssertUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -122,26 +125,60 @@ public class MapUtils {
         return map;
     }
 
-
     /**
-     * 通过Class类创建实体、并赋值
+     * Map转实体类共通方法
      *
-     * @param cls    Class
+     * <ul>
+     * <li>map中的key必须与实体中的常量key一致</li>
+     * </ul>
+     *
+     * @param cls    实体类class
      * @param params 参数
-     * @return Object 赋值后的实体
-     * @throws Exception
-     * @since 1.1.4
+     * @param <T>    类型
+     * @return T 返回实体
+     * @throws Exception 错误异常
+     * @since 1.2.3
      */
-    public static Object toEntity(Class<?> cls, Map<?, ?> params) throws Exception {
+    public static <T> T toEntity(Class<T> cls, Map<?, ?> params) throws Exception {
         AssertUtils.notNull(cls, "class");
-        Object object = cls.newInstance();
-        toEntity(object, params);
-        return object;
+        T obj = cls.newInstance();
+        BeanInfo beanInfo = Introspector.getBeanInfo(cls);
+        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+        for (PropertyDescriptor descriptor : propertyDescriptors) {
+            String propertyName = descriptor.getName();
+            Object value = params.get(propertyName);
+            if (EmptyUtils.isNotEmpty(value)) {
+                switch (descriptor.getPropertyType().getSimpleName()) {
+                    case "int":
+                    case "Integer":
+                        value = Integer.parseInt(String.valueOf(value));
+                        break;
+                    case "long":
+                    case "Long":
+                        value = Long.parseLong(String.valueOf(value));
+                        break;
+                    case "double":
+                    case "Double":
+                        value = Double.parseDouble(String.valueOf(value));
+                        break;
+                    case "Date": // 当时日期类型时，进行格式校验
+                        if (value instanceof Date) {
+                            //日期类型不处理
+                        } else if (DateUtils.isDateFormat(String.valueOf(value))) {
+                            value = DateUtils.parseDate(String.valueOf(value));
+                        }
+                        break;
+                }
+                descriptor.getWriteMethod().invoke(obj, value);
+            }
+        }
+        return obj;
     }
 
     /**
-     * 将map转换为实体对象,并赋值
+     * map转换为实体对象,并赋值
      * <ul>
+     * <li>由于field.setAccessible(true) 会出现安全漏洞、该方法被过期、后续版本中将移除该方法</li>
      * <li>map中的key必须与实体中的常量key一致,且命名规范为驼峰</li>
      * </ul>
      *
@@ -149,6 +186,7 @@ public class MapUtils {
      * @param params 参数
      * @throws Exception
      */
+    @Deprecated
     public static void toEntity(Object bean, Map<?, ?> params) throws Exception {
         if (bean == null) {
             throw new RuntimeException("bean is null");
@@ -190,55 +228,60 @@ public class MapUtils {
     /**
      * get参数后转换为String
      *
+     * @param <K> key 的类型
      * @param map 参数
      * @param key 键
      * @return String
      */
-    public static String getString(Map map, String key) {
+    public static <K> String getString(Map<? super K, ?> map, K key) {
         return org.apache.commons.collections4.MapUtils.getString(map, key);
     }
 
     /**
      * get参数后转换为Long
      *
+     * @param <K> key 的类型
      * @param map 参数
      * @param key 键
-     * @return String
+     * @return Long
      */
-    public static Long getLong(Map map, String key) {
+    public static <K> Long getLong(Map<? super K, ?> map, K key) {
         return org.apache.commons.collections4.MapUtils.getLong(map, key);
     }
 
     /**
      * get参数后转换为Int
      *
+     * @param <K> key 的类型
      * @param map 参数
      * @param key 键
-     * @return String
+     * @return Integer
      */
-    public static Integer getInt(Map map, String key) {
+    public static <K> Integer getInt(Map<? super K, ?> map, K key) {
         return org.apache.commons.collections4.MapUtils.getInteger(map, key);
     }
 
     /**
      * get参数后转换为Double
      *
+     * @param <K> key 的类型
      * @param map 参数
      * @param key 键
-     * @return String
+     * @return Double
      */
-    public static Double getDouble(Map map, String key) {
+    public static <K> Double getDouble(Map<? super K, ?> map, K key) {
         return org.apache.commons.collections4.MapUtils.getDouble(map, key);
     }
 
     /**
      * get参数后转换为Map
      *
+     * @param <K> key 的类型
      * @param map 参数
      * @param key 键
-     * @return String
+     * @return Map
      */
-    public static Map getMap(Map map, String key) {
+    public static <K> Map getMap(Map<? super K, ?> map, K key) {
         return org.apache.commons.collections4.MapUtils.getMap(map, key);
     }
 
