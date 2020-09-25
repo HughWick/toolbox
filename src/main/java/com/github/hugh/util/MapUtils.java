@@ -6,8 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -173,56 +171,6 @@ public class MapUtils {
             }
         }
         return obj;
-    }
-
-    /**
-     * map转换为实体对象,并赋值
-     * <ul>
-     * <li>由于field.setAccessible(true) 会出现安全漏洞、该方法被过期、后续版本中将移除该方法</li>
-     * <li>map中的key必须与实体中的常量key一致,且命名规范为驼峰</li>
-     * </ul>
-     *
-     * @param bean   实体对象
-     * @param params 参数
-     * @throws Exception
-     */
-    @Deprecated
-    public static void toEntity(Object bean, Map<?, ?> params) throws Exception {
-        if (bean == null) {
-            throw new RuntimeException("bean is null");
-        }
-        for (Field field : bean.getClass().getDeclaredFields()) {
-            field.setAccessible(true);// 不会去检查Java语言权限控制（private之类的）
-            String key = field.getName();
-            String upperCaseKey = key.substring(0, 1).toUpperCase() + key.substring(1);// 将属性的首字符大写，方便构造get，set方法
-            Method method = bean.getClass().getDeclaredMethod("set" + upperCaseKey, field.getType());
-            String type = field.getType().getSimpleName();// 获取类型
-            Object value = params.get(key);
-            if (EmptyUtils.isNotEmpty(value)) {
-                switch (type) {
-                    case "int":
-                    case "Integer":
-                        value = Integer.parseInt(String.valueOf(value));
-                        break;
-                    case "long":
-                    case "Long":
-                        value = Long.parseLong(String.valueOf(value));
-                        break;
-                    case "double":
-                    case "Double":
-                        value = Double.parseDouble(String.valueOf(value));
-                        break;
-                    case "Date": // 当时日期类型时，进行格式校验
-                        if (value instanceof Date) {
-                            //日期类型不处理
-                        } else if (DateUtils.isDateFormat(String.valueOf(value))) {
-                            value = DateUtils.parseDate(String.valueOf(value));
-                        }
-                        break;
-                }
-                method.invoke(bean, value);
-            }
-        }
     }
 
     /**
