@@ -8,7 +8,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketTimeoutException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,12 +24,38 @@ public class OkHttpUtils {
 
     }
 
-    private static OkHttpClient client = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS) // 设置连接超时
+    /**
+     * 默认OkHttp请求客户端
+     */
+    private static OkHttpClient CLIENT = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS) // 设置连接超时
             .readTimeout(10, TimeUnit.SECONDS) // 设置读超时
 //				 .writeTimeout(60,TimeUnit.SECONDS)          //设置写超时
 //			     .retryOnConnectionFailure(true)             //是否自动重连
             .build(); // 构建OkHttpClient对象
 
+    /**
+     * 本地cookie存储
+     */
+    private final static ConcurrentHashMap<String, List<Cookie>> COOKIE_STORE = new ConcurrentHashMap<>();
+
+    /**
+     * OkHttp管理cookie
+     */
+    static OkHttpClient COOKIE_CLIENT = new OkHttpClient.Builder()
+            .cookieJar(new CookieJar() {
+                @Override
+                public void saveFromResponse(HttpUrl httpUrl, List<Cookie> list) {
+                    COOKIE_STORE.put(httpUrl.host(), list);
+                }
+
+                @Override
+                public List<Cookie> loadForRequest(HttpUrl httpUrl) {
+                    List<Cookie> cookies = COOKIE_STORE.get(httpUrl.host());
+                    return cookies != null ? cookies : new ArrayList<>();
+                }
+            }).connectTimeout(10, TimeUnit.SECONDS) // 设置连接超时
+            .readTimeout(10, TimeUnit.SECONDS)// 设置读超时
+            .build();
     /**
      * 表单形式提交类型
      */
@@ -64,7 +93,7 @@ public class OkHttpUtils {
     public static String postForm(String url, JSONObject json) {
         String params = jsonParse(json);
         try {
-            return post(url, params, FORM_TYPE);
+            return post(url, params, FORM_TYPE, CLIENT);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -82,7 +111,7 @@ public class OkHttpUtils {
     public static String postJson(String url, JSONObject json) {
         String params = jsonParse(json);
         try {
-            return post(url, params, JSON_TYPE);
+            return post(url, params, JSON_TYPE, CLIENT);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -139,16 +168,17 @@ public class OkHttpUtils {
     /**
      * 统一的post请求
      *
-     * @param url       URL
-     * @param params    参数
-     * @param mediaType 请求类型
-     * @return String
+     * @param url          URL
+     * @param params       参数
+     * @param mediaType    请求类型
+     * @param okHttpClient 请求客户端
+     * @return String 请求结果
      * @throws IOException
      */
-    private static String post(String url, String params, MediaType mediaType) throws IOException {
+    private static String post(String url, String params, MediaType mediaType, OkHttpClient okHttpClient) throws IOException {
         RequestBody body = RequestBody.create(mediaType, params);
         Request request = new Request.Builder().url(url).post(body).build();
-        try (Response response = client.newCall(request).execute()) {
+        try (Response response = okHttpClient.newCall(request).execute()) {
             ResponseBody body1 = response.body();
             if (body1 == null) {
                 throw new ToolboxException("result params is null ");
@@ -190,12 +220,35 @@ public class OkHttpUtils {
      */
     public static String get(String url) {
         Request request = new Request.Builder().url(url).build();
-        try (Response response = client.newCall(request).execute()) {
+        try (Response response = CLIENT.newCall(request).execute()) {
             ResponseBody body1 = response.body();
             if (body1 == null) {
                 throw new ToolboxException("result params is null ");
             }
             return body1.string();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    /**
+     * 发送表单形式参数的POST
+     * <ul>
+     *     <li>Content-Type:application/x-www-form-urlencoded</li>
+     *     <li>该方法为OkHttp管理Cookie,请求获取cookie接口后、将cookie存储至本地Map内存中</li>
+     * </ul>
+     *
+     * @param url  请求URL
+     * @param json 参数
+     * @return String
+     * @since 1.2.4
+     */
+    public static String postFormCookie(String url, JSONObject json) {
+        String params = jsonParse(json);
+        try {
+            return post(url, params, FORM_TYPE, COOKIE_CLIENT);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
