@@ -56,6 +56,7 @@ public class OkHttpUtils {
             }).connectTimeout(10, TimeUnit.SECONDS) // 设置连接超时
             .readTimeout(10, TimeUnit.SECONDS)// 设置读超时
             .build();
+
     /**
      * 表单形式提交类型
      */
@@ -156,38 +157,13 @@ public class OkHttpUtils {
             String value = String.valueOf(json.get(key));
             try {
                 value = URLEncoder.encode(value, CHARSET);//将参数转换为urlEncoder码
-                sb.append(key + "=" + value + "&");
+                sb.append(key).append("=").append(value).append("&");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
         }
         sb.deleteCharAt(sb.length() - 1); // 删除结尾符号
         return sb.toString();
-    }
-
-    /**
-     * 统一的post请求
-     *
-     * @param url          URL
-     * @param params       参数
-     * @param mediaType    请求类型
-     * @param okHttpClient 请求客户端
-     * @return String 请求结果
-     * @throws IOException
-     */
-    private static String post(String url, String params, MediaType mediaType, OkHttpClient okHttpClient) throws IOException {
-        RequestBody body = RequestBody.create(mediaType, params);
-        Request request = new Request.Builder().url(url).post(body).build();
-        try (Response response = okHttpClient.newCall(request).execute()) {
-            ResponseBody body1 = response.body();
-            if (body1 == null) {
-                throw new ToolboxException("result params is null ");
-            }
-            return body1.string();
-        } catch (SocketTimeoutException timeEx) {
-            timeEx.printStackTrace();
-            return null;
-        }
     }
 
     /**
@@ -213,21 +189,54 @@ public class OkHttpUtils {
 
     /**
      * get请求
+     * <p>注：url自行拼接查询条件参数</p>
      *
      * @param url URL
-     *            <p>注：url自行拼接查询条件参数</p>
      * @return String
      */
     public static String get(String url) {
         Request request = new Request.Builder().url(url).build();
-        try (Response response = CLIENT.newCall(request).execute()) {
+        try {
+            return send(request, CLIENT);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 统一的post请求
+     *
+     * @param url          URL
+     * @param params       参数
+     * @param mediaType    请求类型
+     * @param okHttpClient 请求客户端
+     * @return String 请求结果
+     * @throws IOException
+     */
+    private static String post(String url, String params, MediaType mediaType, OkHttpClient okHttpClient) throws IOException {
+        RequestBody body = RequestBody.create(mediaType, params);
+        Request request = new Request.Builder().url(url).post(body).build();
+        return send(request, okHttpClient);
+    }
+
+    /**
+     * 统一请求
+     *
+     * @param request      请求内容
+     * @param okHttpClient OkHttpClient
+     * @return String 返回结果
+     * @throws IOException
+     */
+    private static String send(Request request, OkHttpClient okHttpClient) throws IOException {
+        try (Response response = okHttpClient.newCall(request).execute()) {
             ResponseBody body1 = response.body();
             if (body1 == null) {
                 throw new ToolboxException("result params is null ");
             }
             return body1.string();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (SocketTimeoutException timeEx) {
+            timeEx.printStackTrace();
             return null;
         }
     }
