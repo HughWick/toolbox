@@ -2,10 +2,9 @@ package com.github.hugh.util;
 
 import com.github.hugh.constant.DateCode;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 
 /**
@@ -13,8 +12,8 @@ import java.time.temporal.TemporalAdjusters;
  * <p>如需使用Date类工具 @see {@link  com.github.hugh.util.DateUtils} </p>
  *
  * @author hugh
+ * @version java 1.8
  * @since 1.0.0
- * @version  java 1.8
  */
 public class TimeUtils extends DateCode {
     private TimeUtils() {
@@ -294,5 +293,34 @@ public class TimeUtils extends DateCode {
         LocalDateTime localDateTime = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999)
                 .plusDays(-1);
         return ofPattern(YEAR_MONTH_DAY_HOUR_MIN_SEC, localDateTime);
+    }
+
+
+    /**
+     * 校验开始日期与结束日期相差多少毫秒
+     * <ul>
+     * <li>注：return @{code -1} 时达标参数异常</li>
+     * </ul>
+     *
+     * @param startTime 开始日期 格式：yyyy-MM-dd HH:mm:ss
+     * @param endTime   结束日期 格式：yyyy-MM-dd HH:mm:ss
+     * @return long 相差毫秒数
+     * @since 1.2.4
+     */
+    public static long differ(String startTime, String endTime) {
+        if (EmptyUtils.isEmpty(startTime) || EmptyUtils.isEmpty(endTime)) {
+            return -1;
+        }
+        LocalDateTime start = TimeUtils.parseTime(startTime);
+        if (start == null) {
+            return -1;
+        }
+        LocalDateTime end = TimeUtils.parseTime(endTime);
+        if (end == null) {
+            return -1;
+        }
+        Instant s = start.toInstant(ZoneOffset.ofHours(8));//转换时增加8时区
+        Instant e = end.toInstant(ZoneOffset.ofHours(8));
+        return ChronoUnit.MILLIS.between(s, e);
     }
 }

@@ -34,7 +34,7 @@ public class MapUtils {
         if (map == null) {
             return false;
         }
-        if (com.github.hugh.util.EmptyUtils.isEmpty(code)) {
+        if (EmptyUtils.isEmpty(code)) {
             return false;
         }
         return code.equals(String.valueOf(map.get(key)));
