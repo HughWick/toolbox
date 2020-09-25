@@ -25,6 +25,36 @@ public class OkHttpUtils {
     }
 
     /**
+     * 表单形式提交类型
+     */
+    private static final String APPLICATION_FORM_URLENCODED_VALUE = "application/x-www-form-urlencoded";
+
+    /**
+     * json形式提交类型
+     */
+    private static final String APPLICATION_JSON_UTF8_VALUE = "application/json;charset=UTF-8";
+
+    /**
+     * 统一编码
+     */
+    private static final String CHARSET = "utf-8";
+
+    /**
+     * 本地cookie存储
+     */
+    private final static ConcurrentHashMap<String, List<Cookie>> COOKIE_STORE = new ConcurrentHashMap<>();
+
+    /**
+     * 表单参数请求类型
+     */
+    private static final MediaType FORM_TYPE = MediaType.parse(APPLICATION_FORM_URLENCODED_VALUE);
+
+    /**
+     * json参数请求类型
+     */
+    private static final MediaType JSON_TYPE = MediaType.get(APPLICATION_JSON_UTF8_VALUE);
+
+    /**
      * 默认OkHttp请求客户端
      */
     private static OkHttpClient CLIENT = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS) // 设置连接超时
@@ -32,11 +62,6 @@ public class OkHttpUtils {
 //				 .writeTimeout(60,TimeUnit.SECONDS)          //设置写超时
 //			     .retryOnConnectionFailure(true)             //是否自动重连
             .build(); // 构建OkHttpClient对象
-
-    /**
-     * 本地cookie存储
-     */
-    private final static ConcurrentHashMap<String, List<Cookie>> COOKIE_STORE = new ConcurrentHashMap<>();
 
     /**
      * OkHttp管理cookie
@@ -56,32 +81,6 @@ public class OkHttpUtils {
             }).connectTimeout(10, TimeUnit.SECONDS) // 设置连接超时
             .readTimeout(10, TimeUnit.SECONDS)// 设置读超时
             .build();
-
-    /**
-     * 表单形式提交类型
-     */
-    private static final String APPLICATION_FORM_URLENCODED_VALUE = "application/x-www-form-urlencoded";
-
-    /**
-     * json形式提交类型
-     */
-    private static final String APPLICATION_JSON_UTF8_VALUE = "application/json;charset=UTF-8";
-
-    /**
-     * 统一编码
-     */
-    private static final String CHARSET = "utf-8";
-
-
-    /**
-     * 表单参数请求类型
-     */
-    private static final MediaType FORM_TYPE = MediaType.parse(APPLICATION_FORM_URLENCODED_VALUE);
-
-    /**
-     * json参数请求类型
-     */
-    private static final MediaType JSON_TYPE = MediaType.get(APPLICATION_JSON_UTF8_VALUE);
 
     /**
      * 发送表单形式参数的POST
@@ -240,7 +239,6 @@ public class OkHttpUtils {
             return null;
         }
     }
-
 
     /**
      * 发送表单形式参数的POST
