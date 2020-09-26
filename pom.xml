@@ -122,11 +122,11 @@
             </plugin>
             <!--=================================== coveralls START ===================================-->
             <!--mvn  coveralls:report -DrepoToken=yourcoverallsprojectrepositorytoken-->
-            <plugin>
-                <groupId>org.eluder.coveralls</groupId>
-                <artifactId>coveralls-maven-plugin</artifactId>
-                <version>4.3.0</version>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.eluder.coveralls</groupId>-->
+<!--                <artifactId>coveralls-maven-plugin</artifactId>-->
+<!--                <version>4.3.0</version>-->
+<!--            </plugin>-->
             <!-- Codecov -->
 <!--            <plugin>-->
 <!--                <groupId>org.codehaus.mojo</groupId>-->
@@ -140,6 +140,17 @@
 <!--                    <check/>-->
 <!--                </configuration>-->
 <!--            </plugin>-->
+            <plugin>
+                <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>clover-maven-plugin</artifactId>
+                <version>4.1.2</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*_ESTest.java</exclude>
+                        <exclude>**/*_ESTest_scaffolding.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
             <!--=================================== coveralls END ===================================-->
             <!--mvn clean install sonar:sonar -Dmaven.test.skip=true -Dsonar.host.url=http://localhost:9000-->
             <!--sonar-->
@@ -155,30 +166,19 @@
                 <version>${plugin.maven-javadoc-plugin.version}</version>
             </plugin>
             <!-- jacoco -->
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.6</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>clover-maven-plugin</artifactId>
-                <version>4.1.2</version>
-                <configuration>
-                    <excludes>
-                        <exclude>**/*_ESTest.java</exclude>
-                        <exclude>**/*_ESTest_scaffolding.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.jacoco</groupId>-->
+<!--                <artifactId>jacoco-maven-plugin</artifactId>-->
+<!--                <version>0.8.6</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>prepare-agent</goal>-->
+<!--                            <goal>report</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
 
     </build>
