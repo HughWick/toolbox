@@ -138,8 +138,19 @@
                         <format>html</format>
                         <format>xml</format>
                     </formats>
+                    <instrumentation>
+                        <ignoreTrivial>true</ignoreTrivial>
+                    </instrumentation>
                     <check />
                 </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>cobertura</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 <!--            <plugin>-->
 <!--                <groupId>org.codehaus.mojo</groupId>-->
