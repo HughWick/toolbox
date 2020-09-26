@@ -132,10 +132,22 @@
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>${plugin.coveralls.version}</version>
             </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.codehaus.mojo</groupId>-->
+<!--                <artifactId>cobertura-maven-plugin</artifactId>-->
+<!--                <version>${plugin.cobertura.version}</version>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
-                <version>${plugin.cobertura.version}</version>
+                <version>2.7</version>
+                <configuration>
+                    <format>xml</format>
+                    <maxmem>256m</maxmem>
+                    <!-- aggregated reports for multi-module projects -->
+                    <aggregate>true</aggregate>
+                    <check/>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
