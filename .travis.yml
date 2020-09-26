@@ -5,7 +5,7 @@ install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true
 script: mvn test
 after_success:
   - mvn clean cobertura:cobertura coveralls:report
-
+  - bash <(curl -s https://codecov.io/bash)
 #install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true
 #script: mvn test  clover:setup test clover:aggregate clover:clover
 #after_success:
