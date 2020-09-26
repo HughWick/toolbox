@@ -1,8 +1,9 @@
 language: java
 jdk:
   - openjdk8
-#install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true
-script: mvn clean install cobertura:cobertura coveralls:report -Dmaven.javadoc.skip=true
+install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true
+script: mvn test cobertura:cobertura
 after_success:
-#  - mvn clean cobertura:cobertura coveralls:report
+#   -mvn clean cobertura:cobertura coveralls:report
+#  - mvn jacoco:report
   - bash <(curl -s https://codecov.io/bash)

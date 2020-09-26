@@ -134,21 +134,33 @@
                 <artifactId>cobertura-maven-plugin</artifactId>
                 <version>2.7</version>
                 <configuration>
-                    <format>html</format>
-                    <format>xml</format>
-                    <maxmem>256m</maxmem>
-                    <!-- aggregated reports for multi-module projects -->
-                    <aggregate>true</aggregate>
-                    <instrumentation>
-                        <excludes>
-                            <exclude>**/*Test.class</exclude>
-                            <exclude>**/HelpMojo.class</exclude>
-                            <exclude>**/*Vo.class</exclude>
-                        </excludes>
-                    </instrumentation>
-                    <check/>
+                    <formats>
+                        <format>html</format>
+                        <format>xml</format>
+                    </formats>
+                    <check />
                 </configuration>
             </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.codehaus.mojo</groupId>-->
+<!--                <artifactId>cobertura-maven-plugin</artifactId>-->
+<!--                <version>2.7</version>-->
+<!--                <configuration>-->
+<!--                    <format>html</format>-->
+<!--                    <format>xml</format>-->
+<!--                    <maxmem>256m</maxmem>-->
+<!--                    &lt;!&ndash; aggregated reports for multi-module projects &ndash;&gt;-->
+<!--                    <aggregate>true</aggregate>-->
+<!--                    <instrumentation>-->
+<!--                        <excludes>-->
+<!--                            <exclude>**/*Test.class</exclude>-->
+<!--                            <exclude>**/HelpMojo.class</exclude>-->
+<!--                            <exclude>**/*Vo.class</exclude>-->
+<!--                        </excludes>-->
+<!--                    </instrumentation>-->
+<!--                    <check/>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
             <!--=================================== coveralls END ===================================-->
             <!--mvn clean install sonar:sonar -Dmaven.test.skip=true -Dsonar.host.url=http://localhost:9000-->
             <!--sonar-->
