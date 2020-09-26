@@ -146,7 +146,6 @@
                 </executions>
             </plugin>
             <!--=================================== coveralls END ===================================-->
-
             <!--sonar-->
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
