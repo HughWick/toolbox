@@ -20,6 +20,7 @@
         <!--========================== All Plugins START =====================-->
         <plugin.compiler.version>3.2</plugin.compiler.version>
         <plugin.coveralls.version>4.3.0</plugin.coveralls.version>
+        <plugin.cobertura.version>2.7</plugin.cobertura.version>
         <plugin.surefire.version>2.18.1</plugin.surefire.version>
         <plugin.surefire.skip-it>false</plugin.surefire.skip-it>
         <plugin.surefire.ignore-failure>false</plugin.surefire.ignore-failure>
@@ -119,19 +120,45 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
+
+<!--            <plugin>-->
+<!--                <groupId>com.atlassian.maven.plugins</groupId>-->
+<!--                <artifactId>clover-maven-plugin</artifactId>-->
+<!--                <version>4.1.2</version>-->
+<!--                <configuration>-->
+<!--                    <excludes>-->
+<!--                        <exclude>**/*_ESTest.java</exclude>-->
+<!--                        <exclude>**/*_ESTest_scaffolding.java</exclude>-->
+<!--                    </excludes>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
             <!--=================================== coveralls START ===================================-->
+            <!--mvn cobertura:cobertura coveralls:report -DrepoToken=yourcoverallsprojectrepositorytoken-->
             <plugin>
-                <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>clover-maven-plugin</artifactId>
-                <version>4.1.2</version>
-                <configuration>
-                    <excludes>
-                        <exclude>**/*_ESTest.java</exclude>
-                        <exclude>**/*_ESTest_scaffolding.java</exclude>
-                    </excludes>
-                </configuration>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>${plugin.coveralls.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>${plugin.cobertura.version}</version>
+<!--                <configuration>-->
+<!--                    <format>xml</format>-->
+<!--                    <maxmem>256m</maxmem>-->
+<!--                    &lt;!&ndash; aggregated reports for multi-module projects &ndash;&gt;-->
+<!--                    <aggregate>true</aggregate>-->
+<!--                    <instrumentation>-->
+<!--                        <excludes>-->
+<!--                            <exclude>**/*Test.class</exclude>-->
+<!--                            &lt;!&ndash;<exclude>**/*Vo.class</exclude>&ndash;&gt;-->
+<!--                        </excludes>-->
+<!--                    </instrumentation>-->
+<!--                </configuration>-->
             </plugin>
             <!--=================================== coveralls END ===================================-->
+
             <!--sonar-->
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
@@ -140,6 +167,7 @@
             </plugin>
         </plugins>
     </build>
+
 
     <!--============================== ADD For sonatype START ==============================-->
     <parent>
