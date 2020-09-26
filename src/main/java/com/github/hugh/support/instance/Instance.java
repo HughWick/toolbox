@@ -19,6 +19,7 @@ public class Instance {
 
     /**
      * 懒汉式获取单例对象
+     *
      * @return Instance 实例
      */
     public static Instance getInstance() {
@@ -32,17 +33,32 @@ public class Instance {
         return instance;
     }
 
-    //加载缓存
-    private static CacheLoader<String, Object> cacheLoader = CacheLoader
-            .from(key -> {
+    private static CacheLoader<String, Object> cacheLoader() {
+        return new CacheLoader<String, Object>() {
+            @Override
+            public Object load(String key) {
                 try {
                     return Class.forName(key).newInstance();//根据 key(包名)创建实体
                 } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
                 return null;
-            });
+            }
+        };
+    }
 
+    //加载缓存
+//    private static CacheLoader<String, Object> cacheLoader = CacheLoader
+//            .from(key -> {
+//                try {
+//                    return Class.forName(key).newInstance();//根据 key(包名)创建实体
+//                } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//                return null;
+//            });
+
+//    private static CacheLoader<? super String, Object> cacheLoader;
     /**
      * Guava 缓存策略
      */
@@ -61,7 +77,7 @@ public class Instance {
 //            .removalListener(notification -> {
 //                System.out.println(notification.getKey() + " " + notification.getValue() + " 被移除,原因:" + notification.getCause());
 //            })
-            .build(cacheLoader); //build方法中可以指定CacheLoader，在缓存不存在时通过CacheLoader的实现自动加载缓存
+            .build(cacheLoader()); //build方法中可以指定CacheLoader，在缓存不存在时通过CacheLoader的实现自动加载缓存
 
     /**
      * 根据Class 创建实体
