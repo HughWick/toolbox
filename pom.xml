@@ -20,7 +20,6 @@
         <!--========================== All Plugins START =====================-->
         <plugin.compiler.version>3.2</plugin.compiler.version>
         <plugin.coveralls.version>4.3.0</plugin.coveralls.version>
-        <plugin.cobertura.version>2.7</plugin.cobertura.version>
         <plugin.surefire.version>2.18.1</plugin.surefire.version>
         <plugin.surefire.skip-it>false</plugin.surefire.skip-it>
         <plugin.surefire.ignore-failure>false</plugin.surefire.ignore-failure>
@@ -121,25 +120,6 @@
                 </configuration>
             </plugin>
             <!--=================================== coveralls START ===================================-->
-            <!--mvn  coveralls:report -DrepoToken=yourcoverallsprojectrepositorytoken-->
-<!--            <plugin>-->
-<!--                <groupId>org.eluder.coveralls</groupId>-->
-<!--                <artifactId>coveralls-maven-plugin</artifactId>-->
-<!--                <version>4.3.0</version>-->
-<!--            </plugin>-->
-            <!-- Codecov -->
-<!--            <plugin>-->
-<!--                <groupId>org.codehaus.mojo</groupId>-->
-<!--                <artifactId>cobertura-maven-plugin</artifactId>-->
-<!--                <version>2.7</version>-->
-<!--                <configuration>-->
-<!--                    <formats>-->
-<!--                        <format>html</format>-->
-<!--                        <format>xml</format>-->
-<!--                    </formats>-->
-<!--                    <check/>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
                 <artifactId>clover-maven-plugin</artifactId>
@@ -152,29 +132,13 @@
                 </configuration>
             </plugin>
             <!--=================================== coveralls END ===================================-->
-            <!--mvn clean install sonar:sonar -Dmaven.test.skip=true -Dsonar.host.url=http://localhost:9000-->
             <!--sonar-->
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.1.1</version>
             </plugin>
-            <!-- jacoco -->
-<!--            <plugin>-->
-<!--                <groupId>org.jacoco</groupId>-->
-<!--                <artifactId>jacoco-maven-plugin</artifactId>-->
-<!--                <version>0.8.6</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <goals>-->
-<!--                            <goal>prepare-agent</goal>-->
-<!--                            <goal>report</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
         </plugins>
-
     </build>
 
     <!--============================== ADD For sonatype START ==============================-->
