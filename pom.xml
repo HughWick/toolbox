@@ -123,11 +123,11 @@
             </plugin>
             <!--=================================== coveralls START ===================================-->
             <!--mvn  coveralls:report -DrepoToken=yourcoverallsprojectrepositorytoken-->
-<!--            <plugin>-->
-<!--                <groupId>org.eluder.coveralls</groupId>-->
-<!--                <artifactId>coveralls-maven-plugin</artifactId>-->
-<!--                <version>4.3.0</version>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>4.3.0</version>
+            </plugin>
             <!-- Codecov -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
