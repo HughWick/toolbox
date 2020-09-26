@@ -1,9 +1,8 @@
 language: java
 jdk:
   - openjdk8
-#  - oraclejdk8
 install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true
 script: mvn test cobertura:cobertura
 after_success:
-   -mvn clean cobertura:cobertura coveralls:report
+   -mvn clover:setup test clover:aggregate clover:clover
   - bash <(curl -s https://codecov.io/bash)
