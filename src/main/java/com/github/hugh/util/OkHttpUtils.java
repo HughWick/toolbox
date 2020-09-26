@@ -25,12 +25,12 @@ public class OkHttpUtils {
     }
 
     /**
-     * 表单形式提交类型
+     * 参数以表单形式提交类型
      */
     private static final String APPLICATION_FORM_URLENCODED_VALUE = "application/x-www-form-urlencoded";
 
     /**
-     * json形式提交类型
+     * 参数以json形式提交类型
      */
     private static final String APPLICATION_JSON_UTF8_VALUE = "application/json;charset=UTF-8";
 
@@ -137,7 +137,6 @@ public class OkHttpUtils {
             throw new RuntimeException("request 返回结果格式错误:" + result);
         }
     }
-
 
     /**
      * 将json中键值对拼接为url对应的参数
