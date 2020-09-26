@@ -1,6 +1,6 @@
 language: java
 jdk:
-  - openjdk11
+  - openjdk8
 #  - oraclejdk8
 install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true
 script: mvn test cobertura:cobertura
