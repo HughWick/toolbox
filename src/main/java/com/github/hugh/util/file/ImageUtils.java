@@ -6,7 +6,6 @@ import javax.imageio.stream.ImageInputStream;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Date;
 import java.util.Iterator;
 
 /**
