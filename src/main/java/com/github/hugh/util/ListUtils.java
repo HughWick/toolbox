@@ -75,4 +75,26 @@ public class ListUtils {
     public static List guavaStringToList(String string) {
         return Lists.newArrayList(string);
     }
+
+//    public static <T> Comparator<List<T>> listComparator(Map<Integer, Boolean> colSortMaps) {
+//        Ordering ordering = Ordering.natural();
+//        return (list1, list2) -> {
+//            ComparisonChain compareChain = ComparisonChain.start();
+//            for (Integer index : colSortMaps.keySet()) {
+//                T currObj = Optional.ofNullable(list1.get(index)).orElse(null);//如果 Optional 中有值则将其返回，否则返回 orElse 方法传入的参数。
+//                T compObj = Optional.ofNullable(list2.get(index)).orElse(null);
+//                Comparator<Object> objComparator = objComparator(ordering, colSortMaps.getOrDefault(index, true));
+//                compareChain = compareChain.compare(currObj, compObj, objComparator);
+//            }
+//            return compareChain.result();
+//        };
+//    }
+
+//    private static Comparator<Object> objComparator(Ordering ordering, boolean asc) {
+//        if (asc) {
+//            return ordering::compare;
+//        } else {
+//            return ordering.reverse()::compare;
+//        }
+//    }
 }

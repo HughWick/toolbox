@@ -7,6 +7,15 @@ import java.util.Date;
  * @date 2020/8/31 9:24
  */
 public class Student {
+    public Student() {
+
+    }
+    public Student(int id, String name, int age) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+    }
+
     public long getId() {
         return id;
     }
