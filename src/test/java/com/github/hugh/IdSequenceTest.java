@@ -25,7 +25,6 @@ public class IdSequenceTest {
             System.out.println(snowflake.nextId());
             Map dec = Snowflake.decompile(snowflake.nextId());
             System.out.println("--->" + dec);
-
         }
     }
 
