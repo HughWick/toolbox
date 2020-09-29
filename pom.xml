@@ -37,6 +37,8 @@
         <emoji-converter.version>1.0.1</emoji-converter.version>
         <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
         <kryo.version>4.0.2</kryo.version>
+        <jsoup.version>1.13.1</jsoup.version>
+        <thumbnailator.version>0.4.12</thumbnailator.version>
     </properties>
 
     <dependencies>
@@ -94,11 +96,26 @@
 
     <dependencyManagement>
         <dependencies>
+            <!--===================Goole 套件=======START===========-->
+
             <!-- 谷歌套件 https://mvnrepository.com/artifact/com.google.guava/guava -->
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${google-guava.version}</version>
+            </dependency>
+            <!-- 图片压缩 https://mvnrepository.com/artifact/net.coobird/thumbnailator -->
+            <dependency>
+                <groupId>net.coobird</groupId>
+                <artifactId>thumbnailator</artifactId>
+                <version>${thumbnailator.version}</version>
+            </dependency>
+            <!--===================Goole 套件=======END===========-->
+            <!-- 解析HTML https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>${jsoup.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

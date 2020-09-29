@@ -36,7 +36,7 @@ public class JsonDemo {
         System.out.println(jsonObject.get("name").getAsString());
         System.out.println("====================");
         // json to map
-        String mapStr = "{\"m1\":{\"username\":\"张三\",\"password\":\"123\",\"money\":500,\"book\":{\"id\":0,\"name\":\"三国演义\",\"price\":0,\"author\":\"罗贯中\"}},\"m2\":{\"username\":\"李四\",\"password\":\"123\",\"money\":500,\"book\":{\"id\":0,\"name\":\"红楼梦\",\"price\":0,\"author\":\"曹雪芹\"}}}";
+        String mapStr = "{\"m1\":{\"username\":\"张三\",\"password\":\"123\",\"money\":null,\"book\":{\"id\":0,\"name\":\"三国演义\",\"price\":0,\"author\":\"罗贯中\"}},\"m2\":{\"username\":\"李四\",\"password\":\"123\",\"money\":500,\"book\":{\"id\":0,\"name\":\"红楼梦\",\"price\":0,\"author\":\"曹雪芹\"}}}";
         JsonObject asJsonObject = JsonParser.parseString(mapStr).getAsJsonObject();
         System.out.println(asJsonObject);
         System.out.println("--->>" + asJsonObject.get("m1").getAsJsonObject().get("money").getAsDouble());
