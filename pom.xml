@@ -97,7 +97,6 @@
     <dependencyManagement>
         <dependencies>
             <!--===================Goole 套件=======START===========-->
-
             <!-- 谷歌套件 https://mvnrepository.com/artifact/com.google.guava/guava -->
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -185,7 +184,6 @@
             </plugin>
         </plugins>
     </build>
-
 
     <!--============================== ADD For sonatype START ==============================-->
     <parent>
