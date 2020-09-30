@@ -6,11 +6,11 @@
 
     <groupId>com.github.hughwick</groupId>
     <artifactId>toolbox</artifactId>
-    <version>1.2.5</version>
+    <version>1.2.6</version>
 
     <properties>
         <java.version>1.8</java.version>
-        <github.global.server>github</github.global.server>
+<!--        <github.global.server>github</github.global.server>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -20,7 +20,7 @@
         <!--========================== All Plugins START =====================-->
         <plugin.compiler.version>3.2</plugin.compiler.version>
         <plugin.coveralls.version>4.3.0</plugin.coveralls.version>
-        <plugin.cobertura.version>2.7</plugin.cobertura.version>
+<!--        <plugin.cobertura.version>2.7</plugin.cobertura.version>-->
         <plugin.surefire.version>2.18.1</plugin.surefire.version>
         <plugin.surefire.skip-it>false</plugin.surefire.skip-it>
         <plugin.surefire.ignore-failure>false</plugin.surefire.ignore-failure>

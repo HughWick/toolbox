@@ -72,6 +72,7 @@ public class OkHttpUtils {
                 public void saveFromResponse(HttpUrl httpUrl, List<Cookie> list) {
                     COOKIE_STORE.put(httpUrl.host(), list);
                 }
+
                 @Override
                 public List<Cookie> loadForRequest(HttpUrl httpUrl) {
                     List<Cookie> cookies = COOKIE_STORE.get(httpUrl.host());
@@ -199,7 +200,7 @@ public class OkHttpUtils {
      * @param mediaType    请求类型
      * @param okHttpClient 请求客户端
      * @return String 请求结果
-     * @throws IOException
+     * @throws IOException IO异常
      */
     private static String post(String url, String params, MediaType mediaType, OkHttpClient okHttpClient) throws IOException {
         RequestBody body = RequestBody.create(mediaType, params);
@@ -213,7 +214,7 @@ public class OkHttpUtils {
      * @param request      请求内容
      * @param okHttpClient OkHttpClient
      * @return String 返回结果
-     * @throws IOException
+     * @throws IOException IO异常
      */
     private static String send(Request request, OkHttpClient okHttpClient) throws IOException {
         try (Response response = okHttpClient.newCall(request).execute()) {
