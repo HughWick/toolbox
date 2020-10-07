@@ -28,12 +28,14 @@ public class EntityTest {
         try {
             Object o = MapUtils.toEntity(Student.class, map);
             Student o1 = (Student) EntityUtils.deepClone(o);
+
             System.out.println(o + "====" + o1);
             System.out.println(JSONObject.fromObject(o));
             System.out.println(JSONObject.fromObject(o1));
             o1.setName("张三");
-            System.out.println(JSONObject.fromObject(o1));
-            System.out.println(JSONObject.fromObject(o));
+            System.out.println(o1);
+            Student student2 = EntityUtils.deepClone(o1);
+            System.out.println(student2);
         } catch (Exception e) {
             e.printStackTrace();
         }

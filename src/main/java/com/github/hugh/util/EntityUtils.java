@@ -1,6 +1,7 @@
 package com.github.hugh.util;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.github.hugh.support.instance.Instance;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -44,6 +45,6 @@ public class EntityUtils {
      * @return T 实体对象
      */
     public static <T> T deepClone(T source) {
-        return new Kryo().copy(source);
+        return Instance.getInstance().singleton(Kryo.class).copy(source);
     }
 }
