@@ -4,8 +4,10 @@ import com.esotericsoftware.kryo.Kryo;
 import com.github.hugh.support.instance.Instance;
 
 import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * 实体操作工具类
@@ -20,9 +22,11 @@ public class EntityUtils {
      *
      * @param source 源文
      * @param dest   复制目标
-     * @throws Exception
+     * @throws IntrospectionException    无法将字符串类名称映射到 Class 对象、无法解析字符串方法名，或者指定对其用途而言具有错误类型签名的方法名称
+     * @throws InvocationTargetException 如果底层方法抛出异常
+     * @throws IllegalAccessException    如果这个{@code Method}对象正在执行Java语言访问控制，并且底层方法不可访问。
      */
-    public static void copy(Object source, Object dest) throws Exception {
+    public static <T> void copy(T source, T dest) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
         BeanInfo sourceBean = Introspector.getBeanInfo(source.getClass(), java.lang.Object.class); // 获取属性
         PropertyDescriptor[] sourceProperty = sourceBean.getPropertyDescriptors();
         BeanInfo destBean = Introspector.getBeanInfo(dest.getClass(), java.lang.Object.class);
