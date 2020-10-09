@@ -37,9 +37,9 @@ public class Snowflake {
     /**
      * 每一部分的最大值
      */
-    private static final long MAX_DATA_CENTER_NUM = -1L ^ (-1L << DATA_CENTER_BIT);
-    private static final long MAX_MACHINE_NUM = -1L ^ (-1L << MACHINE_BIT);
-    private static final long MAX_SEQUENCE = -1L ^ (-1L << SEQUENCE_BIT);
+    private static final long MAX_DATA_CENTER_NUM = ~(-1L << DATA_CENTER_BIT);
+    private static final long MAX_MACHINE_NUM = ~(-1L << MACHINE_BIT);
+    private static final long MAX_SEQUENCE = ~(-1L << SEQUENCE_BIT);
 
     /**
      * 每一部分向左的位移
@@ -102,7 +102,7 @@ public class Snowflake {
      * @param maxDataCenterId 最大标识
      * @return 最大标识
      */
-    protected static long getDataCenterId(long maxDataCenterId) {
+    private static long getDataCenterId(long maxDataCenterId) {
         long id = 0L;
         try {
             InetAddress ip = InetAddress.getLocalHost();
@@ -187,7 +187,7 @@ public class Snowflake {
         String workerId = sequenceStart == 0 ? "0" : binaryId.substring(workerStart, sequenceStart);
         String dataCenterId = workerStart == 0 ? "0" : binaryId.substring(timeStart, workerStart);
         String time = timeStart == 0 ? "0" : binaryId.substring(0, timeStart);
-        Map item = new HashMap();
+        Map<String,Object> item = new HashMap<>();
         item.put("sequence", Integer.valueOf(sequence, 2));// 二进制转自增ID
         item.put("workerId", Integer.valueOf(workerId, 2));// 二进制转机器ID
         item.put("dataCenter", Integer.valueOf(dataCenterId, 2));// 二进制转数据中心ID
