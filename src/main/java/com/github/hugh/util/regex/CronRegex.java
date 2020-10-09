@@ -36,10 +36,14 @@ public class CronRegex {
         int length = arr.length;
         for (int i = 1; i < length; i++) {//遍历获取 秒位后的格式
             String v = arr[i];
-            if (v.equals("*") || v.equals("?")) {//分、时、月、都为星号时不处理
+            switch (v) {
+                case "*":
+                case "?": //分、时、月、都为星号时不处理
 
-            } else {
-                flag = false;
+                    break;
+                default:
+                    flag = false;
+                    break;
             }
         }
         if (flag) {//秒数定时调度
@@ -50,9 +54,9 @@ public class CronRegex {
                 //周期不处理、默认返回false
             } else if (top.contains("/")) {//从X秒开始、每X秒执行一次
                 String[] sec = top.split("/");
-                return Integer.valueOf(sec[1]) < 30;//每秒循环小于30秒返回true
+                return Integer.parseInt(sec[1]) < 30;//每秒循环小于30秒返回true
             } else {//指定
-                return Integer.valueOf(top) < 30;//每秒循环小于30秒返回true
+                return Integer.parseInt(top) < 30;//每秒循环小于30秒返回true
             }
         }
         return false;

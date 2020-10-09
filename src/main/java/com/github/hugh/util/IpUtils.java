@@ -7,6 +7,7 @@ import java.util.Random;
  * IP工具类
  *
  * @author hugh
+ * @since 1.0.4
  */
 public class IpUtils {
 
@@ -73,8 +74,8 @@ public class IpUtils {
                 {-770113536, -768606209}, // 210.25.0.0-210.47.255.255
                 {-569376768, -564133889}, // 222.16.0.0-222.95.255.255
         };
-        Random rdint = new Random();
-        int index = rdint.nextInt(10);
+        Random random = new Random();
+        int index = random.nextInt(10);
         return num2ip(range[index][0] + new Random().nextInt(range[index][1] - range[index][0]));
     }
 

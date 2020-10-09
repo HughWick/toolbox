@@ -10,6 +10,7 @@ import java.util.zip.GZIPOutputStream;
  * pako 字符串压缩
  *
  * @author hugh
+ * @since 1.0.4
  */
 public class GzipUtils {
 
