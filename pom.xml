@@ -70,87 +70,59 @@
             <artifactId>jakarta.validation-api</artifactId>
             <version>${jakarta.validation-api.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.binarywang</groupId>
-            <artifactId>java-emoji-converter</artifactId>
-        </dependency>
         <!-- Kryo是一个快速高效的Java序列化框架 https://mvnrepository.com/artifact/com.esotericsoftware/kryo -->
         <dependency>
             <groupId>com.esotericsoftware</groupId>
             <artifactId>kryo</artifactId>
             <version>${kryo.version}</version>
         </dependency>
-        <!--===================JSON解析=======START===========-->
+        <!-- 谷歌套件 https://mvnrepository.com/artifact/com.google.guava/guava -->
         <dependency>
-            <groupId>net.sf.json-lib</groupId>
-            <artifactId>json-lib</artifactId>
-            <classifier>jdk15</classifier>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${google-guava.version}</version>
+        </dependency>
+        <!-- 图片压缩 https://mvnrepository.com/artifact/net.coobird/thumbnailator -->
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>${thumbnailator.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
+            <version>${google-gson.version}</version>
         </dependency>
-        <!--===================JSON解析=======END===========-->
+        <dependency>
+            <groupId>net.sf.json-lib</groupId>
+            <artifactId>json-lib</artifactId>
+            <version>${json-lib.version}</version>
+            <classifier>jdk15</classifier>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+        <!-- 解析HTML https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- 第三方开源emoji表情过滤-->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>java-emoji-converter</artifactId>
+            <version>${emoji-converter.version}</version>
         </dependency>
     </dependencies>
-
-    <dependencyManagement>
-        <dependencies>
-            <!--===================Goole 套件=======START===========-->
-            <!-- 谷歌套件 https://mvnrepository.com/artifact/com.google.guava/guava -->
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${google-guava.version}</version>
-            </dependency>
-            <!-- 图片压缩 https://mvnrepository.com/artifact/net.coobird/thumbnailator -->
-            <dependency>
-                <groupId>net.coobird</groupId>
-                <artifactId>thumbnailator</artifactId>
-                <version>${thumbnailator.version}</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
-            <dependency>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-                <version>${google-gson.version}</version>
-            </dependency>
-            <!--===================Goole 套件=======END===========-->
-            <dependency>
-                <groupId>net.sf.json-lib</groupId>
-                <artifactId>json-lib</artifactId>
-                <version>${json-lib.version}</version>
-                <classifier>jdk15</classifier>
-            </dependency>
-            <!-- 解析HTML https://mvnrepository.com/artifact/org.jsoup/jsoup -->
-            <dependency>
-                <groupId>org.jsoup</groupId>
-                <artifactId>jsoup</artifactId>
-                <version>${jsoup.version}</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>${fastjson.version}</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.github.binarywang</groupId>
-                <artifactId>java-emoji-converter</artifactId>
-                <version>${emoji-converter.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>
