@@ -10,7 +10,6 @@
 
     <properties>
         <java.version>1.8</java.version>
-<!--        <github.global.server>github</github.global.server>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -20,7 +19,7 @@
         <!--========================== All Plugins START =====================-->
         <plugin.compiler.version>3.2</plugin.compiler.version>
         <plugin.coveralls.version>4.3.0</plugin.coveralls.version>
-<!--        <plugin.cobertura.version>2.7</plugin.cobertura.version>-->
+        <plugin.cobertura.version>2.7</plugin.cobertura.version>
         <plugin.surefire.version>2.18.1</plugin.surefire.version>
         <plugin.surefire.skip-it>false</plugin.surefire.skip-it>
         <plugin.surefire.ignore-failure>false</plugin.surefire.ignore-failure>
@@ -39,6 +38,8 @@
         <kryo.version>4.0.2</kryo.version>
         <jsoup.version>1.13.1</jsoup.version>
         <thumbnailator.version>0.4.12</thumbnailator.version>
+        <fastjson.version>1.2.73</fastjson.version>
+        <lombok.version>1.18.12</lombok.version>
     </properties>
 
     <dependencies>
@@ -47,12 +48,6 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.json-lib</groupId>
-            <artifactId>json-lib</artifactId>
-            <version>${json-lib.version}</version>
-            <classifier>jdk15</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -78,7 +73,6 @@
         <dependency>
             <groupId>com.github.binarywang</groupId>
             <artifactId>java-emoji-converter</artifactId>
-            <version>${emoji-converter.version}</version>
         </dependency>
         <!-- Kryo是一个快速高效的Java序列化框架 https://mvnrepository.com/artifact/com.esotericsoftware/kryo -->
         <dependency>
@@ -86,11 +80,20 @@
             <artifactId>kryo</artifactId>
             <version>${kryo.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+        <!--===================JSON解析=======START===========-->
+        <dependency>
+            <groupId>net.sf.json-lib</groupId>
+            <artifactId>json-lib</artifactId>
+            <classifier>jdk15</classifier>
+        </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>${google-gson.version}</version>
+        </dependency>
+        <!--===================JSON解析=======END===========-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
 
@@ -109,12 +112,42 @@
                 <artifactId>thumbnailator</artifactId>
                 <version>${thumbnailator.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${google-gson.version}</version>
+            </dependency>
             <!--===================Goole 套件=======END===========-->
+            <dependency>
+                <groupId>net.sf.json-lib</groupId>
+                <artifactId>json-lib</artifactId>
+                <version>${json-lib.version}</version>
+                <classifier>jdk15</classifier>
+            </dependency>
             <!-- 解析HTML https://mvnrepository.com/artifact/org.jsoup/jsoup -->
             <dependency>
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
                 <version>${jsoup.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>java-emoji-converter</artifactId>
+                <version>${emoji-converter.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -153,7 +186,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.7</version>
+                <version>${plugin.cobertura.version}</version>
                 <configuration>
                     <format>xml</format>
                     <maxmem>256m</maxmem>
