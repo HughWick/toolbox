@@ -23,5 +23,8 @@ public class IdCardTest {
         System.out.println(IdCardUtils.isNot18Place(idcard18));
         // 15位身份证转18位身份证
         System.out.println(IdCardUtils.encrypt(idcard18));
+
+        System.out.println("---->>"+IdCardUtils.encrypt(idcard18,6,4));
+        System.out.println("---->>"+IdCardUtils.encrypt("idcard18",7,1));
     }
 }
