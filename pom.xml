@@ -27,7 +27,7 @@
         <plugin.maven-javadoc-plugin.version>2.9.1</plugin.maven-javadoc-plugin.version>
         <plugin.maven-gpg-plugin.version>1.5</plugin.maven-gpg-plugin.version>
         <!--============================== other ==============================-->
-        <okhttp.version>3.14.2</okhttp.version>
+        <okhttp.version>3.14.9</okhttp.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <servlet-api.version>4.0.1</servlet-api.version>
         <json-lib.version>2.4</json-lib.version>
