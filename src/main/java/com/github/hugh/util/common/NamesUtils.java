@@ -45,7 +45,7 @@ public class NamesUtils {
      * @param str 字符串
      * @return String 脱敏后的姓名字符串
      */
-    public static String hide(String str) {
+    public static String encrypt(String str) {
         if (str == null) {
             return null;
         }

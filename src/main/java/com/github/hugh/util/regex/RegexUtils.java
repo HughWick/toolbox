@@ -256,16 +256,27 @@ public class RegexUtils {
     /**
      * 验证字符串是否为手机号码
      *
-     * @param string 手机号码
+     * @param mobile 手机号码
      * @return boolean {@code true} 正确
      */
-    public static boolean isPhone(String string) {
-        if (EmptyUtils.isEmpty(string) || string.length() != 11) {
+    public static boolean isPhone(String mobile) {
+        if (EmptyUtils.isEmpty(mobile) || mobile.length() != 11) {
             return false;
         } else {
-            Matcher m = PHONE_PATTERN.matcher(string);
+            Matcher m = PHONE_PATTERN.matcher(mobile);
             return m.matches();
         }
+    }
+
+    /**
+     * 验证字符串不是手机号码
+     *
+     * @param mobile 手机号码
+     * @return boolean {@code true} 不是
+     * @since 1.2.8
+     */
+    public static boolean isNotPhone(String mobile) {
+        return !isPhone(mobile);
     }
 
     /**

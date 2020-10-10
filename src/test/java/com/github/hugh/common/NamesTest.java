@@ -11,9 +11,9 @@ public class NamesTest {
 
     @Test
     public void test01() {
-        System.out.println("--1->>" + NamesUtils.hide("刘三"));
-        System.out.println("--2->>" + NamesUtils.hide("王月如"));
-        System.out.println("--3->>" + NamesUtils.hide("欧阳震华"));
-        System.out.println("--4->>" + NamesUtils.hide("麦麦提·赛帕克"));
+        System.out.println("--1->>" + NamesUtils.encrypt("刘三"));
+        System.out.println("--2->>" + NamesUtils.encrypt("王月如"));
+        System.out.println("--3->>" + NamesUtils.encrypt("欧阳震华"));
+        System.out.println("--4->>" + NamesUtils.encrypt("麦麦提·赛帕克"));
     }
 }
