@@ -27,6 +27,7 @@ public class DateTest {
         System.out.println("--->" + DateUtils.getDate(1));
         System.out.println("--->" + DateUtils.getDate(DateUtils.toStringTime(str)));
         System.out.println("--->" + DateUtils.getDateSign());
+        System.out.println("--根据当前时间的一天前的起始时间->" + DateUtils.getDayBeforeStartTime());
     }
 
     @Test
@@ -38,6 +39,15 @@ public class DateTest {
         System.out.println("--->" + DateUtils.getMonthBeforeEndTime());
     }
 
+
+    @Test
+    public void test03() {
+        Date date1 = new Date();
+        System.out.println("--->>" + date1);
+        System.out.println("--->>" + DateUtils.dateStrToDate(date1.toString()));
+
+
+    }
 
 
 }

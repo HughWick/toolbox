@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,7 +16,8 @@ import java.util.regex.Pattern;
  * <p>该类型主要使用java 1.8之前没有LocalDateTime 类的处理方式</p>
  *
  * @author hugh
- * @since java 1.7
+ * @version java 1.7
+ * @since 1.0.0
  */
 public class DateUtils extends DateCode {
     private DateUtils() {
@@ -92,22 +94,6 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 按照指定的格式，将日期类型对象转换成字符串，例如：yyyy-MM-dd,yyyy/MM/dd,yyyy/MM/dd hh:mm:ss
-     * 如果传入的日期为null,则返回空值
-     *
-     * @param date   日期类型对象
-     * @param format 需转换的格式
-     * @return String 日期格式字符串
-     */
-    public static String formatDate(Date date, String format) {
-        if (date == null) {
-            return "";
-        }
-        SimpleDateFormat formater = new SimpleDateFormat(format);
-        return formater.format(date);
-    }
-
-    /**
      * 将字符串yyyy-MM-dd HH:mm:ss转换为yyyyMMddHHmmss 如果传入的字符串为null,则返回空值
      *
      * @param dateTime 日期格式的字符串
@@ -139,10 +125,10 @@ public class DateUtils extends DateCode {
      * 将字符串（yyyy-MM-dd）解析成日期
      *
      * @param dateStr 日期格式的字符串
-     * @return 日期类型对象
+     * @return Date 日期类型对象
      */
     public static Date parseDate(String dateStr) {
-        return parseDate(dateStr, "yyyy-MM-dd");
+        return parseDate(dateStr, YEAR_MONTH_DAY);
     }
 
     /**
@@ -150,7 +136,7 @@ public class DateUtils extends DateCode {
      *
      * @param dateStr 日期格式的字符串
      * @param format  字符串的格式
-     * @return 日期类型对象
+     * @return Date 日期类型对象
      */
     public static Date parseDate(String dateStr, String format) {
         if (com.github.hugh.util.EmptyUtils.isEmpty(dateStr)) {
@@ -169,7 +155,7 @@ public class DateUtils extends DateCode {
      * 将时间戳转换成yyyy-MM-dd HH:mm:ss字符串格式
      *
      * @param timestamp 时间戳
-     * @return 日期格式字符串
+     * @return String 日期格式字符串
      */
     public static String timestampParseTime(long timestamp) {
         if (timestamp < 0) {
@@ -215,7 +201,7 @@ public class DateUtils extends DateCode {
      */
     public static Date getDayBeforeStartTime() {
         Date date = new Date();
-        String dateStr = formatDate(date, "yyyy-MM-dd");
+        String dateStr = format(date, YEAR_MONTH_DAY);
         return getDayBeforeStartTime(dateStr);
     }
 
@@ -229,7 +215,7 @@ public class DateUtils extends DateCode {
         Calendar calendar = Calendar.getInstance();
         Date date = parseDate(dateStr, YEAR_MONTH_DAY);
         if (date == null) {
-            return date;
+            return null;
         }
         calendar.setTime(date);
         calendar.add(Calendar.DAY_OF_MONTH, -1);
@@ -247,7 +233,7 @@ public class DateUtils extends DateCode {
      */
     public static Date getDayBeforeEndTime() {
         Date date = new Date();
-        String dateStr = formatDate(date, YEAR_MONTH_DAY);
+        String dateStr = format(date, YEAR_MONTH_DAY);
         return getDayBeforeEndTime(dateStr);
     }
 
@@ -261,7 +247,7 @@ public class DateUtils extends DateCode {
         Calendar calendar = Calendar.getInstance();
         Date date = parseDate(dateStr, YEAR_MONTH_DAY);
         if (date == null) {
-            return date;
+            return null;
         }
         calendar.setTime(date);
         calendar.add(Calendar.DAY_OF_MONTH, -1);
@@ -277,7 +263,7 @@ public class DateUtils extends DateCode {
      *
      * @param beginDate 开始日期
      * @param endDate   结束日期
-     * @return boolean
+     * @return boolean @{code true} 同一月
      */
     public static boolean isSameMonth(Date beginDate, Date endDate) {
         try {
@@ -344,7 +330,7 @@ public class DateUtils extends DateCode {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -1);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.set(Calendar.HOUR_OF_DAY, 00);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
@@ -875,7 +861,7 @@ public class DateUtils extends DateCode {
             // 转换为日期
             Date date = parseDate(time, format);
             // 再将日期转换成对应格式，进行校验是否与字符串一致
-            return time.equals(formatDate(date, format));
+            return time.equals(format(date, format));
         } catch (Exception e) {
             return false;
         }
@@ -1040,24 +1026,24 @@ public class DateUtils extends DateCode {
     /**
      * 校验开始日期与结束日期是否属于同一年份
      *
-     * @param s 支持格式：yyyy-MM-dd | yyyy-MM-dd HH:mm:ss
-     * @param e 支持格式：yyyy-MM-dd | yyyy-MM-dd HH:mm:ss
+     * @param startStr 起始日期字符串 支持格式：yyyy-MM-dd | yyyy-MM-dd HH:mm:ss
+     * @param endStr   结束日期字符串 支持格式：yyyy-MM-dd | yyyy-MM-dd HH:mm:ss
      * @return boolean 不是同一年返回true
      */
-    public static boolean isAcrossYear(String s, String e) {
+    public static boolean isAcrossYear(String startStr, String endStr) {
         Date start;
-        if (isDateFormat(s)) {
-            start = parseDate(s, YEAR_MONTH_DAY_HOUR_MIN_SEC);
-        } else if (isDateFormat(s, YEAR_MONTH_DAY)) {
-            start = parseDate(s);
+        if (isDateFormat(startStr)) {
+            start = parseDate(startStr, YEAR_MONTH_DAY_HOUR_MIN_SEC);
+        } else if (isDateFormat(startStr, YEAR_MONTH_DAY)) {
+            start = parseDate(startStr);
         } else {
             return true;
         }
         Date end;
-        if (isDateFormat(e)) {
-            end = parseDate(e, YEAR_MONTH_DAY_HOUR_MIN_SEC);
-        } else if (isDateFormat(e, YEAR_MONTH_DAY)) {
-            end = parseDate(e);
+        if (isDateFormat(endStr)) {
+            end = parseDate(endStr, YEAR_MONTH_DAY_HOUR_MIN_SEC);
+        } else if (isDateFormat(endStr, YEAR_MONTH_DAY)) {
+            end = parseDate(endStr);
         } else {
             return true;
         }
@@ -1067,8 +1053,8 @@ public class DateUtils extends DateCode {
     /**
      * 校验开始日期与结束日期是否属于同一年份
      *
-     * @param start
-     * @param end
+     * @param start 起始日期
+     * @param end   结束日期
      * @return boolean 不是同一年返回true
      */
     private static boolean isAcrossYear(Date start, Date end) {
@@ -1085,7 +1071,7 @@ public class DateUtils extends DateCode {
     /**
      * 根据当前时间获取距离凌晨还剩余多少毫秒
      *
-     * @return long
+     * @return long 距离凌晨毫秒数
      */
     public static long getEarlyMorningSec() {
         long now = System.currentTimeMillis();// 当前毫秒数
@@ -1101,5 +1087,20 @@ public class DateUtils extends DateCode {
         return 24 * 60 * 60 - overTime;
     }
 
+    /**
+     * 日期对象的字符串 转 日期对象
+     *
+     * @param dataStr 日期对象字符串 @{code Fri Oct 09 00:00:00 CST 2020}
+     * @return Date
+     * @since 1.2.8
+     */
+    public static Date dateStrToDate(String dataStr) {
+        try {
+            return new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US).parse(dataStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }
