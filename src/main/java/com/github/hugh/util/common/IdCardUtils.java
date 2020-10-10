@@ -17,7 +17,7 @@ public class IdCardUtils {
      * @param idCard 身份证号码
      * @return boolean 合法返回true，否则返回false
      */
-    public boolean isIdCard(String idCard) {
+    public static boolean isIdCard(String idCard) {
         if (idCard.length() == 15) {
             return IdCardValidator.is15Place(idCard);
         }
