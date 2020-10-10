@@ -45,9 +45,5 @@ public class DateTest {
         Date date1 = new Date();
         System.out.println("--->>" + date1);
         System.out.println("--->>" + DateUtils.dateStrToDate(date1.toString()));
-
-
     }
-
-
 }
