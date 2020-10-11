@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Map 工具类
  * <ul>
- * <li>该类获取map中的值使用了apache MapUtil进行二次封装</li>
+ * <li>该类获取map中的值使用了{@link org.apache.commons.collections4.MapUtils}进行二次封装</li>
  * </ul>
  *
  * @author hugh

@@ -1,5 +1,8 @@
 package com.github.hugh.util.common;
 
+import com.google.common.base.Strings;
+import org.apache.commons.lang.StringUtils;
+
 /**
  * 姓名工具类
  *
@@ -114,5 +117,30 @@ public class NamesUtils {
             return str;
         }
         return str.substring(str.length() - len);
+    }
+
+    /**
+     * 脱敏规则: 只显示第一个汉字,比如李某某置换为李**, 李某置换为李*
+     * <ul>
+     *     <li>注：该方法不支持少数民族名称脱敏,如：麦麦提·赛帕克,只会脱敏为麦******,建议使用{@link NamesUtils#encrypt(String)}该方法为市面通用的姓名脱敏方式</li>
+     * </ul>
+     *
+     * @param fullName 姓名
+     * @return String 脱敏后的姓名
+     * @since 1.2.9
+     */
+    public static String desensitized(String fullName) {
+        if (Strings.isNullOrEmpty(fullName)) {
+            return fullName;
+        }
+        int index;
+        int length = fullName.length();
+        if (length == 4) {
+            index = 2;
+        } else {
+            index = 1;
+        }
+        String name = StringUtils.left(fullName, index);
+        return StringUtils.rightPad(name, StringUtils.length(fullName), "*");
     }
 }

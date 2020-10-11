@@ -16,4 +16,13 @@ public class NamesTest {
         System.out.println("--3->>" + NamesUtils.encrypt("欧阳震华"));
         System.out.println("--4->>" + NamesUtils.encrypt("麦麦提·赛帕克"));
     }
+
+    @Test
+    public void test02(){
+        System.out.println("---1->>>"+ NamesUtils.desensitized("刘三"));
+        System.out.println("---2->>>"+ NamesUtils.desensitized("王月如"));
+        System.out.println("---3->>>"+ NamesUtils.desensitized("欧阳震华"));
+        System.out.println("---4->>>"+ NamesUtils.desensitized("麦麦提·赛帕克"));
+    }
+
 }
