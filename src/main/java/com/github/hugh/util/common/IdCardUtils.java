@@ -91,7 +91,7 @@ public class IdCardUtils {
         if (rear < 0) {
             throw new ToolboxException("number rear error !");
         }
-        // 字符串总数小于前后要脱敏保留的数之和
+        // 字符串长度小于前后要脱敏保留的数之和
         int total = before + rear;
         if (length <= total) {
             throw new ToolboxException("id card number length error !");

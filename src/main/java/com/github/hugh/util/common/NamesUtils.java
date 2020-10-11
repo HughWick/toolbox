@@ -1,6 +1,8 @@
 package com.github.hugh.util.common;
 
 /**
+ * 姓名工具类
+ *
  * @author hugh
  * @since 1.2.8
  */

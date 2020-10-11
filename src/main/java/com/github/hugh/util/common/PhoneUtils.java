@@ -3,6 +3,8 @@ package com.github.hugh.util.common;
 import com.github.hugh.util.EmptyUtils;
 
 /**
+ * 手机号码工具类
+ *
  * @author hugh
  * @version 1.2.8
  */

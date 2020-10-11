@@ -337,7 +337,6 @@ public class RegexUtils {
         return !isPort(string);
     }
 
-
     /**
      * 验证字符串是否匹配正则表达式
      *
