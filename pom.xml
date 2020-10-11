@@ -122,6 +122,7 @@
             <artifactId>java-emoji-converter</artifactId>
             <version>${emoji-converter.version}</version>
         </dependency>
+
     </dependencies>
 
     <build>
