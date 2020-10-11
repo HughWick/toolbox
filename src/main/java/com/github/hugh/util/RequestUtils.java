@@ -1,4 +1,4 @@
-package com.github.hugh.util.system;
+package com.github.hugh.util;
 
 import javax.servlet.http.HttpServletRequest;
 
