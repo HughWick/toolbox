@@ -24,10 +24,7 @@ public class JsonObjectUtils {
      * @return String
      */
     public static String getString(JsonObject jsonObject, String key) {
-        if (jsonObject == null) {
-            throw new ToolboxException("JsonObject is null !");
-        }
-        JsonElement jsonElement = jsonObject.get(key);
+        JsonElement jsonElement = get(jsonObject, key);
         return jsonElement == null ? null : jsonElement.getAsString();
     }
 
@@ -43,10 +40,7 @@ public class JsonObjectUtils {
      * @return Integer
      */
     public static Integer getInteger(JsonObject jsonObject, String key) {
-        if (jsonObject == null) {
-            throw new ToolboxException("JsonObject is null !");
-        }
-        JsonElement jsonElement = jsonObject.get(key);
+        JsonElement jsonElement = get(jsonObject, key);
         return jsonElement == null ? null : jsonElement.getAsInt();
     }
 
@@ -59,18 +53,12 @@ public class JsonObjectUtils {
      * @return int 在json中获取key下面的value返回为null时,返回{@code 0}
      */
     public static int getInt(JsonObject jsonObject, String key) {
-        if (jsonObject == null) {
-            throw new ToolboxException("JsonObject is null !");
-        }
         Integer integer = getInteger(jsonObject, key);
         return integer == null ? 0 : integer;
     }
 
     public static Long getLong(JsonObject jsonObject, String key) {
-        if (jsonObject == null) {
-            throw new ToolboxException("JsonObject is null !");
-        }
-        JsonElement jsonElement = jsonObject.get(key);
+        JsonElement jsonElement = get(jsonObject, key);
         return jsonElement == null ? null : jsonElement.getAsLong();
     }
 
@@ -80,18 +68,12 @@ public class JsonObjectUtils {
      * @return long 在json中获取key的long返回为null时,返回{@code 0}
      */
     public static long getLongValue(JsonObject jsonObject, String key) {
-        if (jsonObject == null) {
-            throw new ToolboxException("JsonObject is null !");
-        }
         Long aLong = getLong(jsonObject, key);
         return aLong == null ? 0 : aLong;
     }
 
     public static Double getDouble(JsonObject jsonObject, String key) {
-        if (jsonObject == null) {
-            throw new ToolboxException("JsonObject is null !");
-        }
-        JsonElement jsonElement = jsonObject.get(key);
+        JsonElement jsonElement = get(jsonObject, key);
         return jsonElement == null ? null : jsonElement.getAsDouble();
     }
 
@@ -101,26 +83,31 @@ public class JsonObjectUtils {
      * @return double 在json中获取key的double结果为null时,返回{@code 0}
      */
     public static double getDoubleValue(JsonObject jsonObject, String key) {
-        if (jsonObject == null) {
-            throw new ToolboxException("JsonObject is null !");
-        }
         Double aDouble = getDouble(jsonObject, key);
         return aDouble == null ? 0 : aDouble;
     }
 
     public static JsonObject getJsonObject(JsonObject jsonObject, String key) {
-        if (jsonObject == null) {
-            throw new ToolboxException("JsonObject is null !");
-        }
-        JsonElement jsonElement = jsonObject.get(key);
+        JsonElement jsonElement = get(jsonObject, key);
         return jsonElement == null ? null : jsonElement.getAsJsonObject();
     }
 
     public static JsonArray getJsonArray(JsonObject jsonObject, String key) {
+        JsonElement jsonElement = get(jsonObject, key);
+        return jsonElement == null ? null : jsonElement.getAsJsonArray();
+    }
+
+    /**
+     * 统一的获取JsonObject中元素方法
+     *
+     * @param jsonObject JsonObject
+     * @param key        Key
+     * @return JsonElement
+     */
+    private static JsonElement get(JsonObject jsonObject, String key) {
         if (jsonObject == null) {
             throw new ToolboxException("JsonObject is null !");
         }
-        JsonElement jsonElement = jsonObject.get(key);
-        return jsonElement == null ? null : jsonElement.getAsJsonArray();
+        return jsonObject.get(key);
     }
 }
