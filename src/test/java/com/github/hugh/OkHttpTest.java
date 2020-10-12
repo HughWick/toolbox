@@ -5,6 +5,9 @@ import net.sf.json.JSONObject;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author AS
@@ -40,5 +43,16 @@ public class OkHttpTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void test03() throws IOException {
+        String url = "http://localhost:7900/testHeader";
+        JSONObject json = new JSONObject();
+        Map<String, String> headerContent = new HashMap<>();
+        headerContent.put("test_token", UUID.randomUUID().toString());
+        headerContent.put("test_token_02", UUID.randomUUID().toString());
+        headerContent.put("int_test", "123");
+        System.out.println("--->" + OkHttpUtils.postForm(url, json, headerContent));
     }
 }

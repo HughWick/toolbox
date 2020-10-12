@@ -2,11 +2,13 @@ package com.github.hugh.gson;
 
 import com.github.hugh.model.Student;
 import com.github.hugh.util.DateUtils;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.github.hugh.util.OkHttpUtils;
+import com.github.hugh.util.gson.JsonObjectUtils;
+import com.google.gson.*;
+import net.sf.json.JSONObject;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author AS
@@ -42,6 +44,19 @@ public class JsonDemo {
         System.out.println(asJsonObject);
         System.out.println("--->>" + asJsonObject.get("m1").getAsJsonObject().get("money").getAsDouble());
     }
+
+
+    @Test
+    public void test02() throws IOException {
+        JSONObject json = new JSONObject();
+        json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+        JsonObject jsonObject = OkHttpUtils.postFormReJson("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json);
+        assert jsonObject != null;
+        System.out.println("--1->>" + jsonObject.get( "status"));
+        System.out.println("--1->>" + JsonObjectUtils.getString(jsonObject, "status1"));
+        System.out.println("--2->>" + jsonObject.get("msg").getAsString());
+    }
+
 
 
     public static void main(String[] args) {
