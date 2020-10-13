@@ -4,11 +4,17 @@ import com.github.hugh.model.Student;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.OkHttpUtils;
 import com.github.hugh.util.gson.JsonObjectUtils;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import net.sf.json.JSONObject;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author AS
@@ -51,7 +57,6 @@ public class JsonDemo {
         JSONObject json = new JSONObject();
         json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
         JsonObject jsonObject = OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json);
-//        JsonObject jsonObject = OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manager/", json);
         assert jsonObject != null;
         System.out.println("--->>" + jsonObject.toString());
         System.out.println("--getString->>" + JsonObjectUtils.getString(jsonObject, "msg1"));
@@ -67,6 +72,7 @@ public class JsonDemo {
         System.out.println("--getBigDecimal->>" + JsonObjectUtils.getBigDecimal(jsonObject, "status2"));
     }
 
+
     @Test
     public void test03() {
         JSONObject json = new JSONObject();
@@ -75,19 +81,26 @@ public class JsonDemo {
         try {
             JsonObject jsonObject = OkHttpUtils.postFormReJsonObject("https://www.hnlot.com.cn/ptpz/yonghu/login", json);
             assert jsonObject != null;
-//            System.out.println("--->>" + jsonObject.toString());
             System.out.println("--getJsonObject->>" + JsonObjectUtils.getJsonObject(jsonObject, "data"));
             JsonObject data = JsonObjectUtils.getJsonObject(jsonObject, "data");
             System.out.println("--getString->>" + JsonObjectUtils.getString(data, "access_token"));
             JsonArray menus = JsonObjectUtils.getJsonArray(data, "menus");
-            for (int i =0 ; i < menus.size() ; i++){
-                System.out.println("--JsonArray遍历->"+menus.get(i));
+            for (int i = 0; i < menus.size(); i++) {
+                System.out.println("--JsonArray遍历->" + menus.get(i));
             }
-//            System.out.println("--getJsonArray->>" + JsonObjectUtils.getJsonArray(data, "menus"));
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    @Test
+    public void test04() throws IOException {
+        Map<String, String> header = new HashMap<>();
+        header.put("token", UUID.randomUUID().toString());
+        JSONObject json = new JSONObject();
+        json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+        String str = OkHttpUtils.get("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json, header);
+        System.out.println("--->" + JsonParser.parseString(str).getAsJsonObject());
     }
 
     public static void main(String[] args) {
@@ -105,5 +118,4 @@ public class JsonDemo {
 //            System.out.println(set.getKey() + "_" + set.getValue().getAsInt());
 //        }
     }
-
 }
