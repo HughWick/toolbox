@@ -26,7 +26,7 @@ public class StringUtils {
     /**
      * 空字符串
      */
-    public static final String EMPTY = "";
+    private static final String EMPTY = "";
 
     /**
      * 根据Unicode编码完美的判断中文汉字和符号
@@ -225,10 +225,10 @@ public class StringUtils {
     }
 
     /**
-     * 获取的驼峰写法。
+     * 将字符串转换为驼峰写法.
      * <ul>
      *     <li>注：这是 mybatis-gen 源码</li>
-     *     <li>支持字符串格式：_,-,@,#,$,空格,/,&</li>
+     *     <li>支持字符串格式_,-,@,#,$, ,/,{@code &}</li>
      * </ul>
      *
      * @param inputString             输入字符串
@@ -292,7 +292,8 @@ public class StringUtils {
 
     /**
      * 替换掉任意空格为空
-     * <p>调用{@link #replaceAnyBlank(String, String)}替换字符串中所有空格/p>
+     * <p>调用{@link #replaceAnyBlank(String, String)}替换字符串中所有空格</p>
+     *
      * @param string 原始字符串
      * @return String 替换后结果
      * @since 1.3.1

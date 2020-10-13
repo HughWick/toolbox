@@ -20,6 +20,7 @@ public class EntityUtils {
     /**
      * 实现两个实体类属性之间的复制
      *
+     * @param <T>    实体类型
      * @param source 源文
      * @param dest   复制目标
      * @throws IntrospectionException    无法将字符串类名称映射到 Class 对象、无法解析字符串方法名，或者指定对其用途而言具有错误类型签名的方法名称
@@ -45,6 +46,7 @@ public class EntityUtils {
     /**
      * 通过Kryo框架深拷贝
      *
+     * @param <T>    实体类型
      * @param source 拷贝对象
      * @return T 实体对象
      */
