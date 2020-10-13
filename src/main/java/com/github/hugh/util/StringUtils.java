@@ -1,5 +1,7 @@
 package com.github.hugh.util;
 
+import jodd.util.StringUtil;
+
 /**
  * 字符串工具
  *
@@ -8,6 +10,7 @@ package com.github.hugh.util;
  */
 public class StringUtils {
 
+    private StringUtils(){}
     /**
      * 根据Unicode编码完美的判断中文汉字和符号
      *
@@ -129,5 +132,79 @@ public class StringUtils {
         return length;
     }
 
+    /**
+     * 左补信息
+     *
+     * @param original     原始字符串
+     * @param targetLength 目标长度
+     * @param unit         补的元素
+     * @return 结果
+     * @since 1.3.1
+     */
+    public static String leftPadding(final String original, final int targetLength,
+                                     final char unit) {
+        //1. fast-return
+        final int originalLength = original.length();
+        if (originalLength >= targetLength) {
+            return original;
+        }
+        //2. 循环补零
+        StringBuilder stringBuilder = new StringBuilder(targetLength);
+        for (int i = originalLength; i < targetLength; i++) {
+            stringBuilder.append(unit);
+        }
+        stringBuilder.append(original);
+        return stringBuilder.toString();
+    }
 
+    /**
+     * 左补信息
+     * 默认左补零 0
+     *
+     * @param original     原始字符串
+     * @param targetLength 目标长度
+     * @return String 结果
+     * @since 1.3.1
+     */
+    public static String leftPadding(final String original,
+                                     final int targetLength) {
+        return leftPadding(original, targetLength, '0');
+    }
+
+    /**
+     * 驼峰命名转下划线,小写
+     *
+     * @param camelStr 驼峰字符串
+     * @return String 下划线小写字符串
+     * @since 1.3.1
+     */
+    public static String camelToUnderline(String camelStr) {
+        if (StringUtil.isEmpty(camelStr)) {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        char[] chars = camelStr.toCharArray();
+        for (char c : chars) {
+            if (Character.isUpperCase(c)) {
+                sb.append('_');
+                sb.append(Character.toLowerCase(c));
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 驼峰命名转下划线,大写
+     * <p>调用{@link #camelToUnderline(String)}驼峰转下划线命名方式</p>
+     *
+     * @param camelStr 驼峰字符串
+     * @return String 下划线大写字符串
+     * @since 1.3.1
+     */
+    public static String camelToUnderlineUppercase(String camelStr) {
+        String str = camelToUnderline(camelStr);
+        return str == null ? null : str.toUpperCase();
+    }
 }

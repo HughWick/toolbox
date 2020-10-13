@@ -18,10 +18,20 @@ public class StringTest {
 
 //        System.out.println("fileName = " + fileName);
         System.out.println("---1>>>" + StringUtils.after(fName, "\\"));
-
-
         System.out.println("---1>>>" + StringUtils.before(fName, "\\"));
         System.out.println("--2->>>" + StringUtils.isChinese(fName));
         System.out.println("--3->>>" + StringUtils.getNumber(fName));
+    }
+
+    @Test
+    public void test02() {
+        System.out.println("--->" + StringUtils.leftPadding("1", 8));
+    }
+
+    @Test
+    public void test03() {
+        String value = "startDate";
+        System.out.println("---->>" + StringUtils.camelToUnderline(value));
+        System.out.println("---->>" + StringUtils.camelToUnderlineUppercase(value));
     }
 }
