@@ -144,6 +144,7 @@ public class OkHttpUtils {
      * @param url  请求URL
      * @param json 参数
      * @return JSONObject
+     * @throws IOException IO流错误
      */
     @Deprecated
     public static JSONObject postFormReJSON(String url, JSONObject json) throws IOException {
@@ -165,6 +166,7 @@ public class OkHttpUtils {
      * @param url  请求URL
      * @param json 参数
      * @return JsonObject
+     * @throws IOException IO流错误
      * @since 1.3.0
      */
     public static JsonObject postFormReJsonObject(String url, JSONObject json) throws IOException {

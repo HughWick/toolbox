@@ -181,6 +181,7 @@ public class TimeUtils extends DateCode {
     /**
      * 获取上个月的月初时间
      *
+     * @param pattern 日期格式
      * @return String 返回格式
      */
     public static String earlyLastMonth(String pattern) {
