@@ -10,7 +10,9 @@ import jodd.util.StringUtil;
  */
 public class StringUtils {
 
-    private StringUtils(){}
+    private StringUtils() {
+    }
+
     /**
      * 根据Unicode编码完美的判断中文汉字和符号
      *
@@ -106,7 +108,6 @@ public class StringUtils {
         }
         return value;
     }
-
 
     /**
      * 查询字符串中的对应varchar的长度
@@ -206,5 +207,48 @@ public class StringUtils {
     public static String camelToUnderlineUppercase(String camelStr) {
         String str = camelToUnderline(camelStr);
         return str == null ? null : str.toUpperCase();
+    }
+
+    /**
+     * 获取的驼峰写法。
+     * 1.这是 mybatis-gen 源码
+     *
+     * @param inputString             输入字符串
+     * @param firstCharacterUppercase 首字母是否大写。
+     * @return String 驼峰写法
+     * @since 1.3.1
+     */
+    public static String getCamelCase(String inputString, boolean firstCharacterUppercase) {
+        StringBuilder sb = new StringBuilder();
+        boolean nextUpperCase = false;
+        for (int i = 0; i < inputString.length(); i++) {
+            char c = inputString.charAt(i);
+            switch (c) {
+                case '_':
+                case '-':
+                case '@':
+                case '$':
+                case '#':
+                case ' ':
+                case '/':
+                case '&':
+                    if (sb.length() > 0) {
+                        nextUpperCase = true;
+                    }
+                    break;
+                default:
+                    if (nextUpperCase) {
+                        sb.append(Character.toUpperCase(c));
+                        nextUpperCase = false;
+                    } else {
+                        sb.append(Character.toLowerCase(c));
+                    }
+                    break;
+            }
+        }
+        if (firstCharacterUppercase) {
+            sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+        }
+        return sb.toString();
     }
 }
