@@ -19,7 +19,7 @@ public class StringUtils {
     /**
      * 空白信息的表达式
      *
-     * @since 0.1.98
+     * @since 1.3.1
      */
     private static final Pattern BLANK_PATTERN = Pattern.compile("\\s*|\t|\r|\n");
 
