@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
  * OkHttp工具类
  *
  * @author hugh
+ * @since 1.0.2
  */
 public class OkHttpUtils {
     private OkHttpUtils() {
