@@ -134,8 +134,8 @@ public class OkHttpUtils {
      * 发送POST 后返回结果转换为JSON
      * <p>Content-Type:application/x-www-form-urlencoded</p>
      * <ul>
-     *     <li>由于JSONObject底层将字符串转成JSONObject时效率过低,在版本1.3.0开始废弃</li>
-     *     <li>建议使用Gson版本的转换方法{@link OkHttpUtils#postFormReJsonObject(String, JSONObject)}</li>
+     * <li>由于JSONObject底层将字符串转成JSONObject时效率过低,在版本1.3.0开始废弃</li>
+     * <li>建议使用Gson版本的转换方法{@link #postFormReJsonObject(String, JSONObject)}</li>
      * </ul>
      *
      * @param url  请求URL
@@ -156,13 +156,13 @@ public class OkHttpUtils {
     }
 
     /**
-     * 发送POST 后返回结果转换为JSON
+     * 发送POST 后返回结果转换为{@link JsonObject}
      * <p>Content-Type:application/x-www-form-urlencoded</p>
      *
      * @param url  请求URL
      * @param json 参数
      * @return JsonObject
-     * @see JsonObject
+     * @since 1.3.0
      */
     public static JsonObject postFormReJsonObject(String url, JSONObject json) throws IOException {
         String result = postForm(url, json);
@@ -211,6 +211,19 @@ public class OkHttpUtils {
      * @return String
      */
     public static String get(String url, JSONObject data) {
+        url = urlParam(url, data);
+        return get(url);
+    }
+
+    /**
+     * 在url后拼接参数
+     *
+     * @param url  URL
+     * @param data 参数
+     * @return String 拼接好参数的Get请求url
+     * @since 1.3.0
+     */
+    private static String urlParam(String url, JSONObject data) {
         if (EmptyUtils.isEmpty(url)) {
             return "";
         }
@@ -220,7 +233,26 @@ public class OkHttpUtils {
         }
         String params = jsonParse(data);
         url += params;
-        return get(url);
+        return url;
+    }
+
+    /**
+     * 发送Get请求
+     *
+     * @param url           请求URL
+     * @param data          参数
+     * @param headerContent header 附加内容
+     * @return String
+     * @throws IOException IO流错误
+     * @since 1.3.0
+     */
+    public static String get(String url, JSONObject data, Map<String, String> headerContent) throws IOException {
+        url = urlParam(url, data);
+        Headers headers = Headers.of(headerContent);
+        Request request = new Request.Builder()
+                .url(url)
+                .headers(headers).build();
+        return send(request, CLIENT);
     }
 
     /**
@@ -257,7 +289,7 @@ public class OkHttpUtils {
     }
 
     /**
-     * 统一请求
+     * 统一发送请求
      *
      * @param request      请求内容
      * @param okHttpClient OkHttpClient
