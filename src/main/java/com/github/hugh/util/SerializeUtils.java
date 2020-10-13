@@ -44,6 +44,7 @@ public final class SerializeUtils {
     /**
      * 序列化
      *
+     * @param <T>    实体类型
      * @param object 参数
      * @return byte[]
      * @since 1.2.0

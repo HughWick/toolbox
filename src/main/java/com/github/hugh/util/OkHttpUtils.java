@@ -90,6 +90,7 @@ public class OkHttpUtils {
      * @param url  请求URL
      * @param json 参数
      * @return String
+     * @throws IOException IO流错误
      */
     public static String postForm(String url, JSONObject json) throws IOException {
         String params = jsonParse(json);
@@ -125,6 +126,7 @@ public class OkHttpUtils {
      * @param url  请求URL
      * @param json 参数
      * @return String
+     * @throws IOException IO流错误
      */
     public static String postJson(String url, JSONObject json) throws IOException {
         String params = jsonParse(json);
@@ -320,6 +322,7 @@ public class OkHttpUtils {
      * @param url  请求URL
      * @param json 参数
      * @return String
+     * @throws IOException IO流错误
      * @since 1.2.4
      */
     public static String postFormCookie(String url, JSONObject json) throws IOException {
