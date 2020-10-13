@@ -2,6 +2,9 @@ package com.github.hugh.util;
 
 import jodd.util.StringUtil;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * 字符串工具
  *
@@ -12,6 +15,18 @@ public class StringUtils {
 
     private StringUtils() {
     }
+
+    /**
+     * 空白信息的表达式
+     *
+     * @since 0.1.98
+     */
+    private static final Pattern BLANK_PATTERN = Pattern.compile("\\s*|\t|\r|\n");
+
+    /**
+     * 空字符串
+     */
+    public static final String EMPTY = "";
 
     /**
      * 根据Unicode编码完美的判断中文汉字和符号
@@ -211,7 +226,10 @@ public class StringUtils {
 
     /**
      * 获取的驼峰写法。
-     * 1.这是 mybatis-gen 源码
+     * <ul>
+     *     <li>注：这是 mybatis-gen 源码</li>
+     *     <li>支持字符串格式：_,-,@,#,$,空格,/,&</li>
+     * </ul>
      *
      * @param inputString             输入字符串
      * @param firstCharacterUppercase 首字母是否大写。
@@ -250,5 +268,36 @@ public class StringUtils {
             sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
         }
         return sb.toString();
+    }
+
+    /**
+     * 将字符串中所有空格替换为指定元素
+     *
+     * @param string      原始字符串
+     * @param replacement 待替换的文本
+     * @return String 替换后结果
+     * @since 1.3.1
+     */
+    public static String replaceAnyBlank(final String string,
+                                         final String replacement) {
+        if (StringUtil.isEmpty(string)) {
+            return string;
+        }
+        Matcher m = BLANK_PATTERN.matcher(string);
+        String result = m.replaceAll(replacement);
+        //160 &nbsp;
+        result = result.replaceAll("\\u00A0", replacement);
+        return result;
+    }
+
+    /**
+     * 替换掉任意空格为空
+     * <p>调用{@link #replaceAnyBlank(String, String)}替换字符串中所有空格/p>
+     * @param string 原始字符串
+     * @return String 替换后结果
+     * @since 1.3.1
+     */
+    public static String replaceAnyBlank(final String string) {
+        return replaceAnyBlank(string, EMPTY);
     }
 }

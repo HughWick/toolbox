@@ -26,7 +26,7 @@ public class StringTest {
 
     @Test
     public void test02() {
-        System.out.println("--->" + StringUtils.leftPadding("1", 8,'a'));
+        System.out.println("--->" + StringUtils.leftPadding("1", 8, 'a'));
         System.out.println("--->" + StringUtils.leftPadding("1", 8));
     }
 
@@ -35,8 +35,14 @@ public class StringTest {
         String value = "startDate";
         String str1 = "getCamelCaseString";
         String camel = StringUtils.camelToUnderline(str1);
-        System.out.println("--1-->>" +camel );
+        System.out.println("--1-->>" + camel);
         System.out.println("--2-->>" + StringUtils.camelToUnderlineUppercase(value));
-        System.out.println("--2-->>" + StringUtils.getCamelCase(camel,false));
+        System.out.println("--2-->>" + StringUtils.getCamelCase(camel, false));
+    }
+
+    @Test
+    public void test04() {
+        System.out.println("--1-->>" + StringUtils.replaceAnyBlank("entity is error !"));
+        System.out.println("--2-->>" + StringUtils.replaceAnyBlank("entity is error !", "_"));
     }
 }
