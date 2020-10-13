@@ -135,7 +135,7 @@ public class OkHttpUtils {
      * <p>Content-Type:application/x-www-form-urlencoded</p>
      * <ul>
      *     <li>由于JSONObject底层将字符串转成JSONObject时效率过低,在版本1.3.0开始废弃</li>
-     *     <li>建议使用Gson版本的转换方法{@link OkHttpUtils#postFormReJson(String, JSONObject)}</li>
+     *     <li>建议使用Gson版本的转换方法{@link OkHttpUtils#postFormReJsonObject(String, JSONObject)}</li>
      * </ul>
      *
      * @param url  请求URL
@@ -164,7 +164,7 @@ public class OkHttpUtils {
      * @return JsonObject
      * @see JsonObject
      */
-    public static JsonObject postFormReJson(String url, JSONObject json) throws IOException {
+    public static JsonObject postFormReJsonObject(String url, JSONObject json) throws IOException {
         String result = postForm(url, json);
         if (EmptyUtils.isEmpty(result)) {
             return null;

@@ -50,14 +50,45 @@ public class JsonDemo {
     public void test02() throws IOException {
         JSONObject json = new JSONObject();
         json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-        JsonObject jsonObject = OkHttpUtils.postFormReJson("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json);
+        JsonObject jsonObject = OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json);
+//        JsonObject jsonObject = OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manager/", json);
         assert jsonObject != null;
-        System.out.println("--1->>" + jsonObject.get( "status"));
-        System.out.println("--1->>" + JsonObjectUtils.getString(jsonObject, "status1"));
-        System.out.println("--2->>" + jsonObject.get("msg").getAsString());
+        System.out.println("--->>" + jsonObject.toString());
+        System.out.println("--getString->>" + JsonObjectUtils.getString(jsonObject, "msg1"));
+        System.out.println("--getString->>" + JsonObjectUtils.getString(jsonObject, "msg"));
+        System.out.println("-getInt-->>" + JsonObjectUtils.getInt(jsonObject, "status"));
+        System.out.println("--getInt->>" + JsonObjectUtils.getInt(jsonObject, "status2"));
+        System.out.println("--getInteger->>" + JsonObjectUtils.getInteger(jsonObject, "status"));
+        System.out.println("--getInteger->>" + JsonObjectUtils.getInteger(jsonObject, "status2"));
+        System.out.println("--getLong->>" + JsonObjectUtils.getLong(jsonObject, "status2"));
+        System.out.println("--getLongValue->>" + JsonObjectUtils.getLongValue(jsonObject, "status2"));
+        System.out.println("--getDouble->>" + JsonObjectUtils.getDouble(jsonObject, "status"));
+        System.out.println("--getDoubleValue->>" + JsonObjectUtils.getDoubleValue(jsonObject, "status2"));
+        System.out.println("--getBigDecimal->>" + JsonObjectUtils.getBigDecimal(jsonObject, "status2"));
     }
 
+    @Test
+    public void test03() {
+        JSONObject json = new JSONObject();
+        json.put("ZH", "admin");
+        json.put("MM", "88888888");
+        try {
+            JsonObject jsonObject = OkHttpUtils.postFormReJsonObject("https://www.hnlot.com.cn/ptpz/yonghu/login", json);
+            assert jsonObject != null;
+//            System.out.println("--->>" + jsonObject.toString());
+            System.out.println("--getJsonObject->>" + JsonObjectUtils.getJsonObject(jsonObject, "data"));
+            JsonObject data = JsonObjectUtils.getJsonObject(jsonObject, "data");
+            System.out.println("--getString->>" + JsonObjectUtils.getString(data, "access_token"));
+            JsonArray menus = JsonObjectUtils.getJsonArray(data, "menus");
+            for (int i =0 ; i < menus.size() ; i++){
+                System.out.println("--JsonArray遍历->"+menus.get(i));
+            }
+//            System.out.println("--getJsonArray->>" + JsonObjectUtils.getJsonArray(data, "menus"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+    }
 
     public static void main(String[] args) {
         JsonObject msgObj = new JsonObject();
