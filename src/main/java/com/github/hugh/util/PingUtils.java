@@ -110,7 +110,7 @@ public class PingUtils {
                 }
             }
         } catch (Exception ex) {
-            ex.getMessage();
+            ex.printStackTrace();
         }
         return strs;
     }
