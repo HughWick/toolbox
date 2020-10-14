@@ -3,6 +3,7 @@ package com.github.hugh.util;
 import com.github.hugh.constant.DateCode;
 
 import java.time.*;
+import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
@@ -78,7 +79,7 @@ public class TimeUtils extends DateCode {
     /**
      * 校验年与当前日期的年份一致
      *
-     * @param year 年(1-13)
+     * @param year 年(1-12)
      * @return boolean {@code true} 同一年
      */
     public static boolean isThisYear(int year) {
@@ -323,5 +324,55 @@ public class TimeUtils extends DateCode {
         Instant s = start.toInstant(ZoneOffset.ofHours(8));//转换时增加8时区
         Instant e = end.toInstant(ZoneOffset.ofHours(8));
         return ChronoUnit.MILLIS.between(s, e);
+    }
+
+
+    /**
+     * 获取指定日期后的第N天
+     * <ul>
+     * <li>注：{@link LocalDate} 为没有时分秒的日期对象。</li>
+     * </ul>
+     *
+     * @param localDate 日期
+     * @param days      天数
+     * @return LocalDate 指定日期后的第N天
+     * @since 1.3.2
+     */
+    public static LocalDate getNextNDay(LocalDate localDate, int days) {
+        return localDate.with(temporal -> temporal.plus(days, ChronoUnit.DAYS));
+    }
+
+    /**
+     * 校验结束日期是否超过开始日期一天
+     * <p>调用{@link #isCrossDay(String, String, int)}进行校验</p>
+     *
+     * @param start 开始日期
+     * @param end   结束日期
+     * @return boolean {@code true}
+     * @since 1.3.2
+     */
+    public static boolean isCrossDay(String start, String end) {
+        return isCrossDay(start, end, 1);
+    }
+
+    /**
+     * 校验开始日期与结束日期是否跨天
+     * <li>例：
+     * 开始日期：2020-06-08 00:00:00
+     * 结束日期:2020-06-09 00:00:00
+     * 结果{@code true}
+     * </li>
+     *
+     * @param start 开始日期 格式：yyyy-MM-dd HH:mm:ss
+     * @param end   结束日期 格式：yyyy-MM-dd HH:mm:ss
+     * @param days  天数
+     * @return boolean {@code true} 跨天
+     * @since 1.3.2
+     */
+    public static boolean isCrossDay(String start, String end, int days) {
+        LocalDate startDate = LocalDate.parse(start, DateTimeFormatter.ofPattern(YEAR_MONTH_DAY_HOUR_MIN_SEC));
+        LocalDate endDate = LocalDate.parse(end, DateTimeFormatter.ofPattern(YEAR_MONTH_DAY_HOUR_MIN_SEC));
+        startDate = getNextNDay(startDate, days);//开始日期加N天后的日期
+        return startDate.isEqual(ChronoLocalDate.from(endDate));   //与结束日期比对
     }
 }

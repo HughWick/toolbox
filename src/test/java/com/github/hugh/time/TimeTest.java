@@ -15,8 +15,17 @@ public class TimeTest {
         System.out.println("-1-->>" + TimeUtils.checkTimestamp(start + "", 1800000));
         System.out.println("-2-->>" + TimeUtils.checkTimestamp(start + "1528858736043", 1800000));
 //        System.out.println("-3-->>" + TimeUtils.checkTimestamp(start + "1528858736043", 1800000));
-        System.out.println("-4-->>" + TimeUtils.checkTimestamp( "1528858736043", 1800000));
-        System.out.println("--->>"+ TimeUtils.getTime());
-        System.out.println("--->>"+ TimeUtils.endOfLastMonth());
+        System.out.println("-4-->>" + TimeUtils.checkTimestamp("1528858736043", 1800000));
+        System.out.println("--->>" + TimeUtils.getTime());
+        System.out.println("--->>" + TimeUtils.endOfLastMonth());
     }
+
+    @Test
+    public void test02() {
+        String start = "2020-06-08 00:00:00";
+        String end = "2020-06-10 00:00:00";
+        System.out.println("--->>" + TimeUtils.isCrossDay(start, end));
+        System.out.println("--->>" + TimeUtils.isCrossDay(start, end,2));
+    }
+
 }
