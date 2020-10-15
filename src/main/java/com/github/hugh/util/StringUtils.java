@@ -158,8 +158,7 @@ public class StringUtils {
      * @return 结果
      * @since 1.3.1
      */
-    public static String leftPadding(final String original, final int targetLength,
-                                     final char unit) {
+    public static String leftPadding(final String original, final int targetLength, final char unit) {
         //1. fast-return
         final int originalLength = original.length();
         if (originalLength >= targetLength) {
@@ -183,8 +182,7 @@ public class StringUtils {
      * @return String 结果
      * @since 1.3.1
      */
-    public static String leftPadding(final String original,
-                                     final int targetLength) {
+    public static String leftPadding(final String original, final int targetLength) {
         return leftPadding(original, targetLength, '0');
     }
 
@@ -270,8 +268,7 @@ public class StringUtils {
      * @return String 替换后结果
      * @since 1.3.1
      */
-    public static String replaceAnyBlank(final String string,
-                                         final String replacement) {
+    public static String replaceAnyBlank(final String string, final String replacement) {
         if (StringUtil.isEmpty(string)) {
             return string;
         }
