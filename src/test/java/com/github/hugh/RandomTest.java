@@ -19,4 +19,23 @@ public class RandomTest {
         }
         System.out.println("--6->>" + RandomUtils.number(2));
     }
+
+    @Test
+    public void test02() {
+        for (int i = 0; i < 100; i++) {
+            System.out.println("---->" + RandomUtils.number(4));
+        }
+    }
+
+    public static int number(int length) {
+        int num = 1;
+        double random = Math.random();
+        if (random < 0.1D) {
+            random += 0.1D;
+        }
+        for (int i = 0; i < length; i++) {
+            num *= 10;
+        }
+        return (int) (random * num);
+    }
 }
