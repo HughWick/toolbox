@@ -113,7 +113,7 @@ public class RandomUtils {
     public static int number(int length) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length; i++) {
-            int number = ThreadLocalRandom.current().nextInt(10);
+            int number = ThreadLocalRandom.current().nextInt(10);//随机生成0-9的数字
             sb.append(number);
         }
         return sb.charAt(0) == '0' ? number(length) : Integer.valueOf(sb.toString());

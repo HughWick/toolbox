@@ -7,8 +7,7 @@ import com.google.common.cache.LoadingCache;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 提供Goole Guava 缓存
- * {@link LoadingCache} 实例
+ * 提供Goole Guava 缓存 {@link LoadingCache} 实例
  * <p>它还提供了以下方法进行参数配置</p>
  * <ul>
  * <li>{@link CacheBuilder#newBuilder()}有以下参数可进行配置</li>

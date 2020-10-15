@@ -190,7 +190,7 @@ public class StringUtils {
 
     /**
      * 驼峰命名转下划线,小写
-     * <p>该转换方式调用{@link CaseFormat#LOWER_CAMEL}</p>
+     * <p>该转换方式调用{@link CaseFormat#to(CaseFormat, String)}</p>
      *
      * @param camelStr 驼峰字符串
      * @return String 下划线小写字符串
