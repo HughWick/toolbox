@@ -1,5 +1,6 @@
 package com.github.hugh.util;
 
+import com.google.common.base.CaseFormat;
 import jodd.util.StringUtil;
 
 import java.util.regex.Matcher;
@@ -189,6 +190,7 @@ public class StringUtils {
 
     /**
      * 驼峰命名转下划线,小写
+     * <p>该转换方式调用{@link CaseFormat#LOWER_CAMEL}</p>
      *
      * @param camelStr 驼峰字符串
      * @return String 下划线小写字符串
@@ -198,17 +200,7 @@ public class StringUtils {
         if (StringUtil.isEmpty(camelStr)) {
             return null;
         }
-        StringBuilder sb = new StringBuilder();
-        char[] chars = camelStr.toCharArray();
-        for (char c : chars) {
-            if (Character.isUpperCase(c)) {
-                sb.append('_');
-                sb.append(Character.toLowerCase(c));
-            } else {
-                sb.append(c);
-            }
-        }
-        return sb.toString();
+        return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, camelStr);
     }
 
     /**
@@ -227,8 +219,8 @@ public class StringUtils {
     /**
      * 将字符串转换为驼峰写法.
      * <ul>
-     *     <li>注：这是 mybatis-gen 源码</li>
-     *     <li>支持字符串格式_,-,@,#,$, ,/,{@code &}</li>
+     * <li>注：这是 mybatis-gen 源码</li>
+     * <li>支持字符串格式_,-,@,#,$, ,/,{@code &}</li>
      * </ul>
      *
      * @param inputString             输入字符串

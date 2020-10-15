@@ -36,7 +36,7 @@ public class StringTest {
         String str1 = "getCamelCaseString";
         String camel = StringUtils.camelToUnderline(str1);
         System.out.println("--1-->>" + camel);
-        System.out.println("--2-->>" + StringUtils.camelToUnderlineUppercase(value));
+        System.out.println("--2-->>" + StringUtils.camelToUnderlineUppercase(camel));
         System.out.println("--2-->>" + StringUtils.getCamelCase(camel, false));
     }
 
