@@ -4,6 +4,8 @@ import com.github.hugh.model.Student;
 import com.github.hugh.model.Student1;
 import com.github.hugh.support.instance.Instance;
 
+import java.util.concurrent.ExecutionException;
+
 
 /**
  * @author AS
@@ -30,6 +32,13 @@ public class InstanceTest {
 //            System.out.println("thread1 instance : " + instance);
             Student singleton = instance.singleton(Student.class);
             System.out.println("thread1 : " + singleton);
+            Instance.SINGLETON_CACHE.invalidate(Student.class.getName());
+
+            try {
+                System.out.println("--->>" + Instance.SINGLETON_CACHE.get(Student.class.getName()));
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
         }).start();
 
         new Thread(() -> {
@@ -38,6 +47,12 @@ public class InstanceTest {
 //            System.out.println("thread2 instance : " + instance);
             Student singleton = instance.singleton(Student.class);
             System.out.println("thread2 : " + singleton);
+        }).start();
+        new Thread(() -> {
+            System.out.println("thread5");
+            Instance instance = Instance.getInstance();
+            Student singleton = instance.singleton(Student.class);
+            System.out.println("thread5 : " + singleton);
         }).start();
 
         new Thread(() -> {
