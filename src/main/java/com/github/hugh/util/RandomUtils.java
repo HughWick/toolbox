@@ -103,8 +103,9 @@ public class RandomUtils {
 
     /**
      * 根据需要的数字长度来生成随机数
-     * <p>由于{@link RandomUtils#randomNumber} 会生成补0的两位随机数 例：04</p>
-     * <p>该方法不会产生补0的两位随机数</p>
+     * <p>由于{@link RandomUtils#randomNumber} 会生成补0的两位随机数 例：04,但该方法只会生成对应长度的int数</p>
+     * <p>注：该方法内部生成随机数时,如果首字母为0在转换为int时会自动忽略,导致返回的int长度与传参不一致,
+     * 所以在循环结束后,判断首字符是否为0，是0则进行递归调用直至达到对应长度的随机数</p>
      *
      * @param length 随机数长度
      * @return int 随机数
