@@ -116,7 +116,7 @@ public class RandomUtils {
             int number = ThreadLocalRandom.current().nextInt(10);//随机生成0-9的数字
             sb.append(number);
         }
-        return sb.charAt(0) == '0' ? number(length) : Integer.valueOf(sb.toString());
+        return sb.charAt(0) == '0' ? number(length) : Integer.parseInt(sb.toString());
     }
 
     /**
