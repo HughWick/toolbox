@@ -26,7 +26,7 @@ public class GuavaCache {
      * 创建本地谷歌缓存
      *
      * @param cacheLoader build方法中可以指定CacheLoader，在缓存不存在时通过CacheLoader的实现自动加载缓存
-     * @return LoadingCache<String, Object>
+     * @return LoadingCache
      */
     public static LoadingCache<String, Object> create(CacheLoader<String, Object> cacheLoader) {
         return CacheBuilder.newBuilder()
@@ -40,7 +40,7 @@ public class GuavaCache {
      * @param maximumSize      设置缓存最大容量，超过之后就会按照LRU最近虽少使用算法来移除缓存项
      * @param expireAfterWrite 设置写缓存后n秒钟过期
      * @param cacheLoader      build方法中可以指定CacheLoader，在缓存不存在时通过CacheLoader的实现自动加载缓存
-     * @return LoadingCache<String, Object>
+     * @return LoadingCache
      */
     public static LoadingCache<String, Object> create(int initialCapacity, int maximumSize, int expireAfterWrite, CacheLoader<String, Object> cacheLoader) {
         return CacheBuilder.newBuilder()
@@ -55,7 +55,7 @@ public class GuavaCache {
      *
      * @param expireAfterWrite 设置写缓存后n秒钟过期
      * @param cacheLoader      build方法中可以指定CacheLoader，在缓存不存在时通过CacheLoader的实现自动加载缓存
-     * @return LoadingCache<String, Object>
+     * @return LoadingCache
      */
     public static LoadingCache<String, Object> create(int expireAfterWrite, CacheLoader<String, Object> cacheLoader) {
         return CacheBuilder.newBuilder()

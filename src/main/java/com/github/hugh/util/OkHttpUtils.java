@@ -26,6 +26,50 @@ public class OkHttpUtils {
     }
 
     /**
+     * 构建OkHttpClient对象
+     * <p>链接超时为10秒</p>
+     * <p>设置读超时10秒</p>
+     *
+     * @return OkHttpClient
+     * @since 1.3.3
+     */
+    public static OkHttpClient buildClient() {
+        return buildClient(10, 10);
+    }
+
+    /**
+     * 构建OkHttpClient对象
+     *
+     * @param connectTimeout 设置连接超时
+     * @param readTimeout    设置读超时
+     * @return OkHttpClient
+     * @since 1.3.3
+     */
+    public static OkHttpClient buildClient(int connectTimeout, int readTimeout) {
+        return new OkHttpClient.Builder().connectTimeout(connectTimeout, TimeUnit.SECONDS)
+                .readTimeout(readTimeout, TimeUnit.SECONDS)
+                .build();
+    }
+
+    /**
+     * 构建OkHttpClient对象
+     *
+     * @param connectTimeout           设置连接超时,单位：秒
+     * @param readTimeout              设置读超时,单位：秒
+     * @param writeTimeout             设置写超时,单位：秒
+     * @param retryOnConnectionFailure 是否自动重连
+     * @return OkHttpClient
+     * @since 1.3.3
+     */
+    public static OkHttpClient buildClient(int connectTimeout, int readTimeout, int writeTimeout, boolean retryOnConnectionFailure) {
+        return new OkHttpClient.Builder().connectTimeout(connectTimeout, TimeUnit.SECONDS)
+                .readTimeout(readTimeout, TimeUnit.SECONDS)
+                .writeTimeout(writeTimeout, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(retryOnConnectionFailure)
+                .build();
+    }
+
+    /**
      * 参数以表单形式提交类型
      */
     private static final String APPLICATION_FORM_URLENCODED_VALUE = "application/x-www-form-urlencoded";
@@ -55,14 +99,6 @@ public class OkHttpUtils {
      */
     private static final MediaType JSON_TYPE = MediaType.get(APPLICATION_JSON_UTF8_VALUE);
 
-    /**
-     * 默认OkHttp请求客户端
-     */
-    private static OkHttpClient CLIENT = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS) // 设置连接超时
-            .readTimeout(10, TimeUnit.SECONDS) // 设置读超时
-//				 .writeTimeout(60,TimeUnit.SECONDS)          //设置写超时
-//			     .retryOnConnectionFailure(true)             //是否自动重连
-            .build(); // 构建OkHttpClient对象
 
     /**
      * OkHttp管理cookie
@@ -94,7 +130,7 @@ public class OkHttpUtils {
      */
     public static String postForm(String url, JSONObject json) throws IOException {
         String params = jsonParse(json);
-        return post(url, params, FORM_TYPE, CLIENT);
+        return post(url, params, FORM_TYPE, buildClient());
     }
 
     /**
@@ -116,7 +152,7 @@ public class OkHttpUtils {
                 .url(url)
                 .headers(headers)
                 .post(body).build();
-        return send(request, CLIENT);
+        return send(request, buildClient());
     }
 
     /**
@@ -130,7 +166,7 @@ public class OkHttpUtils {
      */
     public static String postJson(String url, JSONObject json) throws IOException {
         String params = jsonParse(json);
-        return post(url, params, JSON_TYPE, CLIENT);
+        return post(url, params, JSON_TYPE, buildClient());
     }
 
     /**
@@ -257,7 +293,7 @@ public class OkHttpUtils {
         Request request = new Request.Builder()
                 .url(url)
                 .headers(headers).build();
-        return send(request, CLIENT);
+        return send(request, buildClient());
     }
 
     /**
@@ -270,7 +306,7 @@ public class OkHttpUtils {
     public static String get(String url) {
         Request request = new Request.Builder().url(url).build();
         try {
-            return send(request, CLIENT);
+            return send(request, buildClient());
         } catch (IOException e) {
             e.printStackTrace();
             return null;

@@ -357,11 +357,13 @@ public class TimeUtils extends DateCode {
 
     /**
      * 校验开始日期与结束日期是否跨天
+     * <ul>
      * <li>例：
      * 开始日期：2020-06-08 00:00:00
      * 结束日期:2020-06-09 00:00:00
      * 结果{@code true}
      * </li>
+     * </ul>
      *
      * @param start 开始日期 格式：yyyy-MM-dd HH:mm:ss
      * @param end   结束日期 格式：yyyy-MM-dd HH:mm:ss

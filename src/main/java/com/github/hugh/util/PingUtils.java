@@ -89,7 +89,7 @@ public class PingUtils {
      * @param ipAddress IP地址
      * @param pingCount ping次数
      * @param timeOut   超时时间
-     * @return List<String>
+     * @return List
      */
     public static List<String> batch(String ipAddress, int pingCount, int timeOut) {
         List<String> strs = new ArrayList<>();
