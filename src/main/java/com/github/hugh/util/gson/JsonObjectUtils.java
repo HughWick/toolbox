@@ -16,6 +16,17 @@ import java.math.BigDecimal;
 public class JsonObjectUtils {
 
     /**
+     * 判断JsonElement是否为null 或者 {@link com.google.gson.JsonNull}
+     *
+     * @param jsonElement JsonObject
+     * @return boolean {@code true} null返回true
+     * @since 1.3.2
+     */
+    private static boolean isJsonNull(JsonElement jsonElement) {
+        return jsonElement == null || jsonElement.isJsonNull();
+    }
+
+    /**
      * 以空值安全的方式从JsonObject中获取一个String.
      * <ul>
      * <li>说明：针对{@link com.google.gson.JsonObject}在get其中value时、返回的结果集会默认带上两个""(双引号),需要二次调用{@link JsonElement#getAsString()}方法进行转义成常规没有双引号的结果</li>
@@ -28,7 +39,7 @@ public class JsonObjectUtils {
      */
     public static String getString(JsonObject jsonObject, String key) {
         JsonElement jsonElement = get(jsonObject, key);
-        return jsonElement == null ? null : jsonElement.getAsString();
+        return isJsonNull(jsonElement) ? null : jsonElement.getAsString();
     }
 
     /**
@@ -44,7 +55,7 @@ public class JsonObjectUtils {
      */
     public static Integer getInteger(JsonObject jsonObject, String key) {
         JsonElement jsonElement = get(jsonObject, key);
-        return jsonElement == null ? null : jsonElement.getAsInt();
+        return isJsonNull(jsonElement) ? null : jsonElement.getAsInt();
     }
 
     /**
@@ -73,7 +84,7 @@ public class JsonObjectUtils {
      */
     public static Long getLong(JsonObject jsonObject, String key) {
         JsonElement jsonElement = get(jsonObject, key);
-        return jsonElement == null ? null : jsonElement.getAsLong();
+        return isJsonNull(jsonElement) ? null : jsonElement.getAsLong();
     }
 
     /**
@@ -102,7 +113,7 @@ public class JsonObjectUtils {
      */
     public static Double getDouble(JsonObject jsonObject, String key) {
         JsonElement jsonElement = get(jsonObject, key);
-        return jsonElement == null ? null : jsonElement.getAsDouble();
+        return isJsonNull(jsonElement) ? null : jsonElement.getAsDouble();
     }
 
     /**
@@ -131,7 +142,7 @@ public class JsonObjectUtils {
      */
     public static JsonObject getJsonObject(JsonObject jsonObject, String key) {
         JsonElement jsonElement = get(jsonObject, key);
-        return jsonElement == null ? null : jsonElement.getAsJsonObject();
+        return isJsonNull(jsonElement) ? null : jsonElement.getAsJsonObject();
     }
 
     /**
@@ -147,7 +158,7 @@ public class JsonObjectUtils {
      */
     public static JsonArray getJsonArray(JsonObject jsonObject, String key) {
         JsonElement jsonElement = get(jsonObject, key);
-        return jsonElement == null ? null : jsonElement.getAsJsonArray();
+        return isJsonNull(jsonElement) ? null : jsonElement.getAsJsonArray();
     }
 
 
@@ -164,7 +175,7 @@ public class JsonObjectUtils {
      */
     public static BigDecimal getBigDecimal(JsonObject jsonObject, String key) {
         JsonElement jsonElement = get(jsonObject, key);
-        return jsonElement == null ? null : jsonElement.getAsBigDecimal();
+        return isJsonNull(jsonElement) ? null : jsonElement.getAsBigDecimal();
     }
 
     /**
