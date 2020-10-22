@@ -16,17 +16,6 @@ import java.math.BigDecimal;
 public class JsonObjectUtils {
 
     /**
-     * 判断JsonElement是否为null 或者 {@link com.google.gson.JsonNull}
-     *
-     * @param jsonElement JsonObject
-     * @return boolean {@code true} null返回true
-     * @since 1.3.3
-     */
-    private static boolean isJsonNull(JsonElement jsonElement) {
-        return jsonElement == null || jsonElement.isJsonNull();
-    }
-
-    /**
      * 以空值安全的方式从JsonObject中获取一个String.
      * <ul>
      * <li>说明：针对{@link com.google.gson.JsonObject}在get其中value时、返回的结果集会默认带上两个""(双引号),需要二次调用{@link JsonElement#getAsString()}方法进行转义成常规没有双引号的结果</li>
@@ -190,5 +179,16 @@ public class JsonObjectUtils {
             throw new ToolboxException("JsonObject is null !");
         }
         return jsonObject.get(key);
+    }
+
+    /**
+     * 判断JsonElement是否为null 或者 {@link com.google.gson.JsonNull}
+     *
+     * @param jsonElement JsonObject
+     * @return boolean {@code true} null返回true
+     * @since 1.3.3
+     */
+    private static boolean isJsonNull(JsonElement jsonElement) {
+        return jsonElement == null || jsonElement.isJsonNull();
     }
 }
