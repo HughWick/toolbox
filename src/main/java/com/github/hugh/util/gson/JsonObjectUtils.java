@@ -20,7 +20,7 @@ public class JsonObjectUtils {
      *
      * @param jsonElement JsonObject
      * @return boolean {@code true} null返回true
-     * @since 1.3.2
+     * @since 1.3.3
      */
     private static boolean isJsonNull(JsonElement jsonElement) {
         return jsonElement == null || jsonElement.isJsonNull();
