@@ -168,6 +168,30 @@ public class JsonObjectUtils {
         return isJsonNull(jsonElement) ? null : jsonElement.getAsBigDecimal();
     }
 
+    /**
+     * 统一的获取JsonObject中元素方法
+     *
+     * @param jsonObject JsonObject
+     * @param key        Key
+     * @return JsonElement
+     */
+    private static JsonElement get(JsonObject jsonObject, String key) {
+        if (jsonObject == null) {
+            throw new ToolboxException("JsonObject is null !");
+        }
+        return jsonObject.get(key);
+    }
+
+    /**
+     * 判断JsonElement是否为null 或者 {@link com.google.gson.JsonNull}
+     *
+     * @param jsonElement JsonObject
+     * @return boolean {@code true} null返回true
+     * @since 1.3.3
+     */
+    private static boolean isJsonNull(JsonElement jsonElement) {
+        return jsonElement == null || jsonElement.isJsonNull();
+    }
 
     /**
      * 将Object 解析为 JsonObject
@@ -193,30 +217,5 @@ public class JsonObjectUtils {
     public static JsonArray parseArray(Object object) {
         JsonElement jsonElement = JsonParser.parseString(String.valueOf(object));
         return isJsonNull(jsonElement) ? null : jsonElement.getAsJsonArray();
-    }
-
-    /**
-     * 统一的获取JsonObject中元素方法
-     *
-     * @param jsonObject JsonObject
-     * @param key        Key
-     * @return JsonElement
-     */
-    private static JsonElement get(JsonObject jsonObject, String key) {
-        if (jsonObject == null) {
-            throw new ToolboxException("JsonObject is null !");
-        }
-        return jsonObject.get(key);
-    }
-
-    /**
-     * 判断JsonElement是否为null 或者 {@link com.google.gson.JsonNull}
-     *
-     * @param jsonElement JsonObject
-     * @return boolean {@code true} null返回true
-     * @since 1.3.3
-     */
-    private static boolean isJsonNull(JsonElement jsonElement) {
-        return jsonElement == null || jsonElement.isJsonNull();
     }
 }
