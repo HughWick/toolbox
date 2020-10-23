@@ -4,6 +4,7 @@ import com.github.hugh.exception.ToolboxException;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.math.BigDecimal;
 
@@ -165,6 +166,33 @@ public class JsonObjectUtils {
     public static BigDecimal getBigDecimal(JsonObject jsonObject, String key) {
         JsonElement jsonElement = get(jsonObject, key);
         return isJsonNull(jsonElement) ? null : jsonElement.getAsBigDecimal();
+    }
+
+
+    /**
+     * 将Object 解析为 JsonObject
+     * <p>Object为空时返回{@code null}</p>
+     *
+     * @param object 待解析参数
+     * @return JsonObject {@link JsonObject}
+     * @since 1.3.4
+     */
+    public static JsonObject parse(Object object) {
+        JsonElement jsonElement = JsonParser.parseString(String.valueOf(object));
+        return isJsonNull(jsonElement) ? null : jsonElement.getAsJsonObject();
+    }
+
+    /**
+     * 将Object 解析为 JsonArray
+     * <p>Object为空时返回{@code null}</p>
+     *
+     * @param object 待解析参数
+     * @return JsonArray {@link JsonArray}
+     * @since 1.3.4
+     */
+    public static JsonArray parseArray(Object object) {
+        JsonElement jsonElement = JsonParser.parseString(String.valueOf(object));
+        return isJsonNull(jsonElement) ? null : jsonElement.getAsJsonArray();
     }
 
     /**

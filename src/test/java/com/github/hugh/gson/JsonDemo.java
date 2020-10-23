@@ -122,6 +122,19 @@ public class JsonDemo {
     }
 
 
+    @Test
+    public void test06() {
+        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\",\"id\":null}";
+        JsonObject parse = JsonObjectUtils.parse(str);
+        System.out.println("--->>" + parse);
+        String arr = "[1,2,3,4,5]";
+        JsonArray jsonArray = JsonObjectUtils.parseArray(arr);
+        System.out.println("--->>" + jsonArray);
+        String arr2 = null;
+        System.out.println("--->>" + JsonObjectUtils.parseArray(arr2));
+    }
+
+
     public static void main(String[] args) {
         JsonObject msgObj = new JsonObject();
         msgObj.addProperty("test", "null");
