@@ -111,7 +111,7 @@ public class StreamUtils {
      */
     public static String toString(InputStream inputStream, String charset) {
         try (ByteArrayOutputStream boa = new ByteArrayOutputStream()) {
-            int len = 0;
+            int len;
             byte[] buffer = new byte[1024];
             while ((len = inputStream.read(buffer)) != -1) {
                 boa.write(buffer, 0, len);
