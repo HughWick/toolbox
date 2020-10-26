@@ -25,9 +25,9 @@ public class EmptyUtils {
      * </ul>
      *
      * @param obj 待检查对象
-     *            @return boolean {@code true}空
+     * @return boolean {@code true}空
      */
-    public static boolean isEmpty(Object obj) {
+    public static <T> boolean isEmpty(T obj) {
         if (obj == null || obj == "") {
             return true;
         } else if (obj instanceof String) {
@@ -55,7 +55,7 @@ public class EmptyUtils {
      * <li>isNotEmpty("abc")    = true</li>
      * </ul>
      */
-    public static boolean isNotEmpty(Object obj) {
+    public static <T> boolean isNotEmpty(T obj) {
         return !isEmpty(obj);
     }
 }

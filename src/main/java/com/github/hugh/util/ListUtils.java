@@ -20,7 +20,7 @@ public class ListUtils {
      * @param collection 集合
      * @return boolean {@code true} 空
      */
-    public static boolean isEmpty(Collection<?> collection) {
+    public static <T> boolean isEmpty(Collection<T> collection) {
         return collection == null || collection.isEmpty();
     }
 
@@ -30,7 +30,7 @@ public class ListUtils {
      * @param collection 集合
      * @return boolean {@code true} 有元素
      */
-    public static boolean isNotEmpty(Collection<?> collection) {
+    public static <T> boolean isNotEmpty(Collection<T> collection) {
         return !isEmpty(collection);
     }
 
@@ -46,11 +46,11 @@ public class ListUtils {
      * @return Object
      * @since 1.1.0
      */
-    public static Object guavaPartitionList(List<?> originList, int page, int size) {
+    public static <T> List<T> guavaPartitionList(List<T> originList, int page, int size) {
         if (isEmpty(originList)) {
             throw new ToolboxException("数据不能为空!");
         }
-        List pagedList = Lists.partition(originList, size);//根据条数切割成多个list
+        List<List<T>> pagedList = Lists.partition(originList, size);//根据条数切割成多个list
         return pagedList.get(page);//根据下标(分页)对应的数据
     }
 
