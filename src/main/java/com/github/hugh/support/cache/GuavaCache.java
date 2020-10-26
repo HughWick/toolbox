@@ -29,8 +29,7 @@ public class GuavaCache {
      * @return LoadingCache
      */
     public static <T> LoadingCache<String, T> create(CacheLoader<String, T> cacheLoader) {
-        return CacheBuilder.newBuilder()
-                .build(cacheLoader);
+        return CacheBuilder.newBuilder().build(cacheLoader);
     }
 
     /**
