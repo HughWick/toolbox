@@ -11,6 +11,7 @@ import java.net.URL;
 
 /**
  * Java 流处理工具类
+ * <p>note:类中所有方法都不会关闭流,使用完InputStream后注意关闭{@link #close(Closeable)}!</p>
  *
  * @author hugh
  * @version 1.7
@@ -57,6 +58,7 @@ public class StreamUtils {
 
     /**
      * InputStream转byte[]
+     * <p>warn:该方法不会关闭InputStream,请自行关闭!</p>
      *
      * @param input 输入流
      * @return byte[]
@@ -75,6 +77,8 @@ public class StreamUtils {
 
     /**
      * 将InputStream 输出至指定的文件
+     * <p>warn:该方法不会关闭InputStream,请使用完后记得关闭流!</p>
+     * <p>内部调用{@link #toFile(InputStream, File)} </p>
      *
      * @param inputStream 输入流
      * @param filePath    文件路径
@@ -85,6 +89,7 @@ public class StreamUtils {
 
     /**
      * 将InputStream 输出至指定的文件
+     * <p>warn:该方法不会关闭InputStream,请使用完后记得关闭流!</p>
      *
      * @param inputStream 输入流
      * @param file        文件
@@ -104,6 +109,7 @@ public class StreamUtils {
 
     /**
      * 将输入流转换为字符串
+     * <p>warn:该方法不会关闭InputStream,请自行关闭!</p>
      *
      * @param inputStream 输入流
      * @param charset     字符编码
@@ -126,7 +132,7 @@ public class StreamUtils {
     /**
      * 流转换为UTF-8字符串
      *
-     * <p>注意：这里并不会关闭输入流，需要外部自行处理。</p>
+     * <p>内部调用{@link #toString(InputStream, String)}编码格式默认为UTF-8</p>
      *
      * @param inputStream 输入流
      * @return String 字符串
@@ -137,11 +143,27 @@ public class StreamUtils {
 
     /**
      * 将字符串转输入流
+     * <p>warn:该方法不会关闭InputStream,请自行关闭!</p>
      *
      * @param str 字符串
      * @return InputStream
      */
     public InputStream toInputStream(String str) {
         return new ByteArrayInputStream(str.getBytes());
+    }
+
+    /**
+     * 关闭流
+     *
+     * @param closeable 可关闭的对象资源
+     */
+    public void close(Closeable closeable) {
+        try {
+            if (closeable != null) {
+                closeable.close();
+            }
+        } catch (IOException e) {
+            throw new ToolboxException(e);
+        }
     }
 }
