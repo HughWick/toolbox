@@ -201,7 +201,7 @@ public class JsonObjectUtils {
      * @return JsonObject {@link JsonObject}
      * @since 1.3.4
      */
-    public static JsonObject parse(Object object) {
+    public static <T> JsonObject parse(T object) {
         JsonElement jsonElement = JsonParser.parseString(String.valueOf(object));
         return isJsonNull(jsonElement) ? null : jsonElement.getAsJsonObject();
     }
@@ -214,7 +214,7 @@ public class JsonObjectUtils {
      * @return JsonArray {@link JsonArray}
      * @since 1.3.4
      */
-    public static JsonArray parseArray(Object object) {
+    public static <T> JsonArray parseArray(T object) {
         JsonElement jsonElement = JsonParser.parseString(String.valueOf(object));
         return isJsonNull(jsonElement) ? null : jsonElement.getAsJsonArray();
     }
