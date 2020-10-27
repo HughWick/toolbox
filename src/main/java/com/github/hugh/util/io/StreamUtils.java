@@ -11,7 +11,6 @@ import java.net.URL;
 
 /**
  * Java 流处理工具类
- * <p>note:类中所有方法都不会关闭流,使用完InputStream后注意关闭{@link #close(Closeable)}!</p>
  *
  * @author hugh
  * @version 1.7
@@ -77,7 +76,6 @@ public class StreamUtils {
 
     /**
      * 将InputStream 输出至指定的文件
-     * <p>warn:该方法不会关闭InputStream,请使用完后记得关闭流!</p>
      * <p>内部调用{@link #toFile(InputStream, File)} </p>
      *
      * @param inputStream 输入流
@@ -89,7 +87,6 @@ public class StreamUtils {
 
     /**
      * 将InputStream 输出至指定的文件
-     * <p>warn:该方法不会关闭InputStream,请使用完后记得关闭流!</p>
      *
      * @param inputStream 输入流
      * @param file        文件
@@ -164,6 +161,21 @@ public class StreamUtils {
             }
         } catch (IOException e) {
             throw new ToolboxException(e);
+        }
+    }
+
+    /**
+     * 根据图片路径读取文件并转化为Byte[]
+     *
+     * @param path 文件路径
+     * @return byte[] 文件数组
+     * @since 1.3.6
+     */
+    public static byte[] readFile(String path) {
+        try (InputStream inputStream = getInputStream(path)) {
+            return toByteArray(inputStream);
+        } catch (IOException ioe) {
+            throw new ToolboxException(ioe);
         }
     }
 }
