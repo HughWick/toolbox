@@ -140,7 +140,6 @@ public class StreamUtils {
 
     /**
      * 将字符串转输入流
-     * <p>warn:该方法不会关闭InputStream,请自行关闭!</p>
      *
      * @param str 字符串
      * @return InputStream
