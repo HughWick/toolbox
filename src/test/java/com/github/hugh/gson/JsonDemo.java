@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.UUID;
 
@@ -132,6 +133,28 @@ public class JsonDemo {
         System.out.println("--->>" + jsonArray);
         String arr2 = null;
         System.out.println("--->>" + JsonObjectUtils.parseArray(arr2));
+    }
+
+    @Test
+    public void test07() {
+//        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\",\"id\":null}";
+
+        String arryStr = "{ " +
+                "\"client\":\"127.0.0.1\"," +
+                "\"servers\":[" +
+                "    \"8.8.8.8\"," +
+                "    \"8.8.4.4\"," +
+                "    \"156.154.70.1\"," +
+                "    \"156.154.71.1\" " +
+                "    ]}";
+        JsonObject parse = JsonObjectUtils.parse(arryStr);
+        System.out.println("-1-->>" + parse);
+        Map map = JsonObjectUtils.toMap(parse);
+        System.out.println("-2-->>" + map.get("servers"));
+        JsonArray servers = JsonObjectUtils.getJsonArray(parse, "servers");
+        System.out.println("=--3->>" + servers);
+        System.out.println("=--4->>" + JsonObjectUtils.toArrayList(servers));
+        System.out.println("=--5->>" + JsonObjectUtils.fromJson(servers, LinkedList.class));
     }
 
 

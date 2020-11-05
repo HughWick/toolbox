@@ -1,12 +1,13 @@
 package com.github.hugh.util.gson;
 
 import com.github.hugh.exception.ToolboxException;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 
+import java.io.Reader;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * 针对Gson进行二次封装处理工具类
@@ -217,5 +218,41 @@ public class JsonObjectUtils {
     public static <T> JsonArray parseArray(T object) {
         JsonElement jsonElement = JsonParser.parseString(String.valueOf(object));
         return isJsonNull(jsonElement) ? null : jsonElement.getAsJsonArray();
+    }
+
+    /**
+     * 将jsonArray 转换为{@link ArrayList}
+     *
+     * @param jsonArray 数组
+     * @return ArrayList 集合
+     * @since 1.3.7
+     */
+    public static ArrayList toArrayList(JsonArray jsonArray) {
+        return fromJson(jsonArray, ArrayList.class);
+    }
+
+    /**
+     * jsonObject 转换为{@link Map}
+     *
+     * @param jsonObject json
+     * @return Map
+     * @since 1.3.7
+     */
+    public static Map toMap(JsonObject jsonObject) {
+        return fromJson(jsonObject, Map.class);
+    }
+
+    /**
+     * 将Json转换为指定类型
+     * <p>由于{@link Gson#fromJson(Reader, Type)}无法静态调用，故而这里进行二次封装</p>
+     *
+     * @param json     参数
+     * @param classOfT 转换类型
+     * @param <T>      转换泛型
+     * @return T
+     * @since 1.3.7
+     */
+    public static <T> T fromJson(JsonElement json, Class<T> classOfT) {
+        return new Gson().fromJson(json, classOfT);
     }
 }
