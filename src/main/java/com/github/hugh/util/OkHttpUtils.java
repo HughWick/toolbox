@@ -1,8 +1,8 @@
 package com.github.hugh.util;
 
 import com.github.hugh.exception.ToolboxException;
+import com.github.hugh.util.gson.JsonObjectUtils;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import net.sf.json.JSONObject;
 import okhttp3.*;
 
@@ -10,7 +10,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketTimeoutException;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -207,11 +210,8 @@ public class OkHttpUtils {
      */
     public static JsonObject postFormReJsonObject(String url, JSONObject json) throws IOException {
         String result = postForm(url, json);
-        if (EmptyUtils.isEmpty(result)) {
-            return null;
-        }
         try {
-            return JsonParser.parseString(result).getAsJsonObject();
+            return JsonObjectUtils.parse(result);
         } catch (Exception e) {
             throw new ToolboxException("request 返回结果格式错误:" + result);
         }
