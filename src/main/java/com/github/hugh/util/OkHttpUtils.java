@@ -125,6 +125,21 @@ public class OkHttpUtils {
     /**
      * 发送表单形式参数的POST
      * <p>Content-Type:application/x-www-form-urlencoded</p>
+     * <p>该方法调用{@link #postForm(String, JSONObject)}发送post请求</p>
+     *
+     * @param url 请求URL
+     * @param map Map参数
+     * @return String
+     * @throws IOException IO流错误
+     * @since 1.3.8
+     */
+    public static String postForm(String url, Map map) throws IOException {
+        return postForm(url, JSONObject.fromObject(map));
+    }
+
+    /**
+     * 发送表单形式参数的POST
+     * <p>Content-Type:application/x-www-form-urlencoded</p>
      *
      * @param url  请求URL
      * @param json 参数
@@ -156,6 +171,22 @@ public class OkHttpUtils {
                 .headers(headers)
                 .post(body).build();
         return send(request, buildClient());
+    }
+
+
+    /**
+     * 发送json形式参数的post请求
+     * <p>Content-Type:application/x-www-form-urlencoded</p>
+     * <p>该方法调用{@link #postJson(String, JSONObject) }进行post请求</p>
+     *
+     * @param url 请求URL
+     * @param map 参数
+     * @return String
+     * @throws IOException IO流错误
+     * @since 1.3.8
+     */
+    public static String postJson(String url, Map map) throws IOException {
+        return postJson(url, JSONObject.fromObject(map));
     }
 
     /**
@@ -213,7 +244,7 @@ public class OkHttpUtils {
         try {
             return JsonObjectUtils.parse(result);
         } catch (Exception e) {
-            throw new ToolboxException("request 返回结果格式错误:" + result);
+            throw new ToolboxException("url:" + url + ",返回结果参数格式错误:" + result);
         }
     }
 
