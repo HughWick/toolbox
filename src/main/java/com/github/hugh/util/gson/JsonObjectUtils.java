@@ -2,11 +2,13 @@ package com.github.hugh.util.gson;
 
 import com.github.hugh.exception.ToolboxException;
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -190,7 +192,7 @@ public class JsonObjectUtils {
      * @return boolean {@code true} null返回true
      * @since 1.3.3
      */
-    private static boolean isJsonNull(JsonElement jsonElement) {
+    public static boolean isJsonNull(JsonElement jsonElement) {
         return jsonElement == null || jsonElement.isJsonNull();
     }
 
@@ -238,8 +240,10 @@ public class JsonObjectUtils {
      * @return Map
      * @since 1.3.7
      */
-    public static Map toMap(JsonObject jsonObject) {
-        return fromJson(jsonObject, Map.class);
+    public static <K, V> Map<K, V> toMap(JsonObject jsonObject) {
+        TypeToken<HashMap<K, V>> typeToken = new TypeToken<HashMap<K, V>>() {
+        };
+        return new Gson().fromJson(jsonObject, typeToken.getType());
     }
 
     /**
