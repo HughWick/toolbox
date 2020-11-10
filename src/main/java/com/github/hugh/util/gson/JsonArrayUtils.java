@@ -9,6 +9,8 @@ import com.google.gson.JsonArray;
 public class JsonArrayUtils {
 
     /**
+     * 判断{@link JsonArray} 是否为空
+     *
      * @param jsonArray 数组
      * @return boolean 空返回{@code true}
      * @since 1.3.9
@@ -18,8 +20,11 @@ public class JsonArrayUtils {
     }
 
     /**
+     * 判断{@link JsonArray} 不为空
+     * <p>调用{@link #isEmpty(JsonArray)}反转结果</p>
+     *
      * @param jsonArray 数组
-     * @return boolean 不为空返回{@code true}
+     * @return boolean {@code true}不为空
      * @since 1.3.9
      */
     public static boolean isNotEmpty(JsonArray jsonArray) {
