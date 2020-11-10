@@ -28,7 +28,7 @@ public class GuavaCache {
      * @param cacheLoader build方法中可以指定CacheLoader，在缓存不存在时通过CacheLoader的实现自动加载缓存
      * @return LoadingCache
      */
-    public static <T> LoadingCache<String, T> create(CacheLoader<String, T> cacheLoader) {
+    public static <K, V> LoadingCache<K, V> create(CacheLoader<K, V> cacheLoader) {
         return CacheBuilder.newBuilder().build(cacheLoader);
     }
 
@@ -41,7 +41,7 @@ public class GuavaCache {
      * @param cacheLoader      build方法中可以指定CacheLoader，在缓存不存在时通过CacheLoader的实现自动加载缓存
      * @return LoadingCache
      */
-    public static <T> LoadingCache<String, T> create(int initialCapacity, int maximumSize, int expireAfterWrite, CacheLoader<String, T> cacheLoader) {
+    public static <K, V> LoadingCache<K, V> create(int initialCapacity, int maximumSize, int expireAfterWrite, CacheLoader<K, V> cacheLoader) {
         return CacheBuilder.newBuilder()
                 .initialCapacity(initialCapacity)
                 .maximumSize(maximumSize)
@@ -56,7 +56,7 @@ public class GuavaCache {
      * @param cacheLoader      build方法中可以指定CacheLoader，在缓存不存在时通过CacheLoader的实现自动加载缓存
      * @return LoadingCache
      */
-    public static <T> LoadingCache<String, T> create(int expireAfterWrite, CacheLoader<String, T> cacheLoader) {
+    public static <K, V> LoadingCache<K, V> create(int expireAfterWrite, CacheLoader<K, V> cacheLoader) {
         return CacheBuilder.newBuilder()
                 .expireAfterWrite(expireAfterWrite, TimeUnit.SECONDS)
                 .build(cacheLoader);
