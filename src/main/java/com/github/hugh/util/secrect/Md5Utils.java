@@ -41,7 +41,7 @@ public class Md5Utils {
      * 获取字符串的 md5 值
      *
      * @param string    字符串
-     * @param lowerCase 大小写表示,true为小写
+     * @param lowerCase 大小写标识：{@code true}小写
      * @return String MD5字符串
      */
     private static String generate(final String string, boolean lowerCase) {
