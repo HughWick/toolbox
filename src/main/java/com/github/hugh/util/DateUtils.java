@@ -132,6 +132,18 @@ public class DateUtils extends DateCode {
     }
 
     /**
+     * 将字符串解析成日期
+     * <p>调用{@link #parseDate(String, String)}格式为yyyy-MM-dd HH:mm:ss</p>
+     *
+     * @param dateStr 日期字符串
+     * @return Date 日期类型对象
+     * @since 1.3.10
+     */
+    public static Date parse(String dateStr) {
+        return parseDate(dateStr, YEAR_MONTH_DAY_HOUR_MIN_SEC);
+    }
+
+    /**
      * 按照指定的格式，将字符串解析成日期类型对象，例如：yyyy-MM-dd,yyyy/MM/dd,yyyy/MM/dd hh:mm:ss
      *
      * @param dateStr 日期格式的字符串
@@ -139,7 +151,7 @@ public class DateUtils extends DateCode {
      * @return Date 日期类型对象
      */
     public static Date parseDate(String dateStr, String format) {
-        if (com.github.hugh.util.EmptyUtils.isEmpty(dateStr)) {
+        if (EmptyUtils.isEmpty(dateStr)) {
             return null;
         }
         SimpleDateFormat formats = new SimpleDateFormat(format);
@@ -152,12 +164,13 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 将时间戳转换成yyyy-MM-dd HH:mm:ss字符串格式
+     * 将时间戳转换成日期格式的字符串
      *
      * @param timestamp 时间戳
-     * @return String 日期格式字符串
+     * @return String yyyy-MM-dd HH:mm:ss 日期字符串
+     * @since 1.3.10
      */
-    public static String timestampParseTime(long timestamp) {
+    public static String formatTimestamp(long timestamp) {
         if (timestamp < 0) {
             return null;
         }
@@ -167,16 +180,18 @@ public class DateUtils extends DateCode {
 
     /**
      * 将时间戳转换为Date类型
+     * <p>调用{@link #formatTimestamp(long)}格式化时间戳，后将调用{@link #parse(String)}解析成{@link Date}</p>
      *
      * @param timestamp 时间戳
      * @return Date
+     * @since 1.3.10
      */
-    public static Date timestampParseDate(long timestamp) {
+    public static Date parseTimestamp(long timestamp) {
         if (timestamp < 0) {
             return null;
         }
-        String strTime = timestampParseTime(timestamp);
-        return parseDate(strTime, YEAR_MONTH_DAY_HOUR_MIN_SEC);
+        String strTime = formatTimestamp(timestamp);
+        return parse(strTime);
     }
 
     /**

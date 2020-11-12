@@ -1,13 +1,13 @@
 package com.github.hugh.util.base;
 
-import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.EmptyUtils;
 
 /**
  * base64处理工具
  *
  * @author hugh
- * @version 1.0.0
+ * @version java 1.8
+ * @since 1.0.0
  */
 public class Base64 {
     private Base64() {
@@ -17,33 +17,6 @@ public class Base64 {
      * hex 数组
      */
     private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
-
-    /**
-     * Base64 标准字符集合
-     */
-    private static final char[] ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".toCharArray();
-
-    /**
-     * 编码信息
-     */
-    private static final byte[] CODES = new byte[256];
-
-    static {
-        for (int i = 0; i < 256; i++) {
-            CODES[i] = -1;
-        }
-        for (int i = 'A'; i <= 'Z'; i++) {
-            CODES[i] = (byte) (i - 'A');
-        }
-        for (int i = 'a'; i <= 'z'; i++) {
-            CODES[i] = (byte) (26 + i - 'a');
-        }
-        for (int i = '0'; i <= '9'; i++) {
-            CODES[i] = (byte) (52 + i - '0');
-        }
-        CODES['+'] = 62;
-        CODES['/'] = 63;
-    }
 
     /**
      * 将字节数组转换成十六进制，并以字符串的形式返回
@@ -79,76 +52,8 @@ public class Base64 {
     }
 
     /**
-     * 将原始数据编码为base64编码
-     *
-     * @param data 数据信息
-     * @return 结果
-     */
-    public static char[] encode(byte[] data) {
-        char[] out = new char[((data.length + 2) / 3) * 4];
-        for (int i = 0, index = 0; i < data.length; i += 3, index += 4) {
-            boolean quad = false;
-            boolean trip = false;
-            int val = (0xFF & (int) data[i]);
-            val <<= 8;
-            if ((i + 1) < data.length) {
-                val |= (0xFF & (int) data[i + 1]);
-                trip = true;
-            }
-            val <<= 8;
-            if ((i + 2) < data.length) {
-                val |= (0xFF & (int) data[i + 2]);
-                quad = true;
-            }
-            out[index + 3] = ALPHABET[(quad ? (val & 0x3F) : 64)];
-            val >>= 6;
-            out[index + 2] = ALPHABET[(trip ? (val & 0x3F) : 64)];
-            val >>= 6;
-            out[index + 1] = ALPHABET[val & 0x3F];
-            val >>= 6;
-            out[index] = ALPHABET[val & 0x3F];
-        }
-        return out;
-    }
-
-    /**
-     * 将base64编码的数据解码成原始数据
-     *
-     * @param data 数据
-     * @return 结果
-     */
-    public static byte[] decode(char[] data) {
-        int len = ((data.length + 3) / 4) * 3;
-        if (data.length > 0 && data[data.length - 1] == '=') {
-            --len;
-        }
-        if (data.length > 1 && data[data.length - 2] == '=') {
-            --len;
-        }
-        byte[] out = new byte[len];
-        int shift = 0;
-        int accum = 0;
-        int index = 0;
-        for (char aData : data) {
-            int value = CODES[aData & 0xFF];
-            if (value >= 0) {
-                accum <<= 6;
-                shift += 6;
-                accum |= value;
-                if (shift >= 8) {
-                    shift -= 8;
-                    out[index++] = (byte) ((accum >> shift) & 0xff);
-                }
-            }
-        }
-        if (index != out.length) {
-            throw new ToolboxException("miscalculated data length!");
-        }
-        return out;
-    }
-
-    /**
      * 将字符串转换成base64 编码
+     * <p>将字符串转Bytes后,调用{@link #encode(byte[])}</p>
      *
      * @param text 文本
      * @return String 结果
@@ -161,6 +66,28 @@ public class Base64 {
     }
 
     /**
+     * 将原始数据转换为base64的数组
+     * <p>使用JDK8自带的{@link java.util.Base64}</p>
+     *
+     * @param bytes 数据信息
+     * @return 结果
+     */
+    public static byte[] encode(byte[] bytes) {
+        return java.util.Base64.getEncoder().encode(bytes);
+    }
+
+    /**
+     * 将base64编码的数组解码成原始数据
+     * <p>使用JDK8自带的{@link java.util.Base64}</p>
+     *
+     * @param bytes 数据
+     * @return byte[] 结果
+     */
+    public static byte[] decode(byte[] bytes) {
+        return java.util.Base64.getDecoder().decode(bytes);
+    }
+
+    /**
      * 将原base64的字符串解码
      *
      * @param text 文本
@@ -170,6 +97,6 @@ public class Base64 {
         if (EmptyUtils.isEmpty(text)) {
             return text;
         }
-        return new String(decode(text.toCharArray()));
+        return new String(decode(text.getBytes()));
     }
 }

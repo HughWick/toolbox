@@ -1,14 +1,13 @@
 package com.github.hugh.util.secrect;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 /**
  * DES加密工具
@@ -63,7 +62,7 @@ public class DesEncDecUtils {
         // Encrypt
         byte[] enc = ENCRYPT_CIPHER.doFinal(utf8);
         // Encode bytes to base64 to get a string
-        return new sun.misc.BASE64Encoder().encode(enc);
+        return java.util.Base64.getEncoder().encodeToString(enc);
     }
 
     /**
@@ -75,7 +74,7 @@ public class DesEncDecUtils {
      */
     public String decrypt(String str) throws Exception {
         // Decode base64 to get bytes
-        byte[] dec = new sun.misc.BASE64Decoder().decodeBuffer(str);
+        byte[] dec = java.util.Base64.getDecoder().decode(str);
         byte[] utf8 = DECRYPT_CIPHER.doFinal(dec);
         // Decode using utf-8
         return new String(utf8, CHARSET);
