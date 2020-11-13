@@ -30,7 +30,7 @@ public class TimeUtils extends DateCode {
      * @return String 返回根据对应格式，格式化后的字符串
      */
     private static String ofPattern(String format, LocalDateTime time) {
-        if (format == null || "".equals(format)) {
+        if (EmptyUtils.isEmpty(format)) {
             format = YEAR_MONTH_DAY_HOUR_MIN_SEC;
         }
         return DateTimeFormatter.ofPattern(format).format(time);
