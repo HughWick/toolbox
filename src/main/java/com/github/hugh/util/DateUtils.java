@@ -410,7 +410,7 @@ public class DateUtils extends DateCode {
      * @return Date
      */
     public static Date getEndTime(String dateStr) {
-        Date date = null;
+        Date date;
         if (EmptyUtils.isEmpty(dateStr)) {
             date = new Date();
         } else {
@@ -578,7 +578,7 @@ public class DateUtils extends DateCode {
      * @return String yyyyMM
      */
     public static String substring(String strDate) {
-        if (com.github.hugh.util.EmptyUtils.isEmpty(strDate)) {
+        if (EmptyUtils.isEmpty(strDate)) {
             return null;
         }
         return strDate.substring(0, 6);
@@ -636,7 +636,6 @@ public class DateUtils extends DateCode {
         if (date == null || hour <= 0) {
             return true;
         }
-        //
         long mill = 3600000;
         // 当小时大于一小时的时候，根据需求乘以对应的小时毫秒
         if (hour > 1) {
@@ -741,19 +740,6 @@ public class DateUtils extends DateCode {
                 return null;
         }
         return startDate;
-    }
-
-    /**
-     * 将完整的字符串转换成日期
-     *
-     * @param value 格式：yyyy-MM-dd HH:mm:ss
-     * @return Date
-     */
-    public static Date strToDate(String value) {
-        if (com.github.hugh.util.EmptyUtils.isEmpty(value)) {
-            return null;
-        }
-        return parseDate(value, YEAR_MONTH_DAY_HOUR_MIN_SEC);
     }
 
     /**
@@ -1091,7 +1077,7 @@ public class DateUtils extends DateCode {
     public static long getEarlyMorningSec() {
         long now = System.currentTimeMillis();// 当前毫秒数
         SimpleDateFormat sdfOne = new SimpleDateFormat(YEAR_MONTH_DAY);
-        long overTime = -1;
+        long overTime;
         try {
             overTime = (now - (sdfOne.parse(sdfOne.format(now)).getTime())) / 1000;
         } catch (ParseException e) {
@@ -1117,5 +1103,4 @@ public class DateUtils extends DateCode {
         }
         return null;
     }
-
 }
