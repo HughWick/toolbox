@@ -3,8 +3,10 @@ package com.github.hugh.util.gson;
 import com.google.gson.JsonArray;
 
 /**
+ * Gson JsonArray工具类
+ *
  * @author hugh
- * @version 1.3.0
+ * @version 1.3.9
  */
 public class JsonArrayUtils {
 
