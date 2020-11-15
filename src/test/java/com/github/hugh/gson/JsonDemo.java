@@ -3,7 +3,6 @@ package com.github.hugh.gson;
 import com.github.hugh.model.Student;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.OkHttpUtils;
-import com.github.hugh.util.gson.JsonArrayUtils;
 import com.github.hugh.util.gson.JsonObjectUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -131,16 +130,9 @@ public class JsonDemo {
         System.out.println("--->>" + parse);
         String arr = "[1,2,3,4,5]";
         JsonArray jsonArray = JsonObjectUtils.parseArray(arr);
-
-        System.out.println("--1->>" + jsonArray);
+        System.out.println("--->>" + jsonArray);
         String arr2 = null;
-        System.out.println("--2->>" + JsonObjectUtils.parseArray(arr2));
-        String arr3 = "[]";
-        JsonArray jsonArray1 = JsonObjectUtils.parseArray(arr3);
-        System.out.println("--3->>" + JsonArrayUtils.isEmpty(jsonArray1));
-        System.out.println("--4->>" + JsonArrayUtils.isEmpty(JsonObjectUtils.parseArray(arr2)));
-        System.out.println("--5->>" + JsonArrayUtils.isNotEmpty(JsonObjectUtils.parseArray(arr2)));
-        System.out.println("--6->>" + JsonArrayUtils.isNotEmpty(jsonArray));
+        System.out.println("--->>" + JsonObjectUtils.parseArray(arr2));
     }
 
     @Test
