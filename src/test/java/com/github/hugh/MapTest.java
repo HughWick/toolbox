@@ -26,7 +26,7 @@ public class MapTest {
         map.put("name", "null");
         map.put("amount", 10.14);
 //        map.put("birthday", new Date());
-//        map.put("create", "2019-04-06 12:11:20");
+        map.put("create", "2019-04-06 12:11:20");
         try {
             Object o = MapUtils.toEntity(Student.class, map);
             System.out.println(JSONObject.fromObject(o));

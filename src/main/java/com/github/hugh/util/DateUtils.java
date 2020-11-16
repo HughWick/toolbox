@@ -171,11 +171,22 @@ public class DateUtils extends DateCode {
      * @since 1.3.10
      */
     public static String formatTimestamp(long timestamp) {
+        return formatTimestamp(timestamp, YEAR_MONTH_DAY_HOUR_MIN_SEC);
+    }
+
+    /**
+     * 将时间戳转换成日期格式的字符串
+     *
+     * @param timestamp 时间戳
+     * @param format    日期格式
+     * @return String 字符串
+     * @since 1.3.12
+     */
+    public static String formatTimestamp(long timestamp, String format) {
         if (timestamp < 0) {
             return null;
         }
-        SimpleDateFormat format = new SimpleDateFormat(YEAR_MONTH_DAY_HOUR_MIN_SEC);
-        return format.format(timestamp);
+        return new SimpleDateFormat(format).format(timestamp);
     }
 
     /**

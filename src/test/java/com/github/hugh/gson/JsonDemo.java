@@ -4,10 +4,7 @@ import com.github.hugh.model.Student;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.OkHttpUtils;
 import com.github.hugh.util.gson.JsonObjectUtils;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import net.sf.json.JSONObject;
 import org.junit.Test;
 
@@ -155,6 +152,11 @@ public class JsonDemo {
         System.out.println("=--3->>" + servers);
         System.out.println("=--4->>" + JsonObjectUtils.toArrayList(servers));
         System.out.println("=--5->>" + JsonObjectUtils.fromJson(servers, LinkedList.class));
+
+        String tmee = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06 12:11:20\"}";
+        Student student = JsonObjectUtils.fromJson(tmee, Student.class);
+        System.out.println("=--7->>" + student.getCreate());
+        System.out.println("--->>" + JsonObjectUtils.toJson(student));
     }
 
 

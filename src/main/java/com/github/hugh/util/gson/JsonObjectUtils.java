@@ -1,6 +1,8 @@
 package com.github.hugh.util.gson;
 
+import com.github.hugh.constant.DateCode;
 import com.github.hugh.exception.ToolboxException;
+import com.github.hugh.support.instance.Instance;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
@@ -18,6 +20,17 @@ import java.util.Map;
  * @version 1.3.0
  */
 public class JsonObjectUtils {
+
+
+    /**
+     * 单例的创建Gson
+     *
+     * @return Gson
+     * @since 1.3.12
+     */
+    public static Gson gson() {
+        return Instance.getInstance().singleton(Gson.class);
+    }
 
     /**
      * 以空值安全的方式从JsonObject中获取一个String.
@@ -234,7 +247,7 @@ public class JsonObjectUtils {
     }
 
     /**
-     * jsonObject 转换为{@link Map}
+     * jsonObject 转换为{@link HashMap}
      *
      * @param jsonObject json
      * @return Map
@@ -243,7 +256,7 @@ public class JsonObjectUtils {
     public static <K, V> Map<K, V> toMap(JsonObject jsonObject) {
         TypeToken<HashMap<K, V>> typeToken = new TypeToken<HashMap<K, V>>() {
         };
-        return new Gson().fromJson(jsonObject, typeToken.getType());
+        return gson().fromJson(jsonObject, typeToken.getType());
     }
 
     /**
@@ -257,6 +270,46 @@ public class JsonObjectUtils {
      * @since 1.3.7
      */
     public static <T> T fromJson(JsonElement json, Class<T> classOfT) {
-        return new Gson().fromJson(json, classOfT);
+        return gson().fromJson(json, classOfT);
+    }
+
+    /**
+     * 将Json字符串转换为指定类型
+     *
+     * @param json     字符串json
+     * @param classOfT 实体类
+     * @param <T>      实体
+     * @return T 实体类
+     * @since 1.3.12
+     */
+    public static <T> T fromJson(String json, Class<T> classOfT) {
+        return gson().fromJson(json, classOfT);
+    }
+
+    /**
+     * 实体转Json
+     * <p>调用{@link #toJson(Object, String)} 将实体转换为json字符串,日期对象转换时,默认转换为:yyyy-MM-dd HH:mm:ss格式</p>
+     *
+     * @param entity 实体类型
+     * @param <T>    实体类型
+     * @return String json字符串
+     * @since 1.3.12
+     */
+    public static <T> String toJson(T entity) {
+        return toJson(entity, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
+    }
+
+    /**
+     * 实体转Json,并且指定日期格式
+     *
+     * @param entity     实体类型
+     * @param dateFormat 日期格式
+     * @param <T>        实体类型
+     * @return String json字符串
+     * @since 1.3.12
+     */
+    public static <T> String toJson(T entity, String dateFormat) {
+        Gson gson = new GsonBuilder().setDateFormat(dateFormat).create();
+        return gson.toJson(entity);
     }
 }
