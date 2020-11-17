@@ -1,6 +1,5 @@
 package com.github.hugh.annotation.constraints.validator;
 
-
 import com.github.hugh.annotation.constraints.NotEmpty;
 import com.github.hugh.util.EmptyUtils;
 
@@ -14,16 +13,6 @@ import javax.validation.ConstraintValidatorContext;
  * @since 1.0.5
  */
 public class NotEmptyValidator implements ConstraintValidator<NotEmpty, String> {
-
-//    private List<String> valueList;
-
-    @Override
-    public void initialize(NotEmpty notEmpty) {
-//        valueList = new ArrayList<>();
-//        for (String val : notEmpty.value()) {
-//            valueList.add(notEmpty.value());
-//        }
-    }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {

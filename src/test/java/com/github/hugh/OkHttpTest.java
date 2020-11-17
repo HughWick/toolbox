@@ -53,6 +53,6 @@ public class OkHttpTest {
         headerContent.put("test_token", UUID.randomUUID().toString());
         headerContent.put("test_token_02", UUID.randomUUID().toString());
         headerContent.put("int_test", "123");
-        System.out.println("--->" + OkHttpUtils.postForm(url, json, headerContent));
+        System.out.println("--->" + OkHttpUtils.post(url, json, headerContent));
     }
 }

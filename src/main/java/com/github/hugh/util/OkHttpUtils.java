@@ -55,24 +55,6 @@ public class OkHttpUtils {
     }
 
     /**
-     * 构建OkHttpClient对象
-     *
-     * @param connectTimeout           设置连接超时,单位：秒
-     * @param readTimeout              设置读超时,单位：秒
-     * @param writeTimeout             设置写超时,单位：秒
-     * @param retryOnConnectionFailure 是否自动重连
-     * @return OkHttpClient
-     * @since 1.3.3
-     */
-    public static OkHttpClient buildClient(int connectTimeout, int readTimeout, int writeTimeout, boolean retryOnConnectionFailure) {
-        return new OkHttpClient.Builder().connectTimeout(connectTimeout, TimeUnit.SECONDS)
-                .readTimeout(readTimeout, TimeUnit.SECONDS)
-                .writeTimeout(writeTimeout, TimeUnit.SECONDS)
-                .retryOnConnectionFailure(retryOnConnectionFailure)
-                .build();
-    }
-
-    /**
      * 参数以表单形式提交类型
      */
     private static final String APPLICATION_FORM_URLENCODED_VALUE = "application/x-www-form-urlencoded";

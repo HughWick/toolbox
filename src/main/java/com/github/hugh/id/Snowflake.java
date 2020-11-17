@@ -1,5 +1,6 @@
 package com.github.hugh.id;
 
+import com.github.hugh.constant.DateCode;
 import com.github.hugh.util.EmptyUtils;
 
 import java.lang.management.ManagementFactory;
@@ -122,7 +123,6 @@ public class Snowflake {
         return id;
     }
 
-
     /**
      * 产生下一个ID
      *
@@ -197,7 +197,6 @@ public class Snowflake {
         return item;
     }
 
-
     /**
      * 格式化反编译后的时间戳部分、转义成标准的yyyy-MM-dd HH:mm:ss 日期格式
      *
@@ -205,7 +204,7 @@ public class Snowflake {
      * @return String yyyy-MM-dd HH:mm:ss 日期格式
      */
     private static String formDate(long timestamp) {
-        DateTimeFormatter ftf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter ftf = DateTimeFormatter.ofPattern(DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
         return ftf.format(LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault()));
     }
 }
