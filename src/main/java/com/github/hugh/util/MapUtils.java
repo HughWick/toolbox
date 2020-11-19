@@ -1,11 +1,14 @@
 package com.github.hugh.util;
 
 import com.github.hugh.util.common.AssertUtils;
+import com.google.common.base.Splitter;
 
 import javax.servlet.http.HttpServletRequest;
 import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -125,10 +128,8 @@ public class MapUtils {
 
     /**
      * Map转实体类共通方法
-     *
-     * <ul>
-     * <li>map中的key必须与实体中的常量key一致</li>
-     * </ul>
+     * <p>注:该方法通过传入{@link Class}进行实体创建,再调用{@link #convertObjects(Object, Map)}将map中与实体对应的的key赋值</p>
+     * <p>map中的key必须与实体中的常量key一致</p>
      *
      * @param cls    实体类class
      * @param params 参数
@@ -140,12 +141,32 @@ public class MapUtils {
     public static <T> T toEntity(Class<T> cls, Map<?, ?> params) throws Exception {
         AssertUtils.notNull(cls, "class");
         T obj = cls.newInstance();
-        BeanInfo beanInfo = Introspector.getBeanInfo(cls);
+        return convertObjects(obj, params);
+    }
+
+    /**
+     * 将map转换为实体对象,并赋值
+     * <p>注：该方法不会新创建实体对象,通过反射机制调用对象方法,获取map中的value进行赋值后返回</p>
+     * <p>map中的key必须与实体中的常量key一致</p>
+     *
+     * @param object 实体对象
+     * @param params 参数
+     * @since 1.3.13
+     */
+    public static <T, K, V> T convertEntity(T object, Map<K, V> params) throws Exception {
+        AssertUtils.notNull(object, "object");
+        return convertObjects(object, params);
+    }
+
+    private static <T> T convertObjects(T bean, Map params) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
+        Class<?> aClass = bean.getClass();
+        BeanInfo beanInfo = Introspector.getBeanInfo(aClass);
         PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
         for (PropertyDescriptor descriptor : propertyDescriptors) {
             String propertyName = descriptor.getName();
             Object value = params.get(propertyName);
-            if (EmptyUtils.isNotEmpty(value)) {
+//            if (EmptyUtils.isNotEmpty(value)) {
+            if (value != null) {
                 switch (descriptor.getPropertyType().getSimpleName()) {
                     case "int":
                     case "Integer":
@@ -163,14 +184,21 @@ public class MapUtils {
                         if (value instanceof Date) {
                             //日期类型不处理
                         } else if (DateUtils.isDateFormat(String.valueOf(value))) {
-                            value = DateUtils.parseDate(String.valueOf(value));
+                            value = DateUtils.parse(String.valueOf(value));
                         }
                         break;
+                    case "List":
+                        System.out.println("===soure=>>" + value);
+                        String s1 = String.valueOf(value).substring(1);
+                        String s2 = s1.substring(0, s1.length() - 1);
+                        System.out.println("---2->>" + s2);
+                        value = Splitter.on(",").trimResults().splitToList(s2);
+                        break;
                 }
-                descriptor.getWriteMethod().invoke(obj, value);
+                descriptor.getWriteMethod().invoke(bean, value);
             }
         }
-        return obj;
+        return bean;
     }
 
     /**

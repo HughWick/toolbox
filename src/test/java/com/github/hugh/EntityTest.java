@@ -30,7 +30,7 @@ public class EntityTest {
             Student student = MapUtils.toEntity(Student.class, map);
             Student student2 = new Student();
             EntityUtils.copy(student, student2);
-            System.out.println(student + "-----" + student2);
+            System.out.println(student + "<----->" + student2);
             System.out.println("-1-->>" + JSONObject.fromObject(student));
             System.out.println("-2-->>" + JSONObject.fromObject(student2));
         } catch (Exception e) {
