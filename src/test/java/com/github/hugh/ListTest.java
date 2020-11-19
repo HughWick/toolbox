@@ -2,10 +2,16 @@ package com.github.hugh;
 
 import com.github.hugh.model.Student;
 import com.github.hugh.util.ListUtils;
+import com.github.hugh.util.gson.JsonObjectUtils;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.google.gson.JsonArray;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -60,7 +66,6 @@ public class ListTest {
 //        System.out.println("-2-->>" + lists);
 //    }
 
-
     @Test
     public void test04() {
         List<Student> list = new ArrayList<>();
@@ -74,5 +79,28 @@ public class ListTest {
         System.out.println("---Sorting using Comparator by Age in reverse order---");
         list.stream().sorted(Comparator.comparing(Student::getAge).reversed())
                 .forEach(e -> System.out.println("Id:" + e.getId() + ", Name: " + e.getName() + ", Age:" + e.getAge()));
+    }
+
+    @Test
+    public void test05() {
+        String strings = "[\"Saab\", \"Volvo\", \"BMW\",[sub]]";
+        String s1 = strings.substring(1);
+        System.out.println("---1>>>" + s1);
+        String s2 = s1.substring(0, s1.length() - 1);
+        System.out.println("---2>>" + s2);
+        List strings1 = Splitter.on(",").trimResults().splitToList(s2);
+        System.out.println("--3-->>" + strings1);
+        JsonArray jsonElements = JsonObjectUtils.parseArray(strings1.get(3));
+        System.out.println("--4-->>" + jsonElements.size());
+        System.out.println("--4-->>" + jsonElements.get(0).getAsString());
+    }
+
+    public static void main(String[] args) {
+        String input = "John=first,Adam=second";
+        Map<String, String> result = Splitter.on(",")
+                .withKeyValueSeparator("=")
+                .split(input);
+        System.out.println("--->>"+result.toString());
+        System.out.println("--===>>"+ JsonObjectUtils.parse(result));
     }
 }
