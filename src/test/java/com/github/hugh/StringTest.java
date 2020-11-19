@@ -1,5 +1,6 @@
 package com.github.hugh;
 
+import com.github.hugh.util.DoubleMathUtils;
 import com.github.hugh.util.StringUtils;
 import org.junit.Test;
 
@@ -44,5 +45,10 @@ public class StringTest {
     public void test04() {
         System.out.println("--1-->>" + StringUtils.replaceAnyBlank("entity is error !"));
         System.out.println("--2-->>" + StringUtils.replaceAnyBlank("entity is error !", "_"));
+    }
+
+    public static void main(String[] args) {
+        double threadcount  = DoubleMathUtils.mul(16, 3);
+        System.out.println("-=-threadcount ->>"+threadcount );
     }
 }
