@@ -299,7 +299,7 @@ public class StringUtils {
      * @param source 目标字符串
      * @param beTrim 要删除的指定字符
      * @return 删除之后的字符串
-     * @since 1.3.13
+     * @since 1.4.0
      */
     public static String trim(String source, String beTrim) {
         if (source == null) {

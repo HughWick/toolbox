@@ -3,6 +3,7 @@ package com.github.hugh.util.gson;
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.support.instance.Instance;
+import com.github.hugh.util.gson.adapter.MapTypeAdapter;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
@@ -20,7 +21,6 @@ import java.util.Map;
  * @version 1.3.0
  */
 public class JsonObjectUtils {
-
 
     /**
      * 单例的创建Gson
@@ -249,14 +249,19 @@ public class JsonObjectUtils {
     /**
      * jsonObject 转换为{@link HashMap}
      *
+     * <p>使用的自定义的{@link MapTypeAdapter}解析器,重写了数值转换校验</p>
+     *
      * @param jsonObject json
      * @return Map
-     * @since 1.3.7
+     * @since 1.4.0
      */
     public static <K, V> Map<K, V> toMap(JsonObject jsonObject) {
-        TypeToken<HashMap<K, V>> typeToken = new TypeToken<HashMap<K, V>>() {
-        };
-        return gson().fromJson(jsonObject, typeToken.getType());
+        String strJson = toJson(jsonObject);
+        Type type = new TypeToken<Map<K, V>>() {
+        }.getType();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(type, new MapTypeAdapter()).create();
+        return gson.fromJson(strJson, type);
     }
 
     /**

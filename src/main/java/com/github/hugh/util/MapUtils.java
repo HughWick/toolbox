@@ -157,7 +157,7 @@ public class MapUtils {
      *
      * @param object 实体对象
      * @param params 参数
-     * @since 1.3.13
+     * @since 1.4.0
      */
     public static <T, K, V> T toEntity(T object, Map<K, V> params) throws Exception {
         AssertUtils.notNull(object, "object");
@@ -180,7 +180,7 @@ public class MapUtils {
      * @param <V>    map-value
      * @return T 实体
      * @throws Exception 错误信息
-     * @since 1.3.13
+     * @since 1.4.0
      */
     public static <T, K, V> T convertEntity(Class<T> cls, Map<K, V> params) throws Exception {
         AssertUtils.notNull(cls, "class");
@@ -203,7 +203,7 @@ public class MapUtils {
      * @param <V>    map-value
      * @return T 实体
      * @throws Exception 错误信息
-     * @since 1.3.13
+     * @since 1.4.0
      */
     public static <T, K, V> T convertEntity(T object, Map<K, V> params) throws Exception {
         AssertUtils.notNull(object, "object");
@@ -221,7 +221,7 @@ public class MapUtils {
      * @throws IntrospectionException
      * @throws InvocationTargetException
      * @throws IllegalAccessException
-     * @since 1.3.13
+     * @since 1.4.0
      */
     private static <T> T convertObjects(T bean, Map params, boolean empty) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
         Class<?> aClass = bean.getClass();

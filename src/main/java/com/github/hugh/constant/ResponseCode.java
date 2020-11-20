@@ -4,7 +4,7 @@ package com.github.hugh.constant;
  * 响应常用编码
  *
  * @author hugh
- * @see 1.3.13
+ * @see 1.4.0
  */
 public class ResponseCode {
 

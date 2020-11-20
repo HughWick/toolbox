@@ -4,7 +4,10 @@ import com.github.hugh.model.Student;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.OkHttpUtils;
 import com.github.hugh.util.gson.JsonObjectUtils;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import net.sf.json.JSONObject;
 import org.junit.Test;
 
@@ -134,7 +137,7 @@ public class JsonDemo {
 
     @Test
     public void test07() {
-//        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\",\"id\":null}";
+        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\",\"id\":null,\"opType\":1}";
 
         String arryStr = "{ " +
                 "\"client\":\"127.0.0.1\"," +
@@ -145,6 +148,7 @@ public class JsonDemo {
                 "    \"156.154.71.1\" " +
                 "    ]}";
         JsonObject parse = JsonObjectUtils.parse(arryStr);
+        JsonObject json2 = JsonObjectUtils.parse(str);
         System.out.println("-1-->>" + parse);
         Map map = JsonObjectUtils.toMap(parse);
         System.out.println("-2-->>" + map.get("servers"));
@@ -156,7 +160,10 @@ public class JsonDemo {
         String tmee = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06 12:11:20\"}";
         Student student = JsonObjectUtils.fromJson(tmee, Student.class);
         System.out.println("=--7->>" + student.getCreate());
-        System.out.println("--->>" + JsonObjectUtils.toJson(student));
+        System.out.println("-8-->>" + JsonObjectUtils.toJson(student));
+//        new MyType<Map<String, Object>>().gsonToMap(json2);
+        Map<Object, Object> objectObjectMap = JsonObjectUtils.toMap(json2);
+        System.out.println("-9-->>" +objectObjectMap );
     }
 
 

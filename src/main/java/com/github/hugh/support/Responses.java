@@ -10,7 +10,7 @@ import net.sf.json.JSONObject;
  * <p>方法返回结果都为{@link JSONObject}</p>
  *
  * @author hugh
- * @see 1.3.13
+ * @see 1.4.0
  */
 @Data
 @AllArgsConstructor // 为类提供一个全参的构造方法
