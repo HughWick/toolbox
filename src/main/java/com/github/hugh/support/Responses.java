@@ -1,6 +1,5 @@
 package com.github.hugh.support;
 
-
 import lombok.Data;
 import net.sf.json.JSONObject;
 
@@ -9,7 +8,7 @@ import net.sf.json.JSONObject;
  * <p>方法返回结果都为{@link JSONObject}</p>
  *
  * @author hugh
- * @see 1.4.0
+ * @since 1.4.0
  */
 @Data
 public class Responses<T> {

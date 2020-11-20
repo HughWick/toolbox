@@ -201,9 +201,6 @@ public class OkHttpUtils {
     @Deprecated
     public static JSONObject postFormReJSON(String url, JSONObject json) throws IOException {
         String result = postForm(url, json);
-        if (EmptyUtils.isEmpty(result)) {
-            return null;
-        }
         try {
             return JSONObject.fromObject(result);
         } catch (Exception e) {
