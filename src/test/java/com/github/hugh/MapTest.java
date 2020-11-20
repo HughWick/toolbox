@@ -4,7 +4,6 @@ import com.github.hugh.model.Student;
 import com.github.hugh.util.EntityUtils;
 import com.github.hugh.util.MapUtils;
 import com.github.hugh.util.StringUtils;
-import com.google.common.base.Stopwatch;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.Test;
@@ -70,34 +69,30 @@ public class MapTest {
         Map<String, Object> map = new HashMap<>();
         map.put("id", 1);
         map.put("age", 2);
-        map.put("name", null);
+        map.put("name", "null");
         map.put("amount", 10.14);
         map.put("birthday", new Date());
         map.put("create", "2019-04-06 12:11:20");
-        List<String> list = new ArrayList<>();
-        list.add("a");
-        list.add("b");
-        List<String> list2 = new ArrayList<>();
-        list2.add("c");
-        list.add(list2.toString());
-        map.put("list", list.toString());
+        JSONArray arr = new JSONArray();
+        arr.add("a");
+        arr.add("b");
+        JSONArray arr2 = new JSONArray();
+        arr2.add("c");
+        arr.add(arr2.toString());
+        map.put("list", arr.toString());
         System.out.println("--->>" + map);
         try {
             Student Student1 = MapUtils.toEntity(Student.class, map);
             System.out.println(JSONObject.fromObject(Student1));
-            Stopwatch stopwatch = Stopwatch.createStarted();
-//            for (int i = 0; i < 100000; i++) {
             map.put("age", 22233);
             Student Student12 = MapUtils.convertEntity(Student1, map);
             System.out.println(JSONObject.fromObject(Student12));
-            Object o = Student12.getList().get(2);
-            System.out.println("--->>>>>" + JSONArray.fromObject(o));
-//            }
-//            Stopwatch stopwatch2 = Stopwatch.createStarted();
-//            for (int i = 0; i < 100000; i++) {
-//                Object o = MapUtils.toEntity(Student.class, map);
-//            }
-//            System.out.println(stopwatch2.elapsed(TimeUnit.MILLISECONDS));
+//            Object o = Student12.getList().get(2);
+//            System.out.println("--->>>>>" + JSONArray.fromObject(o));
+//            String s = JsonObjectUtils.toJson(Student1);
+//            Student Student3 = MapUtils.toEntity(Student1, JsonObjectUtils.parse(s));
+//            System.out.println(JSONObject.fromObject(Student3));
+
         } catch (Exception e) {
             e.printStackTrace();
         }

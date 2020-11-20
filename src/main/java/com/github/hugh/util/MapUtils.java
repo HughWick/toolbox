@@ -127,9 +127,12 @@ public class MapUtils {
     }
 
     /**
-     * Map转实体类共通方法
-     * <p>注:该方法通过传入{@link Class}进行实体创建,再调用{@link #convertObjects(Object, Map)}将map中与实体对应的的key赋值</p>
-     * <p>map中的key必须与实体中的常量key一致</p>
+     * Map转实体类
+     * <ul>
+     * <li>注:</li>
+     * <li>1.map中的key必须与实体中的常量key一致.</li>
+     * <li>2.通过class创建一个新的实例,后调用{@link #convertObjects(Object, Map, boolean)}赋值.</li>
+     * </ul>
      *
      * @param cls    实体类class
      * @param params 参数
@@ -138,39 +141,106 @@ public class MapUtils {
      * @throws Exception 错误异常
      * @since 1.2.3
      */
-    public static <T> T toEntity(Class<T> cls, Map<?, ?> params) throws Exception {
+    public static <T, K, V> T toEntity(Class<T> cls, Map<K, V> params) throws Exception {
         AssertUtils.notNull(cls, "class");
         T obj = cls.newInstance();
-        return convertObjects(obj, params);
+        return convertObjects(obj, params, true);
     }
 
     /**
      * 将map转换为实体对象,并赋值
-     * <p>注：该方法不会新创建实体对象,通过反射机制调用对象方法,获取map中的value进行赋值后返回</p>
-     * <p>map中的key必须与实体中的常量key一致</p>
+     * <ul>
+     * <li>注:</li>
+     * <li>1.map中的key必须与实体中的常量key一致.</li>
+     * <li>2.调用{@link EmptyUtils#isNotEmpty(Object)}字符串非空判断,如果字符串为空则不进行实体赋值.转换方式与{@link #convertObjects(Object, Map, boolean)}.</li>
+     * </ul>
      *
      * @param object 实体对象
      * @param params 参数
      * @since 1.3.13
      */
-    public static <T, K, V> T convertEntity(T object, Map<K, V> params) throws Exception {
+    public static <T, K, V> T toEntity(T object, Map<K, V> params) throws Exception {
         AssertUtils.notNull(object, "object");
-        return convertObjects(object, params);
+        return convertObjects(object, params, true);
     }
 
-    private static <T> T convertObjects(T bean, Map params) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
+    /**
+     * Map转实体类方法
+     * <ul>
+     * <li>注:</li>
+     * <li>1.map中的key必须与实体中的常量key一致.</li>
+     * <li>2.class创建一个新的实例,后进行赋值.</li>
+     * <li>3.调用{@link EmptyUtils#isNotEmpty(Object)}字符串非空判断,如果字符串为空则不进行实体赋值.转换方式与{@link #convertObjects(Object, Map, boolean)}.</li>
+     * </ul>
+     *
+     * @param cls    类
+     * @param params 参数
+     * @param <T>    实体泛型
+     * @param <K>    map中key
+     * @param <V>    map-value
+     * @return T 实体
+     * @throws Exception 错误信息
+     * @since 1.3.13
+     */
+    public static <T, K, V> T convertEntity(Class<T> cls, Map<K, V> params) throws Exception {
+        AssertUtils.notNull(cls, "class");
+        T obj = cls.newInstance();
+        return convertObjects(obj, params, false);
+    }
+
+    /**
+     * Map转实体类方法
+     * <ul>
+     * <li>注:</li>
+     * <li>1.不会新创建实体对象,通过反射机制调用对象方法,获取map中的value进行赋值后返回</li>
+     * <li>3.调用{@link EmptyUtils#isNotEmpty(Object)}字符串非空判断,如果字符串为空则不进行实体赋值.转换方式与{@link #convertObjects(Object, Map, boolean)}.</li>
+     * </ul>
+     *
+     * @param object 实体
+     * @param params 参数
+     * @param <T>    实体泛型
+     * @param <K>    map中key
+     * @param <V>    map-value
+     * @return T 实体
+     * @throws Exception 错误信息
+     * @since 1.3.13
+     */
+    public static <T, K, V> T convertEntity(T object, Map<K, V> params) throws Exception {
+        AssertUtils.notNull(object, "object");
+        return convertObjects(object, params, false);
+    }
+
+    /**
+     * map转实体
+     *
+     * @param bean   实体
+     * @param params 参数
+     * @param empty  空判断
+     * @param <T>    实体泛型
+     * @return T 实体
+     * @throws IntrospectionException
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     * @since 1.3.13
+     */
+    private static <T> T convertObjects(T bean, Map params, boolean empty) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
         Class<?> aClass = bean.getClass();
         BeanInfo beanInfo = Introspector.getBeanInfo(aClass);
         PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
         for (PropertyDescriptor descriptor : propertyDescriptors) {
             String propertyName = descriptor.getName();
             Object value = params.get(propertyName);
-//            if (EmptyUtils.isNotEmpty(value)) {
-            if (value != null) {
+            boolean flag;
+            if (empty) {
+                flag = EmptyUtils.isNotEmpty(value);
+            } else {
+                flag = value != null;
+            }
+            if (flag) {
                 switch (descriptor.getPropertyType().getSimpleName()) {
                     case "int":
                     case "Integer":
-                        value = Integer.parseInt(String.valueOf(value));
+                        value = Integer.parseInt(String.valueOf(value).trim());
                         break;
                     case "long":
                     case "Long":
@@ -188,17 +258,28 @@ public class MapUtils {
                         }
                         break;
                     case "List":
-                        System.out.println("===soure=>>" + value);
-                        String s1 = String.valueOf(value).substring(1);
-                        String s2 = s1.substring(0, s1.length() - 1);
-                        System.out.println("---2->>" + s2);
-                        value = Splitter.on(",").trimResults().splitToList(s2);
+                        String trim = trim(String.valueOf(value));
+                        value = Splitter.on(",").trimResults().splitToList(trim);
                         break;
                 }
                 descriptor.getWriteMethod().invoke(bean, value);
             }
         }
         return bean;
+    }
+
+    /**
+     * 修剪掉前后各一位字符
+     *
+     * @param source 源
+     * @return String
+     */
+    private static String trim(String source) {
+        if (EmptyUtils.isEmpty(source)) {
+            return "";
+        }
+        String s1 = source.substring(1);
+        return s1.substring(0, s1.length() - 1);
     }
 
     /**
