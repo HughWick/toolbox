@@ -31,7 +31,7 @@ public class MapUtils {
      * @param map  Map
      * @param key  map中的key
      * @param code 需要验证的code码
-     * @return boolean @code true} 一致
+     * @return boolean {@code true} 一致
      */
     public static boolean isSuccess(Map<?, ?> map, String key, String code) {
         if (map == null) {

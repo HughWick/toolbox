@@ -2,12 +2,11 @@ package com.github.hugh.support;
 
 
 import lombok.Data;
-
-import java.util.HashMap;
-import java.util.Map;
+import net.sf.json.JSONObject;
 
 /**
  * 返回信息工具类
+ * <p>方法返回结果都为{@link JSONObject}</p>
  *
  * @author hugh
  * @see 1.3.13
@@ -85,39 +84,39 @@ public class Responses<T> {
     /**
      * 返回信息
      *
-     * @return Map
+     * @return JSONObject
      */
-    public Map<String, Object> info() {
-        Map<String, Object> map = new HashMap<>();
-        map.put(this.codeKey, this.codeValue);
-        map.put(this.messageKey, this.messageValue);
-        return map;
+    public JSONObject info() {
+        JSONObject json = new JSONObject();
+        json.put(this.codeKey, this.codeValue);
+        json.put(this.messageKey, this.messageValue);
+        return json;
     }
 
     /**
      * 返回带数据的信息
      *
-     * @return Map
+     * @return JSONObject
      */
-    public Map<String, Object> data() {
-        Map<String, Object> map = new HashMap<>();
-        map.put(this.codeKey, this.codeValue);
-        map.put(this.messageKey, this.messageValue);
-        map.put(this.dataKey, this.dataValue);
-        return map;
+    public JSONObject data() {
+        JSONObject json = new JSONObject();
+        json.put(this.codeKey, this.codeValue);
+        json.put(this.messageKey, this.messageValue);
+        json.put(this.dataKey, this.dataValue);
+        return json;
     }
 
     /**
      * 返回带数据,与总数的信息
      *
-     * @return Map
+     * @return JSONObject
      */
-    public Map<String, Object> complete() {
-        Map<String, Object> map = new HashMap<>();
-        map.put(this.codeKey, this.codeValue);
-        map.put(this.messageKey, this.messageValue);
-        map.put(this.dataKey, this.dataValue);
-        map.put(this.countKey, this.countValue);
-        return map;
+    public JSONObject complete() {
+        JSONObject json = new JSONObject();
+        json.put(this.codeKey, this.codeValue);
+        json.put(this.messageKey, this.messageValue);
+        json.put(this.dataKey, this.dataValue);
+        json.put(this.countKey, this.countValue);
+        return json;
     }
 }
