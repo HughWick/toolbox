@@ -127,11 +127,12 @@ public class MapUtils {
     }
 
     /**
-     * Map转实体类
+     * 将map,转换成对应class对象的实体类
      * <ul>
      * <li>注:</li>
      * <li>1.map中的key必须与实体中的常量key一致.</li>
      * <li>2.通过class创建一个新的实例,后调用{@link #convertObjects(Object, Map, boolean)}赋值.</li>
+     * <li>3.调用{@link EmptyUtils#isNotEmpty(Object)}字符串非空判断,如果字符串为空则不进行实体赋值.转换方式与{@link #convertObjects(Object, Map, boolean)}.</li>
      * </ul>
      *
      * @param cls    实体类class
@@ -148,7 +149,7 @@ public class MapUtils {
     }
 
     /**
-     * 将map转换为实体对象,并赋值
+     * map转换为实体对象,并赋值
      * <ul>
      * <li>注:</li>
      * <li>1.map中的key必须与实体中的常量key一致.</li>
@@ -165,12 +166,12 @@ public class MapUtils {
     }
 
     /**
-     * Map转实体类方法
+     *  将map,转换成对应class对象的实体类
      * <ul>
      * <li>注:</li>
      * <li>1.map中的key必须与实体中的常量key一致.</li>
-     * <li>2.class创建一个新的实例,后进行赋值.</li>
-     * <li>3.调用{@link EmptyUtils#isNotEmpty(Object)}字符串非空判断,如果字符串为空则不进行实体赋值.转换方式与{@link #convertObjects(Object, Map, boolean)}.</li>
+     * <li>2.class创建一个新的实例,通过反射机制调用对象方法,获取map中的value不为{@code null}时进行赋值.</li>
+     * <li>3.转换方式与{@link #convertObjects(Object, Map, boolean)}.</li>
      * </ul>
      *
      * @param cls    类
@@ -192,8 +193,9 @@ public class MapUtils {
      * Map转实体类方法
      * <ul>
      * <li>注:</li>
-     * <li>1.不会新创建实体对象,通过反射机制调用对象方法,获取map中的value进行赋值后返回</li>
-     * <li>3.调用{@link EmptyUtils#isNotEmpty(Object)}字符串非空判断,如果字符串为空则不进行实体赋值.转换方式与{@link #convertObjects(Object, Map, boolean)}.</li>
+     * <li>1.map中的key必须与实体中的常量key一致.</li>
+     * <li>2.不会新创建实体对象,通过反射机制调用对象方法,获取map中的value不为{@code null}时进行赋值</li>
+     * <li>3.转换方式与{@link #convertObjects(Object, Map, boolean)}</li>
      * </ul>
      *
      * @param object 实体
