@@ -1,7 +1,6 @@
 package com.github.hugh.support;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.sf.json.JSONObject;
 
@@ -13,7 +12,6 @@ import net.sf.json.JSONObject;
  * @see 1.4.0
  */
 @Data
-@AllArgsConstructor // 为类提供一个全参的构造方法
 public class Responses<T> {
 
     /**
@@ -70,6 +68,17 @@ public class Responses<T> {
         this.messageValue = messageValue;
         this.dataKey = dataKey;
         this.dataValue = dataValue;
+    }
+
+    public Responses(String codeKey, String codeValue, String messageKey, String messageValue, String dataKey, T dataValue, String countKey, long countValue) {
+        this.codeKey = codeKey;
+        this.codeValue = codeValue;
+        this.messageKey = messageKey;
+        this.messageValue = messageValue;
+        this.dataKey = dataKey;
+        this.dataValue = dataValue;
+        this.countKey = countKey;
+        this.countValue = countValue;
     }
 
     /**
