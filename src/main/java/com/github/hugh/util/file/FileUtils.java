@@ -92,6 +92,13 @@ public class FileUtils {
         file.delete();
     }
 
+    public static void deleteDir(String path) {
+        if (path == null) {
+            return;
+        }
+        deleteDir(new File(path));
+    }
+
     /**
      * 根据文件路径删除文件,后如果目录为空,也会删除
      *
