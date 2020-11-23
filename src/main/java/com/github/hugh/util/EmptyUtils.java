@@ -24,6 +24,7 @@ public class EmptyUtils {
      * <li>isEmpty("abc") = false</li>
      * </ul>
      *
+     * @param <T> 对象泛型
      * @param obj 待检查对象
      * @return boolean {@code true}空
      */
@@ -45,6 +46,7 @@ public class EmptyUtils {
      * 判断对象是否为NotEmpty
      * <p>实用于对String Collection及其子类 Map及其子类</p>
      *
+     * @param <T> 对象泛型
      * @param obj 待检查对象
      * @return boolean {@code true}不为空
      * <ul>

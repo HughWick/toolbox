@@ -41,4 +41,14 @@ public class FileTest {
         }
         System.out.println("======END=====");
     }
+    @Test
+    public void test02() {
+        String dir = "C:\\Users\\Lenovo\\Desktop\\新建文件夹";
+        FileUtils.deleteDir(new File(dir));
+
+        System.out.println("========");
+        String path = "C:\\Users\\Lenovo\\Desktop\\新建文件夹 (2)";
+        FileUtils.deleteDir(path);
+        System.out.println("===END=====");
+    }
 }

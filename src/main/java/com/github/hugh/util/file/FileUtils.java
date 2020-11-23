@@ -92,6 +92,13 @@ public class FileUtils {
         file.delete();
     }
 
+    /**
+     * 根据文件路径删除文件夹下所有文件及文件夹
+     * <p>通过创建一个文件后调用{@link #deleteDir(File)}方法</p>
+     *
+     * @param path 路径
+     * @since 1.4.2
+     */
     public static void deleteDir(String path) {
         if (path == null) {
             return;
