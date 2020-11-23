@@ -4,6 +4,7 @@ import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.EmptyUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
@@ -89,5 +90,27 @@ public class FileUtils {
                 deleteDir(f);
         }
         file.delete();
+    }
+
+    /**
+     * 根据文件路径删除文件,后如果目录为空,也会删除
+     *
+     * @param path 路径
+     * @since 1.4.1
+     */
+    public static void delFile(String path) throws IOException {
+        if (path == null) {
+            return;
+        }
+        File file = new File(path);
+        if (file.exists()) {
+            boolean delete = file.delete();//删除文件
+            if (delete) {
+                String canonicalPath = file.getCanonicalPath();
+                String directory = canonicalPath.
+                        substring(0, canonicalPath.lastIndexOf(File.separator));
+                delEmptyDir(directory);//删除目录
+            }
+        }
     }
 }
