@@ -44,12 +44,12 @@ public class StringUtils {
     }
 
     /**
-     * 完整的判断中文汉字和符号
+     * 校验字符串中是否存在中文
      *
      * @param string 字符串
      * @return boolean
      */
-    public static boolean isChinese(String string) {
+    public static boolean isContainChinese(String string) {
         if (EmptyUtils.isEmpty(string)) {
             return false;
         }
@@ -60,6 +60,17 @@ public class StringUtils {
             }
         }
         return false;
+    }
+
+    /**
+     * 校验字符串不是全中文名称
+     *
+     * @param string 字符串
+     * @return boolean {@code true}
+     * @since 1.4.3
+     */
+    public static boolean isNotContainChinese(String string) {
+        return !isContainChinese(string);
     }
 
     /**

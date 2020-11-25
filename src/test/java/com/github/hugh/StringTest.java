@@ -2,6 +2,7 @@ package com.github.hugh;
 
 import com.github.hugh.util.DoubleMathUtils;
 import com.github.hugh.util.StringUtils;
+import com.github.hugh.util.regex.RegexUtils;
 import org.junit.Test;
 
 /**
@@ -20,7 +21,7 @@ public class StringTest {
 //        System.out.println("fileName = " + fileName);
         System.out.println("---1>>>" + StringUtils.after(fName, "\\"));
         System.out.println("--2->>>" + StringUtils.before(fName, "\\"));
-        System.out.println("--3->>>" + StringUtils.isChinese(fName));
+        System.out.println("--3->>>" + StringUtils.isContainChinese(fName));
         System.out.println("--4->>>" + StringUtils.getNumber(fName));
         System.out.println("--5>>" + StringUtils.varcharSize(value));
     }
@@ -47,8 +48,20 @@ public class StringTest {
         System.out.println("--2-->>" + StringUtils.replaceAnyBlank("entity is error !", "_"));
     }
 
+    @Test
+    public void test05() {
+        System.out.println("--1-->>" + RegexUtils.isFullChinese("中文"));
+        System.out.println("--2-->>" + RegexUtils.isFullChinese("中文！"));
+        System.out.println("--3-->>" + RegexUtils.isFullChinese("中文1"));
+        System.out.println("--3-->>" + RegexUtils.isNotFullChinese("中文 "));
+        System.out.println("--4-->>" + StringUtils.isContainChinese("；"));
+        System.out.println("--5-->>" + StringUtils.isContainChinese("中文"));
+        System.out.println("--6-->>" + StringUtils.isNotContainChinese("中文2"));
+        System.out.println("--7-->>" + StringUtils.isNotContainChinese("中文"));
+    }
+
     public static void main(String[] args) {
-        double threadcount  = DoubleMathUtils.mul(16, 3);
-        System.out.println("-=-threadcount ->>"+threadcount );
+        double threadcount = DoubleMathUtils.mul(16, 3);
+        System.out.println("-=-threadcount ->>" + threadcount);
     }
 }

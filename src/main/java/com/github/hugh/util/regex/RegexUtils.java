@@ -149,11 +149,15 @@ public class RegexUtils {
     private static final Pattern IP_PATTERN = Pattern.compile("^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\." + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\." + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
             + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$");
 
-
     /**
      * 端口正则表达式
      */
     private static final Pattern PORT_PATTERN = Pattern.compile("([0-9]|[1-9]\\d{1,3}|[1-5]\\d{4}|6[0-5]{2}[0-3][0-5])");
+
+    /**
+     * 全中文-正则
+     */
+    private static final Pattern FULL_CHINESE_PATTERN = Pattern.compile("[\\u4e00-\\u9fa5]+");
 
     /**
      * 对特殊字符转译
@@ -347,4 +351,30 @@ public class RegexUtils {
     private static boolean isPatternMatch(final String string, final Pattern pattern) {
         return pattern.matcher(string).find();
     }
+
+    /**
+     * 判断字符串全是中文
+     *
+     * @param str 待校验字符串
+     * @return boolean {@code true}全中文,其他返回{@code false}
+     * @since 1.4.3
+     */
+    public static boolean isFullChinese(String str) {
+        if (EmptyUtils.isEmpty(str)) {
+            return false;
+        }
+        return FULL_CHINESE_PATTERN.matcher(str).matches();
+    }
+
+    /**
+     * 校验字符串,如果不全是中文返回{@code true}
+     *
+     * @param str 待校验字符串
+     * @return boolean {@code true}不全是中文
+     * @since 1.4.3
+     */
+    public static boolean isNotFullChinese(String str) {
+        return !isFullChinese(str);
+    }
+
 }
