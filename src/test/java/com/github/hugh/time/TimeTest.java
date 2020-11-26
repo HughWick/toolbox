@@ -28,4 +28,11 @@ public class TimeTest {
         System.out.println("--->>" + TimeUtils.isCrossDay(start, end,2));
     }
 
+    @Test
+    public void test03(){
+        String timeStart = "2019-12-11";
+        String timeEnd = "2020-12-20";
+        TimeUtils.collectLocalDates(timeStart, timeEnd).forEach(System.out::println);
+    }
+
 }

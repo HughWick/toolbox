@@ -48,7 +48,7 @@ public class FileTest {
 //        System.out.println("========");
 //        String path = "C:\\Users\\Lenovo\\Desktop\\新建文件夹 (2)";
 //        FileUtils.deleteDir(path);
-        String dirs = "C:\\Users\\Lenovo\\Desktop\\新建文件夹";
+        String dirs = "C:\\Users\\Lenovo\\Desktop";
         FileUtils.delEmptyDir(dirs);
         System.out.println("===END=====");
     }

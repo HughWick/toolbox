@@ -7,6 +7,9 @@ import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 针对 LocalDateTime
@@ -377,4 +380,34 @@ public class TimeUtils extends DateCode {
         startDate = getNextNDay(startDate, days);//开始日期加N天后的日期
         return startDate.isEqual(ChronoLocalDate.from(endDate));   //与结束日期比对
     }
+
+    /**
+     * 收集起始时间到结束时间之间所有的时间并以字符串集合方式返回
+     *
+     * @param timeStart 开始日期:yyyy-MM-dd
+     * @param timeEnd   结束日期:yyyy-MM-dd
+     * @return List
+     */
+    public static List<String> collectLocalDates(String timeStart, String timeEnd) {
+        return collectLocalDates(LocalDate.parse(timeStart), LocalDate.parse(timeEnd));
+    }
+
+    /**
+     * 收集起始时间到结束时间之间所有的时间并以字符串集合方式返回
+     *
+     * @param start 开始日期
+     * @param end   结束日期
+     * @return List
+     */
+    public static List<String> collectLocalDates(LocalDate start, LocalDate end) {
+        // 用起始时间作为流的源头，按照每次加一天的方式创建一个无限流
+        return Stream.iterate(start, localDate -> localDate.plusDays(1))
+                // 截断无限流，长度为起始时间和结束时间的差+1个
+                .limit(ChronoUnit.DAYS.between(start, end) + 1)
+                // 由于最后要的是字符串，所以map转换一下
+                .map(LocalDate::toString)
+                // 把流收集为List
+                .collect(Collectors.toList());
+    }
+
 }
