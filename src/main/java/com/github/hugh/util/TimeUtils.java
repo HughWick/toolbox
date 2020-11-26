@@ -387,6 +387,7 @@ public class TimeUtils extends DateCode {
      * @param timeStart 开始日期:yyyy-MM-dd
      * @param timeEnd   结束日期:yyyy-MM-dd
      * @return List
+     * @since 1.4.5
      */
     public static List<String> collectLocalDates(String timeStart, String timeEnd) {
         return collectLocalDates(LocalDate.parse(timeStart), LocalDate.parse(timeEnd));
@@ -398,6 +399,7 @@ public class TimeUtils extends DateCode {
      * @param start 开始日期
      * @param end   结束日期
      * @return List
+     * @since 1.4.5
      */
     public static List<String> collectLocalDates(LocalDate start, LocalDate end) {
         // 用起始时间作为流的源头，按照每次加一天的方式创建一个无限流
