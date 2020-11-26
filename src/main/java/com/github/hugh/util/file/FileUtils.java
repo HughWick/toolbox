@@ -57,20 +57,31 @@ public class FileUtils {
     }
 
     /**
+     * 删除文件下所有空文件夹
+     *
+     * @param dir 文件
+     */
+    public static void delEmptyDir(File dir) {
+        File[] dirs = dir.listFiles();
+        assert dirs != null;
+        for (File file : dirs) {
+            if (file.isDirectory()) {
+                delEmptyDir(file);
+            }
+        }
+        if (dir.isDirectory()) {
+            dir.delete();
+        }
+    }
+
+    /**
      * 根据路径删除空文件夹
      *
      * @param path 文件夹路径
+     * @since 1.4.4
      */
     public static void delEmptyDir(String path) {
-        File directory = new File(path);
-        if (directory.isDirectory()) {
-            File[] files = directory.listFiles();
-            if (files == null)
-                return;
-            if (files.length == 0) {
-                directory.delete();
-            }
-        }
+        delEmptyDir(new File(path));
     }
 
     /**
