@@ -2,6 +2,7 @@ package com.github.hugh.util.file;
 
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.EmptyUtils;
+import com.github.hugh.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -93,6 +94,20 @@ public class FileUtils {
     }
 
     /**
+     * 根据文件路径删除文件夹下所有文件及文件夹
+     * <p>通过创建一个文件后调用{@link #deleteDir(File)}方法</p>
+     *
+     * @param path 路径
+     * @since 1.4.2
+     */
+    public static void deleteDir(String path) {
+        if (path == null) {
+            return;
+        }
+        deleteDir(new File(path));
+    }
+
+    /**
      * 根据文件路径删除文件,后如果目录为空,也会删除
      *
      * @param path 路径
@@ -106,25 +121,9 @@ public class FileUtils {
         if (file.exists()) {
             boolean delete = file.delete();//删除文件
             if (delete) {
-                String canonicalPath = file.getCanonicalPath();
-                String directory = canonicalPath.
-                        substring(0, canonicalPath.lastIndexOf(File.separator));
+                String directory = StringUtils.before(file.getCanonicalPath(), "\\");
                 delEmptyDir(directory);//删除目录
             }
         }
-    }
-
-    /**
-     * 根据文件路径删除文件夹下所有文件及文件夹
-     * <p>通过创建一个文件后调用{@link #deleteDir(File)}方法</p>
-     *
-     * @param path 路径
-     * @since 1.4.2
-     */
-    public static void deleteDir(String path) {
-        if (path == null) {
-            return;
-        }
-        deleteDir(new File(path));
     }
 }
