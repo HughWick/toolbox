@@ -135,7 +135,7 @@ public class RegexUtils {
     private static final Pattern WEB_SITE_PATTERN = Pattern.compile("^([a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,6}$");
 
     /**
-     * 正则表达式
+     * sql 关键字-正则表达式
      * <ul>
      * <li>\\b  表示 限定单词边界  比如  select 不通过   1select则是可以的</li>
      * </ul>
@@ -158,6 +158,11 @@ public class RegexUtils {
      * 全中文-正则
      */
     private static final Pattern FULL_CHINESE_PATTERN = Pattern.compile("[\\u4e00-\\u9fa5]+");
+
+    /**
+     * 特殊字符-正则
+     */
+    private static final Pattern SPECIAL_CHAR_PATTERN = Pattern.compile("[ _`~!@#$%^&*()+=|{}':;,\\[\\].<>/?！￥…（）—【】‘；：”“’。，、？]|\n|\r|\t");
 
     /**
      * 对特殊字符转译
@@ -376,5 +381,4 @@ public class RegexUtils {
     public static boolean isNotFullChinese(String str) {
         return !isFullChinese(str);
     }
-
 }

@@ -10,15 +10,34 @@ import org.junit.Test;
 public class RegexTest {
 
     @Test
-    public void test01(){
+    public void test01() {
         String str = "escapeWord[]";
         String str2 = "<>";
         String str3 = "1select>1";
-        System.out.println("-1-->>"+ RegexUtils.escapeWord(str));
-        System.out.println("-2-->>"+ RegexUtils.isPunctuation(str2));
-        System.out.println("-3-->>"+ RegexUtils.isSql(str3));
-        System.out.println("-3-->>"+ RegexUtils.isNotIp(str3));
-
+        System.out.println("-1-->>" + RegexUtils.escapeWord(str));
+        System.out.println("-2-->>" + RegexUtils.isPunctuation(str2));
+        System.out.println("-3-->>" + RegexUtils.isSql(str3));
+        System.out.println("-3-->>" + RegexUtils.isNotIp(str3));
     }
 
+
+    @Test
+    public void test02() {
+        String str1 = "123sf";
+        String str2 = "_123sf";
+        String str3 = "123sf@";
+        String str4 = "123sf()";
+        String str5 = "123sf-";
+        String str6 = "123sf（）";
+        String str7 = "skjh上课就会让她";
+        String str8 = "skjh上 课就会让她 ";
+        System.out.println("---->>>" + RegexUtils.isPunctuation(str1));
+        System.out.println("---->>>" + RegexUtils.isPunctuation(str2));
+        System.out.println("---->>>" + RegexUtils.isPunctuation(str3));
+        System.out.println("---->>>" + RegexUtils.isPunctuation(str4));
+        System.out.println("---->>>" + RegexUtils.isPunctuation(str5));
+        System.out.println("---->>>" + RegexUtils.isPunctuation(str6));
+        System.out.println("---->>>" + RegexUtils.isPunctuation(str7));
+        System.out.println("---->>>" + RegexUtils.isPunctuation(str8));
+    }
 }
