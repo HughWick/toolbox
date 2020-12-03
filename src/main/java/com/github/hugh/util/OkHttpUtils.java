@@ -1,6 +1,7 @@
 package com.github.hugh.util;
 
 import com.github.hugh.exception.ToolboxException;
+import com.github.hugh.support.instance.Instance;
 import com.github.hugh.util.gson.JsonObjectUtils;
 import com.google.gson.JsonObject;
 import net.sf.json.JSONObject;
@@ -42,6 +43,7 @@ public class OkHttpUtils {
 
     /**
      * 构建OkHttpClient对象
+     * <p> 版本从：1.4.6开始，改用单例模式创建{@link OkHttpClient}</p>
      *
      * @param connectTimeout 设置连接超时
      * @param readTimeout    设置读超时
@@ -49,9 +51,11 @@ public class OkHttpUtils {
      * @since 1.3.3
      */
     public static OkHttpClient buildClient(int connectTimeout, int readTimeout) {
-        return new OkHttpClient.Builder().connectTimeout(connectTimeout, TimeUnit.SECONDS)
+        OkHttpClient client = Instance.getInstance().singleton(OkHttpClient.class);
+        client.newBuilder().connectTimeout(connectTimeout, TimeUnit.SECONDS)
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
                 .build();
+        return client;
     }
 
     /**
