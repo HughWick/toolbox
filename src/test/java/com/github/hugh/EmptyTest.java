@@ -9,19 +9,25 @@ import java.util.HashMap;
 public class EmptyTest {
 
     @Test
-    public void isEmpty(){
+    public void isEmpty() {
 //        EmptyUtils u = new EmptyUtils();
-        System.out.println("-1-->"+ EmptyUtils.isEmpty("  "));
-        System.out.println("-2-->"+ EmptyUtils.isEmpty("null"));
-        System.out.println("-3->"+ EmptyUtils.isEmpty(new ArrayList<>()));
-        System.out.println("-4->"+ EmptyUtils.isEmpty(new HashMap<>()));
-        System.out.println("-6-->"+ EmptyUtils.isEmpty(12));
+        System.out.println("-1-->" + EmptyUtils.isEmpty("  "));
+        System.out.println("-2-->" + EmptyUtils.isEmpty("null"));
+        System.out.println("-3->" + EmptyUtils.isEmpty(new ArrayList<>()));
+        System.out.println("-4->" + EmptyUtils.isEmpty(new HashMap<>()));
+        System.out.println("-6-->" + EmptyUtils.isEmpty(12));
     }
 
     @Test
-    public void isNotEmpty(){
-        System.out.println("--->"+ EmptyUtils.isNotEmpty(""));
+    public void isNotEmpty() {
+        System.out.println("--->" + EmptyUtils.isNotEmpty(""));
     }
 
 
+    public static void main(String[] args) {
+        String[] strArr = {"1"};
+        System.out.println("---->>"+strArr.length);
+        System.out.println(EmptyUtils.isEmpty(strArr));
+        System.out.println(EmptyUtils.isNotEmpty(strArr));
+    }
 }

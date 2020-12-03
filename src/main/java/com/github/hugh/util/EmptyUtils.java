@@ -35,6 +35,8 @@ public class EmptyUtils {
         } else if (obj instanceof String) {
             String str = obj.toString().trim();
             return str.length() == 0 || str.equals("null");// 长度等于0 或者 为字符串的null 返回true
+        } else if (obj instanceof String[]) {
+            return ((String[]) obj).length == 0;
         } else if (obj instanceof Collection) {
             return ((Collection) obj).isEmpty();
         } else if (obj instanceof Map) {
