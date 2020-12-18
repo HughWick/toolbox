@@ -14,6 +14,6 @@
 <dependency>
   <groupId>com.github.hughwick</groupId>
   <artifactId>toolbox</artifactId>
-  <version>1.4.6</version>
+  <version>1.4.8</version>
 </dependency>
 ```
