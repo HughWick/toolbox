@@ -132,7 +132,7 @@ public class FileUtils {
         if (file.exists()) {
             boolean delete = file.delete();//删除文件
             if (delete) {
-                String directory = StringUtils.before(file.getCanonicalPath(), "\\");
+                String directory = StringUtils.before(file.getCanonicalPath(), File.separator);
                 delEmptyDir(directory);//删除目录
             }
         }
