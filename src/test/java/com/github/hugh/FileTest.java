@@ -32,7 +32,7 @@ public class FileTest {
 
     @Test
     public void test01() {
-        String path = "C:\\Users\\Lenovo\\Desktop\\新建文件夹\\3311523eaa9d64a9d278e5b5304ccae4.jpg";
+        String path = "C:\\Users\\Lenovo\\Desktop\\新建文件夹\\bb9b12369c80588bbed1ea6ae744875e.jpg";
         try {
             FileUtils.delFile(path);
         } catch (IOException e) {
