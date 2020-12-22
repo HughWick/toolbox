@@ -20,6 +20,13 @@ public class BaseConvertTest {
         System.out.println("--4-===>>" + BaseConvertUtils.binaryToTen(binary));
     }
 
+    @Test
+    public void test02() {
+        String str = "61:62";
+        System.out.println("--->>" + BaseConvertUtils.hexToString(str, ":"));
+    }
+
+
     public static void main(String[] args) {
         System.out.println("---1>>" + ControlEnum.ENABLE.getCode());
         System.out.println("--2->>" + ControlEnum.ENABLE.getDesc());

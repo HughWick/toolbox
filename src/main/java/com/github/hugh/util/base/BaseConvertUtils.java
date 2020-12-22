@@ -50,4 +50,24 @@ public class BaseConvertUtils {
         String str = Integer.toBinaryString(num);
         return str.length() < digits ? cover.substring(str.length()) + str : str;
     }
+
+    /**
+     * 16进制转换为字符串
+     *
+     * @param source   源
+     * @param interval 切割的标识符
+     * @return String
+     * @since 1.4.9
+     */
+    public static String hexToString(String source, String interval) {
+        if (interval == null) {
+            throw new RuntimeException(" interval is null ");
+        }
+        String[] array = source.split(interval);
+        byte[] bytes = new byte[array.length];
+        for (int i = 0; i < array.length; i++) {
+            bytes[i] = Byte.parseByte(array[i], 16);
+        }
+        return new String(bytes);
+    }
 }
