@@ -265,7 +265,7 @@ public class JsonObjectUtils {
     }
 
     /**
-     * 将Json转换为指定类型
+     * 将Json转换为指定实体
      * <p>由于{@link Gson#fromJson(Reader, Type)}无法静态调用，故而这里进行二次封装</p>
      *
      * @param json     参数
@@ -279,7 +279,7 @@ public class JsonObjectUtils {
     }
 
     /**
-     * 将Json字符串转换为指定类型
+     * 将Json字符串转换为指定实体
      *
      * @param json     字符串json
      * @param classOfT 实体类
@@ -289,6 +289,20 @@ public class JsonObjectUtils {
      */
     public static <T> T fromJson(String json, Class<T> classOfT) {
         return gson().fromJson(json, classOfT);
+    }
+
+    /**
+     * 将Json字符串转换为指定实体
+     *
+     * @param json       json字符串
+     * @param classOfT   实体class
+     * @param dateFormat 日期格式
+     * @param <T>        实体类型
+     * @return 1.4.10
+     */
+    public static <T> T fromJson(String json, Class<T> classOfT, String dateFormat) {
+        Gson gson = new GsonBuilder().setDateFormat(dateFormat).create();
+        return gson.fromJson(json, classOfT);
     }
 
     /**
