@@ -40,7 +40,7 @@ public class FileUtils {
      * @param url 网址链接
      * @return boolean 存在返回true
      */
-    public static boolean exist(String url) {
+    public static boolean isUrlFile(String url) {
         if (EmptyUtils.isEmpty(url)) {
             return false;
         }
@@ -52,6 +52,7 @@ public class FileUtils {
                 in.close();
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
