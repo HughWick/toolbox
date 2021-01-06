@@ -1,10 +1,13 @@
 package com.github.hugh;
 
 import com.github.hugh.util.OkHttpUtils;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import net.sf.json.JSONObject;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -13,6 +16,7 @@ import java.util.UUID;
  * @author AS
  * @date 2020/8/31 16:41
  */
+@Slf4j
 public class OkHttpTest {
 
     @Test
@@ -56,5 +60,24 @@ public class OkHttpTest {
         headerContent.put("test_token_02", UUID.randomUUID().toString());
         headerContent.put("int_test", "123");
         System.out.println("--->" + OkHttpUtils.postForm(url, json, headerContent));
+    }
+
+    public void tem() throws IOException {
+        JSONObject json = new JSONObject();
+        json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+        log.info(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+        log.debug(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+        log.error(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+    }
+
+    public static void main(String[] args) throws IOException {
+        OkHttpTest test = new OkHttpTest();
+        test.tem();
+        val map =  new HashMap<>();
+        map.put("1",1);
+        map.put(1,1);
+        System.out.println("--->>"+map);
+        val list = new ArrayList<>();
+
     }
 }
