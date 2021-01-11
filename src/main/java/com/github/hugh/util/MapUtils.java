@@ -142,7 +142,7 @@ public class MapUtils {
      * @throws Exception 错误异常
      * @since 1.2.3
      */
-    public static <T, K, V> T toEntity(Class<T> cls, Map<K, V> params) throws Exception {
+    public static <T, K, V> T toEntityNotEmpty(Class<T> cls, Map<K, V> params) throws Exception {
         AssertUtils.notNull(cls, "class");
         T obj = cls.newInstance();
         return convertObjects(obj, params, true);
@@ -160,7 +160,7 @@ public class MapUtils {
      * @param params 参数
      * @since 1.4.0
      */
-    public static <T, K, V> T toEntity(T object, Map<K, V> params) throws Exception {
+    public static <T, K, V> T toEntityNotEmpty(T object, Map<K, V> params) throws Exception {
         AssertUtils.notNull(object, "object");
         return convertObjects(object, params, true);
     }

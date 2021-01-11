@@ -26,7 +26,7 @@ public class MapTest {
 //        map.put("birthday", new Date());
         map.put("create", "2019-04-06 12:11:20");
         try {
-            Object o = MapUtils.toEntity(Student.class, map);
+            Object o = MapUtils.toEntityNotEmpty(Student.class, map);
             System.out.println(JSONObject.fromObject(o));
             Student student = new Student();
             EntityUtils.copy(o, student);
@@ -82,7 +82,7 @@ public class MapTest {
         map.put("list", arr.toString());
         System.out.println("--->>" + map);
         try {
-            Student Student1 = MapUtils.toEntity(Student.class, map);
+            Student Student1 = MapUtils.toEntityNotEmpty(Student.class, map);
             System.out.println(JSONObject.fromObject(Student1));
             map.put("age", 22233);
             Student Student12 = MapUtils.convertEntity(Student1, map);

@@ -27,7 +27,7 @@ public class EntityTest {
         map.put("birthday", new Date());
         map.put("create", "2019-04-06 12:11:20");
         try {
-            Student student = MapUtils.toEntity(Student.class, map);
+            Student student = MapUtils.toEntityNotEmpty(Student.class, map);
             Student student2 = new Student();
             EntityUtils.copy(student, student2);
             System.out.println(student + "<----->" + student2);
@@ -48,7 +48,7 @@ public class EntityTest {
         map.put("birthday", new Date());
         map.put("create", "2019-04-06 12:11:20");
         try {
-            Student student = MapUtils.toEntity(Student.class, map);
+            Student student = MapUtils.toEntityNotEmpty(Student.class, map);
             Student o1 = EntityUtils.deepClone(student);
             System.out.println(student + "====" + o1);
             System.out.println(JSONObject.fromObject(student));
