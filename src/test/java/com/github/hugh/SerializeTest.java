@@ -33,7 +33,7 @@ public class SerializeTest {
         map.put("birthday", new Date());
         map.put("create", "2019-04-06 12:11:20");
         try {
-            Object o = MapUtils.toEntity(Student.class, map);
+            Object o = MapUtils.toEntityNotEmpty(Student.class, map);
             byte[] bytes = SerializeUtils.toBytes(o);
             System.out.println("-1-->" + bytes);
             Student student = (Student) SerializeUtils.toObject(bytes);

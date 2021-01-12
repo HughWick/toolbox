@@ -22,4 +22,13 @@ public class Crc16Test {
 //		System.out.println("==>" + m.length());
         // System.out.println(AppUtil.generateAppKey().toUpperCase());
     }
+
+
+    @Test
+    public void test02(){
+        String m = Crc16Utils.generate(12);
+        System.out.println("==1=>" + m);
+        System.out.println("==2=>" + m.length());
+        System.out.println("==3=>" + Crc16Utils.checkCode(m));
+    }
 }

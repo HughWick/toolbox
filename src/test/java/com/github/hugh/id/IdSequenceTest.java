@@ -1,5 +1,6 @@
-package com.github.hugh;
+package com.github.hugh.id;
 
+import com.github.hugh.IdSequence;
 import com.github.hugh.id.Snowflake;
 import org.junit.Test;
 

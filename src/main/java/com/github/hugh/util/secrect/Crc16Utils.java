@@ -3,7 +3,7 @@ package com.github.hugh.util.secrect;
 import com.github.hugh.util.EmptyUtils;
 
 /**
- * CRC16相关计算
+ * CRC16相关计算工具类
  * <p>encode: utf-8</p>
  *
  * @author hugh
@@ -14,7 +14,7 @@ public class Crc16Utils {
     private Crc16Utils() {
     }
 
-    static byte[] crc16_tab_h = {(byte) 0x00, (byte) 0xC1, (byte) 0x81, (byte) 0x40, (byte) 0x01, (byte) 0xC0,
+    private static byte[] crc16_tab_h = {(byte) 0x00, (byte) 0xC1, (byte) 0x81, (byte) 0x40, (byte) 0x01, (byte) 0xC0,
             (byte) 0x80, (byte) 0x41, (byte) 0x01, (byte) 0xC0, (byte) 0x80, (byte) 0x41, (byte) 0x00, (byte) 0xC1,
             (byte) 0x81, (byte) 0x40, (byte) 0x01, (byte) 0xC0, (byte) 0x80, (byte) 0x41, (byte) 0x00, (byte) 0xC1,
             (byte) 0x81, (byte) 0x40, (byte) 0x00, (byte) 0xC1, (byte) 0x81, (byte) 0x40, (byte) 0x01, (byte) 0xC0,
@@ -48,7 +48,7 @@ public class Crc16Utils {
             (byte) 0x80, (byte) 0x41, (byte) 0x01, (byte) 0xC0, (byte) 0x80, (byte) 0x41, (byte) 0x00, (byte) 0xC1,
             (byte) 0x81, (byte) 0x40};
 
-    static byte[] crc16_tab_l = {(byte) 0x00, (byte) 0xC0, (byte) 0xC1, (byte) 0x01, (byte) 0xC3, (byte) 0x03,
+    private static byte[] crc16_tab_l = {(byte) 0x00, (byte) 0xC0, (byte) 0xC1, (byte) 0x01, (byte) 0xC3, (byte) 0x03,
             (byte) 0x02, (byte) 0xC2, (byte) 0xC6, (byte) 0x06, (byte) 0x07, (byte) 0xC7, (byte) 0x05, (byte) 0xC5,
             (byte) 0xC4, (byte) 0x04, (byte) 0xCC, (byte) 0x0C, (byte) 0x0D, (byte) 0xCD, (byte) 0x0F, (byte) 0xCF,
             (byte) 0xCE, (byte) 0x0E, (byte) 0x0A, (byte) 0xCA, (byte) 0xCB, (byte) 0x0B, (byte) 0xC9, (byte) 0x09,
@@ -127,11 +127,29 @@ public class Crc16Utils {
 
     /**
      * 生成十位数随机码
+     * <p>前8位为uuid截取</p>
+     * <p>后两位为校验码</p>
      *
      * @return String
      */
     public static String generate() {
-        String random = AppkeyUtils.generate().substring(0, 8);
+        return generate(8);
+    }
+
+    /**
+     * 生成指定长度的crc
+     * <p>根据指定长度生成crc 编码</p>
+     * <p>PS：在指定长度后两位都为校验码,例：如果生成一个10位的crc,结果则生成返回为12位长度的字符串,后两位固定为校验码</p>
+     *
+     * @param length 长度
+     * @return String
+     * @since 1.4.12
+     */
+    public static String generate(int length) {
+        if (length < 0) {
+            throw new RuntimeException("length error !");
+        }
+        String random = AppkeyUtils.generate().substring(0, length);
         String code = random + getVerCode(random);//根据八位数随机码、计算一个crc16的校验码
         return code.toUpperCase();
     }
