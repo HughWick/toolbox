@@ -718,7 +718,7 @@ public class DateUtils extends DateCode {
      * 校验日期是否超过当前系统日期
      *
      * @param date 日期对象
-     * @return boolean 超过返回true、小于返回false
+     * @return boolean {@code true} 超过当前系统时间
      */
     public static boolean exceedSystem(Date date) {
         if (date == null) {
@@ -727,6 +727,20 @@ public class DateUtils extends DateCode {
         // 当前系统日期
         Date current = new Date();
         return date.getTime() > current.getTime();
+    }
+
+    /**
+     * 校验日期对象是否小于当前系统时间
+     *
+     * @param date 日期对象
+     * @return boolean {@code true} 小于当前系统时间
+     */
+    public static boolean belowSystem(Date date) {
+        if (date == null) {
+            return true;  // 空直接返回true
+        }
+        Date current = new Date();
+        return date.getTime() < current.getTime();
     }
 
     /**
@@ -908,27 +922,13 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 校验日期对象是否小于当前系统时间
-     *
-     * @param date 日期对象
-     * @return boolean {@code true} 小于当前系统时间
-     */
-    public static boolean belowSystem(Date date) {
-        if (date == null) {
-            return true;  // 空直接返回true
-        }
-        Date current = new Date();
-        return date.getTime() < current.getTime();
-    }
-
-    /**
      * 校验结束日期是否小于开始时间
      *
      * @param start 起始日期
      * @param end   结束日期
-     * @return boolean 结束日期小于起始日期返回true
+     * @return boolean {@code true} 结束日期小于起始日期
      */
-    public static boolean check(Date start, Date end) {
+    public static boolean lessThanStartDate(Date start, Date end) {
         if (start == null || end == null) {
             return true;
         } else if (end.getTime() == start.getTime()) {
