@@ -939,6 +939,25 @@ public class DateUtils extends DateCode {
     }
 
     /**
+     * 结束日期大于起始日期
+     *
+     * @param start 起始日期
+     * @param end   结束日期
+     * @return boolean {@code true} 结束日期小于起始日期
+     * @since 1.4.14
+     */
+    public static boolean greaterThanStartDate(Date start, Date end) {
+        if (start == null) {
+            throw new RuntimeException(" start date is null ! ");
+        }
+        if (end == null) {
+            throw new RuntimeException(" end date is null ! ");
+        }
+        return end.getTime() > start.getTime();
+    }
+
+
+    /**
      * 判断是否是日期的格式
      *
      * @param timeStr 日期格式字符串：yyyy-MM-dd HH:mm:ss
