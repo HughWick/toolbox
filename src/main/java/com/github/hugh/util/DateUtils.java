@@ -922,21 +922,20 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 校验结束日期是否小于开始时间
+     * 结束日期小于起始日期
      *
      * @param start 起始日期
      * @param end   结束日期
      * @return boolean {@code true} 结束日期小于起始日期
      */
     public static boolean lessThanStartDate(Date start, Date end) {
-        if (start == null || end == null) {
-            return true;
-        } else if (end.getTime() == start.getTime()) {
-            return true;
-        } else {
-            // 当结束日期小于开始日期
-            return end.getTime() < start.getTime();
+        if (start == null) {
+            throw new RuntimeException(" start date is null ! ");
         }
+        if (end == null) {
+            throw new RuntimeException(" end date is null ! ");
+        }
+        return end.getTime() < start.getTime();
     }
 
     /**
