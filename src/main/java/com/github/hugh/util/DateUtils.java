@@ -959,8 +959,9 @@ public class DateUtils extends DateCode {
 
     /**
      * 判断是否是日期的格式
+     * <p>默认校验格式：yyyy-MM-dd HH:mm:ss</p>
      *
-     * @param timeStr 日期格式字符串：yyyy-MM-dd HH:mm:ss
+     * @param timeStr 日期格式字符串
      * @return boolean
      */
     public static boolean isDateFormat(String timeStr) {
@@ -968,11 +969,12 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 判断是否是日期的格式
+     * 校验字符串是不是日期的格式
+     * <p>支持格式：yy-MM、yy-MM-dd、yyyy-MM-dd HH:mm:ss</p>
      *
      * @param timeStr 日期字符串
      * @param pattern 日期格式
-     * @return boolean
+     * @return boolean {@code true} 字符串格式正确
      */
     public static boolean isDateFormat(String timeStr, String pattern) {
         if (timeStr == null || "".equals(timeStr)) {
