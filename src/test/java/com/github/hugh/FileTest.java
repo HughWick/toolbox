@@ -56,7 +56,9 @@ public class FileTest {
     @Test
     public void test03() {
         String url = "https://ym.191ec.com/img/goodsContent/901015857951990381/b632537a5b884ecc8309222fca1d835b_1588148150570.jpg";
-        System.out.println("--->>" + FileUtils.isUrlFile(url));
-        System.out.println("--->>" + FileUtils.isUrlFile(url+"1"));
+        System.out.println("---1>>" + FileUtils.urlFileExist(url));
+        System.out.println("--2->>" + FileUtils.urlFileExist(url+"1"));
+        System.out.println("--3->>" + FileUtils.urlNotFileExist(url));
+        System.out.println("--4->>" + FileUtils.urlNotFileExist(url+"1"));
     }
 }

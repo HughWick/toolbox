@@ -38,9 +38,9 @@ public class FileUtils {
      * 根据url链接判断对应图片是否存在
      *
      * @param url 网址链接
-     * @return boolean 存在返回true
+     * @return boolean {@code true}存在返回
      */
-    public static boolean isUrlFile(String url) {
+    public static boolean urlFileExist(String url) {
         if (EmptyUtils.isEmpty(url)) {
             return false;
         }
@@ -55,6 +55,17 @@ public class FileUtils {
             e.printStackTrace();
             return false;
         }
+    }
+
+    /**
+     * URL 文件不存在
+     *
+     * @param url 网址链接
+     * @return boolean {@code true} 文件不存在返回
+     * @since 1.4.15
+     */
+    public static boolean urlNotFileExist(String url) {
+        return !urlFileExist(url);
     }
 
     /**
