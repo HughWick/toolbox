@@ -1,4 +1,4 @@
-package com.github.hugh;
+package com.github.hugh.regex;
 
 import com.github.hugh.util.regex.RegexUtils;
 import org.junit.Test;
@@ -39,5 +39,19 @@ public class RegexTest {
         System.out.println("---->>>" + RegexUtils.isPunctuation(str6));
         System.out.println("---->>>" + RegexUtils.isPunctuation(str7));
         System.out.println("---->>>" + RegexUtils.isPunctuation(str8));
+    }
+
+    @Test
+    public void test03() {
+        String longitude = "109.48427455";
+        String longitude2 = "1019.48427455";
+        String latitude = "28.59640742";
+        String latitude2 = "218.59640742";
+        System.out.println("---1->" + RegexUtils.isLonLat(longitude, latitude));
+        System.out.println("--2->" + RegexUtils.isNotLonLat(longitude, latitude));
+        System.out.println("--3->" + RegexUtils.isLongitude(longitude));
+        System.out.println("--4->" + RegexUtils.isLongitude(longitude2));
+        System.out.println("--5->" + RegexUtils.isLatitude(latitude));
+        System.out.println("--6->" + RegexUtils.isLatitude(latitude2));
     }
 }
