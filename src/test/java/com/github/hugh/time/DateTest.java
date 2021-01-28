@@ -39,11 +39,15 @@ public class DateTest {
         System.out.println("--->" + DateUtils.getMonthBeforeEndTime());
     }
 
-
     @Test
     public void test03() {
         Date date1 = new Date();
         System.out.println("--->>" + date1);
         System.out.println("--->>" + DateUtils.dateStrToDate(date1.toString()));
     }
+    @Test
+    public void test04() {
+
+    }
+
 }

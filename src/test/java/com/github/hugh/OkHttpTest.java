@@ -3,11 +3,11 @@ package com.github.hugh;
 import com.github.hugh.util.OkHttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import lombok.var;
 import net.sf.json.JSONObject;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -77,7 +77,8 @@ public class OkHttpTest {
         map.put("1",1);
         map.put(1,1);
         System.out.println("--->>"+map);
-        val list = new ArrayList<>();
-
+        var str = "123c";
+        str = "abcdef";
+        System.out.println("--->>"+str);
     }
 }
