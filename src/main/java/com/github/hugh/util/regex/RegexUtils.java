@@ -382,12 +382,13 @@ public class RegexUtils {
         return !isFullChinese(str);
     }
 
-
     /**
      * 只校验正数 0-90.000000 0-180.000000 范围内
      * 经纬度校验
-     * 经度longitude： -180.0～+180.0（整数部分为0～180，必须输入1到8位小数）
-     * 纬度 latitude ： -90.0～+90.0（整数部分为0～90，必须输入1到8位小数）
+     * <pre>
+     *      经度longitude： -180.0～+180.0（整数部分为0～180，必须输入1到8位小数）
+     *      纬度 latitude ： -90.0～+90.0（整数部分为0～90，必须输入1到8位小数）
+     * </pre>
      *
      * @return boolean {@code true} 正确的经纬度
      * @since 1.4.16
@@ -411,7 +412,9 @@ public class RegexUtils {
     /**
      * 只校验正数 0-180.000000 范围内
      * 经度校验
-     * 经度longitude： -180.0～+180.0（整数部分为0～180，必须输入1到8位小数）
+     * <pre>
+     *      经度longitude： -180.0～+180.0（整数部分为0～180，必须输入1到8位小数）
+     * </pre>
      *
      * @return boolean {@code true} 经度正确
      * @since 1.4.16
@@ -428,7 +431,9 @@ public class RegexUtils {
     /**
      * 只校验正数 0-90.000000 范围内
      * 纬度校验
-     * 纬度 latitude ： -90.0～+90.0（整数部分为0～90，必须输入1到8位小数）
+     * <pre>
+     *      纬度 latitude ： -90.0～+90.0（整数部分为0～90，必须输入1到8位小数）
+     * </pre>
      *
      * @return boolean {@code true} 维度正确
      * @since 1.4.16

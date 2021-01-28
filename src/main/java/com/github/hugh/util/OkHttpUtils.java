@@ -257,17 +257,48 @@ public class OkHttpUtils {
         return sb.toString();
     }
 
+
     /**
      * 发送get请求
      * <p>将data中的键值对拼接成标准的url访问参数</p>
      *
-     * @param url  URL
-     * @param data 请求参数
+     * @param url    URL
+     * @param params 请求参数
+     * @return String
+     * @since 1.4.17
+     */
+    public static String get(String url, Map params) {
+        return get(url, JSONObject.fromObject(params));
+    }
+
+    /**
+     * 发送get请求
+     * <p>将data中的键值对拼接成标准的url访问参数</p>
+     *
+     * @param url    URL
+     * @param params 请求参数
      * @return String
      */
-    public static String get(String url, JSONObject data) {
-        url = urlParam(url, data);
+    public static String get(String url, JSONObject params) {
+        url = urlParam(url, params);
         return get(url);
+    }
+
+    /**
+     * get请求
+     * <p>注：url自行拼接查询条件参数</p>
+     *
+     * @param url URL
+     * @return String
+     */
+    public static String get(String url) {
+        Request request = new Request.Builder().url(url).build();
+        try {
+            return send(request, buildClient());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -308,23 +339,6 @@ public class OkHttpUtils {
                 .url(url)
                 .headers(headers).build();
         return send(request, buildClient());
-    }
-
-    /**
-     * get请求
-     * <p>注：url自行拼接查询条件参数</p>
-     *
-     * @param url URL
-     * @return String
-     */
-    public static String get(String url) {
-        Request request = new Request.Builder().url(url).build();
-        try {
-            return send(request, buildClient());
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     /**

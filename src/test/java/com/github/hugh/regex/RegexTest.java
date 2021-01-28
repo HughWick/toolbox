@@ -43,9 +43,9 @@ public class RegexTest {
 
     @Test
     public void test03() {
-        String longitude = "109.48427455";
+        String longitude = "112.94662109375";
         String longitude2 = "1019.48427455";
-        String latitude = "28.59640742";
+        String latitude = "28.219310709636";
         String latitude2 = "218.59640742";
         System.out.println("---1->" + RegexUtils.isLonLat(longitude, latitude));
         System.out.println("--2->" + RegexUtils.isNotLonLat(longitude, latitude));
