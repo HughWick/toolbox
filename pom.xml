@@ -6,7 +6,7 @@
 
     <groupId>com.github.hughwick</groupId>
     <artifactId>toolbox</artifactId>
-    <version>1.4.17</version>
+    <version>1.4.18</version>
 
     <properties>
         <java.version>1.8</java.version>
