@@ -6,10 +6,12 @@ import net.sf.json.JSONObject;
 /**
  * 返回信息工具类
  * <p>方法返回结果都为{@link JSONObject}</p>
+ * <p>可以直接才用实体转json的方式，无需使用{@link JSONObject}转换</p>
  *
  * @author hugh
  * @since 1.4.0
  */
+@Deprecated
 @Data
 public class Responses<T> {
 

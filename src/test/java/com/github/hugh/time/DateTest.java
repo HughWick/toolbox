@@ -2,9 +2,12 @@ package com.github.hugh.time;
 
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.TimeUtils;
+import lombok.val;
 import org.junit.Test;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DateTest {
 
@@ -45,9 +48,20 @@ public class DateTest {
         System.out.println("--->>" + date1);
         System.out.println("--->>" + DateUtils.dateStrToDate(date1.toString()));
     }
+
     @Test
     public void test04() {
+        val date = new Date();
+        val map = new HashMap<>();
+        map.put("a", 1);
+        for (val entry : map.entrySet()) {
 
+        }
+        Map map2 = new HashMap<>();
+        map2.put("a", 1);
+        for (val entry : map2.entrySet()) {
+
+        }
     }
 
 }
