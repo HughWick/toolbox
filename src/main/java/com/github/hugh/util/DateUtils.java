@@ -5,6 +5,7 @@ import com.github.hugh.exception.ToolboxException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -559,6 +560,16 @@ public class DateUtils extends DateCode {
     }
 
     /**
+     * 获取年份
+     *
+     * @return the year, from MIN_YEAR to MAX_YEAR
+     * @since 1.5.0
+     */
+    public static int getYear() {
+        return LocalDateTime.now().getYear();
+    }
+
+    /**
      * 获取日期中的月份
      *
      * @param date 日期对象
@@ -571,6 +582,16 @@ public class DateUtils extends DateCode {
     }
 
     /**
+     * 获取月数
+     *
+     * @return the month-of-year, from 1 to 12
+     * @since 1.5.0
+     */
+    public static int getMonth() {
+        return LocalDateTime.now().getMonthValue();
+    }
+
+    /**
      * 获取日期中的日
      *
      * @param date 日期对象
@@ -580,6 +601,16 @@ public class DateUtils extends DateCode {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar.get(Calendar.DATE);
+    }
+
+    /**
+     * 获取日
+     *
+     * @return the day-of-month, from 1 to 31
+     * @since 1.5.0
+     */
+    public static int getDay() {
+        return LocalDateTime.now().getDayOfMonth();
     }
 
     /**
