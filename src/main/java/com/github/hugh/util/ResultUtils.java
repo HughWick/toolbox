@@ -37,7 +37,8 @@ public class ResultUtils {
     /**
      * 判断dto 状态码是成功
      *
-     * @param dto 返回实体类
+     * @param dto         返回信息实体类
+     * @param successCode 成功状态码
      * @return boolean
      */
     public static boolean isSuccess(ResultDTO dto, String successCode) {
@@ -50,7 +51,8 @@ public class ResultUtils {
     /**
      * 判断dto 状态码时错误
      *
-     * @param dto 实体类
+     * @param dto         返回信息实体类
+     * @param successCode 成功状态码
      * @return boolean
      */
     public static boolean isError(ResultDTO dto, String successCode) {
