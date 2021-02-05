@@ -3,12 +3,16 @@ package com.github.hugh.util.file;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.StringUtils;
+import lombok.Cleanup;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 
 /**
  * 文件工具类
@@ -149,4 +153,30 @@ public class FileUtils {
             }
         }
     }
+
+    /**
+     * 网络TRL中下载图片
+     * <p>该方法类使用了{@link Cleanup}进行通道与流的关闭。</p>
+     *
+     * @param uri  URL
+     * @param path 存放文件的路径
+     * @return boolean {@code true}存储成功
+     * @since 1.5.1
+     */
+    public static boolean downloadByUrl(String uri, String path) {
+        if (urlNotFileExist(uri)) {
+            return false;
+        }
+        try {
+            URL url = new URL(uri);
+            @Cleanup ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+            @Cleanup FileOutputStream fos = new FileOutputStream(path);
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

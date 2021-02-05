@@ -20,11 +20,13 @@ public class ImageUtils {
 
     /**
      * 通过url访问图片信息后、存储到本地
+     * <p>V-1.5.1 后使用{@link FileUtils#downloadByUrl(String, String)}代替该方法</p>
      *
      * @param fileUrl  网络资源地址
      * @param savePath 保存路径
      * @return boolean 成功返回true
      */
+    @Deprecated
     public static boolean saveUrl(String fileUrl, String savePath) {
         try {
             /* 将网络资源地址传给,即赋值给url */
@@ -82,4 +84,6 @@ public class ImageUtils {
         }
         return false;
     }
+
+
 }

@@ -1,4 +1,4 @@
-package com.github.hugh;
+package com.github.hugh.file;
 
 import com.github.hugh.util.file.FileUtils;
 import com.github.hugh.util.file.ImageUtils;
@@ -14,7 +14,7 @@ public class ImageTest {
     public static void main(String[] args) {
 //        CatchPic pic = new CatchPic();/* 创建实例 */
         //需要下载的URL
-        String photoUrl = "https://www.hnlot.com.cn/DaHua/capture/4K03702PAA39BD4/2020/8/27/ffd8f7e378a94fdcbde323cd79de2ffd.jpg";
+        String photoUrl = "https://cmmop.hnlot.com.cn/capture/DaHua/capture/3K02281PAJ00016/2021/2/2/f331dbb64caa4480bf92c8a335b3e02a.jpg";
 
         // 截取最后/后的字符串
         String fileName = new Date().getTime() + ".png";

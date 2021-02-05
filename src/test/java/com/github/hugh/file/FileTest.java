@@ -1,10 +1,11 @@
-package com.github.hugh;
+package com.github.hugh.file;
 
 import com.github.hugh.util.file.FileUtils;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * @author AS
@@ -57,8 +58,19 @@ public class FileTest {
     public void test03() {
         String url = "https://ym.191ec.com/img/goodsContent/901015857951990381/b632537a5b884ecc8309222fca1d835b_1588148150570.jpg";
         System.out.println("---1>>" + FileUtils.urlFileExist(url));
-        System.out.println("--2->>" + FileUtils.urlFileExist(url+"1"));
+        System.out.println("--2->>" + FileUtils.urlFileExist(url + "1"));
         System.out.println("--3->>" + FileUtils.urlNotFileExist(url));
-        System.out.println("--4->>" + FileUtils.urlNotFileExist(url+"1"));
+        System.out.println("--4->>" + FileUtils.urlNotFileExist(url + "1"));
+    }
+
+    @Test
+    public void test04() {
+        String str = "http://hyga.hnlot.com.cn:8000/capture/DaHua/quality/6D0529FPAG95B23/2021/2/3/836ee391c4a749f2a5c1a0b4b6cda6a5.jpg";
+        //图片保存路径
+        String filePath = "D:\\img\\";
+        // 截取最后/后的字符串
+        String fileName = new Date().getTime() + ".png";
+        FileUtils.downloadByUrl(str, filePath + fileName);
+        System.out.println("===END====");
     }
 }
