@@ -18,6 +18,7 @@ public class ListUtils {
      * 判断集合是否为null或者集合内元素空
      *
      * @param collection 集合
+     * @param <T>        泛型
      * @return boolean {@code true} 空
      */
     public static <T> boolean isEmpty(Collection<T> collection) {
@@ -25,9 +26,10 @@ public class ListUtils {
     }
 
     /**
-     * 判断集合不是空集合
+     * 判断集合不为空
      *
      * @param collection 集合
+     * @param <T>        泛型
      * @return boolean {@code true} 有元素
      */
     public static <T> boolean isNotEmpty(Collection<T> collection) {
