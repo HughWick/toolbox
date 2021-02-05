@@ -2,6 +2,7 @@ package com.github.hugh.file;
 
 import com.github.hugh.util.file.FileUtils;
 import com.github.hugh.util.file.ImageUtils;
+import org.junit.Test;
 
 import java.util.Date;
 
@@ -11,19 +12,24 @@ import java.util.Date;
  */
 public class ImageTest {
 
+    @Test
+    public void test01() {
+        String str = "C:\\Users\\AS\\Desktop\\Es_aaVKVcAogC45.jfif";
+        System.out.println("--->>" + ImageUtils.isImage(str));
+        System.out.println("--->>" + ImageUtils.isImage(str));
+    }
+
     public static void main(String[] args) {
 //        CatchPic pic = new CatchPic();/* 创建实例 */
         //需要下载的URL
         String photoUrl = "https://cmmop.hnlot.com.cn/capture/DaHua/capture/3K02281PAJ00016/2021/2/2/f331dbb64caa4480bf92c8a335b3e02a.jpg";
-
         // 截取最后/后的字符串
         String fileName = new Date().getTime() + ".png";
-
         //图片保存路径
         String filePath = "D:/img/";
         FileUtils.createDir(filePath);
         /* 调用函数，并且进行传参 */
-        boolean flag = ImageUtils.saveUrl(photoUrl, filePath + fileName);
+        boolean flag = FileUtils.downloadByStream(photoUrl, filePath + fileName);
         System.out.println("Run ok!\n Get URL file " + flag);
         System.out.println(filePath);
         System.out.println(fileName);

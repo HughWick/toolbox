@@ -70,7 +70,8 @@ public class FileTest {
         String filePath = "D:\\img\\";
         // 截取最后/后的字符串
         String fileName = new Date().getTime() + ".png";
-        FileUtils.downloadByUrl(str, filePath + fileName);
+        FileUtils.downloadByStream(str, filePath + fileName);
+        FileUtils.downloadByNio(str, filePath + fileName);
         System.out.println("===END====");
     }
 }

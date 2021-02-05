@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutionException;
  * @author hugh
  * @since 1.2.1
  */
-public class Instance {
+public class Instance { 
 
     private static volatile Instance instance;
 
