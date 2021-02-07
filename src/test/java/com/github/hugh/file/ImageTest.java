@@ -14,9 +14,10 @@ public class ImageTest {
 
     @Test
     public void test01() {
-        String str = "C:\\Users\\AS\\Desktop\\Es_aaVKVcAogC45.jfif";
-        System.out.println("--->>" + ImageUtils.isImage(str));
-        System.out.println("--->>" + ImageUtils.isImage(str));
+        String str = "C:\\Users\\AS\\Desktop\\Es_aaVKVcAogC45.jpg";
+        String str2 = "C:\\Users\\AS\\Desktop\\Es_aaVKVcAogC45.j";
+        System.out.println("-1-->>" + ImageUtils.isImage(str));
+        System.out.println("--2->>" + ImageUtils.isImage(str2));
     }
 
     public static void main(String[] args) {
