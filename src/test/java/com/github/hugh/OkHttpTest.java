@@ -3,7 +3,6 @@ package com.github.hugh;
 import com.github.hugh.util.OkHttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import lombok.var;
 import net.sf.json.JSONObject;
 import org.junit.Test;
 
@@ -71,14 +70,20 @@ public class OkHttpTest {
     }
 
     public static void main(String[] args) throws IOException {
-        OkHttpTest test = new OkHttpTest();
-        test.tem();
+//        OkHttpTest test = new OkHttpTest();
+//        test.tem();
+//        val map =  new HashMap<>();
+//        map.put("1",1);
+//        map.put(1,1);
+//        System.out.println("--->>"+map);
+//        var str = "123c";
+//        str = "abcdef";
+//        System.out.println("--->>"+str);
         val map =  new HashMap<>();
-        map.put("1",1);
-        map.put(1,1);
-        System.out.println("--->>"+map);
-        var str = "123c";
-        str = "abcdef";
-        System.out.println("--->>"+str);
+        val map2 = new JSONObject();
+        map.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+        map2.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+        System.out.println("--1->>" + OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", map));
+        System.out.println("--2->>" + OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", map2));
     }
 }

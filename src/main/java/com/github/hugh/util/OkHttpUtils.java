@@ -159,7 +159,6 @@ public class OkHttpUtils {
         return send(request, buildClient());
     }
 
-
     /**
      * 发送json形式参数的post请求
      * <p>Content-Type:application/x-www-form-urlencoded</p>
@@ -215,15 +214,30 @@ public class OkHttpUtils {
     /**
      * 发送POST 后返回结果转换为{@link JsonObject}
      * <p>Content-Type:application/x-www-form-urlencoded</p>
+     * <p>该方法调用{@link #postFormReJsonObject(String, JSONObject) }进行post请求</p>
      *
-     * @param url  请求URL
-     * @param json 参数
-     * @return JsonObject
+     * @param url    请求URL
+     * @param params 参数
+     * @return {@link JsonObject}
+     * @throws IOException IO流错误
+     * @since 1.5.2
+     */
+    public static JsonObject postFormReJsonObject(String url, Map params) throws IOException {
+        return postFormReJsonObject(url, JSONObject.fromObject(params));
+    }
+
+    /**
+     * 发送POST 后返回结果转换为{@link JsonObject}
+     * <p>Content-Type:application/x-www-form-urlencoded</p>
+     *
+     * @param url    请求URL
+     * @param params 参数
+     * @return {@link JsonObject}
      * @throws IOException IO流错误
      * @since 1.3.0
      */
-    public static JsonObject postFormReJsonObject(String url, JSONObject json) throws IOException {
-        String result = postForm(url, json);
+    public static JsonObject postFormReJsonObject(String url, JSONObject params) throws IOException {
+        String result = postForm(url, params);
         try {
             return JsonObjectUtils.parse(result);
         } catch (Exception e) {
