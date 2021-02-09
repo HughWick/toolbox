@@ -17,7 +17,6 @@ public class JsonArrayUtils {
      *
      * @param jsonArray 数组
      * @return boolean {@code true}空返回
-     * @since 1.3.9
      */
     public static boolean isEmpty(JsonArray jsonArray) {
         return JsonObjectUtils.isJsonNull(jsonArray) || jsonArray.size() <= 0;
@@ -29,7 +28,6 @@ public class JsonArrayUtils {
      *
      * @param jsonArray 数组
      * @return boolean {@code true}不为空
-     * @since 1.3.9
      */
     public static boolean isNotEmpty(JsonArray jsonArray) {
         return !isEmpty(jsonArray);
