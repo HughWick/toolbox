@@ -1,15 +1,11 @@
 package com.github.hugh.id;
 
-import com.github.hugh.constant.DateCode;
+import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.EmptyUtils;
 
 import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -193,18 +189,7 @@ public class Snowflake {
         item.put("dataCenter", Integer.valueOf(dataCenterId, 2));// 二进制转数据中心ID
         long diffTime = Long.parseLong(time, 2);// 二进制转long
         long timeLong = diffTime + START_STMP;// 加上初初始时间
-        item.put("date", formDate(timeLong));
+        item.put("date", DateUtils.formatTimestamp(timeLong));
         return item;
-    }
-
-    /**
-     * 格式化反编译后的时间戳部分、转义成标准的yyyy-MM-dd HH:mm:ss 日期格式
-     *
-     * @param timestamp 时间戳
-     * @return String yyyy-MM-dd HH:mm:ss 日期格式
-     */
-    private static String formDate(long timestamp) {
-        DateTimeFormatter ftf = DateTimeFormatter.ofPattern(DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
-        return ftf.format(LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault()));
     }
 }

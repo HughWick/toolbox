@@ -1,7 +1,6 @@
 package com.github.hugh.id;
 
 import com.github.hugh.IdSequence;
-import com.github.hugh.id.Snowflake;
 import org.junit.Test;
 
 import java.util.Map;
@@ -31,8 +30,10 @@ public class IdSequenceTest {
 
     public static void main(String[] args) {
 //        Instance.getInstance().singleton(null);
+        long id = 1359463339870322690L;
         System.out.println("-1-->" + IdSequence.snowflake());
         System.out.println("-2-->" + IdSequence.snowflake());
         System.out.println("-3-->" + IdSequence.snowflake());
+        System.out.println("------->>" + Snowflake.decompile(id));
     }
 }
