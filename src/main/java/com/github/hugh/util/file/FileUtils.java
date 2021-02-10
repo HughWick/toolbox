@@ -166,9 +166,9 @@ public class FileUtils {
             URL url = new URL(fileUrl);
             /* 此为联系获得网络资源的固定格式用法，以便后面的in变量获得url截取网络资源的输入流 */
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            DataInputStream in = new DataInputStream(connection.getInputStream());
+            @Cleanup DataInputStream in = new DataInputStream(connection.getInputStream());
             /* 此处也可用BufferedInputStream与BufferedOutputStream  需要保存的路径*/
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(savePath));
+            @Cleanup DataOutputStream out = new DataOutputStream(new FileOutputStream(savePath));
             /* 将参数savePath，即将截取的图片的存储在本地地址赋值给out输出流所指定的地址 */
             byte[] buffer = new byte[4096];
             int count;
@@ -176,8 +176,7 @@ public class FileUtils {
             while ((count = in.read(buffer)) > 0) {
                 out.write(buffer, 0, count);
             }
-            out.close();/* 后面三行为关闭输入输出流以及网络资源的固定格式 */
-            in.close();
+            /* 关闭输入输出流以及网络资源的固定格式 */
             connection.disconnect();
             return true;/* 网络资源截取并存储本地成功返回true */
         } catch (Exception e) {
@@ -211,5 +210,4 @@ public class FileUtils {
             return false;
         }
     }
-
 }

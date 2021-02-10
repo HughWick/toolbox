@@ -23,5 +23,4 @@ public class IdSequence {
         Snowflake snowflake = Instance.getInstance().singleton(Snowflake.class);
         return String.valueOf(snowflake.nextId());
     }
-
 }

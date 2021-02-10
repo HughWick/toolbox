@@ -76,4 +76,10 @@ public class JsonObjectsTest {
         System.out.println("--3->>" +   new JsonObjects<>(json2.getJsonObject("data")));
     }
 
+    @Test
+    public void test04(){
+        JsonObjects json = new JsonObjects<>(null);
+        System.out.println("---1>>" + json.isNull());
+        System.out.println("----NED----");
+    }
 }
