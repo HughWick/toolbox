@@ -41,7 +41,7 @@ public class ResultUtils {
      * @param successCode 成功状态码
      * @return boolean
      */
-    public static boolean isSuccess(ResultDTO dto, String successCode) {
+    public static boolean isEquals(ResultDTO dto, String successCode) {
         if (dto == null) {
             return false;
         }
@@ -55,8 +55,8 @@ public class ResultUtils {
      * @param successCode 成功状态码
      * @return boolean
      */
-    public static boolean isError(ResultDTO dto, String successCode) {
-        return !isSuccess(dto, successCode);
+    public static boolean isNotEquals(ResultDTO dto, String successCode) {
+        return !isEquals(dto, successCode);
     }
 }
 

@@ -29,8 +29,10 @@ public class JsonObjects<T> extends JsonObjectUtils {
     }
 
     /**
+     * 获取gson中对应的{@link JsonObject}后放入封装的{@link JsonObjects}中，方便后去使用
+     *
      * @param key 键
-     * @return {@link JsonObject}
+     * @return {@link JsonObjects}
      */
     public JsonObjects json(String key) {
         return new JsonObjects<>(getJsonObject(jsonObject, key));
