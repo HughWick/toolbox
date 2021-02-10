@@ -10,16 +10,15 @@ import com.github.hugh.util.EmptyUtils;
  */
 public class PhoneUtils {
 
-
     /**
      * 手机号码前三后四脱敏
      * <ul>
-     *     <li>例：</li>
-     *     <li>格式：191****0393</li>
+     * <li>例：</li>
+     * <li>格式：191****0393</li>
      * </ul>
      *
      * @param mobile 手机号码
-     * @return String
+     * @return String 脱敏后的字符串
      */
     public static String encrypt(String mobile) {
         if (EmptyUtils.isEmpty(mobile) || (mobile.length() != 11)) {
@@ -27,5 +26,4 @@ public class PhoneUtils {
         }
         return mobile.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
     }
-
 }

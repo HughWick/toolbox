@@ -1,4 +1,4 @@
-package com.github.hugh.util.regex;
+package com.github.hugh.util;
 
 import com.github.binarywang.java.emoji.EmojiConverter;
 

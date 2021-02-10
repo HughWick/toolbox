@@ -76,7 +76,6 @@ public class RegexUtils {
      */
     private static final Pattern NUMBER_PATTERN = Pattern.compile("\\p{N}");
 
-
     /**
      * 其他字符-正则模式
      */
@@ -353,7 +352,7 @@ public class RegexUtils {
      * @param pattern 正则表达式
      * @return boolean 是否匹配
      */
-    private static boolean isPatternMatch(final String string, final Pattern pattern) {
+    protected static boolean isPatternMatch(final String string, final Pattern pattern) {
         return pattern.matcher(string).find();
     }
 
