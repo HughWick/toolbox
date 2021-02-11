@@ -45,7 +45,7 @@ public class ListUtils {
      * @param originList 数据
      * @param page       页数
      * @param size       条数
-     * @return Object
+     * @return List<T> 切割后的list
      * @since 1.1.0
      */
     public static <T> List<T> guavaPartitionList(List<T> originList, int page, int size) {

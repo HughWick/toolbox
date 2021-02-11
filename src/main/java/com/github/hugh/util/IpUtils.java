@@ -56,7 +56,6 @@ public class IpUtils {
         return ip;
     }
 
-
     /**
      * 随机生成国内IP地址
      * @return String ip

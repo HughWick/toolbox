@@ -1,7 +1,5 @@
 package com.github.hugh.model.dto;
 
-import com.github.hugh.util.ResultUtils;
-import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -11,8 +9,19 @@ import lombok.Data;
  * @since 1.5.0
  */
 @Data
-@Builder
 public class ResultDTO<T> {
+
+    public ResultDTO(String code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
+    public ResultDTO(String code, String message, T data) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
+    }
+
     private String code;
     private String message;
     private T data;
@@ -24,7 +33,7 @@ public class ResultDTO<T> {
      * @return boolean {@code true} 一样
      */
     public boolean isEquals(String code) {
-        return ResultUtils.isEquals(this, code);
+        return this.getCode().equals(code);
     }
 
     /**
@@ -34,6 +43,6 @@ public class ResultDTO<T> {
      * @return boolean {@code true} 不一样
      */
     public boolean isNotEquals(String code) {
-        return ResultUtils.isNotEquals(this, code);
+        return !isEquals(code);
     }
 }
