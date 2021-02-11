@@ -214,6 +214,7 @@ public class JsonObjectUtils {
      * <p>Object为空时返回{@code null}</p>
      *
      * @param object 待解析参数
+     * @param <T>    入参泛型
      * @return JsonObject {@link JsonObject}
      * @since 1.3.4
      */
@@ -227,6 +228,7 @@ public class JsonObjectUtils {
      * <p>Object为空时返回{@code null}</p>
      *
      * @param object 待解析参数
+     * @param <T>    入参泛型
      * @return JsonArray {@link JsonArray}
      * @since 1.3.4
      */
@@ -252,6 +254,8 @@ public class JsonObjectUtils {
      * <p>使用的自定义的{@link MapTypeAdapter}解析器,重写了数值转换校验</p>
      *
      * @param jsonObject json
+     * @param <K>        键泛型
+     * @param <V>        value泛型
      * @return Map
      * @since 1.4.0
      */

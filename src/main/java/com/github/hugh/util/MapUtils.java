@@ -138,6 +138,8 @@ public class MapUtils {
      * @param cls    实体类class
      * @param params 参数
      * @param <T>    类型
+     * @param <K>    键泛型
+     * @param <V>    value泛型
      * @return T 返回实体
      * @throws Exception 错误异常
      * @since 1.2.3
@@ -166,7 +168,7 @@ public class MapUtils {
     }
 
     /**
-     *  将map,转换成对应class对象的实体类
+     * 将map,转换成对应class对象的实体类
      * <ul>
      * <li>注:</li>
      * <li>1.map中的key必须与实体中的常量key一致.</li>
