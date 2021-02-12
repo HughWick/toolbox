@@ -2,7 +2,6 @@ package com.github.hugh.util.common;
 
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.EmptyUtils;
-import com.github.hugh.util.base.IdCardValidator;
 
 /**
  * 身份证工具类
@@ -98,5 +97,4 @@ public class IdCardUtils {
         }
         return idCard.replaceAll("(?<=\\w{" + before + "})\\w(?=\\w{" + rear + "})", "*");
     }
-
 }

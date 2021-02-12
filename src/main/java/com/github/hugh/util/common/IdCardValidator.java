@@ -1,4 +1,4 @@
-package com.github.hugh.util.base;
+package com.github.hugh.util.common;
 
 import com.github.hugh.util.EmptyUtils;
 

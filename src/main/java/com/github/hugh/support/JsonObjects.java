@@ -34,7 +34,7 @@ public class JsonObjects<T> extends JsonObjectUtils {
      * @param key 键
      * @return {@link JsonObjects}
      */
-    public JsonObjects json(String key) {
+    public JsonObjects jsonObjects(String key) {
         return new JsonObjects<>(getJsonObject(jsonObject, key));
     }
 
