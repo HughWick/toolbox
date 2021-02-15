@@ -3,6 +3,7 @@ package com.github.hugh.util.file;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.StringUtils;
+import com.google.common.io.Files;
 import lombok.Cleanup;
 
 import java.io.*;
@@ -209,5 +210,36 @@ public class FileUtils {
             e.printStackTrace();
             return false;
         }
+    }
+
+    /**
+     * 根据图片路径读取文件并转化为Byte[]
+     * <p>调用{@link #toByteArray(File)}</p>
+     *
+     * @param path 文件路径
+     * @return byte[] 文件数组
+     * @since 1.3.6
+     */
+    public static byte[] toByteArray(String path) throws IOException {
+        File file = new File(path);
+        return toByteArray(file);
+    }
+
+    /**
+     * <p>使用{@link Files#asByteSource(File)}读取文件</p>
+     *
+     * @param file 文件
+     * @return byte
+     * @throws IOException IO异常
+     * @since 1.5.2
+     */
+    public static byte[] toByteArray(File file) throws IOException {
+        if (file == null) {
+            throw new ToolboxException("file is null !");
+        }
+        if (!file.exists()) {
+            throw new ToolboxException("file not exists !");
+        }
+        return Files.asByteSource(file).read();
     }
 }

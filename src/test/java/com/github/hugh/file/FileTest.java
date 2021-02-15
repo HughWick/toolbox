@@ -74,4 +74,13 @@ public class FileTest {
         FileUtils.downloadByNio(str, filePath + fileName);
         System.out.println("===END====");
     }
+
+    private static final String DEL_PATH = "D:\\battery-report.html";
+
+    @Test
+    public void test05() throws IOException {
+        byte[] bytes = FileUtils.toByteArray(DEL_PATH);
+        System.out.println("--->>" + bytes.length);
+        byte[] bytes2 = FileUtils.toByteArray(DEL_PATH+"2");
+    }
 }

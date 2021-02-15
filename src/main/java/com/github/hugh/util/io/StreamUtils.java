@@ -73,7 +73,6 @@ public class StreamUtils {
         return output.toByteArray();
     }
 
-
     /**
      * 将InputStream 输出至指定的文件
      * <p>内部调用{@link #toFile(InputStream, File)} </p>
@@ -170,7 +169,7 @@ public class StreamUtils {
      * @return byte[] 文件数组
      * @since 1.3.6
      */
-    public static byte[] readFile(String path) {
+    public static byte[] resourceToByteArray(String path) {
         try (InputStream inputStream = getInputStream(path)) {
             return toByteArray(inputStream);
         } catch (IOException ioe) {
