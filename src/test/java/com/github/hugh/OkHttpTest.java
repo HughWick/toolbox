@@ -23,9 +23,9 @@ public class OkHttpTest {
         JSONObject json = new JSONObject();
         json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
         try {
-            for (int i = 0; i < 10000; i++) {
-                System.out.println(i + "--1->>" + OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
-            }
+//            for (int i = 0; i < 10000; i++) {
+//                System.out.println(i + "--1->>" + OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+//            }
             System.out.println("--2>>" + OkHttpUtils.postJson("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
             System.out.println("--3->>" + OkHttpUtils.postFormReJSON("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
             System.out.println("--4->>" + OkHttpUtils.get("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
@@ -70,8 +70,8 @@ public class OkHttpTest {
     }
 
     public static void main(String[] args) throws IOException {
-//        OkHttpTest test = new OkHttpTest();
-//        test.tem();
+        OkHttpTest test = new OkHttpTest();
+        test.tem();
 //        val map =  new HashMap<>();
 //        map.put("1",1);
 //        map.put(1,1);

@@ -41,6 +41,7 @@
         <fastjson.version>1.2.74</fastjson.version>
         <lombok.version>1.18.12</lombok.version>
         <slf4j.version>1.7.30</slf4j.version>
+        <ip2region.version>1.7.2</ip2region.version>
     </properties>
 
     <dependencies>
@@ -132,6 +133,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.lionsoul</groupId>
+            <artifactId>ip2region</artifactId>
+            <version>${ip2region.version}</version>
         </dependency>
     </dependencies>
 
