@@ -24,6 +24,7 @@ public class ResultTest {
 
         ResultDTO dto = new ResultDTO<>("0000", "操作成功");
         System.out.println("--1->" + JsonObjectUtils.toJson(dto));
+        System.out.println("---.>>"+dto.toString());
         System.out.println("--2->" + ResultUtils.isEquals(dto, "0000"));
         System.out.println("--3->" + ResultUtils.isNotEquals(dto, "0000"));
         val map = new HashMap<>();
