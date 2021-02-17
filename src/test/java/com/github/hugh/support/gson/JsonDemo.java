@@ -1,4 +1,4 @@
-package com.github.hugh.gson;
+package com.github.hugh.support.gson;
 
 import com.github.hugh.model.Student;
 import com.github.hugh.util.DateUtils;

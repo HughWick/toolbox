@@ -222,9 +222,9 @@ public class MapUtils {
      * @param empty  空判断
      * @param <T>    实体泛型
      * @return T 实体
-     * @throws IntrospectionException
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
+     * @throws IntrospectionException    无法将字符串类名称映射到 Class 对象、无法解析字符串方法名，或者指定对其用途而言具有错误类型签名的方法名称
+     * @throws InvocationTargetException 反射异常
+     * @throws IllegalAccessException    没有访问权限的异常
      * @since 1.4.0
      */
     private static <T> T convertObjects(T bean, Map params, boolean empty) throws IntrospectionException, InvocationTargetException, IllegalAccessException {

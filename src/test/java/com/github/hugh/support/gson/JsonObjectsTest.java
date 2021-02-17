@@ -1,6 +1,6 @@
-package com.github.hugh.gson;
+package com.github.hugh.support.gson;
 
-import com.github.hugh.support.JsonObjects;
+import com.github.hugh.util.gson.JsonObjects;
 import com.google.gson.JsonArray;
 import org.junit.Test;
 

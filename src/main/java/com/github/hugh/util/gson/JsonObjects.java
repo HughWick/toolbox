@@ -1,11 +1,10 @@
-package com.github.hugh.support;
+package com.github.hugh.util.gson;
 
-import com.github.hugh.util.gson.JsonObjectUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 /**
- * 由于使用{@link JsonObjectUtils}的方法获取值时需要每次将转{@link JsonObject}作为参数传入，故而该类在创建该class时将需要转换的参数传入，然后转换成{@link JsonObject}
+ * 由于使用{@link JsonObjectUtils}的方法获取值时需要每次将转{@link JsonObject}作为参数传入，所以该类在new 对象时将需要转换的参数传入，然后转换成{@link JsonObject}
  * 而后只需要使用get方法获取对象中的参数即可。
  *
  * @author hugh
