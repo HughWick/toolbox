@@ -86,4 +86,15 @@ public class JsonObjects<T> extends JsonObjectUtils {
     public double getDoubleValue(String key) {
         return getDoubleValue(jsonObject, key);
     }
+
+    /**
+     * 方便的方法获取{@link JsonObject}中对应key的long值。
+     *
+     * @param key 键
+     * @return double json中获取key的long值,没有返回{@code 0}
+     * @since 1.5.2
+     */
+    public long getLongValue(String key) {
+        return getLongValue(jsonObject, key);
+    }
 }
