@@ -163,7 +163,7 @@ public class StreamUtils {
     }
 
     /**
-     * 根据图片路径读取文件并转化为Byte[]
+     * 根据文件路径读取文件并转化为Byte[]
      *
      * @param path 文件路径
      * @return byte[] 文件数组
