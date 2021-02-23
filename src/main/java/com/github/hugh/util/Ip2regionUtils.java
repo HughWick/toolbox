@@ -1,5 +1,7 @@
 package com.github.hugh.util;
 
+import com.github.hugh.model.dto.Ip2regionDTO;
+import com.github.hugh.util.gson.JsonObjectUtils;
 import com.github.hugh.util.io.StreamUtils;
 import com.google.gson.JsonObject;
 import org.lionsoul.ip2region.DataBlock;
@@ -7,7 +9,8 @@ import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
 
 /**
- * git ip2region IP查询国家省市工具
+ * 基于 ip2region IP查询国家省市工具
+ * <p>https://github.com/lionsoul2014/ip2region</p>
  *
  * @author hugh
  * @since 1.5.2
@@ -25,7 +28,7 @@ public class Ip2regionUtils {
      * @param ip IP地址
      * @return String 返回字符串格式：国家|大区|省份|城市|运营商
      */
-    public static String getCityInfo(String ip) {
+    private static String getCityInfo(String ip) {
         try {
             DbConfig config = new DbConfig();
             byte[] bytes = StreamUtils.resourceToByteArray(DB_PATH);
@@ -58,5 +61,17 @@ public class Ip2regionUtils {
         item.addProperty("city", arr[3]);// 城市
         item.addProperty("isp", arr[4]);// 运营商
         return item;
+    }
+
+    /**
+     * 根据IP地址解析国家、省份、城市、运营商信息
+     *
+     * @param ip IP
+     * @return {@link Ip2regionDTO}
+     * @since 1.5.4
+     */
+    public static Ip2regionDTO parse(String ip) {
+        JsonObject jsonObject = get(ip);
+        return JsonObjectUtils.fromJson(jsonObject, Ip2regionDTO.class);
     }
 }

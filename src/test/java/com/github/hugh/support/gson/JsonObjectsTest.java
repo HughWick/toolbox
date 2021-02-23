@@ -2,6 +2,7 @@ package com.github.hugh.support.gson;
 
 import com.github.hugh.util.gson.JsonObjects;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.junit.Test;
 
 /**
@@ -35,6 +36,8 @@ public class JsonObjectsTest {
         String str2 = null;
         JsonObjects json2 = new JsonObjects<>(str2);
         System.out.println("---->>" + json2.isNull());
+        JsonObject jsopn = new JsonObject();
+        System.out.println("---->>" + new JsonObjects<>(jsopn).toString());
     }
 
     @Test
