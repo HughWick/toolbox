@@ -80,16 +80,6 @@ public class RandomUtils {
     }
 
     /**
-     * 随机的字符数字
-     *
-     * @param length 长度
-     * @return 随机的数字
-     */
-    public static String randomCharNumber(final int length) {
-        return randomString(BASE_CHAR_NUMBER, length);
-    }
-
-    /**
      * 随机一个字符串的数字
      * <p>该方法返回为字符串类型数字</p>
      * <p>注：当长度为2时、会产生01这种长度的数字字符串</p>
@@ -117,6 +107,17 @@ public class RandomUtils {
             sb.append(number);
         }
         return sb.charAt(0) == '0' ? number(length) : Integer.parseInt(sb.toString());
+    }
+
+    /**
+     * 随机指定长度的字符串
+     * <p>结果包含字符和数字</p>
+     *
+     * @param length 长度
+     * @return String 随机的字符串
+     */
+    public static String randomString(final int length) {
+        return randomString(BASE_CHAR_NUMBER, length);
     }
 
     /**

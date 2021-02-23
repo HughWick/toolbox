@@ -13,6 +13,7 @@ public class RandomTest {
     public void test001() {
         System.out.println("--1->>" + RandomUtils.getRandom());
         System.out.println("--2->>" + RandomUtils.getSecureRandom());
+        System.out.println("--3->>" + RandomUtils.randomString(3));
         System.out.println("--4->>" + RandomUtils.randomChar(2));
         for (int i = 0; i < 10; i++) {
             System.out.println("--5->>" + RandomUtils.randomNumber(2));
