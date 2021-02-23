@@ -1,7 +1,7 @@
 package com.github.hugh;
 
 import com.github.hugh.model.dto.Ip2regionDTO;
-import com.github.hugh.util.Ip2regionUtils;
+import com.github.hugh.util.ip.Ip2regionUtils;
 
 /**
  * @author AS

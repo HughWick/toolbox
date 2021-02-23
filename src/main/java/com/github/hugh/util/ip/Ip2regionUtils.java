@@ -1,4 +1,4 @@
-package com.github.hugh.util;
+package com.github.hugh.util.ip;
 
 import com.github.hugh.model.dto.Ip2regionDTO;
 import com.github.hugh.util.gson.JsonObjectUtils;

@@ -1,4 +1,4 @@
-package com.github.hugh.util;
+package com.github.hugh.util.ip;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Random;
