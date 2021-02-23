@@ -71,10 +71,21 @@ public class JsonObjects<T> extends JsonObjectUtils {
      * 方便的方法获取{@link JsonObject}中对应key的int值。
      *
      * @param key 键
-     * @return int json中获取key的Integer值,没有返回{@code 0}
+     * @return int 获取key的Integer值,没有返回{@code 0}
      */
     public int getInt(String key) {
         return getInt(jsonObject, key);
+    }
+
+    /**
+     * 方便的方法获取{@link JsonObject}中对应key的{@link Integer}值。
+     *
+     * @param key KEY
+     * @return Integer 获取key的{@link Integer}值,没有返回{@code null}
+     * @since 1.5.4
+     */
+    public Integer getInteger(String key) {
+        return getInteger(jsonObject, key);
     }
 
     /**
@@ -87,6 +98,18 @@ public class JsonObjects<T> extends JsonObjectUtils {
         return getDoubleValue(jsonObject, key);
     }
 
+
+    /**
+     * 方便的方法获取{@link JsonObject}中对应key的{@link Double}值。
+     *
+     * @param key Key
+     * @return Double key的{@link Double}值,没有返回{@code null}
+     * @since 1.5.4
+     */
+    public Double getDouble(String key) {
+        return getDouble(jsonObject, key);
+    }
+
     /**
      * 方便的方法获取{@link JsonObject}中对应key的long值。
      *
@@ -96,5 +119,16 @@ public class JsonObjects<T> extends JsonObjectUtils {
      */
     public long getLongValue(String key) {
         return getLongValue(jsonObject, key);
+    }
+
+    /**
+     * 以空值安全的方式从JsonObject中获取一个Long.
+     *
+     * @param key Key
+     * @return Long json中没有获取key的value时返回{@code null}
+     * @since 1.5.4
+     */
+    public Long getLong(String key) {
+        return getLong(jsonObject, key);
     }
 }
