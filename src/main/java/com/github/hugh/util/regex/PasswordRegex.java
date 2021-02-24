@@ -17,7 +17,7 @@ public class PasswordRegex {
 
     /**
      * 中等密码强度
-     * <p>密码至少要由包括大小写字母、数字、特殊符号符号的其中两项,共计6-20位编码组成！</p>
+     * <p>密码长度6-20位，须包含大小写字母、数字、特殊符号至少2种或以上元素！</p>
      *
      * @param password 密码
      * @return boolean
