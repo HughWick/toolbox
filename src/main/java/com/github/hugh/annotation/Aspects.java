@@ -18,7 +18,7 @@ public @interface Aspects {
     /**
      * 名称
      *
-     * @return
+     * @return String
      */
     String name() default "";
 }
