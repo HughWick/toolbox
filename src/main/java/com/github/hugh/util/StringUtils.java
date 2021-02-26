@@ -309,7 +309,7 @@ public class StringUtils {
      *
      * @param source 目标字符串
      * @param beTrim 要删除的指定字符
-     * @return 删除之后的字符串
+     * @return String 删除之后的字符串
      * @since 1.4.0
      */
     public static String trim(String source, String beTrim) {
@@ -322,15 +322,54 @@ public class StringUtils {
         }
         String beginChar = source.substring(0, 1);
         if (beginChar.equalsIgnoreCase(beTrim)) {
-            source = source.substring(1, source.length());
-            beginChar = source.substring(0, 1);
+            source = source.substring(1);
         }
         // 循环去掉字符串尾的beTrim字符
-        String endChar = source.substring(source.length() - 1, source.length());
+        String endChar = source.substring(source.length() - 1);
         if (endChar.equalsIgnoreCase(beTrim)) {
             source = source.substring(0, source.length() - 1);
-            endChar = source.substring(source.length() - 1, source.length());
         }
         return source;
+    }
+
+    /**
+     * 将字符串按照指定的字符与次数进行切割
+     * <ul>
+     * <li>注：返回结果中首字符为指定切割的字符</li>
+     * <li>例：源字符串 http://hyga.hnlot.com.cn:8000/capture/DaHua/capture/6G0BEB9GA12F70A/2021/1/17/9946090cb09b4986af8615174e862b9e.jpg</li>
+     * <li>获取"/"出现的第4次后的所有字符，结果为：/DaHua/capture/6G0BEB9GA12F70A/2021/1/17/9946090cb09b4986af8615174e862b9e.jpg</li>
+     * </ul>
+     *
+     * @param string 源字符串
+     * @param chr    匹配的字符
+     * @param index  次数
+     * @return String 字符串
+     * @since 1.5.6
+     */
+    public static String after(String string, String chr, int index) {
+        int index1 = indexOf(string, chr, index);
+        return string.substring(index1);
+    }
+
+    /**
+     * 根据字符串中指定字符的次数获取对应所在的下标
+     *
+     * @param string 源字符串
+     * @param chr    匹配的字符
+     * @param index  次数
+     * @return int 位置下标
+     * @since 1.5.6
+     */
+    public static int indexOf(String string, String chr, int index) {
+        Pattern pattern = Pattern.compile(chr);
+        Matcher findMatcher = pattern.matcher(string);
+        int number = 0;
+        while (findMatcher.find()) {
+            number++;
+            if (number == index) {//当指定出现次数满足时停止
+                break;
+            }
+        }
+        return findMatcher.start();
     }
 }

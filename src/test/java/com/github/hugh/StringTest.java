@@ -2,7 +2,6 @@ package com.github.hugh;
 
 import com.github.hugh.util.DoubleMathUtils;
 import com.github.hugh.util.StringUtils;
-import com.github.hugh.util.regex.RegexUtils;
 import org.junit.Test;
 
 /**
@@ -50,14 +49,21 @@ public class StringTest {
 
     @Test
     public void test05() {
-        System.out.println("--1-->>" + RegexUtils.isFullChinese("中文"));
-        System.out.println("--2-->>" + RegexUtils.isFullChinese("中文！"));
-        System.out.println("--3-->>" + RegexUtils.isFullChinese("中文1"));
-        System.out.println("--3-->>" + RegexUtils.isNotFullChinese("中文 "));
+        String str = "[a, b, [c]]]";
+        System.out.println("==2=>>>" + StringUtils.trim(str, "]"));
+        System.out.println("==2=>>>" + StringUtils.trim(str, "["));
         System.out.println("--4-->>" + StringUtils.isContainChinese("；"));
         System.out.println("--5-->>" + StringUtils.isContainChinese("中文"));
         System.out.println("--6-->>" + StringUtils.isNotContainChinese("中文2"));
         System.out.println("--7-->>" + StringUtils.isNotContainChinese("中文"));
+    }
+
+    @Test
+    public void test06() {
+        String string = "http://hyga.hnlot.com.cn:8000/capture/DaHua/capture/6G0BEB9GA12F70A/2021/1/17/9946090cb09b4986af8615174e862b9e.jpg";
+        String string2 = "https://www.hnlot.com.cn/DaHua/capture/4M061F3PAA33D78/2020/10/27/e242edb022494a12a778c4cddecf2a48.jpg";
+        System.out.println("--1-->>" + StringUtils.after(string, "/", 4));
+        System.out.println("--2-->>" + StringUtils.after(string2, "/", 4));
     }
 
     public static void main(String[] args) {

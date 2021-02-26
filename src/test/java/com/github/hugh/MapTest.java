@@ -3,12 +3,13 @@ package com.github.hugh;
 import com.github.hugh.model.Student;
 import com.github.hugh.util.EntityUtils;
 import com.github.hugh.util.MapUtils;
-import com.github.hugh.util.StringUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author AS
@@ -96,23 +97,6 @@ public class MapTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        List<String> list = new ArrayList<>();
-        list.add("a");
-        System.out.println("--->>" + list.toString());
-        String str = "[a, b, [c]]";
-//        String s1 = str.substring(0);
-//        System.out.println("--1->>" + s1);
-//        String s2 = str.substring(0, str.length() - 1);
-//        System.out.println("===>>>" + s2);
-//        String s1 = s2.substring(1);
-        System.out.println("===>>>" + StringUtils.trim(str, "[]"));
-        String s1 = "[\"o\"]";
-        System.out.println("-=-->" + JSONArray.fromObject(s1).get(0));
-
-
     }
 }
 
