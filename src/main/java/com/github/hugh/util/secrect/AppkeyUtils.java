@@ -2,7 +2,6 @@ package com.github.hugh.util.secrect;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.UUID;
 
 
@@ -13,6 +12,8 @@ import java.util.UUID;
  * @version 1.0.0
  */
 public class AppkeyUtils {
+    private AppkeyUtils() {
+    }
 
     /**
      * 生成一个32位的UUID

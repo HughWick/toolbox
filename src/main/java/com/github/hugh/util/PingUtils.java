@@ -1,9 +1,9 @@
 package com.github.hugh.util;
 
+import com.github.hugh.constant.CharsetCode;
 import com.github.hugh.util.system.OsUtils;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +17,9 @@ import java.util.regex.Pattern;
  * @since 1.3.2
  */
 public class PingUtils {
+    private PingUtils() {
+
+    }
 
     /**
      * 单次ping IP是否能够正常访问
@@ -27,7 +30,6 @@ public class PingUtils {
      * @return boolean {@code true}
      */
     public static boolean send(String ipAddress, int pingCount, int timeOut) {
-        BufferedReader in = null;
         Runtime runtime = Runtime.getRuntime();
         String pingCommand;
         if (OsUtils.isWindows()) {//将要执行的ping命令
@@ -41,24 +43,18 @@ public class PingUtils {
                 return false;
             }
             InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream());
-            in = new BufferedReader(inputStreamReader);// 逐行检查输出,计算类似出现=23ms TTL=62字样的次数
-            int connectedCount = 0;
-            String line;
-            while ((line = in.readLine()) != null) {
-                connectedCount += getCheckResult(line);// 如果出现类似=23ms TTL=62这样的字样,出现的次数=测试次数则返回真
-            }
-            return connectedCount == pingCount;
-        } catch (Exception ex) {
-            ex.printStackTrace();   // 出现异常则返回假
-            return false;
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+            try (BufferedReader in = new BufferedReader(inputStreamReader)) {
+                // 逐行检查输出,计算类似出现=23ms TTL=62字样的次数
+                int connectedCount = 0;
+                String line;
+                while ((line = in.readLine()) != null) {
+                    connectedCount += getCheckResult(line);// 如果出现类似=23ms TTL=62这样的字样,出现的次数=测试次数则返回真
                 }
+                return connectedCount == pingCount;
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;// 出现异常则返回false
         }
     }
 
@@ -76,12 +72,8 @@ public class PingUtils {
             pattern = Pattern.compile("(\\d+|\\s+ms)(\\s+)(ttl=\\d+)", Pattern.CASE_INSENSITIVE);
         }
         Matcher matcher = pattern.matcher(line);
-        while (matcher.find()) {
-            return 1;
-        }
-        return 0;
+        return matcher.find() ? 1 : 0;
     }
-
 
     /**
      * 发送多次Ping
@@ -102,7 +94,7 @@ public class PingUtils {
         try {
             Process pro = Runtime.getRuntime().exec(pingCommand);
             BufferedReader buf = new BufferedReader(new InputStreamReader(
-                    pro.getInputStream(), "GBK"));
+                    pro.getInputStream(), CharsetCode.GBK));
             String line;
             while ((line = buf.readLine()) != null) {
                 if (!"".equals(line)) {//不等于空字符串时

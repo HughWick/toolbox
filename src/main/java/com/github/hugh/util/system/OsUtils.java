@@ -7,6 +7,9 @@ package com.github.hugh.util.system;
  * @since 1.1.0
  */
 public class OsUtils {
+    private OsUtils() {
+
+    }
 
     /**
      * 校验当前系统是否为windows系统

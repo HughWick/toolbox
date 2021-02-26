@@ -10,14 +10,18 @@ import com.github.hugh.model.dto.ResultDTO;
  */
 public class ResultUtils {
 
+    private ResultUtils() {
+    }
+
     /**
      * 校验当前对象中的code码是与传入的code码一致
      *
      * @param code code
-     * @param dto  返回如果实体类
+     * @param dto  返回结果实体类
+     * @param <E> 对象类型
      * @return boolean {@code true} 一样
      */
-    public static boolean isEquals(ResultDTO dto, String code) {
+    public static <E> boolean isEquals(ResultDTO<E> dto, String code) {
         if (dto == null) {
             return false;
         }
@@ -28,10 +32,11 @@ public class ResultUtils {
      * 校验当前对象中的code码是与传入的code码不一样
      *
      * @param code code
-     * @param dto  返回如果实体类
+     * @param dto  返回结果实体类
+     * @param <E> 对象类型
      * @return boolean {@code true} 不一样
      */
-    public static boolean isNotEquals(ResultDTO dto, String code) {
+    public static <E> boolean isNotEquals(ResultDTO<E> dto, String code) {
         return !isEquals(dto, code);
     }
 }

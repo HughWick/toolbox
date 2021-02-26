@@ -1,5 +1,6 @@
 package com.github.hugh.util.secrect;
 
+import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.base.Base64;
 
@@ -57,8 +58,7 @@ public class Md5Utils {
             }
             return result;
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new ToolboxException(e);
         }
     }
-
 }
