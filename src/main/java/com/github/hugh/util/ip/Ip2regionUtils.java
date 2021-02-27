@@ -17,6 +17,9 @@ import org.lionsoul.ip2region.DbSearcher;
  */
 public class Ip2regionUtils {
 
+    private Ip2regionUtils() {
+    }
+
     /**
      * ip数据文件目录
      */

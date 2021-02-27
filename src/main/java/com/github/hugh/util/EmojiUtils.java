@@ -9,8 +9,10 @@ import com.github.binarywang.java.emoji.EmojiConverter;
  * @since 1.0.6
  */
 public class EmojiUtils {
+    private EmojiUtils() {
+    }
 
-    private static EmojiConverter emojiConverter = EmojiConverter.getInstance();
+    private static final EmojiConverter emojiConverter = EmojiConverter.getInstance();
 
     /**
      * 检测是否有emoji字符
