@@ -1,5 +1,6 @@
 package com.github.hugh.util.secrect;
 
+import com.github.hugh.constant.EncryptCode;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.base.Base64;
@@ -15,9 +16,6 @@ import java.security.NoSuchAlgorithmException;
  */
 public class Md5Utils {
 
-    private Md5Utils() {
-    }
-
     /**
      * 获取字符串的 md5 值 小写
      *
@@ -25,7 +23,7 @@ public class Md5Utils {
      * @return String  加密后的小写字符串
      */
     public static String lowerCase(final String string) {
-        return generate(string, true);
+        return encrypt(string, true, EncryptCode.MD5);
     }
 
     /**
@@ -35,22 +33,23 @@ public class Md5Utils {
      * @return String  加密后的大写字符串
      */
     public static String upperCase(final String string) {
-        return generate(string, false);
+        return encrypt(string, false, EncryptCode.MD5);
     }
 
     /**
      * 获取字符串的 md5 值
      *
-     * @param string    字符串
-     * @param lowerCase 大小写标识：{@code true}小写
+     * @param string      字符串
+     * @param lowerCase   大小写标识：{@code true}小写
+     * @param encryptType 加密类型
      * @return String MD5字符串
      */
-    private static String generate(final String string, boolean lowerCase) {
+    public static String encrypt(final String string, boolean lowerCase, String encryptType) {
+        if (EmptyUtils.isEmpty(string)) {
+            return string;
+        }
         try {
-            if (EmptyUtils.isEmpty(string)) {
-                return string;
-            }
-            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            MessageDigest messageDigest = MessageDigest.getInstance(encryptType);
             byte[] output = messageDigest.digest(string.getBytes());
             String result = Base64.toBase64String(output);
             if (lowerCase) {
