@@ -88,7 +88,6 @@ public class OkHttpUtils {
      */
     private static final MediaType JSON_TYPE = MediaType.get(APPLICATION_JSON_UTF8_VALUE);
 
-
     /**
      * OkHttp管理cookie
      */
