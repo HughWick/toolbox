@@ -102,9 +102,6 @@ public class OkHttpTest {
     }
 
 
-
-
-
     public static void main(String[] args) throws IOException {
         OkHttpTest test = new OkHttpTest();
         test.tem();

@@ -185,9 +185,7 @@ public class OkHttpUtils {
      * @throws IOException IO流错误
      */
     public static String postJson(String url, JSONObject json) throws IOException {
-        RequestBody body = RequestBody.create(JSON_TYPE, json.toString());
-        Request request = new Request.Builder().url(url).post(body).build();
-        return send(request);
+        return post(url, json.toString(), JSON_TYPE, buildClient());
     }
 
     /**
@@ -358,6 +356,23 @@ public class OkHttpUtils {
     }
 
     /**
+     * 统一发送post请求方法
+     * <p>该方法调用{@link #post(String, String, MediaType, OkHttpClient)},client使用默认的{@link #buildClient()}进行传参</p>
+     *
+     * @param url       URL
+     * @param params    参数
+     * @param mediaType 请求类型
+     * @return String 请求结果
+     * @throws IOException IO异常
+     * @since 1.5.9
+     */
+    private static String post(String url, String params, MediaType mediaType) throws IOException {
+        RequestBody body = RequestBody.create(mediaType, params);
+        Request request = new Request.Builder().url(url).post(body).build();
+        return send(request, buildClient());
+    }
+
+    /**
      * 统一的post请求
      *
      * @param url          URL
@@ -372,6 +387,7 @@ public class OkHttpUtils {
         Request request = new Request.Builder().url(url).post(body).build();
         return send(request, okHttpClient);
     }
+
 
     /**
      * 简化版发送请求
