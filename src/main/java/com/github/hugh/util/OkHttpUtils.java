@@ -1,5 +1,6 @@
 package com.github.hugh.util;
 
+import com.github.hugh.constant.CharsetCode;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.support.instance.Instance;
 import com.github.hugh.util.gson.JsonObjectUtils;
@@ -7,6 +8,7 @@ import com.google.gson.JsonObject;
 import net.sf.json.JSONObject;
 import okhttp3.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketTimeoutException;
@@ -69,9 +71,9 @@ public class OkHttpUtils {
     private static final String APPLICATION_JSON_UTF8_VALUE = "application/json;charset=UTF-8";
 
     /**
-     * 统一编码
+     * 参数以form表单提交类型
      */
-    private static final String CHARSET = "utf-8";
+    private static final String MULTIPART_FORM_DATA = "multipart/form-data";
 
     /**
      * 本地cookie存储
@@ -260,7 +262,7 @@ public class OkHttpUtils {
             String key = String.valueOf(iterator.next());
             String value = String.valueOf(json.get(key));
             try {
-                value = URLEncoder.encode(value, CHARSET);//将参数转换为urlEncoder码
+                value = URLEncoder.encode(value, CharsetCode.UTF_8);//将参数转换为urlEncoder码
                 sb.append(key).append("=").append(value).append("&");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
@@ -351,7 +353,7 @@ public class OkHttpUtils {
         Request request = new Request.Builder()
                 .url(url)
                 .headers(headers).build();
-        return send(request, buildClient());
+        return send(request);
     }
 
     /**
@@ -368,6 +370,19 @@ public class OkHttpUtils {
         RequestBody body = RequestBody.create(mediaType, params);
         Request request = new Request.Builder().url(url).post(body).build();
         return send(request, okHttpClient);
+    }
+
+    /**
+     * 简化版发送请求
+     * <p>该方法调用了{@link #send(Request, OkHttpClient)}，使用默认的{@link #buildClient()}进行创建client</p>
+     *
+     * @param request {@link Request}
+     * @return String 请求返回结果
+     * @throws IOException IO流错误
+     * @since 1.5.8
+     */
+    private static String send(Request request) throws IOException {
+        return send(request, buildClient());
     }
 
     /**
@@ -407,5 +422,40 @@ public class OkHttpUtils {
     public static String postFormCookie(String url, JSONObject json) throws IOException {
         String params = jsonParse(json);
         return post(url, params, FORM_TYPE, COOKIE_CLIENT);
+    }
+
+    /**
+     * 上传文件方法
+     *
+     * @param url      URL
+     * @param params   额外参数
+     * @param fileName 文件的name
+     * @param fileMap  文件map、key-文件名称、value-文件路径
+     * @param <K>      key
+     * @param <V>      value
+     * @return String
+     * @throws IOException IO错误
+     * @since 1.5.8
+     */
+    public static <K, V> String upload(String url, Map<K, V> params, String fileName, Map<K, V> fileMap) throws IOException {
+        MultipartBody.Builder requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM);
+        if (MapUtils.isNotEmpty(params)) {
+            for (Map.Entry<K, V> entry : params.entrySet()) {
+                String name = String.valueOf(entry.getKey());
+                String value = String.valueOf(entry.getValue());
+                requestBody.addFormDataPart(name, value);
+            }
+        }
+        if (MapUtils.isNotEmpty(params)) {
+            for (Map.Entry<K, V> entry : fileMap.entrySet()) {
+                String name = String.valueOf(entry.getKey());
+                String path = String.valueOf(entry.getValue());
+                RequestBody fileBody = RequestBody.create(MediaType.parse(MULTIPART_FORM_DATA), new File(path));
+                requestBody.addFormDataPart(fileName, name, fileBody);
+            }
+        }
+        Request request = new Request.Builder().url(url).post(requestBody.build()).build();
+        return send(request);
     }
 }

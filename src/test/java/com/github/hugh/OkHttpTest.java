@@ -61,6 +61,21 @@ public class OkHttpTest {
         System.out.println("--->" + OkHttpUtils.postForm(url, json, headerContent));
     }
 
+    @Test
+    public void test04() throws Exception {
+        String url = "http://localhost:7010/email/email/send";
+        val params = new HashMap<>();
+        params.put("recipient", "136438455@qq.com");
+        params.put("title", "标题");
+        val fileMap = new HashMap<>();
+        fileMap.put("鬼灭之刃1.jpg", "D:\\OneDrive\\图片\\鬼灭之刃\\78133846_p0.jpg");
+        fileMap.put("鬼灭之刃2.jpg", "D:\\OneDrive\\图片\\鬼灭之刃\\78382590_p4.jpg");
+        fileMap.put("鬼灭之刃3.jpg", "D:\\OneDrive\\图片\\鬼灭之刃\\79733019_p0.jpg");
+        String result = OkHttpUtils.upload(url, params, "file", fileMap);
+
+        System.out.println("--->" + result);
+    }
+
     public void tem() throws IOException {
         JSONObject json = new JSONObject();
         json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
@@ -68,6 +83,7 @@ public class OkHttpTest {
         log.debug(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
         log.error(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
     }
+
 
     public static void main(String[] args) throws IOException {
         OkHttpTest test = new OkHttpTest();
@@ -79,11 +95,12 @@ public class OkHttpTest {
 //        var str = "123c";
 //        str = "abcdef";
 //        System.out.println("--->>"+str);
-        val map =  new HashMap<>();
-        val map2 = new JSONObject();
-        map.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-        map2.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-        System.out.println("--1->>" + OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", map));
-        System.out.println("--2->>" + OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", map2));
+//        val map = new HashMap<>();
+//        val map2 = new JSONObject();
+//        map.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+//        map2.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+//        System.out.println("--1->>" + OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", map));
+//        System.out.println("--2->>" + OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", map2));
+
     }
 }
