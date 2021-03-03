@@ -185,8 +185,9 @@ public class OkHttpUtils {
      * @throws IOException IO流错误
      */
     public static String postJson(String url, JSONObject json) throws IOException {
-        String params = jsonParse(json);
-        return post(url, params, JSON_TYPE, buildClient());
+        RequestBody body = RequestBody.create(JSON_TYPE, json.toString());
+        Request request = new Request.Builder().url(url).post(body).build();
+        return send(request);
     }
 
     /**

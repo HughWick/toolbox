@@ -7,6 +7,7 @@ import net.sf.json.JSONObject;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -76,6 +77,22 @@ public class OkHttpTest {
         System.out.println("--->" + result);
     }
 
+    @Test
+    public void test05() throws Exception {
+        JSONObject json = new JSONObject();
+        val receiveUser = new ArrayList<>();
+        receiveUser.add("234260245@qq.com");
+        receiveUser.add("1378321226@qq.com");
+        receiveUser.add("729076704@qq.com");
+        json.put("recipient", receiveUser);
+        json.put("title", "测试标题");
+        json.put("content", "文本内容");
+        json.put("template", "模板0001");
+        System.out.println("---->" + json.toString());
+        String s = OkHttpUtils.postJson("http://localhost:7010/email/email/sendTemplates", json);
+        System.out.println("--->>" + s);
+    }
+
     public void tem() throws IOException {
         JSONObject json = new JSONObject();
         json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
@@ -83,6 +100,9 @@ public class OkHttpTest {
         log.debug(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
         log.error(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
     }
+
+
+
 
 
     public static void main(String[] args) throws IOException {
