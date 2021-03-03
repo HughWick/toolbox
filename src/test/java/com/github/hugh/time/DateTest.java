@@ -2,12 +2,9 @@ package com.github.hugh.time;
 
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.TimeUtils;
-import lombok.val;
 import org.junit.Test;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class DateTest {
 
@@ -51,17 +48,9 @@ public class DateTest {
 
     @Test
     public void test04() {
-        val date = new Date();
-        val map = new HashMap<>();
-        map.put("a", 1);
-        for (val entry : map.entrySet()) {
-
-        }
-        Map map2 = new HashMap<>();
-        map2.put("a", 1);
-        for (val entry : map2.entrySet()) {
-
-        }
+        System.out.println("-距离凌晨还剩余多少毫秒-->>" + DateUtils.getEarlyMorningSec());
+        System.out.println("--获取小时整点时间->>" + DateUtils.getIniHour());
+        System.out.println("--获取当前小时的结束时间点->>" + DateUtils.getEndHour());
     }
 
 }

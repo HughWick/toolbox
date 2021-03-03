@@ -42,7 +42,7 @@ public class Md5Utils {
      * @param string      字符串
      * @param lowerCase   大小写标识：{@code true}小写
      * @param encryptType 加密类型
-     * @return String MD5字符串
+     * @return String 加密后字符串
      */
     public static String encrypt(final String string, boolean lowerCase, String encryptType) {
         if (EmptyUtils.isEmpty(string)) {

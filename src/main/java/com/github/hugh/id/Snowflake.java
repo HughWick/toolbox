@@ -173,7 +173,7 @@ public class Snowflake {
      * @param id 雪花ID
      * @return Map
      */
-    public static Map decompile(long id) {
+    public static Map<String,Object> decompile(long id) {
         String binaryId = Long.toBinaryString(id);// ID转二进制字符串
         int len = binaryId.length();// 长度
         int sequenceStart = (int) (len < SEQUENCE_BIT ? 0 : len - SEQUENCE_BIT);

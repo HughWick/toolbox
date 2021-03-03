@@ -20,6 +20,12 @@ public class ResultTest {
         System.out.println("--->" + JsonObjectUtils.toJson(dto1));
     }
 
+    @Test
+    public void test02() {
+//        ResultDTO dto = new ResultDTO<>("0000", "操作成功");
+//        System.out.println("--->>"+ResultUtils.re());
+    }
+
     public static void main(String[] args) {
 
         ResultDTO dto = new ResultDTO<>("0000", "操作成功");
