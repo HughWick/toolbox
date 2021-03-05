@@ -85,7 +85,6 @@ public class RegexUtils {
      * 邮箱正则表达式
      * <p>
      * https://blog.csdn.net/Architect_CSDN/article/details/89478042
-     * https://www.cnblogs.com/lst619247/p/9289719.html
      * <p>
      * 只有英文的邮箱。
      */
@@ -232,13 +231,24 @@ public class RegexUtils {
     }
 
     /**
-     * 是否为邮件
+     * 验证字符串是邮箱标准格式
      *
      * @param string 字符
-     * @return boolean 结果
+     * @return boolean {@code true} 是邮箱格式
      */
     public static boolean isEmail(final String string) {
         return isPatternMatch(string, EMAIL_ENGLISH_PATTERN);
+    }
+
+    /**
+     * 字符串不是邮箱格式
+     *
+     * @param string 字符
+     * @return boolean {@code true} 不是邮箱格式
+     * @since 1.5.10
+     */
+    public static boolean isNotEmail(final String string) {
+        return !isEmail(string);
     }
 
     /**

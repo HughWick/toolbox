@@ -54,4 +54,15 @@ public class RegexTest {
         System.out.println("--5->" + RegexUtils.isLatitude(latitude));
         System.out.println("--6->" + RegexUtils.isLatitude(latitude2));
     }
+
+    @Test
+    public void test04() {
+        String str = "136438455@qq.com";
+        String str2 = "136438455@qq";
+        System.out.println("-1-->>"+RegexUtils.isEmail(str));
+        System.out.println("--2->>"+RegexUtils.isEmail(str));
+        System.out.println("-3-->>"+RegexUtils.isEmail(str2));
+        System.out.println("-3-->>"+RegexUtils.isNotEmail(str2));
+    }
+
 }
