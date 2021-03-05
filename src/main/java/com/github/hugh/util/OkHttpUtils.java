@@ -161,8 +161,26 @@ public class OkHttpUtils {
     }
 
     /**
+     * 发送表单形式参数的POST
+     * <ul>
+     * <li>Content-Type:application/x-www-form-urlencoded</li>
+     * <li>该方法为OkHttp管理Cookie,请求获取cookie接口后、将cookie存储至本地Map内存中</li>
+     * </ul>
+     *
+     * @param url  请求URL
+     * @param json 参数
+     * @return String
+     * @throws IOException IO流错误
+     * @since 1.2.4
+     */
+    public static String postFormCookie(String url, JSONObject json) throws IOException {
+        String params = jsonParse(json);
+        return post(url, params, FORM_TYPE, COOKIE_CLIENT);
+    }
+
+    /**
      * 发送json形式参数的post请求
-     * <p>Content-Type:application/x-www-form-urlencoded</p>
+     * <p>Content-Type:application/json;charset=UTF-8</p>
      * <p>该方法调用{@link #postJson(String, JSONObject) }进行post请求</p>
      *
      * @param url 请求URL
@@ -177,7 +195,7 @@ public class OkHttpUtils {
 
     /**
      * 发送json形式参数的post请求
-     * <p>Content-Type:application/x-www-form-urlencoded</p>
+     * <p>Content-Type:application/json;charset=UTF-8</p>
      *
      * @param url  请求URL
      * @param json 参数
@@ -185,7 +203,21 @@ public class OkHttpUtils {
      * @throws IOException IO流错误
      */
     public static String postJson(String url, JSONObject json) throws IOException {
-        return post(url, json.toString(), JSON_TYPE, buildClient());
+        return post(url, json.toString(), JSON_TYPE);
+    }
+
+    /**
+     * 发送json形式参数的post请求
+     * <p>Content-Type:application/json;charset=UTF-8</p>
+     *
+     * @param url  请求URL
+     * @param json json字符串
+     * @return String
+     * @throws IOException IO流错误
+     * @since 1.5.10
+     */
+    public static String postJson(String url, String json) throws IOException {
+        return post(url, json, JSON_TYPE);
     }
 
     /**
@@ -270,7 +302,6 @@ public class OkHttpUtils {
         sb.deleteCharAt(sb.length() - 1); // 删除结尾符号
         return sb.toString();
     }
-
 
     /**
      * 发送get请求
@@ -388,7 +419,6 @@ public class OkHttpUtils {
         return send(request, okHttpClient);
     }
 
-
     /**
      * 简化版发送请求
      * <p>该方法调用了{@link #send(Request, OkHttpClient)}，使用默认的{@link #buildClient()}进行创建client</p>
@@ -421,24 +451,6 @@ public class OkHttpUtils {
             timeEx.printStackTrace();
             return null;
         }
-    }
-
-    /**
-     * 发送表单形式参数的POST
-     * <ul>
-     * <li>Content-Type:application/x-www-form-urlencoded</li>
-     * <li>该方法为OkHttp管理Cookie,请求获取cookie接口后、将cookie存储至本地Map内存中</li>
-     * </ul>
-     *
-     * @param url  请求URL
-     * @param json 参数
-     * @return String
-     * @throws IOException IO流错误
-     * @since 1.2.4
-     */
-    public static String postFormCookie(String url, JSONObject json) throws IOException {
-        String params = jsonParse(json);
-        return post(url, params, FORM_TYPE, COOKIE_CLIENT);
     }
 
     /**
