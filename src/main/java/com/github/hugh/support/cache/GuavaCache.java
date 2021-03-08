@@ -63,8 +63,22 @@ public class GuavaCache {
      * @return LoadingCache
      */
     public static <K, V> LoadingCache<K, V> create(int expireAfterWrite, CacheLoader<K, V> cacheLoader) {
-        return CacheBuilder.newBuilder()
-                .expireAfterWrite(expireAfterWrite, TimeUnit.SECONDS)
+        return create(expireAfterWrite, TimeUnit.SECONDS, cacheLoader);
+    }
+
+    /**
+     * 创建本地谷歌缓存、自定义设置超时时间单位
+     *
+     * @param expireAfterWrite 设置缓存过期时间
+     * @param timeUnit         时间单位 {@link TimeUnit}
+     * @param cacheLoader      build方法中可以指定CacheLoader，在缓存不存在时通过CacheLoader的实现自动加载缓存
+     * @param <K>              key
+     * @param <V>              value
+     * @return LoadingCache
+     * @since 1.5.10
+     */
+    public static <K, V> LoadingCache<K, V> create(int expireAfterWrite, TimeUnit timeUnit, CacheLoader<K, V> cacheLoader) {
+        return CacheBuilder.newBuilder().expireAfterWrite(expireAfterWrite, timeUnit)
                 .build(cacheLoader);
     }
 }
