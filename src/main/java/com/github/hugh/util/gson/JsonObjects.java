@@ -1,5 +1,6 @@
 package com.github.hugh.util.gson;
 
+import com.github.hugh.util.EmptyUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -10,11 +11,11 @@ import com.google.gson.JsonObject;
  * @author hugh
  * @since 1.5.2
  */
-public class JsonObjects<T> extends JsonObjectUtils {
+public class JsonObjects extends JsonObjectUtils {
 
     private JsonObject jsonObject;
 
-    public JsonObjects(T object) {
+    public <T> JsonObjects(T object) {
         this.jsonObject = parse(object);
     }
 
@@ -34,7 +35,7 @@ public class JsonObjects<T> extends JsonObjectUtils {
      * @return {@link JsonObjects}
      */
     public JsonObjects jsonObjects(String key) {
-        return new JsonObjects<>(getJsonObject(jsonObject, key));
+        return new JsonObjects(getJsonObject(jsonObject, key));
     }
 
     /**
@@ -130,5 +131,25 @@ public class JsonObjects<T> extends JsonObjectUtils {
      */
     public Long getLong(String key) {
         return getLong(jsonObject, key);
+    }
+
+
+    /**
+     * 校验 {@link #jsonObject}中的key获取到的value值是否与相同
+     *
+     * @param key   KEY
+     * @param value value
+     * @return boolean {@code true} 相同
+     * @since 1.5.11
+     */
+    public boolean isEquals(String key, String value) {
+        if (jsonObject.isJsonNull()) {
+            return false;
+        }
+        String string = getString(key);
+        if (EmptyUtils.isEmpty(key)) {
+            return false;
+        }
+        return string.equals(value);
     }
 }
