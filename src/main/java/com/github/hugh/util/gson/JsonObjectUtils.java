@@ -12,6 +12,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -244,8 +245,11 @@ public class JsonObjectUtils {
      * @return ArrayList 集合
      * @since 1.3.7
      */
-    public static ArrayList toArrayList(JsonArray jsonArray) {
-        return fromJson(jsonArray, ArrayList.class);
+    public static <T> List toArrayList(JsonArray jsonArray) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setLongSerializationPolicy(LongSerializationPolicy.STRING).create();
+        return gson.fromJson(jsonArray.toString(), new TypeToken<List<T>>() {
+        }.getType());
     }
 
     /**

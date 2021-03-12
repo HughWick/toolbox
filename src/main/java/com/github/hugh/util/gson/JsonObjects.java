@@ -143,7 +143,7 @@ public class JsonObjects extends JsonObjectUtils {
      * @since 1.5.11
      */
     public boolean isEquals(String key, String value) {
-        if (jsonObject.isJsonNull()) {
+        if (isNull()) {
             return false;
         }
         String string = getString(key);
