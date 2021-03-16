@@ -13,7 +13,7 @@ import com.google.gson.JsonObject;
  */
 public class JsonObjects extends JsonObjectUtils {
 
-    private JsonObject jsonObject;
+    private final JsonObject jsonObject;
 
     public <T> JsonObjects(T object) {
         this.jsonObject = parse(object);

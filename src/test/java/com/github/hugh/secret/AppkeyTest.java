@@ -11,7 +11,7 @@ public class AppkeyTest {
 
     @Test
     public void test01() {
-        System.out.println("-1-->>" + AppkeyUtils.generate().length());
-        System.out.println("-2-->>" + AppkeyUtils.generateSecret().length());
+        System.out.println("-1-->>" + AppkeyUtils.generate());
+        System.out.println("-2-->>" + AppkeyUtils.generateSecret());
     }
 }
