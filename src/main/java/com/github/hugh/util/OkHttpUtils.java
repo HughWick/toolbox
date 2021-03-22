@@ -143,6 +143,21 @@ public class OkHttpUtils {
      * <p>Content-Type:application/x-www-form-urlencoded</p>
      *
      * @param url           请求URL
+     * @param params        参数
+     * @param headerContent header 附加内容
+     * @return String
+     * @throws IOException IO流错误
+     * @since 1.5.13
+     */
+    public static String postForm(String url, Map params, Map<String, String> headerContent) throws IOException {
+        return postForm(url, JSONObject.fromObject(params), headerContent);
+    }
+
+    /**
+     * 发送表单形式参数的POST
+     * <p>Content-Type:application/x-www-form-urlencoded</p>
+     *
+     * @param url           请求URL
      * @param json          参数
      * @param headerContent header 附加内容
      * @return String

@@ -4,6 +4,7 @@ import com.github.hugh.model.Student;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.OkHttpUtils;
 import com.github.hugh.util.gson.JsonObjectUtils;
+import com.github.hugh.util.gson.JsonObjects;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -49,7 +50,10 @@ public class JsonDemo {
         String mapStr = "{\"m1\":{\"username\":\"张三\",\"password\":\"123\",\"money\":null,\"book\":{\"id\":0,\"name\":\"三国演义\",\"price\":0,\"author\":\"罗贯中\"}},\"m2\":{\"username\":\"李四\",\"password\":\"123\",\"money\":500,\"book\":{\"id\":0,\"name\":\"红楼梦\",\"price\":0,\"author\":\"曹雪芹\"}}}";
         JsonObject asJsonObject = JsonParser.parseString(mapStr).getAsJsonObject();
         System.out.println(asJsonObject);
-        System.out.println("--->>" + asJsonObject.get("m1").getAsJsonObject().get("money").getAsDouble());
+//        System.out.println("--->>" + asJsonObject.get("m1").getAsJsonObject().get("money").getAsDouble());
+
+        JsonObjects jsonObjects = new JsonObjects(JsonObjectUtils.toJson(student));
+        System.out.println("--->>"+jsonObjects);
     }
 
 
