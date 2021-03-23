@@ -10,17 +10,23 @@ public class EmptyTest {
 
     @Test
     public void isEmpty() {
+        String[] arr = {};
 //        EmptyUtils u = new EmptyUtils();
         System.out.println("-1-->" + EmptyUtils.isEmpty("  "));
         System.out.println("-2-->" + EmptyUtils.isEmpty("null"));
         System.out.println("-3->" + EmptyUtils.isEmpty(new ArrayList<>()));
         System.out.println("-4->" + EmptyUtils.isEmpty(new HashMap<>()));
         System.out.println("-6-->" + EmptyUtils.isEmpty(12));
+        System.out.println("-7-->" + EmptyUtils.isEmpty("[]"));
+        System.out.println("-8-->" + EmptyUtils.isEmpty(arr));
     }
 
     @Test
     public void isNotEmpty() {
-        System.out.println("--->" + EmptyUtils.isNotEmpty(""));
+        System.out.println("---1>" + EmptyUtils.isNotEmpty("b"));
+        System.out.println("2-->" + EmptyUtils.isNotEmpty(""));
+        System.out.println("--3->" + EmptyUtils.isNotEmpty("[]"));
+//        System.out.println("--2->" + EmptyUtils.isNotEmpty("[]"));
     }
 
 

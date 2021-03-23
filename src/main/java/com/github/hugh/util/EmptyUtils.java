@@ -22,6 +22,7 @@ public class EmptyUtils {
      * <li>isEmpty("null") = true</li>
      * <li>isEmpty("") = true</li>
      * <li>isEmpty(" ") = true</li>
+     * <li>isEmpty("[]") = true</li>
      * <li>isEmpty("abc") = false</li>
      * </ul>
      *
@@ -32,13 +33,16 @@ public class EmptyUtils {
     public static <T> boolean isEmpty(T obj) {
         if (obj == null || obj == "") {
             return true;
-        } else if (obj instanceof String) {
-            String str = obj.toString().trim();
-            return str.length() == 0 || "null".equals(str);// 长度等于0 或者 为字符串的null 返回true
         } else if (obj instanceof String[]) {
             return ((String[]) obj).length == 0;
         } else if (obj instanceof int[]) {
             return ((int[]) obj).length == 0;
+        } else if (obj instanceof String) {
+            String str = obj.toString().trim();
+            if ("[]".equals(str)) {
+                return true;
+            }
+            return str.length() == 0 || "null".equals(str);// 长度等于0 或者 为字符串的null 返回true
         } else if (obj instanceof Collection) {
             return ((Collection) obj).isEmpty();
         } else if (obj instanceof Map) {
@@ -58,6 +62,7 @@ public class EmptyUtils {
      * <li>isNotEmpty(null)     = false</li>
      * <li>isNotEmpty("null")   = false</li>
      * <li>isNotEmpty("")       = false</li>
+     * <li>isEmpty("[]")        = false</li>
      * <li>isNotEmpty(" ")      = true</li>
      * <li>isNotEmpty("abc")    = true</li>
      * </ul>
