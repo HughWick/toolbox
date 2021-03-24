@@ -41,7 +41,7 @@ public class GuavaCache {
      * @param <V>              value
      * @param initialCapacity  缓存容器的初始容量
      * @param maximumSize      设置缓存最大容量，超过之后就会按照LRU最近虽少使用算法来移除缓存项
-     * @param expireAfterWrite 设置写缓存后n秒钟过期
+     * @param expireAfterWrite 设置写缓存后n秒内没有更新就会被回收
      * @param cacheLoader      build方法中可以指定CacheLoader，在缓存不存在时通过CacheLoader的实现自动加载缓存
      * @return LoadingCache
      */
@@ -58,7 +58,7 @@ public class GuavaCache {
      *
      * @param <K>              key
      * @param <V>              value
-     * @param expireAfterWrite 设置写缓存后n秒钟过期
+     * @param expireAfterWrite 设置写缓存后n秒内没有更新就会被回收
      * @param cacheLoader      build方法中可以指定CacheLoader，在缓存不存在时通过CacheLoader的实现自动加载缓存
      * @return LoadingCache
      */
@@ -69,7 +69,7 @@ public class GuavaCache {
     /**
      * 创建本地谷歌缓存、自定义设置超时时间单位
      *
-     * @param expireAfterWrite 设置缓存过期时间
+     * @param expireAfterWrite 设置写缓存后n秒内没有更新就会被回收
      * @param timeUnit         时间单位 {@link TimeUnit}
      * @param cacheLoader      build方法中可以指定CacheLoader，在缓存不存在时通过CacheLoader的实现自动加载缓存
      * @param <K>              key

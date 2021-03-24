@@ -491,7 +491,7 @@ public class OkHttpUtils {
                 requestBody.addFormDataPart(name, value);
             }
         }
-        if (MapUtils.isNotEmpty(params)) {
+        if (MapUtils.isNotEmpty(fileMap)) {
             for (Map.Entry<K, V> entry : fileMap.entrySet()) {
                 String name = String.valueOf(entry.getKey());
                 String path = String.valueOf(entry.getValue());

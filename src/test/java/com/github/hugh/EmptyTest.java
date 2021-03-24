@@ -5,13 +5,14 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class EmptyTest {
 
     @Test
     public void isEmpty() {
         String[] arr = {};
-//        EmptyUtils u = new EmptyUtils();
+        List<String> list = new ArrayList<>();
         System.out.println("-1-->" + EmptyUtils.isEmpty("  "));
         System.out.println("-2-->" + EmptyUtils.isEmpty("null"));
         System.out.println("-3->" + EmptyUtils.isEmpty(new ArrayList<>()));
@@ -19,6 +20,7 @@ public class EmptyTest {
         System.out.println("-6-->" + EmptyUtils.isEmpty(12));
         System.out.println("-7-->" + EmptyUtils.isEmpty("[]"));
         System.out.println("-8-->" + EmptyUtils.isEmpty(arr));
+        System.out.println("-9-->" + EmptyUtils.isEmpty(list));
     }
 
     @Test
