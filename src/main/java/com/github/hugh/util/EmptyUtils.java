@@ -22,7 +22,6 @@ public class EmptyUtils {
      * <li>isEmpty("null") = true</li>
      * <li>isEmpty("") = true</li>
      * <li>isEmpty(" ") = true</li>
-     * <li>isEmpty("[]") = true</li>
      * <li>isEmpty("abc") = false</li>
      * </ul>
      *
@@ -39,9 +38,6 @@ public class EmptyUtils {
             return ((int[]) obj).length == 0;
         } else if (obj instanceof String) {
             String str = obj.toString().trim();
-            if ("[]".equals(str)) {
-                return true;
-            }
             return str.length() == 0 || "null".equals(str);// 长度等于0 或者 为字符串的null 返回true
         } else if (obj instanceof Collection) {
             return ((Collection) obj).isEmpty();
@@ -62,7 +58,6 @@ public class EmptyUtils {
      * <li>isNotEmpty(null)     = false</li>
      * <li>isNotEmpty("null")   = false</li>
      * <li>isNotEmpty("")       = false</li>
-     * <li>isEmpty("[]")        = false</li>
      * <li>isNotEmpty(" ")      = true</li>
      * <li>isNotEmpty("abc")    = true</li>
      * </ul>

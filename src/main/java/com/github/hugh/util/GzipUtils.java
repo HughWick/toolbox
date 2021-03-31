@@ -1,5 +1,7 @@
 package com.github.hugh.util;
 
+import com.github.hugh.constant.CharsetCode;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -37,7 +39,6 @@ public class GzipUtils {
         return out.toString(CHARSET);
     }
 
-
     /**
      * 解压
      *
@@ -57,7 +58,6 @@ public class GzipUtils {
         while ((n = gunzip.read(buffer)) >= 0) {
             out.write(buffer, 0, n);
         }
-        return out.toString("UTF-8");
+        return out.toString(CharsetCode.UTF_8);
     }
-
 }
