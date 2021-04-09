@@ -130,7 +130,8 @@ public class RegexUtils {
     /**
      * 网址正则
      */
-    private static final Pattern WEB_SITE_PATTERN = Pattern.compile("^([a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,6}$");
+    private static final Pattern WEB_SITE_PATTERN = Pattern.compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
+//    private static final Pattern WEB_SITE_PATTERN = Pattern.compile("^([a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,6}$");
 
     /**
      * sql 关键字-正则表达式
@@ -268,7 +269,8 @@ public class RegexUtils {
      * @return boolean 是否
      */
     public static boolean isWebSite(final String string) {
-        return isPatternMatch(string, WEB_SITE_PATTERN);
+        return WEB_SITE_PATTERN.matcher(string).matches();
+//        return isPatternMatch(string, WEB_SITE_PATTERN);
     }
 
     /**
