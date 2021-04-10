@@ -13,6 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 public class Student {
+
     public Student() {
 
     }
@@ -29,5 +30,11 @@ public class Student {
     private Date birthday;
     private Date create;
     private List list;
+
+    private Student get(){
+
+        return this;
+    }
+
 
 }

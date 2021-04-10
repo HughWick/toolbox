@@ -250,8 +250,7 @@ public class JsonObjectUtils {
     public static <T> List toArrayList(JsonArray jsonArray) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.setLongSerializationPolicy(LongSerializationPolicy.STRING).create();
-        return gson.fromJson(jsonArray.toString(), new TypeToken<List<T>>() {
-        }.getType());
+        return gson.fromJson(jsonArray, ArrayList.class);
     }
 
     /**
