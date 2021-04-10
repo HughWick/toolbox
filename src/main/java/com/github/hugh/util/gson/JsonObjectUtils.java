@@ -247,7 +247,7 @@ public class JsonObjectUtils {
      * @since 1.3.7
      */
     @Deprecated
-    public static <T> List toArrayList(JsonArray jsonArray) {
+    public static List<?> toArrayList(JsonArray jsonArray) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.setLongSerializationPolicy(LongSerializationPolicy.STRING).create();
         return gson.fromJson(jsonArray, ArrayList.class);
