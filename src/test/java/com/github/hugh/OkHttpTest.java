@@ -1,6 +1,7 @@
 package com.github.hugh;
 
 import com.github.hugh.util.OkHttpUtils;
+import com.github.hugh.util.gson.JsonObjectUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import net.sf.json.JSONObject;
@@ -21,6 +22,10 @@ public class OkHttpTest {
 
     @Test
     public void test01() {
+        Map map = new HashMap<>();
+        map.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+        Map head = new HashMap<>();
+        head.put("a", "1");
         JSONObject json = new JSONObject();
         json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
         try {
@@ -28,9 +33,11 @@ public class OkHttpTest {
 //                System.out.println(i + "--1->>" + OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
 //            }
             System.out.println("--2>>" + OkHttpUtils.postJson("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
-            System.out.println("--3->>" + OkHttpUtils.postFormReJSON("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
-            System.out.println("--4->>" + OkHttpUtils.get("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
-            System.out.println("--5->>" + OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+            System.out.println("--3>>" + OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+            System.out.println("--4> map>" + OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", map, head));
+            System.out.println("--5->>" + OkHttpUtils.postFormReJSON("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+            System.out.println("--6->>" + OkHttpUtils.get("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+            System.out.println("--7->>" + OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -105,10 +112,11 @@ public class OkHttpTest {
     public static void main(String[] args) throws IOException {
         OkHttpTest test = new OkHttpTest();
         test.tem();
-//        val map =  new HashMap<>();
-//        map.put("1",1);
-//        map.put(1,1);
-//        System.out.println("--->>"+map);
+        val map =  new HashMap<>();
+        map.put("1",1);
+        map.put(1,1);
+        System.out.println("--->>"+map);
+        System.out.println("--->>"+ JsonObjectUtils.toJson(map));
 //        var str = "123c";
 //        str = "abcdef";
 //        System.out.println("--->>"+str);
