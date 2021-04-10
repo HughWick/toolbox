@@ -131,7 +131,6 @@ public class RegexUtils {
      * 网址正则
      */
     private static final Pattern WEB_SITE_PATTERN = Pattern.compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
-//    private static final Pattern WEB_SITE_PATTERN = Pattern.compile("^([a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,6}$");
 
     /**
      * sql 关键字-正则表达式
@@ -263,14 +262,25 @@ public class RegexUtils {
     }
 
     /**
-     * 是否为网址
+     * 验证字符串是一个网址
+     * <p>1.5.16 重构了正则,字符串必须是由http or https 开头的url</p>
      *
      * @param string 结果
      * @return boolean 是否
      */
     public static boolean isWebSite(final String string) {
         return WEB_SITE_PATTERN.matcher(string).matches();
-//        return isPatternMatch(string, WEB_SITE_PATTERN);
+    }
+
+    /**
+     * 验证字符串不是一个网址
+     *
+     * @param string 字符串
+     * @return boolean {@code true} 字符串不是网址
+     * @since 1.5.16
+     */
+    public static boolean isNotWebSite(final String string) {
+        return !isWebSite(string);
     }
 
     /**

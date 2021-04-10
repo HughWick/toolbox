@@ -59,10 +59,19 @@ public class RegexTest {
     public void test04() {
         String str = "136438455@qq.com";
         String str2 = "136438455@qq";
-        System.out.println("-1-->>"+RegexUtils.isEmail(str));
-        System.out.println("--2->>"+RegexUtils.isEmail(str));
-        System.out.println("-3-->>"+RegexUtils.isEmail(str2));
-        System.out.println("-3-->>"+RegexUtils.isNotEmail(str2));
+        System.out.println("-1-->>" + RegexUtils.isEmail(str));
+        System.out.println("--2->>" + RegexUtils.isEmail(str));
+        System.out.println("-3-->>" + RegexUtils.isEmail(str2));
+        System.out.println("-3-->>" + RegexUtils.isNotEmail(str2));
     }
 
+    @Test
+    public void test05() {
+        String url = "www.baidu.com";
+        String url1 = "http://www.baidu.com";
+        String url2 = "http://www.baidu.com";
+        System.out.println("-1-->" + RegexUtils.isWebSite(url));
+        System.out.println("-2-->" + RegexUtils.isWebSite(url1));
+        System.out.println("-3-->" + RegexUtils.isWebSite(url2));
+    }
 }

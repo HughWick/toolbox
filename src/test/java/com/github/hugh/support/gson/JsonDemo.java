@@ -167,16 +167,7 @@ public class JsonDemo {
         System.out.println("-8-->>" + JsonObjectUtils.toJson(student));
 //        new MyType<Map<String, Object>>().gsonToMap(json2);
         Map<Object, Object> objectObjectMap = JsonObjectUtils.toMap(json2);
-        System.out.println("-9-->>" + objectObjectMap);
-    }
-
-    @Test
-    public void test08() {
-        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\",\"id\":null,\"opType\":1}";
-//        String s = OkHttpUtils.jsonParse(JsonObjectUtils.parse(str));
-//        System.out.println("-JsonObject-->>" + s);
-//        String s1 = OkHttpUtils.jsonParse(JSONObject.fromObject(str));
-//        System.out.println("--JSONObject====>>" + s1);
+        System.out.println("-9-->>" +objectObjectMap );
     }
 
 
