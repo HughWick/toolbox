@@ -126,6 +126,5 @@ public class OkHttpTest {
 //        map2.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
 //        System.out.println("--1->>" + OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", map));
 //        System.out.println("--2->>" + OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", map2));
-
     }
 }
