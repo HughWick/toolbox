@@ -93,7 +93,7 @@ public class JsonObjectsTest {
         JsonObjects jsonObjects1 = jsonObjects.jsonObjects("data");
         JsonArray list = jsonObjects1.getJsonArray("list");
 //        System.out.println("---->>" + );
-        String str2  =  "[{\"serialNo\":\"1339497989051277312\",\"createBy\":\"xxxx\",\"createDate\":1608196182000,\"updateBy\":\"xxxx\",\"updateDate\":1615444156000}]";
+        String str2  =  "[{\"serialNo\":\"1339497989051277312\",\"createBy\":1,\"createDate\":1608196182000,\"updateBy\":\"xxxx\",\"updateDate\":1615444156000}]";
         JsonArray jsonElements = JsonObjectUtils.parseArray(str2);
         System.out.println("-====>>>" + JsonObjectUtils.toArrayList(jsonElements));
     }
