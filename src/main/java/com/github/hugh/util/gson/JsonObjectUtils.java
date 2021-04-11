@@ -240,17 +240,18 @@ public class JsonObjectUtils {
 
     /**
      * 将jsonArray 转换为{@link ArrayList}
-     * <p>会存在long类型转换成科学计数型，未解决</p>
      *
      * @param jsonArray 数组
      * @return ArrayList 集合
      * @since 1.3.7
      */
-    @Deprecated
     public static List<?> toArrayList(JsonArray jsonArray) {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.setLongSerializationPolicy(LongSerializationPolicy.STRING).create();
-        return gson.fromJson(jsonArray, ArrayList.class);
+        Type type = new TypeToken<ArrayList<?>>() {
+        }.getType();
+        Gson gson = gsonBuilder
+                .registerTypeAdapter(type, new MapTypeAdapter()).create();
+        return gson.fromJson(jsonArray, type);
     }
 
     /**
