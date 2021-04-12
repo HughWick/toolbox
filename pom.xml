@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.hughwick</groupId>
     <artifactId>toolbox</artifactId>
-    <version>1.5.16</version>
+    <version>1.6.1</version>
 
     <properties>
         <java.version>1.8</java.version>
@@ -14,7 +14,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <!--============================== MAIN ==============================-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.2</junit.version>
         <!--========================== All Plugins START =====================-->
         <plugin.compiler.version>3.2</plugin.compiler.version>
         <plugin.coveralls.version>4.3.0</plugin.coveralls.version>
@@ -26,19 +26,19 @@
         <plugin.maven-javadoc-plugin.version>2.9.1</plugin.maven-javadoc-plugin.version>
         <plugin.maven-gpg-plugin.version>1.5</plugin.maven-gpg-plugin.version>
         <!--============================== other ==============================-->
-        <okhttp.version>4.9.0</okhttp.version>
+        <okhttp.version>4.9.1</okhttp.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <servlet-api.version>4.0.1</servlet-api.version>
         <json-lib.version>2.4</json-lib.version>
-        <google-guava.version>29.0-jre</google-guava.version>
+        <google-guava.version>30.1.1-jre</google-guava.version>
         <google-gson.version>2.8.6</google-gson.version>
         <emoji-converter.version>1.0.1</emoji-converter.version>
         <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
         <kryo.version>4.0.2</kryo.version>
         <jsoup.version>1.13.1</jsoup.version>
-        <thumbnailator.version>0.4.12</thumbnailator.version>
-        <fastjson.version>1.2.74</fastjson.version>
-        <lombok.version>1.18.12</lombok.version>
+        <thumbnailator.version>0.4.14</thumbnailator.version>
+        <fastjson.version>1.2.75</fastjson.version>
+        <lombok.version>1.18.20</lombok.version>
         <slf4j.version>1.7.30</slf4j.version>
         <ip2region.version>1.7.2</ip2region.version>
     </properties>
@@ -133,6 +133,7 @@
             <artifactId>slf4j-simple</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
+        <!--  IP解析  https://mvnrepository.com/artifact/org.lionsoul/ip2region  -->
         <dependency>
             <groupId>org.lionsoul</groupId>
             <artifactId>ip2region</artifactId>
