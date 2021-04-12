@@ -1,5 +1,6 @@
 package com.github.hugh.time;
 
+import com.github.hugh.constant.DateCode;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.TimeUtils;
 import org.junit.Test;
@@ -57,6 +58,7 @@ public class DateTest {
     public void test05() {
         Date begin = DateUtils.parseTimestamp(1617943680000L);
         Date end = DateUtils.parseTimestamp(1617948600000L);
-        System.out.println("--->>" + DateUtils.minutesDifference(begin, end));
+        System.out.println("--1->>" + DateUtils.minutesDifference(begin, end));
+        System.out.println("2--->>" + DateUtils.format(DateUtils.getMin(begin, 5), DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
     }
 }
