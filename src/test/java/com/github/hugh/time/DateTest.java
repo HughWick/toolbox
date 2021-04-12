@@ -53,4 +53,10 @@ public class DateTest {
         System.out.println("--获取当前小时的结束时间点->>" + DateUtils.getEndHour());
     }
 
+    @Test
+    public void test05() {
+        Date begin = DateUtils.parseTimestamp(1617943680000L);
+        Date end = DateUtils.parseTimestamp(1617948600000L);
+        System.out.println("--->>" + DateUtils.minutesDifference(begin, end));
+    }
 }

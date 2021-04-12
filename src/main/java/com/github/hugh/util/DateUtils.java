@@ -123,6 +123,31 @@ public class DateUtils extends DateCode {
     }
 
     /**
+     * 转换日期
+     *
+     * @param value 字符串日期 or 日期对象
+     * @return Date 默认日期对象格式:yyyy-MM-dd HH:mm:ss
+     */
+    public static <T> Date changeDate(T value) {
+        return changeDate(value, YEAR_MONTH_DAY_HOUR_MIN_SEC);
+    }
+
+    /**
+     * 根据不同日期格式，转换成对应的日期格式对象
+     *
+     * @param value  日期
+     * @param format 日期格式
+     * @return Date
+     */
+    public static <T> Date changeDate(T value, String format) {
+        if (value instanceof Date) {
+            return (Date) value;
+        } else {
+            return parseDate(value + "", format);
+        }
+    }
+
+    /**
      * 将字符串（yyyy-MM-dd）解析成日期
      *
      * @param dateStr 日期格式的字符串
@@ -668,7 +693,7 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 校验日期是否超过当前时间的多少个小时
+     * 校验日期是否超过日期的多少个小时
      *
      * @param date 日期
      * @param hour 小时
@@ -718,31 +743,6 @@ public class DateUtils extends DateCode {
         calendar.setTime(date);
         set(calendar, 23, 59, 59, 999);
         return calendar.getTime();
-    }
-
-    /**
-     * 转换日期
-     *
-     * @param value 字符串日期 or 日期对象
-     * @return Date 默认日期对象格式:yyyy-MM-dd HH:mm:ss
-     */
-    public static Date changeDate(Object value) {
-        return changeDate(value, YEAR_MONTH_DAY_HOUR_MIN_SEC);
-    }
-
-    /**
-     * 根据不同日期格式，转换成对应的日期格式对象
-     *
-     * @param value  日期
-     * @param format 日期格式
-     * @return Date
-     */
-    public static Date changeDate(Object value, String format) {
-        if (value instanceof Date) {
-            return (Date) value;
-        } else {
-            return parseDate(value + "", format);
-        }
     }
 
     /**
@@ -1165,4 +1165,24 @@ public class DateUtils extends DateCode {
         }
         return null;
     }
+
+    /**
+     * 计算两个时间之间相差多少分钟
+     *
+     * @param begin 开始时间
+     * @param end   结束日期
+     * @return long 相差分钟
+     * @since 1.6.1
+     */
+    public static long minutesDifference(Date begin, Date end) {
+        if (begin == null) {
+            throw new RuntimeException(" start date is null ! ");
+        }
+        if (end == null) {
+            throw new RuntimeException(" end date is null ! ");
+        }
+        long between = (end.getTime() - begin.getTime()) / 1000;
+        return between / 60;
+    }
+
 }
