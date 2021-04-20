@@ -88,7 +88,7 @@ public class ListTest {
         }
     }
 
-    // List排序
+    // List实体排序
     @Test
     public void test04() {
         List<Student> list = new ArrayList<>();
