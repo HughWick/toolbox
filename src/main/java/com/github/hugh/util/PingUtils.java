@@ -153,7 +153,7 @@ public class PingUtils {
      */
     private static PingDTO send(String cmd) {
         PingDTO ping = new PingDTO();
-        String line = null;
+        String line;
         String loss = "";//丢包率
         String delay = "";//延时
         try {
@@ -224,9 +224,11 @@ public class PingUtils {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                ping.setStatus(-2);
             }
         } catch (IOException e) {
             e.printStackTrace();
+            ping.setStatus(-2);
         }
         return ping;
     }

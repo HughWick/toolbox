@@ -12,5 +12,5 @@ import lombok.Data;
 public class PingDTO {
     private int loss;//丢包
     private double delay;//延迟 单位:ms
-    private int status;//状态
+    private int status;//状态:0-正常、-1 无法ping通、-2 程序报错
 }

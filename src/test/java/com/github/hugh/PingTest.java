@@ -22,7 +22,7 @@ public class PingTest {
 
     @Test
     public void test03() {
-//        System.out.println("--->>" + PingUtils.ping("192.168.1.47"));
-        System.out.println("--->>" + PingUtils.ping("192.168.1.236", 9, 1000));
+        System.out.println("---1>>" + PingUtils.ping("192.168.1.25"));
+        System.out.println("-2-->>" + PingUtils.ping("192.168.1.236", 9, 1000));
     }
 }
