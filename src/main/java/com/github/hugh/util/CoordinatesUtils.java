@@ -6,7 +6,6 @@ import java.text.DecimalFormat;
 
 /**
  * 坐标工具类
- * <p>
  *
  * @author hugh
  * @since 1.6.3
@@ -50,7 +49,7 @@ public class CoordinatesUtils {
 
     /**
      * 百度转高德
-     * <p>百度坐标(bd09ll) -> 火星坐标(gcj02ll)</p>
+     * <p>百度坐标(bd09ll) 转 火星坐标(gcj02ll)</p>
      *
      * @param longitude 经度
      * @param latitude  纬度
