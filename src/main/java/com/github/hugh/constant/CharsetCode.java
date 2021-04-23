@@ -1,6 +1,8 @@
 package com.github.hugh.constant;
 
 /**
+ * 字符编码
+ *
  * @author hugh
  * @since 1.3.5
  */
@@ -20,5 +22,10 @@ public class CharsetCode {
      * gbk
      */
     public static final String GBK = "GBK";
+
+    /**
+     * GB2312
+     */
+    public static final String GB_2312 = "GB2312";
 
 }
