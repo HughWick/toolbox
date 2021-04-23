@@ -404,15 +404,6 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 获取今天的开始日期
-     *
-     * @return Date
-     */
-    public static Date getStartTime() {
-        return getStartTime(null);
-    }
-
-    /**
      * 获取某一天开始时间，不传日期则获取今日
      *
      * @param dateStr 字符串日期格式 yyyy-MM-dd
@@ -432,7 +423,7 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 获取今天开始时间
+     * 获取今天起始时间
      *
      * @return Date 今天起始时间
      */
@@ -1185,4 +1176,18 @@ public class DateUtils extends DateCode {
         return between / 60;
     }
 
+    /**
+     * 获取指定N分钟后的日期
+     *
+     * @param date 日期对象
+     * @param min  分钟
+     * @return Date
+     * @since 1.6.2
+     */
+    public static Date getMin(Date date, int min) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MINUTE, +min);
+        return calendar.getTime();
+    }
 }

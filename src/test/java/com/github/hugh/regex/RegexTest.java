@@ -59,10 +59,12 @@ public class RegexTest {
     public void test04() {
         String str = "136438455@qq.com";
         String str2 = "136438455@qq";
+        String str3 = null;
         System.out.println("-1-->>" + RegexUtils.isEmail(str));
         System.out.println("--2->>" + RegexUtils.isEmail(str));
         System.out.println("-3-->>" + RegexUtils.isEmail(str2));
-        System.out.println("-3-->>" + RegexUtils.isNotEmail(str2));
+        System.out.println("-4-->>" + RegexUtils.isNotEmail(str2));
+        System.out.println("-5-->>" + RegexUtils.isNotEmail(str3));
     }
 
     @Test

@@ -375,6 +375,9 @@ public class RegexUtils {
      * @return boolean 是否匹配
      */
     protected static boolean isPatternMatch(final String string, final Pattern pattern) {
+        if (EmptyUtils.isEmpty(string)) {
+            return false;
+        }
         return pattern.matcher(string).find();
     }
 
