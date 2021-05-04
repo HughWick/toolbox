@@ -1,5 +1,6 @@
 package com.github.hugh.support.gson;
 
+import com.github.hugh.model.Student;
 import com.github.hugh.util.gson.JsonObjects;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -19,6 +20,7 @@ public class JsonObjectsTest {
         JsonObjects json2 = new JsonObjects(str2);
         System.out.println(json);
         System.out.println(json.toJson());
+        System.out.println(json.formJson(Student.class));
         System.out.println("--1-->>>" + json.getString("age"));
         System.out.println("---2->>>" + json.getInt("id"));
         System.out.println("---3->>>" + json.getDoubleValue("amount"));
