@@ -51,8 +51,10 @@ public class OkHttpTest {
         params.put("MM", "88888888");
         try {
             System.out.println("--1->>" + OkHttpUtils.postFormCookie("https://www.hnlot.com.cn/ptpz/yonghu/login", params));
-            Thread.sleep(5000);
+//            Thread.sleep(5000);
+//            Thread.sleep(5000);
             System.out.println("--2->>" + OkHttpUtils.postFormCookie("https://www.hnlot.com.cn/ptpz/juese/selectJueSe", params));
+            System.out.println("--3->>" + OkHttpUtils.postFormCookie("http://localhost:7040/knowledge/articles/test02", params));
         } catch (IOException e) {
             e.printStackTrace();
         }

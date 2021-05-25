@@ -32,6 +32,17 @@ public class OkHttpUtils {
     }
 
     /**
+     * 链接超时为10秒
+     */
+    private static final int CONNECT_TIMEOUT = 10;
+
+    /**
+     * 设置读超时10秒
+     */
+    private static final int READ_TIMEOUT = 10;
+
+
+    /**
      * 构建OkHttpClient对象
      * <p>链接超时为10秒</p>
      * <p>设置读超时10秒</p>
@@ -40,7 +51,7 @@ public class OkHttpUtils {
      * @since 1.3.3
      */
     public static OkHttpClient buildClient() {
-        return buildClient(10, 10);
+        return buildClient(CONNECT_TIMEOUT, READ_TIMEOUT);
     }
 
     /**
@@ -56,6 +67,7 @@ public class OkHttpUtils {
         OkHttpClient client = Instance.getInstance().singleton(OkHttpClient.class);
         client.newBuilder().connectTimeout(connectTimeout, TimeUnit.SECONDS)
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
+//                .retryOnConnectionFailure(true)
                 .build();
         return client;
     }

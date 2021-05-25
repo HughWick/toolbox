@@ -771,6 +771,7 @@ public class DateUtils extends DateCode {
      * @param type 日期类型 :day-天、week-周、month-月
      * @return String
      */
+    @Deprecated
     public static String chooseDate(String type) {
         String startDate = "";
         switch (type) {
