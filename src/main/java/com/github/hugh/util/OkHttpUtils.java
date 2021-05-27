@@ -67,7 +67,7 @@ public class OkHttpUtils {
         OkHttpClient client = Instance.getInstance().singleton(OkHttpClient.class);
         client.newBuilder().connectTimeout(connectTimeout, TimeUnit.SECONDS)
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
-//                .retryOnConnectionFailure(true)
+                .retryOnConnectionFailure(true)
                 .build();
         return client;
     }
