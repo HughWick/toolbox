@@ -5,6 +5,7 @@ import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.support.instance.Instance;
 import com.github.hugh.util.gson.JsonObjectUtils;
 import com.google.gson.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import okhttp3.*;
 
@@ -26,6 +27,7 @@ import java.util.concurrent.TimeUnit;
  * @author hugh
  * @since 1.0.2
  */
+@Slf4j
 public class OkHttpUtils {
     private OkHttpUtils() {
 
@@ -475,7 +477,7 @@ public class OkHttpUtils {
             }
             return body1.string();
         } catch (SocketTimeoutException timeEx) {
-            timeEx.printStackTrace();
+            log.error("Request Time Out ,url:{}", request.url(), timeEx);
             return null;
         }
     }
