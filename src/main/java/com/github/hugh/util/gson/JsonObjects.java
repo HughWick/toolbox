@@ -152,4 +152,27 @@ public class JsonObjects extends JsonObjectUtils {
         }
         return string.equals(value);
     }
+
+
+    /**
+     * 将{@link JsonObjects#jsonObject}内的json对象转换成json格式的字符串
+     *
+     * @return String
+     * @since 1.6.6
+     */
+    public String toJson() {
+        return toJson(jsonObject);
+    }
+
+    /**
+     * 将{@link #jsonObject} 转换为对应的实体
+     *
+     * @param classOfT 实体类
+     * @param <T>      泛型
+     * @return T 实体
+     * @since 1.6.7
+     */
+    public <T> T formJson(Class<T> classOfT) {
+        return fromJson(this.jsonObject, classOfT);
+    }
 }

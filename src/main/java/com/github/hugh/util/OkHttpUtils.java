@@ -5,6 +5,7 @@ import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.support.instance.Instance;
 import com.github.hugh.util.gson.JsonObjectUtils;
 import com.google.gson.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import okhttp3.*;
 
@@ -26,10 +27,22 @@ import java.util.concurrent.TimeUnit;
  * @author hugh
  * @since 1.0.2
  */
+@Slf4j
 public class OkHttpUtils {
     private OkHttpUtils() {
 
     }
+
+    /**
+     * 链接超时为10秒
+     */
+    private static final int CONNECT_TIMEOUT = 10;
+
+    /**
+     * 设置读超时10秒
+     */
+    private static final int READ_TIMEOUT = 10;
+
 
     /**
      * 构建OkHttpClient对象
@@ -40,7 +53,7 @@ public class OkHttpUtils {
      * @since 1.3.3
      */
     public static OkHttpClient buildClient() {
-        return buildClient(10, 10);
+        return buildClient(CONNECT_TIMEOUT, READ_TIMEOUT);
     }
 
     /**
@@ -56,6 +69,7 @@ public class OkHttpUtils {
         OkHttpClient client = Instance.getInstance().singleton(OkHttpClient.class);
         client.newBuilder().connectTimeout(connectTimeout, TimeUnit.SECONDS)
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
                 .build();
         return client;
     }
@@ -463,7 +477,7 @@ public class OkHttpUtils {
             }
             return body1.string();
         } catch (SocketTimeoutException timeEx) {
-            timeEx.printStackTrace();
+            log.error("Request Time Out ,url:{}", request.url(), timeEx);
             return null;
         }
     }

@@ -9,25 +9,16 @@ import java.util.Date;
 
 public class DateTest {
 
-    public static void main(String[] args) {
-        System.out.println("-----当前日期---->>" + TimeUtils.getTime());
-        System.out.println("==昨日开始日期==>>" + TimeUtils.getStartedYesterday());
-        System.out.println("--月的第1天--->>" + TimeUtils.firstDayOfMonth());
-        System.out.println("----最后1天----->>" + TimeUtils.lastDayOfMonth());
-        System.out.println("---上个月的第1天------>>" + TimeUtils.earlyLastMonth());
-        System.out.println("---上个月的最后1天------>>" + TimeUtils.endOfLastMonth());
-        System.out.println("--在当前系统时间之后-->>" + TimeUtils.exceedSystem("2020-04-17 13:59:59"));
-    }
-
     @Test
     public void test01() {
         String str = "2020-06-04 13:00:21";
-        System.out.println("--->" + DateUtils.isDateFormat(str));
-        System.out.println("--->" + DateUtils.parseDate(str));
-        System.out.println("--->" + DateUtils.getDate("yyyy-MM-dd"));
-        System.out.println("--->" + DateUtils.getDate(1));
-        System.out.println("--->" + DateUtils.getDate(DateUtils.toStringTime(str)));
-        System.out.println("--->" + DateUtils.getDateSign());
+        System.out.println("--1->" + DateUtils.isDateFormat(str));
+        System.out.println("-2-->" + DateUtils.parseDate(str));
+        System.out.println("--3->" + DateUtils.getDate("yyyy-MM-dd"));
+        System.out.println("--4->" + DateUtils.getDate(1));
+        System.out.println("===>>" + DateUtils.toStringTime(str));
+//        System.out.println("--5->" + DateUtils.getDate(DateUtils.toStringTime(str)));
+        System.out.println("--6->" + DateUtils.getDateSign());
         System.out.println("--根据当前时间的一天前的起始时间->" + DateUtils.getDayBeforeStartTime());
     }
 
@@ -61,4 +52,20 @@ public class DateTest {
         System.out.println("--1->>" + DateUtils.minutesDifference(begin, end));
         System.out.println("2--->>" + DateUtils.format(DateUtils.getMin(begin, 5), DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
     }
+
+    public static void main(String[] args) {
+        System.out.println("-----当前日期---->>" + TimeUtils.getTime());
+        System.out.println("==昨日开始日期==>>" + TimeUtils.getStartedYesterday());
+        System.out.println("--月的第1天--->>" + TimeUtils.firstDayOfMonth());
+        System.out.println("----最后1天----->>" + TimeUtils.lastDayOfMonth());
+        System.out.println("---上个月的第1天------>>" + TimeUtils.earlyLastMonth());
+        System.out.println("---上个月的最后1天------>>" + TimeUtils.endOfLastMonth());
+        System.out.println("--在当前系统时间之后-->>" + TimeUtils.exceedSystem("2020-04-17 13:59:59"));
+        String str = "2020-06-04 13:00:21";
+        String s = DateUtils.toStringTime(str);
+        System.out.println(s);
+        System.out.println(DateUtils.toStringDate(s));
+        System.out.println(DateUtils.changeDate(str));
+    }
+
 }

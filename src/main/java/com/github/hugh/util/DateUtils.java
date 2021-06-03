@@ -70,7 +70,7 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 根据日期根据，转换当前日期
+     * 根据格式获取当前日期
      *
      * @param format 日期格式
      * @return String
@@ -104,7 +104,7 @@ public class DateUtils extends DateCode {
         if (dateTime == null) {
             return "";
         }
-        return dateTime.replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
+        return dateTime.replace("-", "").replace(" ", "").replace(":", "");
     }
 
     /**
@@ -118,8 +118,7 @@ public class DateUtils extends DateCode {
             return "";
         }
         String reg = "(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})(\\d{2})";
-        strDate = strDate.replaceAll(reg, "$1-$2-$3 $4:$5:$6");
-        return strDate;
+        return strDate.replaceAll(reg, "$1-$2-$3 $4:$5:$6");
     }
 
     /**
@@ -771,6 +770,7 @@ public class DateUtils extends DateCode {
      * @param type 日期类型 :day-天、week-周、month-月
      * @return String
      */
+    @Deprecated
     public static String chooseDate(String type) {
         String startDate = "";
         switch (type) {
@@ -952,10 +952,10 @@ public class DateUtils extends DateCode {
      */
     public static boolean lessThanStartDate(Date start, Date end) {
         if (start == null) {
-            throw new RuntimeException(" start date is null ! ");
+            throw new ToolboxException(" start date is null ! ");
         }
         if (end == null) {
-            throw new RuntimeException(" end date is null ! ");
+            throw new ToolboxException(" end date is null ! ");
         }
         return end.getTime() < start.getTime();
     }
@@ -970,10 +970,10 @@ public class DateUtils extends DateCode {
      */
     public static boolean greaterThanStartDate(Date start, Date end) {
         if (start == null) {
-            throw new RuntimeException(" start date is null ! ");
+            throw new ToolboxException(" start date is null ! ");
         }
         if (end == null) {
-            throw new RuntimeException(" end date is null ! ");
+            throw new ToolboxException(" end date is null ! ");
         }
         return end.getTime() > start.getTime();
     }
@@ -1167,10 +1167,10 @@ public class DateUtils extends DateCode {
      */
     public static long minutesDifference(Date begin, Date end) {
         if (begin == null) {
-            throw new RuntimeException(" start date is null ! ");
+            throw new ToolboxException(" start date is null ! ");
         }
         if (end == null) {
-            throw new RuntimeException(" end date is null ! ");
+            throw new ToolboxException(" end date is null ! ");
         }
         long between = (end.getTime() - begin.getTime()) / 1000;
         return between / 60;
