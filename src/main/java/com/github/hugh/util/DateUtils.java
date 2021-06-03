@@ -118,8 +118,7 @@ public class DateUtils extends DateCode {
             return "";
         }
         String reg = "(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})(\\d{2})";
-        strDate = strDate.replaceAll(reg, "$1-$2-$3 $4:$5:$6");
-        return strDate;
+        return strDate.replaceAll(reg, "$1-$2-$3 $4:$5:$6");
     }
 
     /**
