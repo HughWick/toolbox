@@ -127,33 +127,8 @@ public class DateUtils extends DateCode {
      * @param value 字符串日期 or 日期对象
      * @return Date 默认日期对象格式:yyyy-MM-dd HH:mm:ss
      */
-    public static <T> Date changeDate(T value) {
-        return changeDate(value, YEAR_MONTH_DAY_HOUR_MIN_SEC);
-    }
-
-    /**
-     * 根据不同日期格式，转换成对应的日期格式对象
-     *
-     * @param value  日期
-     * @param format 日期格式
-     * @return Date
-     */
-    public static <T> Date changeDate(T value, String format) {
-        if (value instanceof Date) {
-            return (Date) value;
-        } else {
-            return parseDate(value + "", format);
-        }
-    }
-
-    /**
-     * 将字符串（yyyy-MM-dd）解析成日期
-     *
-     * @param dateStr 日期格式的字符串
-     * @return Date 日期类型对象
-     */
-    public static Date parseDate(String dateStr) {
-        return parseDate(dateStr, YEAR_MONTH_DAY);
+    public static <T> Date parse(T value) {
+        return parse(value, YEAR_MONTH_DAY_HOUR_MIN_SEC);
     }
 
     /**
@@ -166,6 +141,31 @@ public class DateUtils extends DateCode {
      */
     public static Date parse(String dateStr) {
         return parseDate(dateStr, YEAR_MONTH_DAY_HOUR_MIN_SEC);
+    }
+
+    /**
+     * 根据不同日期格式，转换成对应的日期格式对象
+     *
+     * @param value  日期
+     * @param format 日期格式
+     * @return Date
+     */
+    public static <T> Date parse(T value, String format) {
+        if (value instanceof Date) {
+            return (Date) value;
+        } else {
+            return parseDate(String.valueOf(value), format);
+        }
+    }
+
+    /**
+     * 将字符串（yyyy-MM-dd）解析成日期
+     *
+     * @param dateStr 日期格式的字符串
+     * @return Date 日期类型对象
+     */
+    public static Date parseDate(String dateStr) {
+        return parseDate(dateStr, YEAR_MONTH_DAY);
     }
 
     /**
