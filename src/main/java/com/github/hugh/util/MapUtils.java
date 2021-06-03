@@ -1,5 +1,6 @@
 package com.github.hugh.util;
 
+import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.common.AssertUtils;
 import com.google.common.base.Splitter;
 
@@ -234,14 +235,16 @@ public class MapUtils {
         for (PropertyDescriptor descriptor : propertyDescriptors) {
             String propertyName = descriptor.getName();
             Object value = params.get(propertyName);
-            boolean flag;
-            if (empty) {
+            boolean flag; // 是否空判断标识
+            if (empty) { // 判断不等于空字符串
                 flag = EmptyUtils.isNotEmpty(value);
-            } else {
+            } else { // 判断不等于null
                 flag = value != null;
             }
             if (flag) {
                 switch (descriptor.getPropertyType().getSimpleName()) {
+                    case "String":
+                        break;
                     case "int":
                     case "Integer":
                         value = Integer.parseInt(String.valueOf(value).trim());
@@ -265,6 +268,8 @@ public class MapUtils {
                         String trim = trim(String.valueOf(value));
                         value = Splitter.on(",").trimResults().splitToList(trim);
                         break;
+                    default:
+                        throw new ToolboxException("Unknown type : " + descriptor.getPropertyType().getSimpleName());
                 }
                 descriptor.getWriteMethod().invoke(bean, value);
             }

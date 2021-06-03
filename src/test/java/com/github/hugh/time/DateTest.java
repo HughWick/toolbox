@@ -65,7 +65,7 @@ public class DateTest {
         String s = DateUtils.toStringTime(str);
         System.out.println(s);
         System.out.println(DateUtils.toStringDate(s));
-        System.out.println(DateUtils.changeDate(str));
+        System.out.println(DateUtils.parse(str));
     }
 
 }
