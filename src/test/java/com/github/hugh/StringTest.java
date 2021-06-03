@@ -1,6 +1,5 @@
 package com.github.hugh;
 
-import com.github.hugh.util.DoubleMathUtils;
 import com.github.hugh.util.StringUtils;
 import org.junit.Test;
 
@@ -67,7 +66,11 @@ public class StringTest {
     }
 
     public static void main(String[] args) {
-        double threadcount = DoubleMathUtils.mul(16, 3);
-        System.out.println("-=-threadcount ->>" + threadcount);
+        String init = "Bob is a Bird... Bob is a Plane... Bob is Superman!";
+        String changed = init.replace("Bob is", "It's"); // Noncompliant  
+        System.out.println(changed);
+        // changed = changed.replaceAll("\\.\\.\\.", ";"); // Noncompliant
+//        double threadcount = DoubleMathUtils.mul(16, 3);
+//        System.out.println("-=-threadcount ->>" + threadcount);
     }
 }

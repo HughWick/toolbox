@@ -22,12 +22,13 @@ public class DateTest {
     @Test
     public void test01() {
         String str = "2020-06-04 13:00:21";
-        System.out.println("--->" + DateUtils.isDateFormat(str));
-        System.out.println("--->" + DateUtils.parseDate(str));
-        System.out.println("--->" + DateUtils.getDate("yyyy-MM-dd"));
-        System.out.println("--->" + DateUtils.getDate(1));
-        System.out.println("--->" + DateUtils.getDate(DateUtils.toStringTime(str)));
-        System.out.println("--->" + DateUtils.getDateSign());
+        System.out.println("--1->" + DateUtils.isDateFormat(str));
+        System.out.println("-2-->" + DateUtils.parseDate(str));
+        System.out.println("--3->" + DateUtils.getDate("yyyy-MM-dd"));
+        System.out.println("--4->" + DateUtils.getDate(1));
+        System.out.println("===>>"+ DateUtils.toStringTime(str));
+//        System.out.println("--5->" + DateUtils.getDate(DateUtils.toStringTime(str)));
+        System.out.println("--6->" + DateUtils.getDateSign());
         System.out.println("--根据当前时间的一天前的起始时间->" + DateUtils.getDayBeforeStartTime());
     }
 
