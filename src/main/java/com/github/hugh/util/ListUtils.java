@@ -86,7 +86,7 @@ public class ListUtils {
      * @return List
      * @since 1.6.10
      */
-    public static List<?> guavaStringToList(String string) {
+    public static List<String> guavaStringToList(String string) {
         return guavaStringToList(string, ",", LIST_CHAR_MATCHER);
     }
 
@@ -101,7 +101,7 @@ public class ListUtils {
      * @return List
      * @since 1.1.0
      */
-    public static List<?> guavaStringToList(String string, String separator, CharMatcher charMatcher) {
+    public static List<String> guavaStringToList(String string, String separator, CharMatcher charMatcher) {
         return Splitter.on(separator)
                 .trimResults()//去除前后空格
                 .trimResults(charMatcher)
