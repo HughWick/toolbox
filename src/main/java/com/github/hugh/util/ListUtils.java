@@ -87,7 +87,20 @@ public class ListUtils {
      * @since 1.6.10
      */
     public static List<String> guavaStringToList(String string) {
-        return guavaStringToList(string, ",", LIST_CHAR_MATCHER);
+        return guavaStringToList(string, ",");
+    }
+
+    /**
+     * Google guava 将字符串数组转 List
+     * <p>并置空[]与"符号</p>
+     *
+     * @param string    字符串 ["a","b"]
+     * @param separator 分隔符
+     * @return List
+     * @since 1.6.11
+     */
+    public static List<String> guavaStringToList(String string, String separator) {
+        return guavaStringToList(string, separator, LIST_CHAR_MATCHER);
     }
 
     /**
