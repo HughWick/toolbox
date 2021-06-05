@@ -134,11 +134,13 @@ public class DateUtils extends DateCode {
     /**
      * 将字符串解析成日期
      * <p>调用{@link #parseDate(String, String)}格式为yyyy-MM-dd HH:mm:ss</p>
+     * <p>直接使用{@link #parse(Object)} 即可</p>
      *
      * @param dateStr 日期字符串
      * @return Date 日期类型对象
      * @since 1.3.10
      */
+    @Deprecated
     public static Date parse(String dateStr) {
         return parseDate(dateStr, YEAR_MONTH_DAY_HOUR_MIN_SEC);
     }

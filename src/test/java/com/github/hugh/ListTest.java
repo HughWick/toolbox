@@ -30,19 +30,20 @@ public class ListTest {
         String[] array = {"1", "2", "3", "4", "5", "6", "7"};
         String strings = "[\"Saab\", \"Volvo\", \"BMW\" ,\"   \"]";
         String str = "{\"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\"}";
-        String str2 = "1,2,3,4,5,6,7";
-        String str3 = "[1,2,3,4,5,6,7]";
+        String str2 = "1,2 , 3, 4 ,5,6,";
+        String str3 = "[1,2,3,4,5,]";
         String str4 = "[1,2,3,4,5,6, \"7\"]";
+        ListUtils.guavaStringToList(strings).forEach(System.out::println);
         System.out.println("-1-->>" + ListUtils.guavaStringToList(strings));
         ListUtils.guavaStringToList(str).forEach(System.out::println);
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        ListUtils.guavaStringToList(strings).forEach(System.out::println);
+        ListUtils.guavaStringToList(str2).forEach(System.out::println);
         System.out.println("--------------");
         ListUtils.guavaStringToList(str3).forEach(System.out::println);
         System.out.println("==============");
         ListUtils.guavaStringToList(str4).forEach(System.out::println);
         System.out.println("-````````````````````````");
-        System.out.println("--3->>" + ListUtils.guavaStringToList(str2).size());
+//        System.out.println("--3->>" + ListUtils.guavaStringToList(str2).size());
     }
 
     //无实体、针对字段排序排序
