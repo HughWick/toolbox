@@ -33,6 +33,7 @@ public class ListTest {
         String str2 = "1,2 , 3, 4 ,5,6,";
         String str3 = "[1,2,3,4,5,]";
         String str4 = "[1,2,3,4,5,6, \"7\"]";
+        String str5 = "[[a,b,c],1,2,3,4,5,6, \"7\",89]";
         ListUtils.guavaStringToList(strings).forEach(System.out::println);
         System.out.println("-1-->>" + ListUtils.guavaStringToList(strings));
         ListUtils.guavaStringToList(str).forEach(System.out::println);
@@ -42,6 +43,8 @@ public class ListTest {
         ListUtils.guavaStringToList(str3).forEach(System.out::println);
         System.out.println("==============");
         ListUtils.guavaStringToList(str4).forEach(System.out::println);
+        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&");
+        ListUtils.guavaStringToList(str5).forEach(System.out::println);
         System.out.println("-````````````````````````");
 //        System.out.println("--3->>" + ListUtils.guavaStringToList(str2).size());
     }
@@ -130,11 +133,25 @@ public class ListTest {
     }
 
     public static void main(String[] args) {
-        String input = "John=first,Adam=second";
-        Map<String, String> result = Splitter.on(",")
-                .withKeyValueSeparator("=")
-                .split(input);
-        System.out.println("--->>" + result.toString());
-        System.out.println("--===>>" + JsonObjectUtils.parse(result));
+        String str3 = "[1,2,3,4,5,[a,b],]";
+        List list1 = new ArrayList<>();
+        list1.add("1");
+        list1.add("2");
+        list1.add("3");
+        list1.add("4");
+        List list2 = new ArrayList<>();
+        list2.add("a");
+        list2.add("b");
+        List list3 = new ArrayList<>();
+        list1.add(list2);
+        System.out.println(list1.toString());
+//        String s = CharMatcher.or()
+//                .trimFrom(str3);
+//        String s = CharMatcher.any(CharMatcher.anyOf("aeiou")).trimFrom( str3, "[]");
+//        Splitter.on(",")
+//                .trimResults()//去除前后空格
+//                .trimResults(s)
+//                .omitEmptyStrings()//用于去除为空格的分割结果
+//                .splitToList(str3);
     }
 }
