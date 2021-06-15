@@ -67,18 +67,6 @@ public class ListUtils {
     }
 
     /**
-     * Google guava 数组转 List
-     *
-     * @param array 数组
-     * @return List
-     * @since 1.1.0
-     */
-    public static <T> List<?> guavaArrToList(T array) {
-        return Lists.newArrayList(array);
-    }
-
-
-    /**
      * Google guava 将字符串数组转 List
      * <p>默认通过,作为分隔符转成List,并置空[]与"符号</p>
      * <p>不支持多级嵌套list转换</p>
