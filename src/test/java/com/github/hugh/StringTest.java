@@ -1,7 +1,11 @@
 package com.github.hugh;
 
 import com.github.hugh.util.StringUtils;
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Splitter;
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * @author AS
@@ -64,6 +68,22 @@ public class StringTest {
         System.out.println("--1-->>" + StringUtils.after(string, "/", 4));
         System.out.println("--2-->>" + StringUtils.after(string2, "/", 4));
     }
+
+    @Test
+    public void test07() {
+        String input = "<0ffff>0|Q|04<0x00100001>0|W||006<0x00100006>0|W||006";
+        String result = CharMatcher.is('<').collapseFrom(input, ',');
+        System.out.println(result);
+        String r2 = CharMatcher.is('>').collapseFrom(result, ':');
+        System.out.println(r2);
+        Map<String, String> map = Splitter.on(",")
+                .trimResults()
+                .omitEmptyStrings()
+                .withKeyValueSeparator(":")
+                .split(r2);
+        System.out.println(map);
+    }
+
 
     public static void main(String[] args) {
         String init = "Bob is a Bird... Bob is a Plane... Bob is Superman!";
