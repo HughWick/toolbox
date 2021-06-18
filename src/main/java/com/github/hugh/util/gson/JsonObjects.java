@@ -29,6 +29,16 @@ public class JsonObjects extends JsonObjectUtils {
     }
 
     /**
+     * jsonObject 不为空
+     *
+     * @return boolean {@code true} jsonObject不为空
+     * @since 1.6.12
+     */
+    public boolean isNotNull() {
+        return !isJsonNull(jsonObject);
+    }
+
+    /**
      * 获取gson中对应的{@link JsonObject}后放入封装的{@link JsonObjects}中，方便后去使用
      *
      * @param key 键
