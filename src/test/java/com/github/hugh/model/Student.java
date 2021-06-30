@@ -1,7 +1,6 @@
 package com.github.hugh.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
@@ -10,12 +9,12 @@ import java.util.List;
  * @author AS
  * @date 2020/8/31 9:24
  */
-@Getter
-@Setter
+@Data
 public class Student {
     public Student() {
 
     }
+
     public Student(int id, String name, int age) {
         this.id = id;
         this.name = name;

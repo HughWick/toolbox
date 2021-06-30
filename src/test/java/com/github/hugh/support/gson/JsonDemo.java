@@ -51,9 +51,8 @@ public class JsonDemo {
         JsonObject asJsonObject = JsonParser.parseString(mapStr).getAsJsonObject();
         System.out.println(asJsonObject);
 //        System.out.println("--->>" + asJsonObject.get("m1").getAsJsonObject().get("money").getAsDouble());
-
         JsonObjects jsonObjects = new JsonObjects(JsonObjectUtils.toJson(student));
-        System.out.println("--->>"+jsonObjects);
+        System.out.println("--->>" + jsonObjects);
     }
 
 
@@ -167,9 +166,15 @@ public class JsonDemo {
         System.out.println("-8-->>" + JsonObjectUtils.toJson(student));
 //        new MyType<Map<String, Object>>().gsonToMap(json2);
         Map<Object, Object> objectObjectMap = JsonObjectUtils.toMap(json2);
-        System.out.println("-9-->>" +objectObjectMap );
+        System.out.println("-9-->>" + objectObjectMap);
     }
 
+    @Test
+    public void testTime() {
+        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"1625024713000\"}";
+        Student student1 = JsonObjectUtils.fromJsonTimeStamp(str, Student.class);
+        System.out.println(student1.toString());
+    }
 
     public static void main(String[] args) {
         JsonObject msgObj = new JsonObject();

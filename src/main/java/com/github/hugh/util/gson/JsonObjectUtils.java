@@ -10,10 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 针对Gson进行二次封装处理工具类
@@ -340,5 +337,24 @@ public class JsonObjectUtils {
     public static <T> String toJson(T entity, String dateFormat) {
         Gson gson = new GsonBuilder().setDateFormat(dateFormat).create();
         return gson.toJson(entity);
+    }
+
+    /**
+     * 将字符串转化为指定实体类
+     * <p>该方法主要作用与解析日期时、json字符串中的值为时间戳(long)类型时</p>
+     *
+     * @param json     json字符串
+     * @param classOfT 类
+     * @param <T>      实体类型
+     * @return T 实体
+     * @since 1.6.13
+     */
+    public static <T> T fromJsonTimeStamp(String value, Class<T> classOfT) {
+        GsonBuilder builder = new GsonBuilder();
+        //注册一个日期解析器、将时间戳转换为Date 类型
+        builder.registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (jsonElement, typeOfT, context) ->
+                new Date(jsonElement.getAsJsonPrimitive().getAsLong()));
+        Gson gson = builder.create();
+        return gson.fromJson(value, classOfT);
     }
 }
