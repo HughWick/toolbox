@@ -1,5 +1,7 @@
 package com.github.hugh.util.base;
 
+import com.github.hugh.exception.ToolboxException;
+
 /**
  * 进制转换工具类
  *
@@ -61,7 +63,7 @@ public class BaseConvertUtils {
      */
     public static String hexToString(String source, String interval) {
         if (interval == null) {
-            throw new RuntimeException(" interval is null ");
+            throw new ToolboxException(" interval is null ");
         }
         String[] array = source.split(interval);
         byte[] bytes = new byte[array.length];

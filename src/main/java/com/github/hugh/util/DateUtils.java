@@ -132,20 +132,6 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 将字符串解析成日期
-     * <p>调用{@link #parseDate(String, String)}格式为yyyy-MM-dd HH:mm:ss</p>
-     * <p>直接使用{@link #parse(Object)} 即可</p>
-     *
-     * @param dateStr 日期字符串
-     * @return Date 日期类型对象
-     * @since 1.3.10
-     */
-    @Deprecated
-    public static Date parse(String dateStr) {
-        return parseDate(dateStr, YEAR_MONTH_DAY_HOUR_MIN_SEC);
-    }
-
-    /**
      * 根据不同日期格式，转换成对应的日期格式对象
      *
      * @param value  日期
@@ -218,7 +204,7 @@ public class DateUtils extends DateCode {
 
     /**
      * 将时间戳转换为Date类型
-     * <p>调用{@link #formatTimestamp(long)}格式化时间戳，后将调用{@link #parse(String)}解析成{@link Date}</p>
+     * <p>调用{@link #formatTimestamp(long)}格式化时间戳，后将调用{@link #parse(Object)}解析成{@link Date}</p>
      *
      * @param timestamp 时间戳
      * @return Date
