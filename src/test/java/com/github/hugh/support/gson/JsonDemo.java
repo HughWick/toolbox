@@ -174,6 +174,9 @@ public class JsonDemo {
         String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"1625024713000\"}";
         Student student1 = JsonObjectUtils.fromJsonTimeStamp(str, Student.class);
         System.out.println(student1.toString());
+
+        JsonObjects jsonObjects = new JsonObjects(str);
+        System.out.println(jsonObjects.fromJsonTimeStamp(Student.class));
     }
 
     public static void main(String[] args) {

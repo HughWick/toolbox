@@ -185,4 +185,17 @@ public class JsonObjects extends JsonObjectUtils {
     public <T> T formJson(Class<T> classOfT) {
         return fromJson(this.jsonObject, classOfT);
     }
+
+    /**
+     * 将{@link #jsonObject} 转换为对应的实体
+     * <p>该方法主要作用与解析日期时、json字符串中的值为时间戳(long)类型时</p>
+     *
+     * @param classOfT 实体类
+     * @param <T>      泛型
+     * @return T 实体
+     * @since 1.6.13
+     */
+    public <T> T fromJsonTimeStamp(Class<T> classOfT) {
+        return fromJsonTimeStamp(this.jsonObject.toString(), classOfT);
+    }
 }

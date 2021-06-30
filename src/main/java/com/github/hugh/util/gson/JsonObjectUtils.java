@@ -343,7 +343,7 @@ public class JsonObjectUtils {
      * 将字符串转化为指定实体类
      * <p>该方法主要作用与解析日期时、json字符串中的值为时间戳(long)类型时</p>
      *
-     * @param json     json字符串
+     * @param value    json字符串
      * @param classOfT 类
      * @param <T>      实体类型
      * @return T 实体
