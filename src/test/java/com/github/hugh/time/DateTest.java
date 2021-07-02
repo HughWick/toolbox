@@ -50,7 +50,8 @@ public class DateTest {
         Date begin = DateUtils.parseTimestamp(1617943680000L);
         Date end = DateUtils.parseTimestamp(1617948600000L);
         System.out.println("--1->>" + DateUtils.minutesDifference(begin, end));
-        System.out.println("2--->>" + DateUtils.format(DateUtils.getMin(begin, 5), DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
+        System.out.println("--2->>" + DateUtils.secondsDifference(begin, end));
+        System.out.println("3--->>" + DateUtils.format(DateUtils.getMin(begin, 5), DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
     }
 
     public static void main(String[] args) {

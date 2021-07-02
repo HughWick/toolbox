@@ -753,31 +753,6 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 根据类型选中对应的起始日期并格式化后返回
-     *
-     * @param type 日期类型 :day-天、week-周、month-月
-     * @return String
-     */
-    @Deprecated
-    public static String chooseDate(String type) {
-        String startDate = "";
-        switch (type) {
-            case "day":// 天
-                startDate = format(getTodayStartTime(), YEAR_MONTH_DAY_HOUR_MIN_SEC);
-                break;
-            case "week":// 周
-                startDate = format(getWeekAgo(), YEAR_MONTH_DAY_HOUR_MIN_SEC);
-                break;
-            case "month":// 月
-                startDate = format(getOneMonthAgo(), YEAR_MONTH_DAY_HOUR_MIN_SEC);
-                break;
-            default:
-                return null;
-        }
-        return startDate;
-    }
-
-    /**
      * 获取当前月份起始日期时间
      *
      * @return Date 月初时间
@@ -1177,5 +1152,20 @@ public class DateUtils extends DateCode {
         calendar.setTime(date);
         calendar.add(Calendar.MINUTE, +min);
         return calendar.getTime();
+    }
+
+
+    /**
+     * 计算开始与结束时间相差秒数
+     *
+     * @param begin 开始日期
+     * @param end   结束日期
+     * @return int 相差秒数
+     * @since 1.6.14
+     */
+    public static int secondsDifference(Date begin, Date end) {
+        long a = end.getTime();
+        long b = begin.getTime();
+        return (int) ((a - b) / 1000);
     }
 }
