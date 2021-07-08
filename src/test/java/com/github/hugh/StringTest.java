@@ -141,6 +141,7 @@ public class StringTest {
         String init = "Bob is a Bird... Bob is a Plane... Bob is Superman!";
         String changed = init.replace("Bob is", "It's"); // Noncompliant  
         System.out.println(changed);
+//        CharMatcher.javaIsoControl()
         // changed = changed.replaceAll("\\.\\.\\.", ";"); // Noncompliant
 //        double threadcount = DoubleMathUtils.mul(16, 3);
 //        System.out.println("-=-threadcount ->>" + threadcount);

@@ -109,7 +109,6 @@ public class JsonObjects extends JsonObjectUtils {
         return getDoubleValue(jsonObject, key);
     }
 
-
     /**
      * 方便的方法获取{@link JsonObject}中对应key的{@link Double}值。
      *
@@ -143,7 +142,6 @@ public class JsonObjects extends JsonObjectUtils {
         return getLong(jsonObject, key);
     }
 
-
     /**
      * 校验 {@link #jsonObject}中的key获取到的value值是否与相同
      *
@@ -162,7 +160,6 @@ public class JsonObjects extends JsonObjectUtils {
         }
         return string.equals(value);
     }
-
 
     /**
      * 将{@link JsonObjects#jsonObject}内的json对象转换成json格式的字符串
