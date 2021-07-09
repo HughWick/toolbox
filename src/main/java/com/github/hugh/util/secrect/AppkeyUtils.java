@@ -38,7 +38,7 @@ public class AppkeyUtils {
             int rand = (int) (Math.random() * a.length());
             rands[i] = a.charAt(rand);
         }
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         for (char rand : rands) {
             l.add(String.valueOf(rand));
         }

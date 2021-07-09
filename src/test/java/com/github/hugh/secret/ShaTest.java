@@ -21,10 +21,10 @@ public class ShaTest {
         String timestamp = System.currentTimeMillis() + "";
         String mastersecret = "migfmCyjVwAQBooo45PUs2";
         String sign = ShaUtils.lowerCase256(appkey + timestamp + mastersecret);
-        System.out.println("--->>"+sign);
-        System.out.println("--timestamp->>"+timestamp);
+        System.out.println("-sign-->>" + sign);
+        System.out.println("--timestamp->>" + timestamp);
         Map<String, Object> map = new HashMap<>();
-        map.put("sign",sign );
+        map.put("sign", sign);
         map.put("timestamp", timestamp);
         map.put("appkey", appkey);
         String s = OkHttpUtils.postJson("https://restapi.getui.com/v2/BrzzkpEOaZ6tehriF2uKL1/auth", map);

@@ -3,7 +3,7 @@ package com.github.hugh.util.secrect;
 import com.github.hugh.constant.EncryptCode;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.EmptyUtils;
-import com.github.hugh.util.base.Base64;
+import com.github.hugh.util.base.BaseConvertUtils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -51,7 +51,7 @@ public class Md5Utils {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance(encryptType);
             byte[] output = messageDigest.digest(string.getBytes());
-            String result = Base64.toBase64String(output);
+            String result = BaseConvertUtils.bytesToHexString(output);
             if (lowerCase) {
                 return result.toLowerCase();
             }

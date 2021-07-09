@@ -49,6 +49,7 @@ public class BaseConvertTest {
         System.out.println("---->>>" + s);
         String s1 = BaseConvertUtils.asciiToHex(s);
         System.out.println("===>>"+s1);
+        System.out.println(BaseConvertUtils.bytesToHexString(bytes));
     }
 
 

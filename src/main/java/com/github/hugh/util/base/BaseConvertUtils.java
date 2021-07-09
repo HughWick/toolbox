@@ -17,10 +17,50 @@ public class BaseConvertUtils {
     }
 
     /**
+     * hex 数组
+     */
+    private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+
+    /**
+     * 将字节数组转换成十六进制，并以字符串的形式返回
+     * 128位是指二进制位。二进制太长，所以一般都改写成16进制，
+     * 每一位16进制数可以代替4位二进制数，所以128位二进制数写成16进制就变成了128/4=32位。
+     * <p>默认为大写</p>
+     *
+     * @param bytes 字节数组
+     * @return String 字符串
+     */
+    public static String bytesToHexString(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bytes) {
+            sb.append(byteToHex(b));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 将一个字节转换成十六进制，并以字符串的形式返回
+     *
+     * @param b 比特
+     * @return String
+     */
+    public static String byteToHex(byte b) {
+        int n = b;
+        if (n < 0) {
+            n = n + 256;
+        }
+        int d1 = n / 16;
+        int d2 = n % 16;
+        final String charOne = String.valueOf(HEX_ARRAY[d1]);
+        final String charTwo = String.valueOf(HEX_ARRAY[d2]);
+        return charOne + charTwo;
+    }
+
+    /**
      * 十进制转16进制
      *
      * @param decimal 十进制
-     * @return long 十六进制
+     * @return String 十六进制字符串
      */
     public static String decToHex(int decimal) {
         return Integer.toHexString(decimal);
@@ -237,8 +277,7 @@ public class BaseConvertUtils {
      * @since 1.6.14
      */
     public static String asciiToHex(String str) {
-        char[] chars = "0123456789ABCDEF".toCharArray();//toCharArray() 方法将字符串转换为字符数组。
-        StringBuilder sb = new StringBuilder(); //StringBuilder是一个类，可以用来处理字符串,sb.append()字符串相加效率高
+        StringBuilder sb = new StringBuilder();
         byte[] bs;//String的getBytes()方法是得到一个操作系统默认的编码格式的字节数组
         try {
             bs = str.getBytes(CharsetCode.GB_2312);
@@ -248,9 +287,9 @@ public class BaseConvertUtils {
         int bit;
         for (byte b : bs) {
             bit = (b & 0x0f0) >> 4; // 高4位, 与操作 1111 0000
-            sb.append(chars[bit]);
+            sb.append(HEX_ARRAY[bit]);
             bit = b & 0x0f;  // 低四位, 与操作 0000 1111
-            sb.append(chars[bit]);
+            sb.append(HEX_ARRAY[bit]);
             sb.append(' ');//每个Byte之间空格分隔
         }
         return sb.toString().trim();
