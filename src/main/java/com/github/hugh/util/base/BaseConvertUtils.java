@@ -45,6 +45,30 @@ public class BaseConvertUtils {
 
     /**
      * 十进制转二进制
+     * <p>默认左边不进行补位</p>
+     *
+     * @param str 字符串
+     * @return String 二进制数字符串
+     * @since 1.6.14
+     */
+    public static String toBinary(String str) {
+        return toBinary(Integer.parseInt(str), 0);
+    }
+
+    /**
+     * 十进制转二进制
+     *
+     * @param str    字符串
+     * @param digits 二进制的位数（左边补零时才生效）
+     * @return String
+     * @since 1.6.14
+     */
+    public static String toBinary(String str, int digits) {
+        return toBinary(Integer.parseInt(str), digits);
+    }
+
+    /**
+     * 十进制转二进制
      *
      * @param num    需要转换的十进制数
      * @param digits 保留二进制的位数（左边补零时才生效）

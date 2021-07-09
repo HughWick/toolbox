@@ -32,6 +32,8 @@ public class BaseConvertTest {
         System.out.println("-1-->>" + BaseConvertUtils.sixteenToBinary(str, 15));
         System.out.println("-2-->>" + BaseConvertUtils.sixteenToBinary(str));
         System.out.println("==3=>>>>" + BaseConvertUtils.toBinary(10, 12));
+        System.out.println("==4=>>>>" + BaseConvertUtils.toBinary("10", 12));
+        System.out.println("==5=>>>>" + BaseConvertUtils.toBinary("10"));
     }
 
     public static void main(String[] args) {
