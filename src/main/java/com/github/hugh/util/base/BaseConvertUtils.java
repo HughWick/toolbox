@@ -10,6 +10,9 @@ import com.github.hugh.exception.ToolboxException;
  */
 public class BaseConvertUtils {
 
+    private BaseConvertUtils() {
+    }
+
     /**
      * 十进制转16进制
      *
@@ -48,9 +51,8 @@ public class BaseConvertUtils {
      * @return String 补0后的二进制
      */
     public static String toBinary(int num, int digits) {
-        String cover = Integer.toBinaryString(1 << digits).substring(1);
         String str = Integer.toBinaryString(num);
-        return str.length() < digits ? cover.substring(str.length()) + str : str;
+        return complement(str, digits);
     }
 
     /**
@@ -71,5 +73,44 @@ public class BaseConvertUtils {
             bytes[i] = Byte.parseByte(array[i], 16);
         }
         return new String(bytes);
+    }
+
+    /**
+     * 十六进制转二进制 并且补位
+     * <p>默认左边不进行补位、只做16进制转换为二进制</p>
+     *
+     * @param num 需要转换的十进制数
+     * @return String 二进制字符串
+     * @since 1.6.14
+     */
+    public static String sixteenToBinary(String num) {
+        return sixteenToBinary(num, 0);
+    }
+
+    /**
+     * 十六进制转二进制 并且补位
+     *
+     * @param num    需要转换的十进制数
+     * @param digits 保留二进制的位数（左边补零时才生效）
+     * @return String 二进制字符串
+     * @since 1.6.14
+     */
+    public static String sixteenToBinary(String num, int digits) {
+        String str = Integer.toBinaryString(Integer.valueOf(num, 16));
+        return complement(str, digits);
+    }
+
+
+    /**
+     * 转换二进制后 根据传入的不为数值 左边补0
+     *
+     * @param str    字符串
+     * @param digits 补位数
+     * @return String 补位后的二进制
+     * @since 1.6.14
+     */
+    private static String complement(String str, int digits) {
+        String cover = Integer.toBinaryString(1 << digits).substring(1);
+        return str.length() < digits ? cover.substring(str.length()) + str : str;
     }
 }
