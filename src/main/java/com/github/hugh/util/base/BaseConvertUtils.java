@@ -22,7 +22,7 @@ public class BaseConvertUtils {
      * @param decimal 十进制
      * @return long 十六进制
      */
-    public static String tenToHex(int decimal) {
+    public static String decToHex(int decimal) {
         return Integer.toHexString(decimal);
     }
 
@@ -32,7 +32,7 @@ public class BaseConvertUtils {
      * @param decimal 十进制
      * @return String 二进制
      */
-    public static String tenToBinary(int decimal) {
+    public static String decToBinary(int decimal) {
         return Integer.toBinaryString(decimal);
     }
 
@@ -42,7 +42,7 @@ public class BaseConvertUtils {
      * @param binary 二进制
      * @return String  十进制
      */
-    public static String binaryToTen(String binary) {
+    public static String binaryToDec(String binary) {
         return Integer.valueOf(binary, 2).toString();
     }
 
@@ -85,16 +85,16 @@ public class BaseConvertUtils {
     /**
      * 16进制转换为字符串
      *
-     * @param source   源
+     * @param hexStr   十六进制字符串
      * @param interval 切割的标识符
      * @return String
      * @since 1.4.9
      */
-    public static String hexToString(String source, String interval) {
+    public static String hexToString(String hexStr, String interval) {
         if (interval == null) {
             throw new ToolboxException(" interval is null ");
         }
-        String[] array = source.split(interval);
+        String[] array = hexStr.split(interval);
         byte[] bytes = new byte[array.length];
         for (int i = 0; i < array.length; i++) {
             bytes[i] = Byte.parseByte(array[i], 16);
@@ -110,8 +110,8 @@ public class BaseConvertUtils {
      * @return String 二进制字符串
      * @since 1.6.14
      */
-    public static String sixteenToBinary(String num) {
-        return sixteenToBinary(num, 0);
+    public static String hexToBinary(String num) {
+        return hexToBinary(num, 0);
     }
 
     /**
@@ -122,7 +122,7 @@ public class BaseConvertUtils {
      * @return String 二进制字符串
      * @since 1.6.14
      */
-    public static String sixteenToBinary(String num, int digits) {
+    public static String hexToBinary(String num, int digits) {
         String str = Integer.toBinaryString(Integer.valueOf(num, 16));
         return complement(str, digits);
     }
@@ -147,52 +147,68 @@ public class BaseConvertUtils {
      * @return int 十进制
      * @since 1.6.14
      */
-    public static int hexToTen(String hex) {
+    public static int hexToDec(String hex) {
         return Integer.parseInt(hex, 16);
     }
 
     /**
-     * 十六进制转十进制字符串
+     * 十六进制 转 十进制字符串
      *
      * @param hex 十六进字符串
      * @return String 十进制
      * @since 1.6.14
      */
-    public static String hexToTenString(String hex) {
-        return String.valueOf(hexToTen(hex));
+    public static String hexToDecString(String hex) {
+        return String.valueOf(hexToDec(hex));
     }
 
     /**
-     * 16进制数转byte
-     * @param hexString
-     * @return
+     * 16进制数转byte[]
+     * <p>如果Hex超过0xFF，显然转换后结果不是一个byte，而是一个byte数组</p>
+     *
+     * @param hexString 16进制字符串
+     * @return byte[]
+     * @since 1.6.14
      */
-    public static byte hexStringToBytes(String hexString) {
-        hexString = hexString.toUpperCase();
-        int length = hexString.length() / 2;
-        char[] hexChars = hexString.toCharArray();
-        byte[] d = new byte[length];
-        for (int i = 0; i < length; i++) {
-            int pos = i * 2;
-            d[i] = (byte) (charToByte(hexChars[pos]) << 4 | charToByte(hexChars[pos + 1]));
+    public static byte[] hexToBytes(String hexString) {
+        int hexLen = hexString.length();
+        byte[] result;
+        if (hexLen % 2 == 1) {
+            //奇数
+            hexLen++;
+            result = new byte[(hexLen / 2)];
+            hexString = "0" + hexString;
+        } else {
+            //偶数
+            result = new byte[(hexLen / 2)];
         }
-        return d[0];
+        int j = 0;
+        for (int i = 0; i < hexLen; i += 2) {
+            result[j] = hexToByte(hexString.substring(i, i + 2));
+            j++;
+        }
+        return result;
     }
 
-    private static byte charToByte(char c) {
-        return (byte) "0123456789ABCDEF".indexOf(c);
+    /**
+     * 十六进制字符串转byte
+     *
+     * @param hexString 待转换的Hex字符串
+     * @return byte
+     * @since 1.6.14
+     */
+    public static byte hexToByte(String hexString) {
+        return (byte) Integer.parseInt(hexString, 16);
     }
-
 
     /**
      * 16进制直接转换成为ascii字符串(无需Unicode解码)
      *
      * @param hexStr Byte字符串(Byte之间无分隔符
-     * @return 对应的字符串
-     * @author zcj
+     * @return String
+     * @since 1.6.14
      */
-    public static String hexToAscii(String hexStr) throws Exception {
-        hexStr = hexStr.replace(" ", "");
+    public static String hexToAscii(String hexStr) {
         String str = "0123456789ABCDEF"; //16进制能用到的所有字符 0-15
         char[] hexs = hexStr.toCharArray();//toCharArray() 方法将字符串转换为字符数组。
         int length = (hexStr.length() / 2);//1个byte数值 -> 两个16进制字符
@@ -206,25 +222,28 @@ public class BaseConvertUtils {
             //当byte要转化为int的时候，高的24位必然会补1，这样，其二进制补码其实已经不一致了，&0xff可以将高的24位置为0，低8位保持原样，这样做的目的就是为了保证二进制数据的一致性。
             bytes[i] = (byte) (n & 0xff);
         }
-        return new String(bytes, CharsetCode.GB_2312);
+        try {
+            return new String(bytes, CharsetCode.GB_2312);
+        } catch (UnsupportedEncodingException e) {
+            throw new ToolboxException(e);
+        }
     }
 
     /**
-     *  * ascii字符串转换成为16进制(无需Unicode编码)
-     *  * @param str 待转换的ASCII字符串
+     *  ascii字符串转换成为16进制(无需Unicode编码)
      *
-     * @author zcj
-     *  * @return byte字符串 （每个Byte之间空格分隔）
-     *  
+     * @param str 待转换的ASCII字符串
+     * @return String byte字符串 （每个Byte之间空格分隔）
+     * @since 1.6.14
      */
     public static String asciiToHex(String str) {
         char[] chars = "0123456789ABCDEF".toCharArray();//toCharArray() 方法将字符串转换为字符数组。
         StringBuilder sb = new StringBuilder(); //StringBuilder是一个类，可以用来处理字符串,sb.append()字符串相加效率高
-        byte[] bs = new byte[0];//String的getBytes()方法是得到一个操作系统默认的编码格式的字节数组
+        byte[] bs;//String的getBytes()方法是得到一个操作系统默认的编码格式的字节数组
         try {
             bs = str.getBytes(CharsetCode.GB_2312);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            throw new ToolboxException(e);
         }
         int bit;
         for (byte b : bs) {
@@ -236,5 +255,4 @@ public class BaseConvertUtils {
         }
         return sb.toString().trim();
     }
-
 }
