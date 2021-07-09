@@ -19,7 +19,7 @@ public class BaseConvertUtils {
      * @param decimal 十进制
      * @return long 十六进制
      */
-    public static String tenToSixteen(int decimal) {
+    public static String tenToHex(int decimal) {
         return Integer.toHexString(decimal);
     }
 
@@ -124,7 +124,6 @@ public class BaseConvertUtils {
         return complement(str, digits);
     }
 
-
     /**
      * 转换二进制后 根据传入的不为数值 左边补0
      *
@@ -136,5 +135,27 @@ public class BaseConvertUtils {
     private static String complement(String str, int digits) {
         String cover = Integer.toBinaryString(1 << digits).substring(1);
         return str.length() < digits ? cover.substring(str.length()) + str : str;
+    }
+
+    /**
+     * 十六进制转十进制
+     *
+     * @param hex 十六进字符串
+     * @return int 十进制
+     * @since 1.6.14
+     */
+    public static int hexToTen(String hex) {
+        return Integer.parseInt(hex, 16);
+    }
+
+    /**
+     * 十六进制转十进制字符串
+     *
+     * @param hex 十六进字符串
+     * @return String 十进制
+     * @since 1.6.14
+     */
+    public static String hexToTenString(String hex) {
+        return String.valueOf(hexToTen(hex));
     }
 }

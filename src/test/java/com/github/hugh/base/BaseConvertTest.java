@@ -12,7 +12,7 @@ public class BaseConvertTest {
 
     @Test
     public void test01() {
-        System.out.println("=1==>>>>" + BaseConvertUtils.tenToSixteen(84213840));
+        System.out.println("=1==>>>>" + BaseConvertUtils.tenToHex(84213840));
         String binary = BaseConvertUtils.tenToBinary(84213840);
         System.out.println("==2=>>>>" + binary);
         System.out.println("==3=>>>>" + BaseConvertUtils.toBinary(10, 12));
@@ -34,6 +34,7 @@ public class BaseConvertTest {
         System.out.println("==3=>>>>" + BaseConvertUtils.toBinary(10, 12));
         System.out.println("==4=>>>>" + BaseConvertUtils.toBinary("10", 12));
         System.out.println("==5=>>>>" + BaseConvertUtils.toBinary("10"));
+        System.out.println("==6=>>>>" + BaseConvertUtils.hexToTenString("8C"));
     }
 
     public static void main(String[] args) {
