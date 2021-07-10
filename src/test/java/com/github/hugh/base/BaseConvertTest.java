@@ -13,6 +13,7 @@ public class BaseConvertTest {
     @Test
     public void test01() {
         System.out.println("=1==>>>>" + BaseConvertUtils.decToHex(84213840));
+        System.out.println("=1==>>>>" + BaseConvertUtils.decToHex("140"));
         String binary = BaseConvertUtils.decToBinary(84213840);
         System.out.println("==2=>>>>" + binary);
         System.out.println("==3=>>>>" + BaseConvertUtils.decToBinary(10, 12));

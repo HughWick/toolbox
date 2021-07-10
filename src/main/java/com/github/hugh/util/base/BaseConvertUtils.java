@@ -72,6 +72,17 @@ public class BaseConvertUtils {
     }
 
     /**
+     * 十进制转16进制
+     *
+     * @param decimal 十进制
+     * @return String 十六进制字符串
+     * @since 1.6.14
+     */
+    public static String decToHex(String decimal) {
+        return decToHex(Integer.parseInt(decimal));
+    }
+
+    /**
      * 十进制转二进制
      *
      * @param decimal 十进制
@@ -116,6 +127,7 @@ public class BaseConvertUtils {
         String str = Integer.toBinaryString(num);
         return complement(str, digits);
     }
+
     /**
      * 二进制转十进制
      *
