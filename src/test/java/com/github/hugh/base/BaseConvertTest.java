@@ -23,7 +23,8 @@ public class BaseConvertTest {
     @Test
     public void test02() {
         String str = "61:62";
-        System.out.println("--->>" + BaseConvertUtils.hexToString(str, ":"));
+        System.out.println("--1->>" + BaseConvertUtils.hexToString(str, ":"));
+//        System.out.println("--2->>" + BaseConvertUtils.hexToString(null, ":"));
     }
 
     @Test
@@ -44,7 +45,7 @@ public class BaseConvertTest {
         byte[] bytes = BaseConvertUtils.hexToBytes(str);
         System.out.println(new String(bytes));
         byte bytes2 = BaseConvertUtils.hexToByte(str2);
-        System.out.println(new String(String.valueOf(bytes2)));
+        System.out.println(String.valueOf(bytes2));
         String s = BaseConvertUtils.hexToAscii(str2);
         System.out.println("---->>>" + s);
         String s1 = BaseConvertUtils.asciiToHex(s);
