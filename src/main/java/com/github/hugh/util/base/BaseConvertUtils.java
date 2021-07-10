@@ -82,16 +82,6 @@ public class BaseConvertUtils {
     }
 
     /**
-     * 二进制转十进制
-     *
-     * @param binary 二进制
-     * @return String  十进制
-     */
-    public static String binaryToDec(String binary) {
-        return Integer.valueOf(binary, 2).toString();
-    }
-
-    /**
      * 十进制转二进制
      * <p>默认左边不进行补位</p>
      *
@@ -99,8 +89,8 @@ public class BaseConvertUtils {
      * @return String 二进制数字符串
      * @since 1.6.14
      */
-    public static String toBinary(String str) {
-        return toBinary(Integer.parseInt(str), 0);
+    public static String decToBinary(String str) {
+        return decToBinary(Integer.parseInt(str), 0);
     }
 
     /**
@@ -111,8 +101,8 @@ public class BaseConvertUtils {
      * @return String
      * @since 1.6.14
      */
-    public static String toBinary(String str, int digits) {
-        return toBinary(Integer.parseInt(str), digits);
+    public static String decToBinary(String str, int digits) {
+        return decToBinary(Integer.parseInt(str), digits);
     }
 
     /**
@@ -122,9 +112,18 @@ public class BaseConvertUtils {
      * @param digits 保留二进制的位数（左边补零时才生效）
      * @return String 补0后的二进制
      */
-    public static String toBinary(int num, int digits) {
+    public static String decToBinary(int num, int digits) {
         String str = Integer.toBinaryString(num);
         return complement(str, digits);
+    }
+    /**
+     * 二进制转十进制
+     *
+     * @param binary 二进制
+     * @return String  十进制
+     */
+    public static String binaryToDec(String binary) {
+        return Integer.valueOf(binary, 2).toString();
     }
 
     /**

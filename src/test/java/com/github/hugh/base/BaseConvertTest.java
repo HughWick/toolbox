@@ -15,7 +15,7 @@ public class BaseConvertTest {
         System.out.println("=1==>>>>" + BaseConvertUtils.decToHex(84213840));
         String binary = BaseConvertUtils.decToBinary(84213840);
         System.out.println("==2=>>>>" + binary);
-        System.out.println("==3=>>>>" + BaseConvertUtils.toBinary(10, 12));
+        System.out.println("==3=>>>>" + BaseConvertUtils.decToBinary(10, 12));
         System.out.println("--4-===>>" + BaseConvertUtils.binaryToDec(binary));
         System.out.println("--4-===>>" + BaseConvertUtils.binaryToDec(binary));
     }
@@ -32,9 +32,9 @@ public class BaseConvertTest {
         String str = "043F";
         System.out.println("-1-->>" + BaseConvertUtils.hexToBinary(str, 15));
         System.out.println("-2-->>" + BaseConvertUtils.hexToBinary(str));
-        System.out.println("==3=>>>>" + BaseConvertUtils.toBinary(10, 12));
-        System.out.println("==4=>>>>" + BaseConvertUtils.toBinary("10", 12));
-        System.out.println("==5=>>>>" + BaseConvertUtils.toBinary("10"));
+        System.out.println("==3=>>>>" + BaseConvertUtils.decToBinary(10, 12));
+        System.out.println("==4=>>>>" + BaseConvertUtils.decToBinary("10", 12));
+        System.out.println("==5=>>>>" + BaseConvertUtils.decToBinary("10"));
         System.out.println("==6=>>>>" + BaseConvertUtils.hexToDecString("8C"));
     }
 
@@ -49,7 +49,7 @@ public class BaseConvertTest {
         String s = BaseConvertUtils.hexToAscii(str2);
         System.out.println("---->>>" + s);
         String s1 = BaseConvertUtils.asciiToHex(s);
-        System.out.println("===>>"+s1);
+        System.out.println("===>>" + s1);
         System.out.println(BaseConvertUtils.bytesToHexString(bytes));
     }
 
