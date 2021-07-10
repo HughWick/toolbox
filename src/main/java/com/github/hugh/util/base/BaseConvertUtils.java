@@ -282,14 +282,14 @@ public class BaseConvertUtils {
      */
     public static String asciiToHex(String str) {
         StringBuilder sb = new StringBuilder();
-        byte[] bs;//String的getBytes()方法是得到一个操作系统默认的编码格式的字节数组
+        byte[] bytes;//String的getBytes()方法是得到一个操作系统默认的编码格式的字节数组
         try {
-            bs = str.getBytes(CharsetCode.GB_2312);
+            bytes = str.getBytes(CharsetCode.GB_2312);
         } catch (UnsupportedEncodingException e) {
             throw new ToolboxException(e);
         }
         int bit;
-        for (byte b : bs) {
+        for (byte b : bytes) {
             bit = (b & 0x0f0) >> 4; // 高4位, 与操作 1111 0000
             sb.append(HEX_ARRAY[bit]);
             bit = b & 0x0f;  // 低四位, 与操作 0000 1111
