@@ -22,7 +22,6 @@ public class ShaUtils {
         return Md5Utils.encrypt(text, true, EncryptCode.SHA_256);
     }
 
-
     /**
      * 传入文本内容，返回小写的SHA-512串
      *

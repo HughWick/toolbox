@@ -25,7 +25,7 @@ public class CoordinatesUtils {
     /**
      * 截取小数点后八位
      */
-    private final static DecimalFormat decimalFormat = new DecimalFormat("#.00000000");
+    private static final  DecimalFormat decimalFormat = new DecimalFormat("#.00000000");
 
     /**
      * 高德转百度

@@ -13,18 +13,52 @@ import lombok.Data;
 @Builder
 public class ResultDTO<T> {
 
+    /**
+     * code、提示信息
+     *
+     * @param code    code
+     * @param message 提示信息
+     */
     public ResultDTO(String code, String message) {
         this.code = code;
         this.message = message;
     }
 
+    /**
+     * @param code    code
+     * @param message 提示信息
+     * @param data    数据
+     */
     public ResultDTO(String code, String message, T data) {
         this.code = code;
         this.message = message;
         this.data = data;
     }
 
-    private String code;
-    private String message;
-    private T data;
+    private String code; // code
+    private String message; // 提示信息
+    private T data; // 数据
+
+    /**
+     * 判断code码是否一样
+     * <p>当前实体类中的对应与传入的code一致</p>
+     *
+     * @param code code
+     * @return boolean
+     * @since 1.7.0
+     */
+    public boolean equalCode(String code) {
+        return this.code.equals(code);
+    }
+
+    /**
+     * 判断code码不一样
+     *
+     * @param code code
+     * @return boolean
+     * @since 1.7.0
+     */
+    public boolean notEqualCode(String code) {
+        return !equalCode(code);
+    }
 }

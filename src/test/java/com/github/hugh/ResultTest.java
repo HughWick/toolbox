@@ -16,8 +16,10 @@ public class ResultTest {
 
     @Test
     public void test01() {
-        ResultDTO dto1 = new ResultDTO("11111", "ssss");
-        System.out.println("--->" + JsonObjectUtils.toJson(dto1));
+        ResultDTO dto1 = new ResultDTO("0000", "ssss");
+        System.out.println("--1->" + JsonObjectUtils.toJson(dto1));
+        System.out.println("===2=>>>" + dto1.equalCode("0000"));
+        System.out.println("==3==>>>" + dto1.notEqualCode("0000"));
     }
 
     @Test
@@ -30,7 +32,7 @@ public class ResultTest {
 
         ResultDTO dto = new ResultDTO<>("0000", "操作成功");
         System.out.println("--1->" + JsonObjectUtils.toJson(dto));
-        System.out.println("---.>>"+dto.toString());
+        System.out.println("---.>>" + dto.toString());
         System.out.println("--2->" + ResultUtils.isEquals(dto, "0000"));
         System.out.println("--3->" + ResultUtils.isNotEquals(dto, "0000"));
         val map = new HashMap<>();
@@ -41,7 +43,6 @@ public class ResultTest {
         ResultDTO dto2 = new ResultDTO<>("00200", "操作成功");
 //        System.out.println("--7->>" + dto2.isEquals("0000"));
 //        System.out.println("--8->>" + dto2.isNotEquals("0000"));
-
 
 
     }
