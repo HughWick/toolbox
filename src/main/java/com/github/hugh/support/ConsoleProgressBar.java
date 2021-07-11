@@ -6,7 +6,7 @@ import java.text.DecimalFormat;
  * 控制台进度条
  *
  * @author hugh
- * @since 1.6.14
+ * @since 1.7.0
  */
 public class ConsoleProgressBar {
     /**

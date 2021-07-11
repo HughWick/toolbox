@@ -1153,15 +1153,14 @@ public class DateUtils extends DateCode {
         calendar.add(Calendar.MINUTE, +min);
         return calendar.getTime();
     }
-
-
+    
     /**
      * 计算开始与结束时间相差秒数
      *
      * @param begin 开始日期
      * @param end   结束日期
      * @return int 相差秒数
-     * @since 1.6.14
+     * @since 1.7.0
      */
     public static int secondsDifference(Date begin, Date end) {
         long a = end.getTime();

@@ -76,7 +76,7 @@ public class BaseConvertUtils {
      *
      * @param decimal 十进制
      * @return String 十六进制字符串
-     * @since 1.6.14
+     * @since 1.7.0
      */
     public static String decToHex(String decimal) {
         return decToHex(Integer.parseInt(decimal));
@@ -98,7 +98,7 @@ public class BaseConvertUtils {
      *
      * @param str 字符串
      * @return String 二进制数字符串
-     * @since 1.6.14
+     * @since 1.7.0
      */
     public static String decToBinary(String str) {
         return decToBinary(Integer.parseInt(str), 0);
@@ -110,7 +110,7 @@ public class BaseConvertUtils {
      * @param str    字符串
      * @param digits 二进制的位数（左边补零时才生效）
      * @return String
-     * @since 1.6.14
+     * @since 1.7.0
      */
     public static String decToBinary(String str, int digits) {
         return decToBinary(Integer.parseInt(str), digits);
@@ -164,7 +164,7 @@ public class BaseConvertUtils {
      *
      * @param num 需要转换的十进制数
      * @return String 二进制字符串
-     * @since 1.6.14
+     * @since 1.7.0
      */
     public static String hexToBinary(String num) {
         return hexToBinary(num, 0);
@@ -176,7 +176,7 @@ public class BaseConvertUtils {
      * @param num    需要转换的十进制数
      * @param digits 保留二进制的位数（左边补零时才生效）
      * @return String 二进制字符串
-     * @since 1.6.14
+     * @since 1.7.0
      */
     public static String hexToBinary(String num, int digits) {
         String str = Integer.toBinaryString(Integer.valueOf(num, 16));
@@ -189,7 +189,7 @@ public class BaseConvertUtils {
      * @param str    字符串
      * @param digits 补位数
      * @return String 补位后的二进制
-     * @since 1.6.14
+     * @since 1.7.0
      */
     private static String complement(String str, int digits) {
         String cover = Integer.toBinaryString(1 << digits).substring(1);
@@ -201,7 +201,7 @@ public class BaseConvertUtils {
      *
      * @param hex 十六进字符串
      * @return int 十进制
-     * @since 1.6.14
+     * @since 1.7.0
      */
     public static int hexToDec(String hex) {
         return Integer.parseInt(hex, 16);
@@ -212,7 +212,7 @@ public class BaseConvertUtils {
      *
      * @param hex 十六进字符串
      * @return String 十进制
-     * @since 1.6.14
+     * @since 1.7.0
      */
     public static String hexToDecString(String hex) {
         return String.valueOf(hexToDec(hex));
@@ -224,7 +224,7 @@ public class BaseConvertUtils {
      *
      * @param hexString 16进制字符串
      * @return byte[]
-     * @since 1.6.14
+     * @since 1.7.0
      */
     public static byte[] hexToBytes(String hexString) {
         int hexLen = hexString.length();
@@ -251,7 +251,7 @@ public class BaseConvertUtils {
      *
      * @param hexString 待转换的Hex字符串
      * @return byte
-     * @since 1.6.14
+     * @since 1.7.0
      */
     public static byte hexToByte(String hexString) {
         return (byte) Integer.parseInt(hexString, 16);
@@ -262,7 +262,7 @@ public class BaseConvertUtils {
      *
      * @param hexStr Byte字符串(Byte之间无分隔符
      * @return String
-     * @since 1.6.14
+     * @since 1.7.0
      */
     public static String hexToAscii(String hexStr) {
         char[] hexChar = hexStr.toCharArray();//toCharArray() 方法将字符串转换为字符数组。
@@ -289,7 +289,7 @@ public class BaseConvertUtils {
      *
      * @param str 待转换的ASCII字符串
      * @return String byte字符串 （每个Byte之间空格分隔）
-     * @since 1.6.14
+     * @since 1.7.0
      */
     public static String asciiToHex(String str) {
         StringBuilder sb = new StringBuilder();
