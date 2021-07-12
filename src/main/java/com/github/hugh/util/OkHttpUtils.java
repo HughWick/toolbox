@@ -92,7 +92,7 @@ public class OkHttpUtils {
     /**
      * 本地cookie存储
      */
-    private final static ConcurrentHashMap<String, List<Cookie>> COOKIE_STORE = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, List<Cookie>> COOKIE_STORE = new ConcurrentHashMap<>();
 
     /**
      * 表单参数请求类型
