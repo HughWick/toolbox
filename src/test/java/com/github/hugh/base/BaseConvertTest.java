@@ -43,15 +43,17 @@ public class BaseConvertTest {
     public void testTex() {
         String str = "043F";
         String str2 = "4A3F7F40";
+        String str3 = "7869616f7a68693130323031";
         byte[] bytes = BaseConvertUtils.hexToBytes(str);
         System.out.println(new String(bytes));
         byte bytes2 = BaseConvertUtils.hexToByte(str2);
         System.out.println(String.valueOf(bytes2));
         String s = BaseConvertUtils.hexToAscii(str2);
-        System.out.println("---->>>" + s);
+        System.out.println("---1->>>" + s);
         String s1 = BaseConvertUtils.asciiToHex(s);
-        System.out.println("===>>" + s1);
+        System.out.println("==2=>>" + s1);
         System.out.println(BaseConvertUtils.bytesToHexString(bytes));
+        System.out.println("=3==>>" + BaseConvertUtils.hexToAscii(str3));
     }
 
 

@@ -259,13 +259,14 @@ public class BaseConvertUtils {
 
     /**
      * 16进制直接转换成为ascii字符串(无需Unicode解码)
+     * <p>默认十六进制字符串为大写、所以内部降字符串转换成大写</p>
      *
      * @param hexStr Byte字符串(Byte之间无分隔符
      * @return String
      * @since 1.7.0
      */
     public static String hexToAscii(String hexStr) {
-        char[] hexChar = hexStr.toCharArray();//toCharArray() 方法将字符串转换为字符数组。
+        char[] hexChar = hexStr.toUpperCase().toCharArray();//toCharArray() 方法将字符串转换为字符数组。
         int length = (hexStr.length() / 2);//1个byte数值 -> 两个16进制字符
         byte[] bytes = new byte[length];
         int n;
