@@ -13,8 +13,8 @@ public class EmptyTest {
     public void isEmpty() {
         String[] arr = {};
         List<String> list = new ArrayList<>();
-        System.out.println("-1-->" + EmptyUtils.isEmpty("  "));
-        System.out.println("-2-->" + EmptyUtils.isEmpty("null"));
+        System.out.println("--1-->" + EmptyUtils.isEmpty("  "));
+        System.out.println("--2-->" + EmptyUtils.isEmpty("null"));
         System.out.println("-3->" + EmptyUtils.isEmpty(new ArrayList<>()));
         System.out.println("-4->" + EmptyUtils.isEmpty(new HashMap<>()));
         System.out.println("-6-->" + EmptyUtils.isEmpty(12));

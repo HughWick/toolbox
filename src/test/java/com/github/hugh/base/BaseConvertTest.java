@@ -52,8 +52,12 @@ public class BaseConvertTest {
         System.out.println("---1->>>" + s);
         String s1 = BaseConvertUtils.asciiToHex(s);
         System.out.println("==2=>>" + s1);
+        String s2 = BaseConvertUtils.asciiToHex(s, "_");
+        System.out.println("==3=>>" + s2);
+        String s3 = BaseConvertUtils.asciiToHex(s, " ");
+        System.out.println("==3=>>" + s3);
         System.out.println(BaseConvertUtils.bytesToHexString(bytes));
-        System.out.println("=3==>>" + BaseConvertUtils.hexToAscii(str3));
+        System.out.println("=4==>>" + BaseConvertUtils.hexToAscii(str3));
     }
 
 

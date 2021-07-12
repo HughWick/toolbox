@@ -289,10 +289,23 @@ public class BaseConvertUtils {
      * ascii字符串转换成为16进制(无需Unicode编码)
      *
      * @param str 待转换的ASCII字符串
-     * @return String byte字符串 （每个Byte之间空格分隔）
+     * @return String 十六进制字符串
      * @since 1.7.0
      */
     public static String asciiToHex(String str) {
+        return asciiToHex(str, null);
+    }
+
+    /**
+     * ascii字符串转换成为16进制(无需Unicode编码)
+     * <p>splits 不为null 时则使用分隔符进行分割</p>
+     *
+     * @param str   ascii 码字符串
+     * @param split 分隔符
+     * @return String 十六进制字符串（每个Byte之间分隔符）
+     * @since 1.7.1
+     */
+    public static String asciiToHex(String str, String split) {
         StringBuilder sb = new StringBuilder();
         byte[] bytes;//String的getBytes()方法是得到一个操作系统默认的编码格式的字节数组
         try {
@@ -306,8 +319,11 @@ public class BaseConvertUtils {
             sb.append(HEX_ARRAY[bit]);
             bit = b & 0x0f;  // 低四位, 与操作 0000 1111
             sb.append(HEX_ARRAY[bit]);
-            sb.append(' ');//每个Byte之间空格分隔
+            if (split != null) {
+                sb.append(split);//拼接每个Byte之间分隔符
+            }
         }
-        return sb.toString().trim();
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
     }
 }
