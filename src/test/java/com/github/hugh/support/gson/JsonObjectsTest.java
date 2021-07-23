@@ -1,6 +1,9 @@
 package com.github.hugh.support.gson;
 
+import com.alibaba.fastjson.JSON;
 import com.github.hugh.model.Student;
+import com.github.hugh.model.dto.ResultDTO;
+import com.github.hugh.util.gson.JsonObjectUtils;
 import com.github.hugh.util.gson.JsonObjects;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -85,6 +88,18 @@ public class JsonObjectsTest {
         System.out.println("---1>>" + data.getString("id"));
         System.out.println("--2->>" + json2.getJsonObject("data"));
         System.out.println("--3->>" + new JsonObjects(json2.getJsonObject("data")));
+    }
+
+    @Test
+    public void test04(){
+        String str = "{\"code\":\"0000\",\"data\":{\"hostSerialNumber\":\"202010260288\",\"networkType\":\"iot\"" +
+                ",\"readIdList\":[\"000f0009\",\"000f0002\",\"000f0001\"],\"resultList\":[{\"action\":\"W\",\"commandId\":\"000f0001\",\"commandKey\":\"GPRS_TIMED_SEND_DATA_TIME\",\"commandName\":\"GPRS-定时发送数据时间\",\"remake\":\"0|W||0006\",\"type\":0,\"unit\":\"S\",\"value\":\"0006\"},{\"action\":\"W\",\"commandId\":\"000f0002\",\"commandKey\":\"GPRS_HEART_BEAT_TIME\",\"commandName\":\"GPRS-网络心跳包时间\",\"remake\":\"0|W||0006\",\"type\":0,\"unit\":\"S\",\"value\":\"0006\"},{\"action\":\"W\",\"commandId\":\"000f0009\",\"commandKey\":\"GPRS_TIMED_READING_OF_POSITIONING_INFORMATION\",\"commandName\":\"GPRS-定时读取定位信息的时间\",\"remake\":\"0|W||0006\",\"type\":0,\"unit\":\"S\",\"value\":\"0006\"}]},\"message\":\"异步信息回调成功\"}";
+        ResultDTO resultDTO = new JsonObjects(str).formJson(ResultDTO.class);
+        System.out.println(resultDTO);
+
+        System.out.println(JsonObjectUtils.fromJson(str , ResultDTO.class));
+        ResultDTO resultDTO1 = JSON.parseObject(str, ResultDTO.class);
+        System.out.println(resultDTO1);
     }
 
 }

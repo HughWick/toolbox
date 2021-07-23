@@ -60,6 +60,19 @@ public class BaseConvertTest {
         System.out.println("=4==>>" + BaseConvertUtils.hexToAscii(str3));
     }
 
+    @Test
+    public void testTex02() {
+        String tex = "7a686f75353937383831";
+        System.out.println(BaseConvertUtils.hexToAscii(tex));
+        String zhou597881 = BaseConvertUtils.asciiToHex("zhou597881");
+        System.out.println("----->>" + zhou597881);
+        System.out.println("----->>" + BaseConvertUtils.hexToAscii(zhou597881.replace(" ", "")));
+        String s = BaseConvertUtils.asciiToHex("4" , " ");
+        System.out.println("===1====>"+s);
+
+
+    }
+
 
     public static void main(String[] args) {
         System.out.println("---1>>" + ControlEnum.ENABLE.getCode());
