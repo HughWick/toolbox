@@ -38,7 +38,8 @@ public @interface IpV4 {
     String value() default "";
 
     /**
-     * 默认空值也会验证
+     * 是否允许为空
+     * <p>默认不允许，也就是false时，不管value是空字符串或者null都进行Ip规则校验</p>
      *
      * @return boolean
      */
