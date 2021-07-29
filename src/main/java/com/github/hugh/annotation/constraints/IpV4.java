@@ -17,14 +17,32 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @author hugh
  * @since 1.4.9
  */
-@Target({METHOD, FIELD, PARAMETER})
-@Retention(RUNTIME)
 @Documented
+@Retention(RUNTIME)
+@Target({METHOD, FIELD, PARAMETER})
 @Constraint(validatedBy = IpV4Validator.class)//指向自定义验证类
 public @interface IpV4 {
+
+    /**
+     * 返回信息
+     *
+     * @return String
+     */
     String message() default "IP格式错误"; //这边可以标注默认的验证失败消息
 
+    /**
+     * 值
+     *
+     * @return String
+     */
     String value() default "";
+
+    /**
+     * 默认空值也会验证
+     *
+     * @return boolean
+     */
+    boolean nullable() default false;
 
     Class<?>[] groups() default {};
 

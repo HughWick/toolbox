@@ -3,10 +3,10 @@ package com.github.hugh.support.gson;
 import com.alibaba.fastjson.JSON;
 import com.github.hugh.model.Student;
 import com.github.hugh.model.dto.ResultDTO;
-import com.github.hugh.util.gson.JsonObjectUtils;
 import com.github.hugh.util.gson.JsonObjects;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import lombok.Data;
 import org.junit.Test;
 
 /**
@@ -91,15 +91,34 @@ public class JsonObjectsTest {
     }
 
     @Test
-    public void test04(){
-        String str = "{\"code\":\"0000\",\"data\":{\"hostSerialNumber\":\"202010260288\",\"networkType\":\"iot\"" +
-                ",\"readIdList\":[\"000f0009\",\"000f0002\",\"000f0001\"],\"resultList\":[{\"action\":\"W\",\"commandId\":\"000f0001\",\"commandKey\":\"GPRS_TIMED_SEND_DATA_TIME\",\"commandName\":\"GPRS-定时发送数据时间\",\"remake\":\"0|W||0006\",\"type\":0,\"unit\":\"S\",\"value\":\"0006\"},{\"action\":\"W\",\"commandId\":\"000f0002\",\"commandKey\":\"GPRS_HEART_BEAT_TIME\",\"commandName\":\"GPRS-网络心跳包时间\",\"remake\":\"0|W||0006\",\"type\":0,\"unit\":\"S\",\"value\":\"0006\"},{\"action\":\"W\",\"commandId\":\"000f0009\",\"commandKey\":\"GPRS_TIMED_READING_OF_POSITIONING_INFORMATION\",\"commandName\":\"GPRS-定时读取定位信息的时间\",\"remake\":\"0|W||0006\",\"type\":0,\"unit\":\"S\",\"value\":\"0006\"}]},\"message\":\"异步信息回调成功\"}";
-        ResultDTO resultDTO = new JsonObjects(str).formJson(ResultDTO.class);
-        System.out.println(resultDTO);
-
-        System.out.println(JsonObjectUtils.fromJson(str , ResultDTO.class));
+    public void test04() {
+        String str = "{\"code\":\"0000\",\"int2\":1,\"data\":{\"hostSerialNumber\":\"202010260288\",\"networkType\":\"iot\",\"readIdList\":[\"000f0009\",\"000f0002\",\"000f0001\"]," +
+                "\"resultList\":[{\"action\":\"W\",\"commandId\":\"000f0001\",\"commandKey\":\"GPRS_TIMED_SEND_DATA_TIME\",\"commandName\":\"GPRS-定时发送数据时间\",\"remake\":\"0|W||0006\",\"type\":0,\"unit\":\"S\",\"value\":\"0006\",\"longValue\":\"12387643876872367867326476\",\"doubleValue\":\"123.321\"}," +
+                "{\"action\":\"W\",\"commandId\":\"000f0002\",\"commandKey\":\"GPRS_HEART_BEAT_TIME\",\"commandName\":\"GPRS-网络心跳包时间\",\"remake\":\"0|W||0006\",\"type\":0,\"unit\":\"S\",\"value\":\"0006\"}," +
+                "{\"action\":\"W\",\"commandId\":\"000f0009\",\"commandKey\":\"GPRS_TIMED_READING_OF_POSITIONING_INFORMATION\",\"commandName\":\"GPRS-定时读取定位信息的时间\",\"remake\":\"0|W||0006\",\"type\":2,\"unit\":\"S\",\"value\":\"0006\"}]},\"message\":\"异步信息回调成功\"}";
         ResultDTO resultDTO1 = JSON.parseObject(str, ResultDTO.class);
-        System.out.println(resultDTO1);
+        System.out.println("-fastjson->>" + resultDTO1);
+//        ResultDTO resultDTO = JsonObjectUtils.fromJson(str, ResultDTO.class);
+//        System.out.println("--gson直转实体->" + resultDTO);
+//        JsonObjects jsonObjects = new JsonObjects(JsonObjectUtils.toJson(resultDTO.getData()));
+//        System.out.println(jsonObjects.toJson());
+//        JsonArray resultList = jsonObjects.getJsonArray("resultList");
+//        for (JsonElement jsonElement : resultList) {
+//            testCommand testCommand = JsonObjectUtils.fromJson(new JsonObjects(jsonElement).toJson(), testCommand.class);
+//            System.out.println(testCommand);
+//        }
+//        GsonBuilder gsonBuilder = new GsonBuilder();
+//        gsonBuilder.registerTypeAdapter(new TypeToken<ResultDTO>() {
+//        }.getType(), new MapDeserializerDoubleAsIntFix());
+//        Gson gson = gsonBuilder.create();
+//        ResultDTO o = gson.fromJson(str, new TypeToken<ResultDTO>() {
+//        }.getType());
+//        System.out.println("==gson自定义转换实体解析提=>?>>" +o);
     }
 
+
+    @Data
+    class testCommand {
+        private int type;
+    }
 }

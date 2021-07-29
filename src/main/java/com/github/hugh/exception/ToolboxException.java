@@ -7,7 +7,7 @@ package com.github.hugh.exception;
  * @version 1.0.0
  * @since JDK 1.8
  */
-public class ToolboxException extends RuntimeException{
+public class ToolboxException extends RuntimeException {
     public ToolboxException() {
     }
 
