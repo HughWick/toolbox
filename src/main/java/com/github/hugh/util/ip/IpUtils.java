@@ -1,6 +1,9 @@
 package com.github.hugh.util.ip;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -13,6 +16,11 @@ public class IpUtils {
 
     private IpUtils() {
     }
+
+    /**
+     * IP点号分隔符
+     */
+    private static final String REGEX_IP = "\\.";
 
     /**
      * 获取用户真实IP地址，不使用request.getRemoteAddr();的原因是有可能用户使用了代理软件方式避免真实IP地址
@@ -58,6 +66,7 @@ public class IpUtils {
 
     /**
      * 随机生成国内IP地址
+     *
      * @return String ip
      */
     public static String random() {
@@ -91,5 +100,253 @@ public class IpUtils {
         b[2] = ((ip >> 8) & 0xff);
         b[3] = (ip & 0xff);
         return b[0] + "." + b[1] + "." + b[2] + "." + b[3];
+    }
+
+    /**
+     * 功能：判断一个IP是不是在一个网段下的
+     * 格式：isInRange("192.168.8.3", "192.168.9.10/22");
+     *
+     * @param ip   IP
+     * @param cidr
+     * @return boolean
+     * @since 1.7.2
+     */
+    public static boolean isInRange(String ip, String cidr) {
+        String[] ips = ip.split(REGEX_IP);
+        int ipAddr = (Integer.parseInt(ips[0]) << 24)
+                | (Integer.parseInt(ips[1]) << 16)
+                | (Integer.parseInt(ips[2]) << 8) | Integer.parseInt(ips[3]);
+        int type = Integer.parseInt(cidr.replaceAll(".*/", ""));
+        int mask = 0xFFFFFFFF << (32 - type);
+        String cidrIp = cidr.replaceAll("/.*", "");
+        String[] cidrIps = cidrIp.split(REGEX_IP);
+        int cidrIpAddr = (Integer.parseInt(cidrIps[0]) << 24)
+                | (Integer.parseInt(cidrIps[1]) << 16)
+                | (Integer.parseInt(cidrIps[2]) << 8)
+                | Integer.parseInt(cidrIps[3]);
+        return (ipAddr & mask) == (cidrIpAddr & mask);
+    }
+
+    /**
+     * 功能：根据位数返回IP总数
+     * 格式：parseIpMaskRange("192.192.192.1", "23")
+     *
+     * @param mask 掩码
+     * @return int
+     * @since 1.7.2
+     */
+    public static int getIpCount(String mask) {
+        return BigDecimal.valueOf(Math.pow(2, 32 - Integer.parseInt(mask))).setScale(0, BigDecimal.ROUND_DOWN).intValue();//IP总数，去小数点
+    }
+
+    /**
+     * 把long类型的Ip转为一般Ip类型：xx.xx.xx.xx
+     *
+     * @param ip IP
+     * @return String
+     * @since 1.7.2
+     */
+    public static String getIpFromLong(Long ip) {
+        String s1 = String.valueOf((ip & 4278190080L) / 16777216L);
+        String s2 = String.valueOf((ip & 16711680L) / 65536L);
+        String s3 = String.valueOf((ip & 65280L) / 256L);
+        String s4 = String.valueOf(ip & 255L);
+        return s1 + "." + s2 + "." + s3 + "." + s4;
+    }
+
+    /**
+     * 把xx.xx.xx.xx类型的转为long类型的
+     *
+     * @param ip IP
+     * @return long
+     * @since 1.7.2
+     */
+    public static Long getIpFromString(String ip) {
+        String ipTemp = ip;
+        long ipLong = Long.parseLong(ipTemp.substring(0, ipTemp.indexOf('.')));
+        ipTemp = ipTemp.substring(ipTemp.indexOf('.') + 1);
+        ipLong = ipLong * 256
+                + Long.parseLong(ipTemp.substring(0, ipTemp.indexOf('.')));
+        ipTemp = ipTemp.substring(ipTemp.indexOf(".") + 1);
+        ipLong = ipLong * 256
+                + Long.parseLong(ipTemp.substring(0, ipTemp.indexOf('.')));
+        ipTemp = ipTemp.substring(ipTemp.indexOf('.') + 1);
+        ipLong = ipLong * 256 + Long.parseLong(ipTemp);
+        return ipLong;
+    }
+
+    /**
+     * 根据掩码位获取掩码
+     *
+     * @param maskBit 掩码位数，如"28"、"30"
+     * @return String
+     * @since 1.7.2
+     */
+    public static String getMaskByMaskBit(String maskBit) {
+        return "".equals(maskBit) ? "error, maskBit is null !" : getNetmask(maskBit);
+    }
+
+    /**
+     * 根据 ip/掩码位 计算IP段的起始IP 如 IP串 218.240.38.69/30
+     *
+     * @param ip      给定的IP，如218.240.38.69
+     * @param maskBit 给定的掩码位，如30
+     * @return String 起始IP的字符串表示
+     * @since 1.7.2
+     */
+    public static String calcBeginIp(String ip, String maskBit) {
+        return getIpFromLong(getBeginIpLong(ip, maskBit));
+    }
+
+    /**
+     * 根据 ip/掩码位 计算IP段的起始IP 如 IP串 218.240.38.69/30
+     *
+     * @param ip      给定的IP，如218.240.38.69
+     * @param maskBit 给定的掩码位，如30
+     * @return long 起始IP的长整型表示
+     * @since 1.7.2
+     */
+    public static Long getBeginIpLong(String ip, String maskBit) {
+        return getIpFromString(ip) & getIpFromString(getMaskByMaskBit(maskBit));
+    }
+
+    /**
+     * 根据 ip/掩码位 计算IP段的终止IP 如 IP串 218.240.38.69/30
+     *
+     * @param ip      给定的IP，如218.240.38.69
+     * @param maskBit 给定的掩码位，如30
+     * @return String 终止IP的字符串表示
+     * @since 1.7.2
+     */
+    public static String calcEndIp(String ip, String maskBit) {
+        return getIpFromLong(getEndIpLong(ip, maskBit));
+    }
+
+    /**
+     * 根据 ip/掩码位 计算IP段的终止IP 如 IP串 218.240.38.69/30
+     *
+     * @param ip      给定的IP，如218.240.38.69
+     * @param maskBit 给定的掩码位，如30
+     * @return long 终止IP的长整型表示
+     * @since 1.7.2
+     */
+    public static Long getEndIpLong(String ip, String maskBit) {
+        return getBeginIpLong(ip, maskBit)
+                + ~getIpFromString(getMaskByMaskBit(maskBit));
+    }
+
+    /**
+     * 根据掩码位获取子网掩码
+     *
+     * @param maskBit 掩码位 1-32
+     * @return String netmask
+     * @since 1.7.2
+     */
+    public static String getNetmask(String maskBit) {
+        if ("1".equals(maskBit)) return "128.0.0.0";
+        if ("2".equals(maskBit)) return "192.0.0.0";
+        if ("3".equals(maskBit)) return "224.0.0.0";
+        if ("4".equals(maskBit)) return "240.0.0.0";
+        if ("5".equals(maskBit)) return "248.0.0.0";
+        if ("6".equals(maskBit)) return "252.0.0.0";
+        if ("7".equals(maskBit)) return "254.0.0.0";
+        if ("8".equals(maskBit)) return "255.0.0.0";
+        if ("9".equals(maskBit)) return "255.128.0.0";
+        if ("10".equals(maskBit)) return "255.192.0.0";
+        if ("11".equals(maskBit)) return "255.224.0.0";
+        if ("12".equals(maskBit)) return "255.240.0.0";
+        if ("13".equals(maskBit)) return "255.248.0.0";
+        if ("14".equals(maskBit)) return "255.252.0.0";
+        if ("15".equals(maskBit)) return "255.254.0.0";
+        if ("16".equals(maskBit)) return "255.255.0.0";
+        if ("17".equals(maskBit)) return "255.255.128.0";
+        if ("18".equals(maskBit)) return "255.255.192.0";
+        if ("19".equals(maskBit)) return "255.255.224.0";
+        if ("20".equals(maskBit)) return "255.255.240.0";
+        if ("21".equals(maskBit)) return "255.255.248.0";
+        if ("22".equals(maskBit)) return "255.255.252.0";
+        if ("23".equals(maskBit)) return "255.255.254.0";
+        if ("24".equals(maskBit)) return "255.255.255.0";
+        if ("25".equals(maskBit)) return "255.255.255.128";
+        if ("26".equals(maskBit)) return "255.255.255.192";
+        if ("27".equals(maskBit)) return "255.255.255.224";
+        if ("28".equals(maskBit)) return "255.255.255.240";
+        if ("29".equals(maskBit)) return "255.255.255.248";
+        if ("30".equals(maskBit)) return "255.255.255.252";
+        if ("31".equals(maskBit)) return "255.255.255.254";
+        if ("32".equals(maskBit)) return "255.255.255.255";
+        return "-1";
+    }
+
+    /**
+     * 根据IP和位数（掩码）返回该IP网段的所有IP
+     * <p>格式：parseIpMaskRange("192.192.192.1.", "23")</p>
+     *
+     * @param ip   ip
+     * @param mask 掩码
+     * @return List<String>
+     * @since 1.7.2
+     */
+    public static List<String> parseIpMaskRange(String ip, String mask) {
+        List<String> list = new ArrayList<>();
+        if ("32".equals(mask)) {
+            list.add(ip);
+        } else {
+            String startIp = getBeginIpStr(ip, mask);
+            String endIp = calcEndIp(ip, mask);
+            if (!"31".equals(mask)) {
+                String subStart = startIp.split(REGEX_IP)[0] + "." + startIp.split(REGEX_IP)[1] + "." + startIp.split(REGEX_IP)[2] + ".";
+                String subEnd = endIp.split(REGEX_IP)[0] + "." + endIp.split(REGEX_IP)[1] + "." + endIp.split(REGEX_IP)[2] + ".";
+                startIp = subStart + (Integer.parseInt(startIp.split(REGEX_IP)[3]) + 1);
+                endIp = subEnd + (Integer.parseInt(endIp.split(REGEX_IP)[3]) - 1);
+            }
+            list = parseIpRange(startIp, endIp);
+        }
+        return list;
+    }
+
+    /**
+     * 转换ip范围
+     *
+     * @param startIp 起始IP地址
+     * @param endIp   结束IP地址
+     * @return List<String>
+     * @since 1.7.2
+     */
+    public static List<String> parseIpRange(String startIp, String endIp) {
+        List<String> ips = new ArrayList<>();
+        String[] startIpArr = startIp.split(REGEX_IP);
+        String[] endIpArr = endIp.split(REGEX_IP);
+        int[] int_ipf = new int[4];
+        int[] int_ipt = new int[4];
+        for (int i = 0; i < 4; i++) {
+            int_ipf[i] = Integer.parseInt(startIpArr[i]);
+            int_ipt[i] = Integer.parseInt(endIpArr[i]);
+        }
+        for (int A = int_ipf[0]; A <= int_ipt[0]; A++) {
+            for (int B = (A == int_ipf[0] ? int_ipf[1] : 0); B <= (A == int_ipt[0] ? int_ipt[1]
+                    : 255); B++) {
+                for (int C = (B == int_ipf[1] ? int_ipf[2] : 0); C <= (B == int_ipt[1] ? int_ipt[2]
+                        : 255); C++) {
+                    for (int D = (C == int_ipf[2] ? int_ipf[3] : 0); D <= (C == int_ipt[2] ? int_ipt[3]
+                            : 255); D++) {
+                        ips.add(A + "." + B + "." + C + "." + D);
+                    }
+                }
+            }
+        }
+        return ips;
+    }
+
+    /**
+     * 根据 ip/掩码位 计算IP段的起始IP 如 IP串 218.240.38.69/30
+     *
+     * @param ip      给定的IP，如218.240.38.69
+     * @param maskBit 给定的掩码位，如30
+     * @return String 起始IP的字符串表示
+     * @since 1.7.2
+     */
+    public static String getBeginIpStr(String ip, String maskBit) {
+        return getIpFromLong(getBeginIpLong(ip, maskBit));
     }
 }
