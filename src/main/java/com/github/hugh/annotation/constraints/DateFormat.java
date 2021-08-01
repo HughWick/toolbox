@@ -16,7 +16,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * 日期格式验证注解类
  *
  * @author hugh
- * @since  1.0.5 
+ * @since  1.0.5
  */
 @Target({METHOD, FIELD, PARAMETER})
 @Retention(RUNTIME)

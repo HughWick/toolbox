@@ -11,12 +11,11 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-
 /**
- *  自定义的不为空验证注解
+ * 自定义的不为空验证注解
  *
  * @author hugh
- * @since  1.0.5 
+ * @since  1.0.5
  */
 @Target({METHOD, FIELD, PARAMETER})
 @Retention(RUNTIME)
