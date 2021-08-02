@@ -243,39 +243,74 @@ public class IpUtils {
      * @since 1.7.2
      */
     public static String getNetmask(String maskBit) {
-        if ("1".equals(maskBit)) return "128.0.0.0";
-        if ("2".equals(maskBit)) return "192.0.0.0";
-        if ("3".equals(maskBit)) return "224.0.0.0";
-        if ("4".equals(maskBit)) return "240.0.0.0";
-        if ("5".equals(maskBit)) return "248.0.0.0";
-        if ("6".equals(maskBit)) return "252.0.0.0";
-        if ("7".equals(maskBit)) return "254.0.0.0";
-        if ("8".equals(maskBit)) return "255.0.0.0";
-        if ("9".equals(maskBit)) return "255.128.0.0";
-        if ("10".equals(maskBit)) return "255.192.0.0";
-        if ("11".equals(maskBit)) return "255.224.0.0";
-        if ("12".equals(maskBit)) return "255.240.0.0";
-        if ("13".equals(maskBit)) return "255.248.0.0";
-        if ("14".equals(maskBit)) return "255.252.0.0";
-        if ("15".equals(maskBit)) return "255.254.0.0";
-        if ("16".equals(maskBit)) return "255.255.0.0";
-        if ("17".equals(maskBit)) return "255.255.128.0";
-        if ("18".equals(maskBit)) return "255.255.192.0";
-        if ("19".equals(maskBit)) return "255.255.224.0";
-        if ("20".equals(maskBit)) return "255.255.240.0";
-        if ("21".equals(maskBit)) return "255.255.248.0";
-        if ("22".equals(maskBit)) return "255.255.252.0";
-        if ("23".equals(maskBit)) return "255.255.254.0";
-        if ("24".equals(maskBit)) return "255.255.255.0";
-        if ("25".equals(maskBit)) return "255.255.255.128";
-        if ("26".equals(maskBit)) return "255.255.255.192";
-        if ("27".equals(maskBit)) return "255.255.255.224";
-        if ("28".equals(maskBit)) return "255.255.255.240";
-        if ("29".equals(maskBit)) return "255.255.255.248";
-        if ("30".equals(maskBit)) return "255.255.255.252";
-        if ("31".equals(maskBit)) return "255.255.255.254";
-        if ("32".equals(maskBit)) return "255.255.255.255";
-        return "-1";
+        switch (maskBit) {
+            case "1":
+                return "128.0.0.0";
+            case "2":
+                return "192.0.0.0";
+            case "3":
+                return "224.0.0.0";
+            case "4":
+                return "240.0.0.0";
+            case "5":
+                return "248.0.0.0";
+            case "6":
+                return "252.0.0.0";
+            case "7":
+                return "254.0.0.0";
+            case "8":
+                return "255.0.0.0";
+            case "9":
+                return "255.128.0.0";
+            case "10":
+                return "255.192.0.0";
+            case "11":
+                return "255.224.0.0";
+            case "12":
+                return "255.240.0.0";
+            case "13":
+                return "255.248.0.0";
+            case "14":
+                return "255.252.0.0";
+            case "15":
+                return "255.254.0.0";
+            case "16":
+                return "255.255.0.0";
+            case "17":
+                return "255.255.128.0";
+            case "18":
+                return "255.255.192.0";
+            case "19":
+                return "255.255.224.0";
+            case "20":
+                return "255.255.240.0";
+            case "21":
+                return "255.255.248.0";
+            case "22":
+                return "255.255.252.0";
+            case "23":
+                return "255.255.254.0";
+            case "24":
+                return "255.255.255.0";
+            case "25":
+                return "255.255.255.128";
+            case "26":
+                return "255.255.255.192";
+            case "27":
+                return "255.255.255.224";
+            case "28":
+                return "255.255.255.240";
+            case "29":
+                return "255.255.255.248";
+            case "30":
+                return "255.255.255.252";
+            case "31":
+                return "255.255.255.254";
+            case "32":
+                return "255.255.255.255";
+            default:
+                return "-1";
+        }
     }
 
     /**
@@ -284,7 +319,7 @@ public class IpUtils {
      *
      * @param ip   ip
      * @param mask 掩码
-     * @return List<String>
+     * @return List IP网段的所有IP
      * @since 1.7.2
      */
     public static List<String> parseIpMaskRange(String ip, String mask) {
@@ -310,7 +345,7 @@ public class IpUtils {
      *
      * @param startIp 起始IP地址
      * @param endIp   结束IP地址
-     * @return List<String>
+     * @return List  起始与结束范围内的所有IP
      * @since 1.7.2
      */
     public static List<String> parseIpRange(String startIp, String endIp) {

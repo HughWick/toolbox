@@ -414,6 +414,8 @@ public class RegexUtils {
      *      纬度 latitude ： -90.0～+90.0（整数部分为0～90，必须输入1到8位小数）
      * </pre>
      *
+     * @param longitude 经度
+     * @param latitude  纬度
      * @return boolean {@code true} 正确的经纬度
      * @since 1.4.16
      */
@@ -440,6 +442,7 @@ public class RegexUtils {
      *      经度longitude： -180.0～+180.0（整数部分为0～180，必须输入1到8位小数）
      * </pre>
      *
+     * @param longitude 经度
      * @return boolean {@code true} 经度正确
      * @since 1.4.16
      */
@@ -459,6 +462,7 @@ public class RegexUtils {
      *      纬度 latitude ： -90.0～+90.0（整数部分为0～90，必须输入1到8位小数）
      * </pre>
      *
+     * @param latitude 维度
      * @return boolean {@code true} 维度正确
      * @since 1.4.16
      */
