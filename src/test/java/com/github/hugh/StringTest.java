@@ -88,6 +88,7 @@ public class StringTest {
     }
 
 
+    // 获取字符串中数字
     @Test
     public void getNumber() {
         String str = "abcd123和345.56jia567.23.23jian345and23or345.56";
@@ -129,13 +130,32 @@ public class StringTest {
             for (Map.Entry<Integer, String> e : map.entrySet()) {
                 result += e.getValue() + ",";
             }
-            result = result.substring(0, result.length()-1);
+            result = result.substring(0, result.length() - 1);
         } else {
             result = "";
         }
         System.out.println(result);
     }
 
+    // 计算字符串与中文的长度
+    public static int length(String value) {
+        int valueLength = 0;
+        String chinese = "[\u0391-\uFFE5]";
+        /* 获取字段值的长度，如果含中文字符，则每个中文字符长度为2，否则为1 */
+        for (int i = 0; i < value.length(); i++) {
+            /* 获取一个字符 */
+            String temp = value.substring(i, i + 1);
+            /* 判断是否为中文字符 */
+            if (temp.matches(chinese)) {
+                /* 中文字符长度为2 */
+                valueLength += 2;
+            } else {
+                /* 其他字符长度为1 */
+                valueLength += 1;
+            }
+        }
+        return valueLength;
+    }
 
     public static void main(String[] args) {
         String init = "Bob is a Bird... Bob is a Plane... Bob is Superman!";
