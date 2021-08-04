@@ -13,8 +13,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * 端口验证
- * User: AS
- * Date: 2021/7/30 10:09
+ *
+ * @author Hugh
+ * @since 1.7.2
  */
 @Documented
 @Retention(RUNTIME)

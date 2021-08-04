@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 /**
  * 字符串工具
  *
- * @author huhg
+ * @author hugh
  * @since 1.0.6
  */
 public class StringUtils {
