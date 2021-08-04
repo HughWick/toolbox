@@ -98,6 +98,19 @@ public class MapTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void test04() {
+        Map<String, Object> map = new HashMap<>();
+        MapUtils.setValue(map, "a", null);
+        System.out.println("--1>>" + map);
+        MapUtils.setValue(map, "null", "null");
+        System.out.println("--2>>" + map);
+        MapUtils.setValue(map, "a", "1");
+        System.out.println("--4>>" + map);
+        MapUtils.setValue(map, "null", "1");
+        System.out.println("--3>>" + map);
+    }
 }
 
 

@@ -351,4 +351,24 @@ public class MapUtils {
         return org.apache.commons.collections4.MapUtils.getMap(map, key);
     }
 
+    /**
+     * 为map put值
+     * <p>如果key或value为空时则不put</p>
+     *
+     * @param map   map
+     * @param key   key
+     * @param value value
+     * @param <K>   the key type
+     * @param <V>   the value type
+     * @since 1.7.3
+     */
+    public static <K, V> void setValue(final Map<? super K, V> map, final K key, final V value) {
+        if (map == null) {
+            return;
+        }
+        if (EmptyUtils.isEmpty(key) || EmptyUtils.isEmpty(value)) {
+            return;
+        }
+        map.put(key, value);
+    }
 }
