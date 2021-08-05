@@ -137,7 +137,7 @@ public class StringUtils {
     }
 
     /**
-     * 查询字符串中的对应varchar的长度
+     * 计算字符串中的对应varchar的长度
      * <ul>
      * <li>由于旧的Mysql数据库一个中文算2个字节、本方法将字符串中的中文按2个长度进行合计</li>
      * </ul>
@@ -285,8 +285,7 @@ public class StringUtils {
         }
         Matcher m = BLANK_PATTERN.matcher(string);
         String result = m.replaceAll(replacement);
-        //160 &nbsp;
-        result = result.replaceAll("\\u00A0", replacement);
+        result = result.replace("\\u00A0", replacement);
         return result;
     }
 

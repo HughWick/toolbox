@@ -49,7 +49,7 @@ public class StringTest {
 
     @Test
     public void test04() {
-        System.out.println("--1-->>" + StringUtils.replaceAnyBlank("entity is error !"));
+        System.out.println("--1-->>" + StringUtils.replaceAnyBlank(" entity is error !"));
         System.out.println("--2-->>" + StringUtils.replaceAnyBlank("entity is error !", "_"));
     }
 
