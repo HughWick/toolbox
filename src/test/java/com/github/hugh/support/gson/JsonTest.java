@@ -22,7 +22,7 @@ import java.util.UUID;
  * @author AS
  * @date 2020/9/28 11:38
  */
-public class JsonDemo {
+public class JsonTest {
 
     @Test
     public void toJsonObject() {
@@ -170,6 +170,13 @@ public class JsonDemo {
     }
 
     @Test
+    public void test08() {
+        String str2 = "[{\"serialNo\":\"1339497989051277312\",\"createBy\":1,\"createDate\":1608196182000,\"updateBy\":\"xxxx\",\"updateDate\":1615444156000}]";
+        JsonArray jsonElements = JsonObjectUtils.parseArray(str2);
+        System.out.println("-====>>>" + JsonObjectUtils.toArrayList(jsonElements));
+    }
+
+    @Test
     public void testTime() {
         String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"1625024713000\"}";
         Student student1 = JsonObjectUtils.fromJsonTimeStamp(str, Student.class);
@@ -178,6 +185,7 @@ public class JsonDemo {
         JsonObjects jsonObjects = new JsonObjects(str);
         System.out.println(jsonObjects.fromJsonTimeStamp(Student.class));
     }
+
 
     public static void main(String[] args) {
         JsonObject msgObj = new JsonObject();
