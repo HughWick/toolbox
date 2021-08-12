@@ -1,7 +1,9 @@
 package com.github.hugh.util;
 
+import com.github.hugh.model.dto.GgaDTO;
 import com.github.hugh.model.dto.GpsDTO;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 /**
@@ -25,7 +27,7 @@ public class CoordinatesUtils {
     /**
      * 截取小数点后八位
      */
-    private static final  DecimalFormat decimalFormat = new DecimalFormat("#.00000000");
+    private static final DecimalFormat decimalFormat = new DecimalFormat("#.00000000");
 
     /**
      * 高德转百度
@@ -65,5 +67,91 @@ public class CoordinatesUtils {
         // 计算后的gcj02ll 纬度
         String gcjLat = decimalFormat.format(z * Math.sin(theta));
         return new GpsDTO(Double.parseDouble(gcjLon), Double.parseDouble(gcjLat));
+    }
+
+    /**
+     * 经纬度计算
+     * 算法示例：
+     * 东经：10629.6601->106.29.6601->106+29.6601÷60=106.494335°
+     * 北纬：2937.1526->29.37.1526-29+37.1526÷60=29.61921°
+     *
+     * @param degreeMinutes 度分格式:经纬度
+     * @return String 经纬度
+     * @since 1.7.4
+     */
+    public static String formatDegreeMinutes(double degreeMinutes) {
+        // 向下取整
+        double number = Math.floor(degreeMinutes / 100);
+        String number2 = String.valueOf(degreeMinutes / 100);
+        // 获取小数点后的数
+        number2 = number2.substring(number2.indexOf("."));
+        double v = Double.parseDouble("0" + number2) * 100;
+        double number3 = DoubleMathUtils.div(v, 60, 8);
+        BigDecimal b1 = new BigDecimal(Double.toString(number));
+        BigDecimal b2 = new BigDecimal(Double.toString(number3));
+        return b2.add(b1).toString();
+    }
+
+    /**
+     * gga解析成实体
+     *
+     * @param gga gga信息
+     * @return GgaDTO
+     * @since 1.7.4
+     */
+    public static GgaDTO parsGga(String gga) {
+        if (EmptyUtils.isEmpty(gga)) {
+            return null;
+        }
+        GgaDTO ggaDTO = new GgaDTO();
+        String[] arr = gga.split(","); // 用,分割
+        for (int i = 0; i < arr.length; i++) {
+            String str = arr[i];
+            switch (i) {
+                case 0:
+                    ggaDTO.setName(str);
+                    break;
+                case 1:
+                    ggaDTO.setDate(str);
+                    break;
+                case 2:
+                    ggaDTO.setLatitude(str);
+                    break;
+                case 3:
+                    ggaDTO.setLatitudeBearing(str);
+                    break;
+                case 4:
+                    ggaDTO.setLongitude(str);
+                    break;
+                case 5:
+                    ggaDTO.setLongitudeBearing(str);
+                    break;
+                case 6:
+                    ggaDTO.setGpsStatus(str);
+                    break;
+                case 7:
+                    ggaDTO.setNumberOfSatellites(str);
+                    break;
+                case 8:
+                    ggaDTO.setHdopHorizontalAccuracyFactor(str);
+                    break;
+                case 9:
+                    ggaDTO.setAltitude(str);
+                    break;
+                case 10:
+                    ggaDTO.setWaterSurfaceAltitude(str);
+                    break;
+                case 11:
+                    ggaDTO.setDifferentialTime(str);
+                    break;
+                case 12:
+                    ggaDTO.setDifferentialStationId(str);
+                    break;
+                default:
+                    break;
+            }
+        }
+        ggaDTO.setCalibrationValue(arr[arr.length - 1]);
+        return ggaDTO;
     }
 }
