@@ -35,4 +35,11 @@ public class TimeTest {
         TimeUtils.collectLocalDates(timeStart, timeEnd).forEach(System.out::println);
     }
 
+    @Test
+    public void test04(){
+        String timeStart = "2019-12-11 00:00:00";
+        String timeEnd = "2020-12-20 23:59:59";
+        long l = TimeUtils.differMilli(timeStart, timeEnd);
+        System.out.println(l);
+    }
 }

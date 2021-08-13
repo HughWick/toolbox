@@ -247,17 +247,18 @@ public class TimeUtils extends DateCode {
      * 校验时间戳是否超过设定
      *
      * @param clientTime 客户端时间戳
-     * @param max_allow  允许的最大误差时间 毫秒
+     * @param maxAllow   允许的最大误差时间 毫秒
      * @return boolean {@code true} 在范围内
      */
-    public static boolean checkTimestamp(String clientTime, long max_allow) {
+    public static boolean checkTimestamp(String clientTime, long maxAllow) {
         if (clientTime.length() != 13) {
             return false;
         }
-        long time, sys = System.currentTimeMillis();
+        long time;
+        long sys = System.currentTimeMillis();
         try {
             time = Long.parseLong(clientTime);
-            if (!((sys - time) <= max_allow && (time - sys) <= max_allow)) {
+            if (!((sys - time) <= maxAllow && (time - sys) <= maxAllow)) {
                 return false;
             }
         } catch (NumberFormatException e) {
@@ -300,7 +301,6 @@ public class TimeUtils extends DateCode {
         return ofPattern(YEAR_MONTH_DAY_HOUR_MIN_SEC, localDateTime);
     }
 
-
     /**
      * 校验开始日期与结束日期相差多少毫秒
      * <ul>
@@ -312,7 +312,7 @@ public class TimeUtils extends DateCode {
      * @return long 相差毫秒数
      * @since 1.2.4
      */
-    public static long differ(String startTime, String endTime) {
+    public static long differMilli(String startTime, String endTime) {
         if (EmptyUtils.isEmpty(startTime) || EmptyUtils.isEmpty(endTime)) {
             return -1;
         }
@@ -328,7 +328,6 @@ public class TimeUtils extends DateCode {
         Instant e = end.toInstant(ZoneOffset.ofHours(8));
         return ChronoUnit.MILLIS.between(s, e);
     }
-
 
     /**
      * 获取指定日期后的第N天
@@ -411,5 +410,4 @@ public class TimeUtils extends DateCode {
                 // 把流收集为List
                 .collect(Collectors.toList());
     }
-
 }
