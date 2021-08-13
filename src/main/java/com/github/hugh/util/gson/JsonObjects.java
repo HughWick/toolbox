@@ -39,12 +39,24 @@ public class JsonObjects extends JsonObjectUtils {
     }
 
     /**
-     * 获取gson中对应的{@link JsonObject}后放入封装的{@link JsonObjects}中，方便后去使用
+     * 获取gson中对应的{@link JsonObject}后放入封装的{@link JsonObjects}中，方便后续使用
      *
      * @param key 键
      * @return {@link JsonObjects}
      */
+    @Deprecated
     public JsonObjects jsonObjects(String key) {
+        return new JsonObjects(getJsonObject(jsonObject, key));
+    }
+
+    /**
+     * 获取gson中对应的{@link JsonObject}后放入封装的{@link JsonObjects}中，方便后续使用
+     *
+     * @param key 键
+     * @return {@link JsonObjects}
+     * @since 1.7.4
+     */
+    public JsonObjects getThis(String key) {
         return new JsonObjects(getJsonObject(jsonObject, key));
     }
 

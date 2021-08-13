@@ -17,12 +17,12 @@ public class CoordinatesUtils {
     /**
      * 圆周率
      */
-    private static double pi = 3.14159265358979324;
+    private static final double pi = 3.14159265358979324;
 
     /**
      * 计算后的Π
      */
-    private static double CALC_PI = pi * 3000.0 / 180.0;
+    private static final double CALC_PI = pi * 3000.0 / 180.0;
 
     /**
      * 截取小数点后八位
@@ -59,7 +59,8 @@ public class CoordinatesUtils {
      * @since 1.6.4
      */
     public static GpsDTO bd09ToGcj02(double longitude, double latitude) {
-        double x = longitude - 0.0065, y = latitude - 0.006;
+        double x = longitude - 0.0065;
+        double y = latitude - 0.006;
         double z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * CALC_PI);
         double theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * CALC_PI);
         // 计算后的gcj02ll 经度

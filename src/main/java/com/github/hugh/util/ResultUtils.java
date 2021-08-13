@@ -8,6 +8,7 @@ import com.github.hugh.model.dto.ResultDTO;
  * @author hugh
  * @since 1.5.0
  */
+@Deprecated
 public class ResultUtils {
 
     private ResultUtils() {
