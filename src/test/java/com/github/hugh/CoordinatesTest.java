@@ -33,7 +33,9 @@ public class CoordinatesTest {
     public void test03() {
         String lons = "2832.9191";
         String lats = "10922.5659";
-        System.out.println(CoordinatesUtils.formatDegreeMinutes(Double.parseDouble(lons)) + "-----------" + CoordinatesUtils.formatDegreeMinutes(Double.parseDouble(lats)));
+        String lon = CoordinatesUtils.formatDegreeMinutes(Double.parseDouble(lons));
+        String lat = CoordinatesUtils.formatDegreeMinutes(Double.parseDouble(lats));
+        System.out.println(lon + "-----------" + lat);
         String str = "$GNGGA,063012.000,2832.9110,N,10922.5671,E,2,21,0.63,400.9,M,-27.1,M,,*5A";
         GgaDTO ggaDTO = CoordinatesUtils.parsGga(str);
         System.out.println(ggaDTO);
