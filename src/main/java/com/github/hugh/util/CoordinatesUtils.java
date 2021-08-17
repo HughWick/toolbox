@@ -103,7 +103,7 @@ public class CoordinatesUtils {
      * @return GgaDTO
      * @since 1.7.4
      */
-    public static GgaDTO parsGga(String gga) {
+    public static GgaDTO parseGga(String gga) {
         if (EmptyUtils.isEmpty(gga)) {
             return null;
         }
