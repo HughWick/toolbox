@@ -242,9 +242,9 @@ public class JsonObjectUtils {
      * @return ArrayList 集合
      * @since 1.3.7
      */
-    public static List<?> toArrayList(JsonArray jsonArray) {
+    public static <T> List<T> toArrayList(JsonArray jsonArray) {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        Type type = new TypeToken<ArrayList<?>>() {
+        Type type = new TypeToken<ArrayList<T>>() {
         }.getType();
         Gson gson = gsonBuilder
                 .registerTypeAdapter(type, new MapTypeAdapter()).create();

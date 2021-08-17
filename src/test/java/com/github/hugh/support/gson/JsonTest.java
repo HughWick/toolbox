@@ -1,5 +1,6 @@
 package com.github.hugh.support.gson;
 
+import com.github.hugh.constant.DateCode;
 import com.github.hugh.model.Student;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.OkHttpUtils;
@@ -13,10 +14,7 @@ import net.sf.json.JSONObject;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author AS
@@ -141,7 +139,6 @@ public class JsonTest {
     @Test
     public void test07() {
         String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\",\"id\":null,\"opType\":1}";
-
         String arryStr = "{ " +
                 "\"client\":\"127.0.0.1\"," +
                 "\"servers\":[" +
@@ -164,16 +161,18 @@ public class JsonTest {
         Student student = JsonObjectUtils.fromJson(tmee, Student.class);
         System.out.println("=--7->>" + student.getCreate());
         System.out.println("-8-->>" + JsonObjectUtils.toJson(student));
-//        new MyType<Map<String, Object>>().gsonToMap(json2);
         Map<Object, Object> objectObjectMap = JsonObjectUtils.toMap(json2);
         System.out.println("-9-->>" + objectObjectMap);
+        Student student2 = JsonObjectUtils.fromJson(tmee, Student.class , DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
+        System.out.println("=--10->>" + student2.getCreate());
     }
 
     @Test
     public void test08() {
         String str2 = "[{\"serialNo\":\"1339497989051277312\",\"createBy\":1,\"createDate\":1608196182000,\"updateBy\":\"xxxx\",\"updateDate\":1615444156000}]";
         JsonArray jsonElements = JsonObjectUtils.parseArray(str2);
-        System.out.println("-====>>>" + JsonObjectUtils.toArrayList(jsonElements));
+        List<JsonObject> objects = JsonObjectUtils.toArrayList(jsonElements);
+        System.out.println("-====>>>" +objects);
     }
 
     @Test
