@@ -69,8 +69,10 @@ public class BaseConvertTest {
         System.out.println("----->>" + BaseConvertUtils.hexToAscii(zhou597881.replace(" ", "")));
         String s = BaseConvertUtils.asciiToHex("4" , " ");
         System.out.println("===1====>"+s);
-
-
+        String str1 = "7e 00 18 20 20 10 26 02 88 87 00 10 00 0b 7a 68 6f 75 35 39 37 38 38 31 c6 7e";
+        String[] strings = str1.split(" ");
+        byte[] bytes = BaseConvertUtils.hexArrToBytes(strings);
+        System.out.println(new String(bytes));
     }
 
 

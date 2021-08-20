@@ -326,4 +326,20 @@ public class BaseConvertUtils {
         sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
     }
+
+    /**
+     * 十六进制数组转byte数组
+     *
+     * @param strings 十六进制字符串数组
+     * @return byte
+     * @since 1.7.6
+     */
+    public static byte[] hexArrToBytes(String[] strings) {
+        byte[] bytes = new byte[strings.length];
+        for (int i = 0; i < strings.length; i++) {
+            byte b = hexToByte(strings[i]);
+            bytes[i] = b;
+        }
+        return bytes;
+    }
 }
