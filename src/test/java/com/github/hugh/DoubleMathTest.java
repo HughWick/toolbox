@@ -23,9 +23,11 @@ public class DoubleMathTest {
 
     @Test
     public void test02() {
-        double pow = Math.pow(10, -(-1));
+        int i1 = -1;
+        int i2 = -2;
+        double pow = Math.pow(10, -i1);
         System.out.println("10的负一次方等于：" + pow);
-        System.out.println("10的负二次方等于：" + Math.pow(10, -(-2)));
+        System.out.println("10的负二次方等于：" + Math.pow(10, -i2));
         System.out.println("10的负三次方等于：" + Math.pow(10, -(-3)));
         System.out.println("-1等于：" + (-1));
         System.out.println("负的括号内-1等于：" + -(-1));

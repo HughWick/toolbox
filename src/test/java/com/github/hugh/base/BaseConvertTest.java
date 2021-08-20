@@ -45,7 +45,7 @@ public class BaseConvertTest {
         String str2 = "4A3F7F40";
         String str3 = "7869616f7a68693130323031";
         byte[] bytes = BaseConvertUtils.hexToBytes(str);
-        System.out.println(new String(bytes));
+        System.out.println("--0->>>" + new String(bytes));
         byte bytes2 = BaseConvertUtils.hexToByte(str2);
         System.out.println(String.valueOf(bytes2));
         String s = BaseConvertUtils.hexToAscii(str2);
@@ -67,12 +67,14 @@ public class BaseConvertTest {
         String zhou597881 = BaseConvertUtils.asciiToHex("zhou597881");
         System.out.println("----->>" + zhou597881);
         System.out.println("----->>" + BaseConvertUtils.hexToAscii(zhou597881.replace(" ", "")));
-        String s = BaseConvertUtils.asciiToHex("4" , " ");
-        System.out.println("===1====>"+s);
+        String s = BaseConvertUtils.asciiToHex("4", " ");
+        System.out.println("===1====>" + s);
         String str1 = "7e 00 18 20 20 10 26 02 88 87 00 10 00 0b 7a 68 6f 75 35 39 37 38 38 31 c6 7e";
         String[] strings = str1.split(" ");
         byte[] bytes = BaseConvertUtils.hexArrToBytes(strings);
         System.out.println(new String(bytes));
+        byte[] bytes2 = BaseConvertUtils.hexArrToBytes(str1, " ");
+        System.out.println(new String(bytes2));
     }
 
 
