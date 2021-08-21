@@ -207,4 +207,9 @@ public class JsonObjects extends JsonObjectUtils {
     public <T> T fromJsonTimeStamp(Class<T> classOfT) {
         return fromJsonTimeStamp(this.jsonObject.toString(), classOfT);
     }
+
+    @Override
+    public String toString() {
+        return this.jsonObject.toString();
+    }
 }
