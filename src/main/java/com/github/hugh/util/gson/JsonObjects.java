@@ -15,6 +15,10 @@ public class JsonObjects extends JsonObjectUtils {
 
     private final JsonObject jsonObject;
 
+    public JsonObjects() {
+        this.jsonObject = new JsonObject();
+    }
+
     public <T> JsonObjects(T object) {
         this.jsonObject = parse(object);
     }
