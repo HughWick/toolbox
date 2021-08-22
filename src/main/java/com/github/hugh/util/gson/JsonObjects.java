@@ -13,7 +13,7 @@ import com.google.gson.JsonObject;
  */
 public class JsonObjects extends JsonObjectUtils {
 
-    private final JsonObject jsonObject;
+    private JsonObject jsonObject;
 
     public JsonObjects() {
         this.jsonObject = new JsonObject();
@@ -215,5 +215,20 @@ public class JsonObjects extends JsonObjectUtils {
     @Override
     public String toString() {
         return this.jsonObject.toString();
+    }
+
+    /**
+     * 增加
+     *
+     * @param key   键
+     * @param value 值
+     * @param <K>   key
+     * @param <V>   value
+     */
+    public <K extends String, V extends String> void addProperty(K key, V value) {
+        if (this.jsonObject == null) {
+            this.jsonObject = new JsonObject();
+        }
+        this.jsonObject.addProperty(key, value);
     }
 }

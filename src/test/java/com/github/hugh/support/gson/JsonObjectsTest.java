@@ -43,10 +43,11 @@ public class JsonObjectsTest {
     public void test02() {
         String str = "{}";
         JsonObjects json = new JsonObjects(str);
-        System.out.println("---->>" + json.isNull());
+        System.out.println("--1-->>" + json.isNull());
         String str2 = null;
         JsonObjects json2 = new JsonObjects(str2);
-        System.out.println("---->>" + json2.isNull());
+        System.out.println("--2-->>" + json2.isNull());
+        System.out.println("--3-->>" + json2.isNotNull());
         JsonObject jsopn = new JsonObject();
         System.out.println("---->>" + new JsonObjects(jsopn).toString());
         System.out.println("---->>" + new JsonObjects(jsopn));
@@ -121,9 +122,11 @@ public class JsonObjectsTest {
     }
 
     @Test
-    public void test05(){
+    public void test05() {
         JsonObjects jsonObjects = new JsonObjects();
         System.out.println(jsonObjects);
+        jsonObjects.addProperty("a", true);
+        System.out.println("--->" + jsonObjects.isEquals("value", "s"));
     }
 
 
