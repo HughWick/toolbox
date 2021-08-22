@@ -125,7 +125,7 @@ public class JsonObjectsTest {
     public void test05() {
         JsonObjects jsonObjects = new JsonObjects();
         System.out.println(jsonObjects);
-        jsonObjects.addProperty("a", true);
+        jsonObjects.addProperty("a", "true");
         System.out.println("--->" + jsonObjects.isEquals("value", "s"));
     }
 
