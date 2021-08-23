@@ -212,18 +212,24 @@ public class JsonObjects extends JsonObjectUtils {
         return fromJsonTimeStamp(this.jsonObject.toString(), classOfT);
     }
 
+    /**
+     * 重写
+     *
+     * @return String
+     */
     @Override
     public String toString() {
         return this.jsonObject.toString();
     }
 
     /**
-     * 增加
+     * 添加
      *
      * @param key   键
      * @param value 值
      * @param <K>   key
      * @param <V>   value
+     * @since 1.7.6
      */
     public <K extends String, V extends String> void addProperty(K key, V value) {
         if (this.jsonObject == null) {
