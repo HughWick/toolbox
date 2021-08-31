@@ -23,7 +23,7 @@ public class DoubleMathTest {
 
     @Test
     public void test02() {
-        int i1 = -1;
+        var i1 = -1;
         int i2 = -2;
         double pow = Math.pow(10, -i1);
         System.out.println("10的负一次方等于：" + pow);
