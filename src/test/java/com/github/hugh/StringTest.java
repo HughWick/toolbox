@@ -55,7 +55,7 @@ public class StringTest {
 
     @Test
     public void test05() {
-        String str = "[a, b, [c]]]";
+        var str = "[a, b, [c]]]";
         System.out.println("==2=>>>" + StringUtils.trim(str, "]"));
         System.out.println("==2=>>>" + StringUtils.trim(str, "["));
         System.out.println("--4-->>" + StringUtils.isContainChinese("；"));
@@ -135,6 +135,13 @@ public class StringTest {
             result = "";
         }
         System.out.println(result);
+    }
+
+    @Test
+    public void trimResults() {
+        var str = "\t0.12 \n";
+        System.out.println("--->>" + str.strip());
+        System.out.println("--->>" + str.trim());
     }
 
 

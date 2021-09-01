@@ -37,7 +37,8 @@ public class EmptyUtils {
         } else if (obj instanceof int[]) {
             return ((int[]) obj).length == 0;
         } else if (obj instanceof String) {
-            String str = obj.toString().trim();
+            // 去除首位的空白，包括英文和其他所有语言中的空白字符
+            String str = obj.toString().strip();
             return str.length() == 0 || "null".equals(str);// 长度等于0 或者 为字符串的null 返回true
         } else if (obj instanceof Collection) {
             return ((Collection) obj).isEmpty();
