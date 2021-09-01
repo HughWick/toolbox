@@ -315,7 +315,7 @@ public class StringUtils {
         if (source == null) {
             return "";
         }
-        source = source.trim(); // 循环去掉字符串首的beTrim字符
+        source = source.strip(); // 循环去掉字符串首的beTrim字符
         if (source.isEmpty()) {
             return "";
         }

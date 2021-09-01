@@ -170,12 +170,12 @@ public class PingUtils {
                         if (line.contains("%")) {
                             loss = line.substring(line.lastIndexOf("=") + 1, line.indexOf("%") + 1);
                             if (loss.contains("(")) {
-                                loss = loss.substring(loss.indexOf("(") + 1).trim();
+                                loss = loss.substring(loss.indexOf("(") + 1).strip();
                             }
                         }
                         //网络延时
                         if ((line.contains(",") || line.contains("，")) && line.contains("=") && line.contains("ms")) {
-                            delay = line.substring(line.lastIndexOf("=") + 1, line.lastIndexOf("ms") + 2).trim();
+                            delay = line.substring(line.lastIndexOf("=") + 1, line.lastIndexOf("ms") + 2).strip();
                         }
                         buffer.append(line).append("\n");
                     }
@@ -191,7 +191,7 @@ public class PingUtils {
                             }
                             assert msg != null;
                             if (msg.length > 0) {
-                                loss = msg[2].substring(0, msg[2].indexOf("%") + 1).trim();
+                                loss = msg[2].substring(0, msg[2].indexOf("%") + 1).strip();
                             }
                         }
                         //网络延时

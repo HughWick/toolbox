@@ -451,7 +451,7 @@ public class RegexUtils {
             return false;
         }
         String longitudePattern = "^[\\-+]?(0?\\d{1,2}\\.\\d{1,8}|1[0-7]?\\d{1}\\.\\d{1,8}|180\\.0{1,8})$";
-        longitude = longitude.trim();
+        longitude = longitude.strip();
         return Pattern.matches(longitudePattern, longitude);
     }
 
@@ -471,7 +471,7 @@ public class RegexUtils {
             return false;
         }
         String latitudePattern = "^[\\-+]?([0-8]?\\d{1}\\.\\d{1,8}|90\\.0{1,8})$";
-        latitude = latitude.trim();
+        latitude = latitude.strip();
         return Pattern.matches(latitudePattern, latitude);
     }
 }

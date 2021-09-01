@@ -247,7 +247,7 @@ public class MapUtils {
                         break;
                     case "int":
                     case "Integer":
-                        value = Integer.parseInt(String.valueOf(value).trim());
+                        value = Integer.parseInt(String.valueOf(value).strip());
                         break;
                     case "long":
                     case "Long":

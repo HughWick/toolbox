@@ -23,7 +23,7 @@ public class AppkeyUtils {
     public static String generate() {
         UUID uuid = UUID.randomUUID();
         String appKey = uuid.toString().replace("-", "");
-        return appKey.trim();
+        return appKey.strip();
     }
 
     /**
@@ -44,6 +44,6 @@ public class AppkeyUtils {
         }
         String ss = l.toString();
         String appSecret = ss.replace("[", "").replace("]", "").replace(",", "").replace(" ", "");
-        return appSecret.trim();
+        return appSecret.strip();
     }
 }
