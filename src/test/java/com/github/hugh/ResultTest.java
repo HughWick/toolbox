@@ -1,7 +1,6 @@
 package com.github.hugh;
 
 import com.github.hugh.model.dto.ResultDTO;
-import com.github.hugh.util.ResultUtils;
 import com.github.hugh.util.gson.JsonObjectUtils;
 import lombok.val;
 import org.junit.Test;
@@ -33,8 +32,8 @@ public class ResultTest {
         ResultDTO dto = new ResultDTO<>("0000", "操作成功");
         System.out.println("--1->" + JsonObjectUtils.toJson(dto));
         System.out.println("---.>>" + dto.toString());
-        System.out.println("--2->" + ResultUtils.isEquals(dto, "0000"));
-        System.out.println("--3->" + ResultUtils.isNotEquals(dto, "0000"));
+//        System.out.println("--2->" + ResultUtils.isEquals(dto, "0000"));
+//        System.out.println("--3->" + ResultUtils.isNotEquals(dto, "0000"));
         val map = new HashMap<>();
 
         System.out.println("--4->" + JsonObjectUtils.toJson(new ResultDTO<>("000", "操作成功", map)));
