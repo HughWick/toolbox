@@ -87,10 +87,10 @@ public class JsonObjectsTest {
                 "  }";
         JsonObjects json2 = new JsonObjects(two);
 
-        JsonObjects data = json2.jsonObjects("data");
+//        JsonObjects data = json2.jsonObjects("data");
         JsonObjects data2 = json2.getThis("data");
         System.out.println("---<>>>" + data2);
-        System.out.println("---1>>" + data.getString("id"));
+//        System.out.println("---1>>" + data.getString("id"));
         System.out.println("--2->>" + json2.getJsonObject("data"));
         System.out.println("--3->>" + new JsonObjects(json2.getJsonObject("data")));
     }

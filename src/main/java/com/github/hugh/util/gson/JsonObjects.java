@@ -47,17 +47,6 @@ public class JsonObjects extends JsonObjectUtils {
      *
      * @param key 键
      * @return {@link JsonObjects}
-     */
-    @Deprecated
-    public JsonObjects jsonObjects(String key) {
-        return new JsonObjects(getJsonObject(jsonObject, key));
-    }
-
-    /**
-     * 获取gson中对应的{@link JsonObject}后放入封装的{@link JsonObjects}中，方便后续使用
-     *
-     * @param key 键
-     * @return {@link JsonObjects}
      * @since 1.7.4
      */
     public JsonObjects getThis(String key) {
@@ -223,15 +212,13 @@ public class JsonObjects extends JsonObjectUtils {
     }
 
     /**
-     * 添加
+     * 向{{@link #jsonObject}}中添加key-value
      *
      * @param key   键
      * @param value 值
-     * @param <K>   key
-     * @param <V>   value
      * @since 1.7.6
      */
-    public <K extends String, V extends String> void addProperty(K key, V value) {
+    public void addProperty(String key, String value) {
         if (this.jsonObject == null) {
             this.jsonObject = new JsonObject();
         }

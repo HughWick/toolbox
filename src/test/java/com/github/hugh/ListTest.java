@@ -21,8 +21,10 @@ public class ListTest {
 
     @Test
     public void test01() {
-        List<Integer> originList = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8);
-        System.out.println("--->>" + ListUtils.guavaPartitionList(originList, 4, 3));
+        var originList = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8);
+        originList.add(9);
+        System.out.println(originList);
+//        System.out.println("--->>" + ListUtils.guavaPartitionList(originList, 4, 3));
     }
 
     @Test
