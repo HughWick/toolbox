@@ -1,9 +1,10 @@
 package com.github.hugh.util;
 
-import com.github.hugh.constant.CharsetCode;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.support.instance.Instance;
+import com.github.hugh.util.common.AssertUtils;
 import com.github.hugh.util.gson.JsonObjectUtils;
+import com.github.hugh.util.lang.UrlUtils;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -11,10 +12,7 @@ import okhttp3.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -106,7 +104,7 @@ public class OkHttpUtils {
     /**
      * OkHttp管理cookie
      */
-    private static OkHttpClient COOKIE_CLIENT = new OkHttpClient.Builder()
+    private static final OkHttpClient COOKIE_CLIENT = new OkHttpClient.Builder()
             .cookieJar(new CookieJar() {
                 @Override
                 public void saveFromResponse(HttpUrl httpUrl, List<Cookie> list) {
@@ -125,30 +123,35 @@ public class OkHttpUtils {
     /**
      * 发送表单形式参数的POST
      * <p>Content-Type:application/x-www-form-urlencoded</p>
-     * <p>该方法调用{@link #postForm(String, JSONObject)}发送post请求</p>
+     * <p>使用默认构建的{@link #buildClient()}OkHttpClient{@link #postForm(String, Object, OkHttpClient)}发送post请求</p>
      *
-     * @param url 请求URL
-     * @param map Map参数
+     * @param url    请求URL
+     * @param params 请求参数参数
+     * @param <T>    请求参数类型
      * @return String
      * @throws IOException IO流错误
      * @since 1.3.8
      */
-    public static String postForm(String url, Map map) throws IOException {
-        return postForm(url, JSONObject.fromObject(map));
+    public static <T> String postForm(String url, T params) throws IOException {
+        return postForm(url, JSONObject.fromObject(params), buildClient());
     }
 
     /**
      * 发送表单形式参数的POST
      * <p>Content-Type:application/x-www-form-urlencoded</p>
      *
-     * @param url  请求URL
-     * @param json 参数
+     * @param url          请求URL
+     * @param params       参数
+     * @param okHttpClient okHttpClient
+     * @param <T>          请求参数类型
      * @return String
      * @throws IOException IO流错误
      */
-    public static String postForm(String url, JSONObject json) throws IOException {
-        String params = jsonParse(json);
-        return post(url, params, FORM_TYPE, buildClient());
+    public static <T> String postForm(String url, T params, OkHttpClient okHttpClient) throws IOException {
+        AssertUtils.notEmpty(url, "url");
+        JSONObject jsonObject = JSONObject.fromObject(params);
+        String urlParams = UrlUtils.jsonParse(jsonObject);
+        return post(url, urlParams, FORM_TYPE, okHttpClient);
     }
 
     /**
@@ -158,28 +161,15 @@ public class OkHttpUtils {
      * @param url           请求URL
      * @param params        参数
      * @param headerContent header 附加内容
-     * @return String
-     * @throws IOException IO流错误
-     * @since 1.5.13
-     */
-    public static String postForm(String url, Map params, Map<String, String> headerContent) throws IOException {
-        return postForm(url, JSONObject.fromObject(params), headerContent);
-    }
-
-    /**
-     * 发送表单形式参数的POST
-     * <p>Content-Type:application/x-www-form-urlencoded</p>
-     *
-     * @param url           请求URL
-     * @param json          参数
-     * @param headerContent header 附加内容
+     * @param <T>           请求参数类型
      * @return String
      * @throws IOException IO流错误
      * @since 1.3.0
      */
-    public static String postForm(String url, JSONObject json, Map<String, String> headerContent) throws IOException {
-        String params = jsonParse(json);
-        RequestBody body = RequestBody.create(FORM_TYPE, params);
+    public static <T> String postForm(String url, T params, Map<String, String> headerContent) throws IOException {
+        JSONObject jsonObject = JSONObject.fromObject(params);
+        String urlParams = UrlUtils.jsonParse(jsonObject);
+        RequestBody body = RequestBody.create(FORM_TYPE, urlParams);
         Headers headers = Headers.of(headerContent);
         Request request = new Request.Builder()
                 .url(url)
@@ -202,65 +192,25 @@ public class OkHttpUtils {
      * @since 1.2.4
      */
     public static String postFormCookie(String url, JSONObject json) throws IOException {
-        String params = jsonParse(json);
+        String params = UrlUtils.jsonParse(json);
         return post(url, params, FORM_TYPE, COOKIE_CLIENT);
     }
 
     /**
      * 发送json形式参数的post请求
      * <p>Content-Type:application/json;charset=UTF-8</p>
-     * <p>该方法调用{@link #postJson(String, JSONObject) }进行post请求</p>
-     *
-     * @param url 请求URL
-     * @param map 参数
-     * @return String
-     * @throws IOException IO流错误
-     * @since 1.3.8
-     */
-    public static String postJson(String url, Map map) throws IOException {
-        return postJson(url, JSONObject.fromObject(map));
-    }
-
-    /**
-     * 发送json形式参数的post请求
-     * <p>Content-Type:application/json;charset=UTF-8</p>
-     *
-     * @param url  请求URL
-     * @param json 参数
-     * @return String
-     * @throws IOException IO流错误
-     */
-    public static String postJson(String url, JSONObject json) throws IOException {
-        return post(url, json.toString(), JSON_TYPE);
-    }
-
-    /**
-     * 发送json形式参数的post请求
-     * <p>Content-Type:application/json;charset=UTF-8</p>
-     *
-     * @param url  请求URL
-     * @param json json字符串
-     * @return String
-     * @throws IOException IO流错误
-     * @since 1.5.10
-     */
-    public static String postJson(String url, String json) throws IOException {
-        return post(url, json, JSON_TYPE);
-    }
-
-    /**
-     * 发送POST 后返回结果转换为{@link JsonObject}
-     * <p>Content-Type:application/x-www-form-urlencoded</p>
-     * <p>该方法调用{@link #postFormReJsonObject(String, JSONObject) }进行post请求</p>
      *
      * @param url    请求URL
      * @param params 参数
-     * @return {@link JsonObject}
+     * @param <T>    请求参数类型
+     * @return String
      * @throws IOException IO流错误
-     * @since 1.5.2
      */
-    public static JsonObject postFormReJsonObject(String url, Map params) throws IOException {
-        return postFormReJsonObject(url, JSONObject.fromObject(params));
+    public static <T> String postJson(String url, T params) throws IOException {
+        if (params instanceof String) {
+            return post(url, String.valueOf(params), JSON_TYPE);
+        }
+        return post(url, JSONObject.fromObject(params).toString(), JSON_TYPE);
     }
 
     /**
@@ -269,11 +219,12 @@ public class OkHttpUtils {
      *
      * @param url    请求URL
      * @param params 参数
+     * @param <T>    请求参数类型
      * @return {@link JsonObject}
      * @throws IOException IO流错误
      * @since 1.3.0
      */
-    public static JsonObject postFormReJsonObject(String url, JSONObject params) throws IOException {
+    public static <T> JsonObject postFormReJsonObject(String url, T params) throws IOException {
         String result = postForm(url, params);
         try {
             return JsonObjectUtils.parse(result);
@@ -283,54 +234,18 @@ public class OkHttpUtils {
     }
 
     /**
-     * 将json中键值对拼接为url对应的参数
-     *
-     * @param json 参数
-     * @return String 拼接后的URL参数字符串
-     */
-    private static String jsonParse(JSONObject json) {
-        if (json == null || json.isEmpty()) {
-            return "";
-        }
-        StringBuilder sb = new StringBuilder();
-        Iterator<?> iterator = json.keys();
-        while (iterator.hasNext()) {
-            String key = String.valueOf(iterator.next());
-            String value = String.valueOf(json.get(key));
-            try {
-                value = URLEncoder.encode(value, CharsetCode.UTF_8);//将参数转换为urlEncoder码
-                sb.append(key).append("=").append(value).append("&");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        }
-        sb.deleteCharAt(sb.length() - 1); // 删除结尾符号
-        return sb.toString();
-    }
-
-    /**
      * 发送get请求
      * <p>将data中的键值对拼接成标准的url访问参数</p>
      *
      * @param url    URL
      * @param params 请求参数
-     * @return String
-     * @since 1.4.17
-     */
-    public static String get(String url, Map params) {
-        return get(url, JSONObject.fromObject(params));
-    }
-
-    /**
-     * 发送get请求
-     * <p>将data中的键值对拼接成标准的url访问参数</p>
-     *
-     * @param url    URL
-     * @param params 请求参数
+     * @param <T>    请求参数类型
      * @return String
      */
-    public static String get(String url, JSONObject params) {
-        url = urlParam(url, params);
+    public static <T> String get(String url, T params) throws IOException {
+        JSONObject jsonObject = JSONObject.fromObject(params);
+        AssertUtils.notEmpty(url, "url");
+        url = UrlUtils.urlParam(url, jsonObject);
         return get(url);
     }
 
@@ -341,35 +256,10 @@ public class OkHttpUtils {
      * @param url URL
      * @return String
      */
-    public static String get(String url) {
+    public static String get(String url) throws IOException {
+        AssertUtils.notEmpty(url, "url");
         Request request = new Request.Builder().url(url).build();
-        try {
-            return send(request, buildClient());
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * 在url后拼接参数
-     *
-     * @param url  URL
-     * @param data 参数
-     * @return String 拼接好参数的Get请求url
-     * @since 1.3.0
-     */
-    private static String urlParam(String url, JSONObject data) {
-        if (EmptyUtils.isEmpty(url)) {
-            return "";
-        }
-        String last = url.substring(url.length() - 1);
-        if (!"?".equals(last)) {// 当最后一个字符不为"?"时进行拼接
-            url += "?";
-        }
-        String params = jsonParse(data);
-        url += params;
-        return url;
+        return send(request, buildClient());
     }
 
     /**
@@ -383,7 +273,7 @@ public class OkHttpUtils {
      * @since 1.3.0
      */
     public static String get(String url, JSONObject data, Map<String, String> headerContent) throws IOException {
-        url = urlParam(url, data);
+        url = UrlUtils.urlParam(url, data);
         Headers headers = Headers.of(headerContent);
         Request request = new Request.Builder()
                 .url(url)

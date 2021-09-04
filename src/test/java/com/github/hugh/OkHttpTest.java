@@ -4,6 +4,7 @@ import com.github.hugh.util.OkHttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import net.sf.json.JSONObject;
+import okhttp3.OkHttpClient;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -21,20 +22,22 @@ public class OkHttpTest {
 
     @Test
     public void test01() {
-        Map map = new HashMap<>();
+        var map = new HashMap<>();
         map.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
         Map head = new HashMap<>();
         head.put("a", "1");
         JSONObject json = new JSONObject();
         json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
         try {
-            System.out.println("--2>>" + OkHttpUtils.postJson("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+            System.out.println("-postJson-1>" + OkHttpUtils.postJson("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+            System.out.println("-postJson-2>>" + OkHttpUtils.postJson("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json.toString()));
             System.out.println("--3>>" + OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
             System.out.println("--4> map>" + OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", map, head));
 //            System.out.println("--5->>" + OkHttpUtils.postFormReJSON("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
-            System.out.println("--6->>" + OkHttpUtils.get("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+            System.out.println("get-1->>" + OkHttpUtils.get("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+            System.out.println("get-2->>" + OkHttpUtils.get("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", map));
+            System.out.println("-get-3->>" + OkHttpUtils.get("" ));
             System.out.println("--7->>" + OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
-            System.out.println("--8->>" + OkHttpUtils.get("http://localhost:8020/redis/test02" ));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -97,16 +100,25 @@ public class OkHttpTest {
         System.out.println("--->>" + s);
     }
 
+//    public static OkHttpClient buildClient(int connectTimeout, int readTimeout) {
+//        OkHttpClient client = Instance.getInstance().singleton(OkHttpClient.class);
+//        client.newBuilder().connectTimeout(connectTimeout, TimeUnit.SECONDS)
+//                .readTimeout(readTimeout, TimeUnit.SECONDS)
+//                .retryOnConnectionFailure(true)
+//                .build();
+//        return client;
+//    }
+
+    @Test
     public void tem() throws IOException {
-        JSONObject json = new JSONObject();
-        json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-        log.info(OkHttpUtils.get("http://localhost:7040/knowledge/articles/test", json));
-        log.debug(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
-        log.error(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
-    }
-
-
-    public static void main(String[] args) throws IOException {
-
+        HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
+//        JSONObject json = new JSONObject();
+        objectObjectHashMap.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+//        log.info(OkHttpUtils.get("http://localhost:7040/knowledge/articles/test", json));
+        log.info(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", objectObjectHashMap));
+        OkHttpClient okHttpClient = OkHttpUtils.buildClient(15, 15);
+        log.info(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", objectObjectHashMap, okHttpClient));
+        log.error(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", JSONObject.fromObject(objectObjectHashMap)));
+        log.error(OkHttpUtils.postForm("", JSONObject.fromObject(objectObjectHashMap)));
     }
 }

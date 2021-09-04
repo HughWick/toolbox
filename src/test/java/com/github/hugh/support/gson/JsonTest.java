@@ -59,8 +59,14 @@ public class JsonTest {
         JSONObject json = new JSONObject();
         json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
         JsonObject jsonObject = OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json);
-        assert jsonObject != null;
-        System.out.println("--->>" + jsonObject.toString());
+        System.out.println("--1->>" + jsonObject.toString());
+        HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
+
+        objectObjectHashMap.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+        JsonObject jsonObject2 = OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", objectObjectHashMap);
+        System.out.println("--2->>" + jsonObject2.toString());
+        JsonObject jsonObject3 = OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json.toString());
+        System.out.println("--3->>" + jsonObject3.toString());
         System.out.println("--getString->>" + JsonObjectUtils.getString(jsonObject, "msg1"));
         System.out.println("--getString->>" + JsonObjectUtils.getString(jsonObject, "msg"));
         System.out.println("-getInt-->>" + JsonObjectUtils.getInt(jsonObject, "status"));
