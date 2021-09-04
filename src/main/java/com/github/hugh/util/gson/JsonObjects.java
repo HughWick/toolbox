@@ -2,6 +2,7 @@ package com.github.hugh.util.gson;
 
 import com.github.hugh.util.EmptyUtils;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -160,7 +161,7 @@ public class JsonObjects extends JsonObjectUtils {
             return false;
         }
         String string = getString(key);
-        if (EmptyUtils.isEmpty(key)) {
+        if (EmptyUtils.isEmpty(string)) {
             return false;
         }
         return string.equals(value);
@@ -212,7 +213,7 @@ public class JsonObjects extends JsonObjectUtils {
     }
 
     /**
-     * 向{{@link #jsonObject}}中添加key-value
+     * 向{@link #jsonObject}中添加key-value
      *
      * @param key   键
      * @param value 值
@@ -223,5 +224,16 @@ public class JsonObjects extends JsonObjectUtils {
             this.jsonObject = new JsonObject();
         }
         this.jsonObject.addProperty(key, value);
+    }
+
+    /**
+     * 移除{@link #jsonObject}key对应的属性
+     *
+     * @param key KEY
+     * @return JsonElement
+     * @since 2.0.0
+     */
+    public JsonElement removeProperty(String key) {
+        return this.jsonObject.remove(key);
     }
 }

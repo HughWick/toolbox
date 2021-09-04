@@ -125,8 +125,11 @@ public class JsonObjectsTest {
     public void test05() {
         JsonObjects jsonObjects = new JsonObjects();
         System.out.println(jsonObjects);
-        jsonObjects.addProperty("a", "true");
-        System.out.println("--->" + jsonObjects.isEquals("value", "s"));
+        jsonObjects.addProperty("a", "111");
+        jsonObjects.addProperty("b", "2222");
+        System.out.println("--->" + jsonObjects.isEquals("a", "s"));
+        System.out.println("--->" + jsonObjects.isEquals("abs", "s"));
+        System.out.println("--2->" + jsonObjects.removeProperty("b").getAsString());
     }
 
 
