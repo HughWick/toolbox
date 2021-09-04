@@ -10,6 +10,8 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * @author AS
  * @date 2020/9/11 16:05
@@ -140,8 +142,8 @@ public class StringTest {
     @Test
     public void trimResults() {
         var str = "\t0.12 \n";
-        System.out.println("--->>" + str.strip());
-        System.out.println("--->>" + str.trim());
+        assertEquals(str.strip(), str.trim());
+        System.out.println("--------------->>");
     }
 
 
@@ -149,6 +151,7 @@ public class StringTest {
         String init = "Bob is a Bird... Bob is a Plane... Bob is Superman!";
         String changed = init.replace("Bob is", "It's"); // Noncompliant  
         System.out.println(changed);
+
 //        CharMatcher.javaIsoControl()
         // changed = changed.replaceAll("\\.\\.\\.", ";"); // Noncompliant
 //        double threadcount = DoubleMathUtils.mul(16, 3);

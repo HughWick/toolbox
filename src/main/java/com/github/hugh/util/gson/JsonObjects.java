@@ -219,11 +219,13 @@ public class JsonObjects extends JsonObjectUtils {
      * @param value 值
      * @since 1.7.6
      */
-    public void addProperty(String key, String value) {
+    public <E> void addProperty(String key, E value) {
         if (this.jsonObject == null) {
             this.jsonObject = new JsonObject();
         }
-        this.jsonObject.addProperty(key, value);
+        if (value instanceof String) {
+            this.jsonObject.addProperty(key, (String) value);
+        }
     }
 
     /**

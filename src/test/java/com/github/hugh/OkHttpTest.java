@@ -1,7 +1,6 @@
 package com.github.hugh;
 
 import com.github.hugh.util.OkHttpUtils;
-import com.github.hugh.util.gson.JsonObjectUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import net.sf.json.JSONObject;
@@ -29,15 +28,13 @@ public class OkHttpTest {
         JSONObject json = new JSONObject();
         json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
         try {
-//            for (int i = 0; i < 10000; i++) {
-//                System.out.println(i + "--1->>" + OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
-//            }
             System.out.println("--2>>" + OkHttpUtils.postJson("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
             System.out.println("--3>>" + OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
             System.out.println("--4> map>" + OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", map, head));
-            System.out.println("--5->>" + OkHttpUtils.postFormReJSON("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+//            System.out.println("--5->>" + OkHttpUtils.postFormReJSON("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
             System.out.println("--6->>" + OkHttpUtils.get("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
             System.out.println("--7->>" + OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+            System.out.println("--8->>" + OkHttpUtils.get("http://localhost:8020/redis/test02" ));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,10 +47,8 @@ public class OkHttpTest {
         params.put("ZH", "admin");
         params.put("MM", "88888888");
         try {
-            System.out.println("--1->>" + OkHttpUtils.postFormCookie("https://www.hnlot.com.cn/ptpz/yonghu/login", params));
-//            Thread.sleep(5000);
-//            Thread.sleep(5000);
-            System.out.println("--2->>" + OkHttpUtils.postFormCookie("https://www.hnlot.com.cn/ptpz/juese/selectJueSe", params));
+            System.out.println("--1->>" + OkHttpUtils.postFormCookie("http://www.hnlot.com.cn/ptpz/yonghu/login", params));
+            System.out.println("--2->>" + OkHttpUtils.postFormCookie("http://www.hnlot.com.cn/ptpz/juese/selectJueSe", params));
             System.out.println("--3->>" + OkHttpUtils.postFormCookie("http://localhost:7040/knowledge/articles/test02", params));
         } catch (IOException e) {
             e.printStackTrace();
@@ -112,21 +107,6 @@ public class OkHttpTest {
 
 
     public static void main(String[] args) throws IOException {
-        OkHttpTest test = new OkHttpTest();
-        test.tem();
-        val map =  new HashMap<>();
-        map.put("1",1);
-        map.put(1,1);
-        System.out.println("--->>"+map);
-        System.out.println("--->>"+ JsonObjectUtils.toJson(map));
-//        var str = "123c";
-//        str = "abcdef";
-//        System.out.println("--->>"+str);
-//        val map = new HashMap<>();
-//        val map2 = new JSONObject();
-//        map.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-//        map2.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-//        System.out.println("--1->>" + OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", map));
-//        System.out.println("--2->>" + OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", map2));
+
     }
 }

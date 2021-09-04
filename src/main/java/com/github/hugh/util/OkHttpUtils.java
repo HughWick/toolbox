@@ -12,7 +12,6 @@ import okhttp3.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.SocketTimeoutException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -250,29 +249,6 @@ public class OkHttpUtils {
     }
 
     /**
-     * 发送POST 后返回结果转换为JSON
-     * <p>Content-Type:application/x-www-form-urlencoded</p>
-     * <ul>
-     * <li>由于JSONObject底层将字符串转成JSONObject时效率过低,在版本1.3.0开始废弃</li>
-     * <li>建议使用Gson版本的转换方法{@link #postFormReJsonObject(String, JSONObject)}</li>
-     * </ul>
-     *
-     * @param url  请求URL
-     * @param json 参数
-     * @return JSONObject
-     * @throws IOException IO流错误
-     */
-    @Deprecated
-    public static JSONObject postFormReJSON(String url, JSONObject json) throws IOException {
-        String result = postForm(url, json);
-        try {
-            return JSONObject.fromObject(result);
-        } catch (Exception e) {
-            throw new ToolboxException("request 返回结果格式错误:" + result);
-        }
-    }
-
-    /**
      * 发送POST 后返回结果转换为{@link JsonObject}
      * <p>Content-Type:application/x-www-form-urlencoded</p>
      * <p>该方法调用{@link #postFormReJsonObject(String, JSONObject) }进行post请求</p>
@@ -476,9 +452,6 @@ public class OkHttpUtils {
                 throw new ToolboxException("result params is null ");
             }
             return body1.string();
-        } catch (SocketTimeoutException timeEx) {
-            log.error("Request Time Out ,url:{}", request.url(), timeEx);
-            return null;
         }
     }
 

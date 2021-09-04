@@ -128,7 +128,6 @@ public class DoubleMathUtils {
         return b.divide(one, scale, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
-
     /**
      * 如果是小数，保留两位，非小数，保留整数
      *
