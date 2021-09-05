@@ -1,7 +1,7 @@
 package com.github.hugh.guava;
 
 import com.google.common.base.Splitter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 

@@ -1,7 +1,7 @@
 package com.github.hugh.file;
 
 import com.github.hugh.util.file.SuffixUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created with IntelliJ IDEA.

@@ -1,7 +1,7 @@
 package com.github.hugh;
 
 import com.github.hugh.util.PingUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author AS

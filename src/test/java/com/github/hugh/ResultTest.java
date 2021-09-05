@@ -3,7 +3,7 @@ package com.github.hugh;
 import com.github.hugh.model.dto.ResultDTO;
 import com.github.hugh.util.gson.JsonObjectUtils;
 import lombok.val;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class ResultTest {
 
     @Test
-    public void test01() {
+    void test01() {
         ResultDTO dto1 = new ResultDTO("0000", "ssss");
         System.out.println("--1->" + JsonObjectUtils.toJson(dto1));
         System.out.println("===2=>>>" + dto1.equalCode("0000"));
@@ -22,7 +22,7 @@ public class ResultTest {
     }
 
     @Test
-    public void test02() {
+    void test02() {
 //        ResultDTO dto = new ResultDTO<>("0000", "操作成功");
 //        System.out.println("--->>"+ResultUtils.re());
     }

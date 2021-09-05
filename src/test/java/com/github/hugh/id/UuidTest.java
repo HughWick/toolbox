@@ -1,6 +1,6 @@
 package com.github.hugh.id;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author AS

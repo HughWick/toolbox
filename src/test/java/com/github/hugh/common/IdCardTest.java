@@ -1,7 +1,7 @@
 package com.github.hugh.common;
 
 import com.github.hugh.util.common.IdCardUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author hugh

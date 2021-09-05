@@ -1,7 +1,7 @@
 package com.github.hugh;
 
 import com.github.hugh.util.RandomUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.ThreadLocalRandom;
 

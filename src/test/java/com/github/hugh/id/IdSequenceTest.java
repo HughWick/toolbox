@@ -1,7 +1,7 @@
 package com.github.hugh.id;
 
 import com.github.hugh.IdSequence;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 

@@ -1,7 +1,7 @@
 package com.github.hugh.secret;
 
 import com.github.hugh.util.secrect.Crc16Utils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author hugh

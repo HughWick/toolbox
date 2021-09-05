@@ -1,7 +1,7 @@
 package com.github.hugh.secret;
 
 import com.github.hugh.util.secrect.Md5Utils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author hugh

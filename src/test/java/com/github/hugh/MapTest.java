@@ -5,7 +5,7 @@ import com.github.hugh.util.EntityUtils;
 import com.github.hugh.util.MapUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 import java.util.HashMap;

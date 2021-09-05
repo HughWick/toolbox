@@ -2,7 +2,7 @@ package com.github.hugh.file;
 
 import com.github.hugh.util.file.FileUtils;
 import com.github.hugh.util.file.ImageUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 

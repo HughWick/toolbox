@@ -1,7 +1,7 @@
 package com.github.hugh.regex;
 
 import com.github.hugh.util.regex.RegexUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author AS

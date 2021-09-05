@@ -2,7 +2,7 @@ package com.github.hugh;
 
 import com.github.hugh.util.ip.IpUtils;
 import com.github.hugh.util.regex.RegexUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.util.List;

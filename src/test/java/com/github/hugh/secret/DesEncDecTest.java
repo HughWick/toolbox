@@ -1,7 +1,7 @@
 package com.github.hugh.secret;
 
 import com.github.hugh.util.secrect.DesEncDecUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;

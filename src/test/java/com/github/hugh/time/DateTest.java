@@ -3,7 +3,7 @@ package com.github.hugh.time;
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.TimeUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 

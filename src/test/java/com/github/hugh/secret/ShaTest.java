@@ -2,7 +2,7 @@ package com.github.hugh.secret;
 
 import com.github.hugh.util.OkHttpUtils;
 import com.github.hugh.util.secrect.ShaUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.HashMap;

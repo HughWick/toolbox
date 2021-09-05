@@ -1,7 +1,7 @@
 package com.github.hugh.file;
 
 import com.github.hugh.util.file.FileUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;

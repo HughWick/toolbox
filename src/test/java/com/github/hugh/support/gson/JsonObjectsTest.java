@@ -7,7 +7,7 @@ import com.github.hugh.util.gson.JsonObjects;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.Data;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * gson JsonObjects测试类

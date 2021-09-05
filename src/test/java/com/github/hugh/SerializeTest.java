@@ -4,7 +4,7 @@ import com.github.hugh.model.Student;
 import com.github.hugh.util.MapUtils;
 import com.github.hugh.util.SerializeUtils;
 import net.sf.json.JSONObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 import java.util.HashMap;

@@ -3,7 +3,7 @@ package com.github.hugh.io;
 import com.github.hugh.util.io.StreamUtils;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;

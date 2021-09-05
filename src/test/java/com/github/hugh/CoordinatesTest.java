@@ -3,7 +3,7 @@ package com.github.hugh;
 import com.github.hugh.model.dto.GgaDTO;
 import com.github.hugh.model.dto.GpsDTO;
 import com.github.hugh.util.CoordinatesUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * User: AS

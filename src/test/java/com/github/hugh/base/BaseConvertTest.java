@@ -2,7 +2,7 @@ package com.github.hugh.base;
 
 import com.github.hugh.constant.enums.ControlEnum;
 import com.github.hugh.util.base.BaseConvertUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author AS

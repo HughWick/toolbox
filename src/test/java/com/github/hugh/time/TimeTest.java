@@ -1,7 +1,7 @@
 package com.github.hugh.time;
 
 import com.github.hugh.util.TimeUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author AS
