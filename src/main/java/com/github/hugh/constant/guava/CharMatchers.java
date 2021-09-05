@@ -6,7 +6,7 @@ import com.google.common.base.CharMatcher;
  * guava 常用的CharMatcher
  *
  * @author Hugh
- * @sine 2.0.0
+ * @since 2.0.0
  **/
 public class CharMatchers {
 
