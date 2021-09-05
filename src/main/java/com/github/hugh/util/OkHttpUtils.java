@@ -121,6 +121,18 @@ public class OkHttpUtils {
             .build();
 
     /**
+     * 发送post表单请求
+     * <p>不带任何参数</p>
+     *
+     * @param url 请求URL
+     * @return String
+     * @throws IOException IO流错误
+     */
+    public static String postForm(String url) throws IOException {
+        return postForm(url, null, buildClient());
+    }
+
+    /**
      * 发送表单形式参数的POST
      * <p>Content-Type:application/x-www-form-urlencoded</p>
      * <p>使用默认构建的{@link #buildClient()}OkHttpClient{@link #postForm(String, Object, OkHttpClient)}发送post请求</p>
@@ -130,7 +142,6 @@ public class OkHttpUtils {
      * @param <T>    请求参数类型
      * @return String
      * @throws IOException IO流错误
-     * @since 1.3.8
      */
     public static <T> String postForm(String url, T params) throws IOException {
         return postForm(url, JSONObject.fromObject(params), buildClient());
@@ -167,6 +178,22 @@ public class OkHttpUtils {
      * @since 1.3.0
      */
     public static <T> String postForm(String url, T params, Map<String, String> headerContent) throws IOException {
+        return postForm(url, params, headerContent, buildClient());
+    }
+
+    /**
+     * 发送表单形式参数的POST
+     * <p>Content-Type:application/x-www-form-urlencoded</p>
+     *
+     * @param url           请求URL
+     * @param params        参数
+     * @param headerContent header 附加内容
+     * @param okHttpClient  okHttpClient
+     * @param <T>           请求参数类型
+     * @return String
+     * @throws IOException IO流错误
+     */
+    public static <T> String postForm(String url, T params, Map<String, String> headerContent, OkHttpClient okHttpClient) throws IOException {
         JSONObject jsonObject = JSONObject.fromObject(params);
         String urlParams = UrlUtils.jsonParse(jsonObject);
         RequestBody body = RequestBody.create(FORM_TYPE, urlParams);
@@ -175,7 +202,7 @@ public class OkHttpUtils {
                 .url(url)
                 .headers(headers)
                 .post(body).build();
-        return send(request, buildClient());
+        return send(request, okHttpClient);
     }
 
     /**
@@ -243,8 +270,8 @@ public class OkHttpUtils {
      * @return String
      */
     public static <T> String get(String url, T params) throws IOException {
-        JSONObject jsonObject = JSONObject.fromObject(params);
         AssertUtils.notEmpty(url, "url");
+        JSONObject jsonObject = JSONObject.fromObject(params);
         url = UrlUtils.urlParam(url, jsonObject);
         return get(url);
     }
@@ -350,7 +377,7 @@ public class OkHttpUtils {
      *
      * @param url      URL
      * @param params   额外参数
-     * @param fileName 文件的name
+     * @param fileName 文件的name(对应后台接收form-data的名称)
      * @param fileMap  文件map、key-文件名称、value-文件路径
      * @param <K>      key
      * @param <V>      value

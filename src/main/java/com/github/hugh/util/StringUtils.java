@@ -1,5 +1,6 @@
 package com.github.hugh.util;
 
+import com.github.hugh.constant.guava.CharMatchers;
 import com.google.common.base.CaseFormat;
 import jodd.util.StringUtil;
 
@@ -75,20 +76,24 @@ public class StringUtils {
 
     /**
      * 获取字符串中的纯数字
+     * <p>不包含小数点</p>
      *
      * @param str 字符串
-     * @return String 数字
+     * @return String 0-9数字
      */
     public static String getNumber(String str) {
-        StringBuilder newString = new StringBuilder();
-        if (EmptyUtils.isNotEmpty(str)) {
-            for (int i = 0; i < str.length(); i++) {
-                if (str.charAt(i) >= 48 && str.charAt(i) <= 57) {
-                    newString.append(str.charAt(i));
-                }
-            }
-        }
-        return newString.toString();
+        return CharMatchers.NUMBER_CHAR_MATCHER.retainFrom(str);
+    }
+
+    /**
+     * 获取字符串中的数字及小数点
+     * <p>包含字符串中的小数点</p>
+     *
+     * @param str 字符串
+     * @return String 保留小数点的数值
+     */
+    public static String getDouble(String str) {
+        return CharMatchers.NUMBERS_AND_DECIMAL_POINTS.retainFrom(str);
     }
 
     /**

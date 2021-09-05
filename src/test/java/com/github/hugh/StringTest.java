@@ -22,6 +22,8 @@ public class StringTest {
     public void test01() {
 //        String str = "https://github.com/HughWick/toolbox";
         String fName = "C:\\Users\\Lenovo\\Desktop\\0e9f4beeb6a5423585c6eabda21a63ee.jpg";
+        var str2 = "\t0.12 \n";
+        var str3 = "\t10.12 \n";
         //或者
 //        String fileName = fName.substring(fName.lastIndexOf("\\") + 1);
         String value = "startDate";
@@ -29,7 +31,8 @@ public class StringTest {
         System.out.println("---1>>>" + StringUtils.after(fName, "\\"));
         System.out.println("--2->>>" + StringUtils.before(fName, "\\"));
         System.out.println("--3->>>" + StringUtils.isContainChinese(fName));
-        System.out.println("--4->>>" + StringUtils.getNumber(fName));
+        System.out.println("--4->>>" + StringUtils.getNumber(str2));
+        System.out.println("--4->>>" + StringUtils.getDouble(str3));
         System.out.println("--5>>" + StringUtils.varcharSize(value));
     }
 
