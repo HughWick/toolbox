@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 public class Crc16Test {
 
     @Test
-    public void test01() {
+    void test01() {
         String m = Crc16Utils.generate();
         System.out.println("==1=>" + m);
 //        System.out.println("==2=>" + get("48F432E3F9"));
@@ -23,12 +23,20 @@ public class Crc16Test {
         // System.out.println(AppUtil.generateAppKey().toUpperCase());
     }
 
-
     @Test
-    public void test02(){
+    void test02() {
         String m = Crc16Utils.generate(12);
         System.out.println("==1=>" + m);
         System.out.println("==2=>" + m.length());
         System.out.println("==3=>" + Crc16Utils.checkCode(m));
     }
+
+    @Test
+    void boxCode() {
+        String m = Crc16Utils.generate(8);
+        System.out.println("==1=>" + m);
+        System.out.println("==2=>" + m.length());
+        System.out.println("==3=>" + Crc16Utils.checkCode(m));
+    }
+
 }
