@@ -19,7 +19,10 @@ public class SerializeTest {
     @Test
     public void test01() {
         String str = "asdasdfdsafaeriuowqeyr4iu13y3iu4gh21juk3739yrfiohdkjcsjdnf`2随身带哦发i是大家都会覅凯撒觉得哈佛i安身的地方哈吉斯的话覅绿卡和肉IP就和外婆而减弱为啊圣诞快乐付款就会考虑就撒娇就发c";
-        System.out.println("--->" + SerializeUtils.toBytes(str));
+        for (int i = 0; i < 10000000; i++) {
+            System.out.println(i + "--->" + SerializeUtils.toBytes(str));
+        }
+
         System.out.println("--->" + SerializeUtils.toObject(SerializeUtils.toBytes(str)));
     }
 
@@ -43,7 +46,6 @@ public class SerializeTest {
             e.printStackTrace();
         }
     }
-
 
 
 }

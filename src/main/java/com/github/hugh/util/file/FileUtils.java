@@ -145,8 +145,7 @@ public class FileUtils {
         }
         File file = new File(path);
         if (file.exists()) {
-            boolean delete = file.delete();//删除文件
-            if (delete) {
+            if (file.delete()) {//删除文件
                 String directory = StringUtils.before(file.getCanonicalPath(), File.separator);
                 delEmptyDir(directory);//删除目录
             }
@@ -163,23 +162,25 @@ public class FileUtils {
      */
     public static boolean downloadByStream(String fileUrl, String savePath) {
         try {
-            /* 将网络资源地址传给,即赋值给url */
             URL url = new URL(fileUrl);
+            /* 将网络资源地址传给,即赋值给url */
             /* 此为联系获得网络资源的固定格式用法，以便后面的in变量获得url截取网络资源的输入流 */
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            @Cleanup DataInputStream in = new DataInputStream(connection.getInputStream());
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            var dataInputStream = new DataInputStream(httpURLConnection.getInputStream());
             /* 此处也可用BufferedInputStream与BufferedOutputStream  需要保存的路径*/
-            @Cleanup DataOutputStream out = new DataOutputStream(new FileOutputStream(savePath));
-            /* 将参数savePath，即将截取的图片的存储在本地地址赋值给out输出流所指定的地址 */
-            byte[] buffer = new byte[4096];
-            int count;
-            /* 将输入流以字节的形式读取并写入buffer中 */
-            while ((count = in.read(buffer)) > 0) {
-                out.write(buffer, 0, count);
+            var dataOutputStream = new DataOutputStream(new FileOutputStream(savePath));
+            try (dataInputStream; dataOutputStream) {
+                /* 将参数savePath，即将截取的图片的存储在本地地址赋值给out输出流所指定的地址 */
+                byte[] buffer = new byte[4096];
+                int count;
+                /* 将输入流以字节的形式读取并写入buffer中 */
+                while ((count = dataInputStream.read(buffer)) > 0) {
+                    dataOutputStream.write(buffer, 0, count);
+                }
+                /* 关闭输入输出流以及网络资源的固定格式 */
+                httpURLConnection.disconnect();
+                return true;/* 网络资源截取并存储本地成功返回true */
             }
-            /* 关闭输入输出流以及网络资源的固定格式 */
-            connection.disconnect();
-            return true;/* 网络资源截取并存储本地成功返回true */
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -202,10 +203,12 @@ public class FileUtils {
         }
         try {
             URL url = new URL(uri);
-            @Cleanup ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-            @Cleanup FileOutputStream fos = new FileOutputStream(path);
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            return true;
+            ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
+            FileOutputStream fileOutputStream = new FileOutputStream(path);
+            try (readableByteChannel; fileOutputStream) {
+                fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+                return true;
+            }
         } catch (IOException e) {
             e.printStackTrace();
             return false;

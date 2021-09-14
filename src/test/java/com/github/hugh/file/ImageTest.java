@@ -20,6 +20,21 @@ public class ImageTest {
         System.out.println("--2->>" + ImageUtils.isImage(str2));
     }
 
+    @Test
+    public void test02() {
+        try {
+            var a = 2;
+            try {
+                int i = a / 0;
+            } finally {
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("==========");
+    }
+
     public static void main(String[] args) {
 //        CatchPic pic = new CatchPic();/* 创建实例 */
         //需要下载的URL
