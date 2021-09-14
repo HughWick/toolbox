@@ -16,7 +16,7 @@ public class SuffixTest {
         String str2 = "docx";
         String str3 = "xlsx";
         String str4 = "rar";
-        String str5 = "pdf";
+        String str5 = "pdF";
         String str6 = "mp4";
         System.out.println("--1->>"+ SuffixUtils.isImage(str));
         System.out.println("--2->>"+ SuffixUtils.isWord(str2));

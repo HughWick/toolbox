@@ -21,10 +21,9 @@ public class SuffixUtils {
         if (EmptyUtils.isEmpty(suffix)) {
             return false;
         }
-        String s = suffix.toUpperCase();
-        return SuffixCode.PNG.equals(s) || SuffixCode.JPG.equals(s) ||
-                SuffixCode.JPEG.equals(s) || SuffixCode.BMP.equals(s) ||
-                SuffixCode.GIF.equals(s) || SuffixCode.SVG.equals(s);
+        return SuffixCode.PNG.equalsIgnoreCase(suffix) || SuffixCode.JPG.equalsIgnoreCase(suffix) ||
+                SuffixCode.JPEG.equalsIgnoreCase(suffix) || SuffixCode.BMP.equalsIgnoreCase(suffix) ||
+                SuffixCode.GIF.equalsIgnoreCase(suffix) || SuffixCode.SVG.equalsIgnoreCase(suffix);
     }
 
     /**
@@ -37,9 +36,8 @@ public class SuffixUtils {
         if (EmptyUtils.isEmpty(suffix)) {
             return false;
         }
-        String s = suffix.toUpperCase();
-        return SuffixCode.ZIP.equals(s) || SuffixCode.RAR.equals(s)
-                || SuffixCode.GZ.equals(s) || SuffixCode.TYPE_7Z.equals(s);
+        return SuffixCode.ZIP.equalsIgnoreCase(suffix) || SuffixCode.RAR.equalsIgnoreCase(suffix)
+                || SuffixCode.GZ.equalsIgnoreCase(suffix) || SuffixCode.TYPE_7Z.equalsIgnoreCase(suffix);
     }
 
     /**
@@ -52,8 +50,7 @@ public class SuffixUtils {
         if (EmptyUtils.isEmpty(suffix)) {
             return false;
         }
-        String s = suffix.toUpperCase();
-        return SuffixCode.XLS.equals(s) || SuffixCode.XLSX.equals(s);
+        return SuffixCode.XLS.equalsIgnoreCase(suffix) || SuffixCode.XLSX.equalsIgnoreCase(suffix);
     }
 
     /**
@@ -66,8 +63,7 @@ public class SuffixUtils {
         if (EmptyUtils.isEmpty(suffix)) {
             return false;
         }
-        String s = suffix.toUpperCase();
-        return SuffixCode.DOC.equals(s) || SuffixCode.DOCX.equals(s);
+        return SuffixCode.DOC.equalsIgnoreCase(suffix) || SuffixCode.DOCX.equalsIgnoreCase(suffix);
     }
 
     /**
@@ -80,7 +76,7 @@ public class SuffixUtils {
         if (EmptyUtils.isEmpty(suffix)) {
             return false;
         }
-        return SuffixCode.MP4.equals(suffix.toUpperCase());
+        return SuffixCode.MP4.equalsIgnoreCase(suffix);
     }
 
     /**
@@ -93,6 +89,6 @@ public class SuffixUtils {
         if (EmptyUtils.isEmpty(suffix)) {
             return false;
         }
-        return SuffixCode.PDF.equals(suffix.toUpperCase());
+        return SuffixCode.PDF.equalsIgnoreCase(suffix);
     }
 }
