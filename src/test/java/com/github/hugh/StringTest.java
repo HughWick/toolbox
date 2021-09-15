@@ -36,8 +36,8 @@ public class StringTest {
 
     @Test
     void test02() {
-        System.out.println("--->" + StringUtils.leftPadding("1", 8, 'a'));
-        System.out.println("--->" + StringUtils.leftPadding("1", 8));
+        System.out.println("--1->" + StringUtils.leftPadding("1", 8, 'a'));
+        System.out.println("-2-->" + StringUtils.leftPadding("1", 8));
     }
 
     @Test

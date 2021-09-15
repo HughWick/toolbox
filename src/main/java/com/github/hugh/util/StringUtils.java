@@ -171,7 +171,7 @@ public class StringUtils {
      * @param original     原始字符串
      * @param targetLength 目标长度
      * @param unit         补的元素
-     * @return 结果
+     * @return String
      * @since 1.3.1
      */
     public static String leftPadding(final String original, final int targetLength, final char unit) {
@@ -180,13 +180,9 @@ public class StringUtils {
         if (originalLength >= targetLength) {
             return original;
         }
-        //2. 循环补零
-        StringBuilder stringBuilder = new StringBuilder(targetLength);
-        for (int i = originalLength; i < targetLength; i++) {
-            stringBuilder.append(unit);
-        }
-        stringBuilder.append(original);
-        return stringBuilder.toString();
+        //2. 复制需要补充的长度 减掉 源数据的长度 加上 源字符串
+        return (String.valueOf(unit).repeat(targetLength - originalLength)) +
+                original;
     }
 
     /**
@@ -195,7 +191,7 @@ public class StringUtils {
      *
      * @param original     原始字符串
      * @param targetLength 目标长度
-     * @return String 结果
+     * @return String
      * @since 1.3.1
      */
     public static String leftPadding(final String original, final int targetLength) {

@@ -222,9 +222,6 @@ public class PingUtils {
                     ping.setDelay(-1);// 延迟
                     ping.setStatus(-1);//无法ping通
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-                ping.setStatus(-2);
             }
         } catch (IOException e) {
             e.printStackTrace();
