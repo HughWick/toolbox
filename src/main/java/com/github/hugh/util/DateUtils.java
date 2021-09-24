@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -128,7 +127,7 @@ public class DateUtils extends DateCode {
         if (strDate == null) {
             return "";
         }
-        String reg = "(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})(\\d{2})";
+        var reg = "(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})(\\d{2})";
         return strDate.replaceAll(reg, "$1-$2-$3 $4:$5:$6");
     }
 
@@ -178,7 +177,7 @@ public class DateUtils extends DateCode {
         if (EmptyUtils.isEmpty(dateStr)) {
             return null;
         }
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        var simpleDateFormat = new SimpleDateFormat(format);
         try {
             return simpleDateFormat.parse(dateStr);
         } catch (ParseException e) {
@@ -237,10 +236,10 @@ public class DateUtils extends DateCode {
      * @return boolean
      */
     public static boolean isThisTime(long time, String pattern) {
-        Date date = new Date(time);
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-        String param = sdf.format(date);// 参数时间
-        String now = sdf.format(new Date());// 当前时间
+        var date = new Date(time);
+        var simpleDateFormat = new SimpleDateFormat(pattern);
+        String param = simpleDateFormat.format(date);// 参数时间
+        String now = simpleDateFormat.format(new Date());// 当前时间
         return param.equals(now);
     }
 
@@ -250,7 +249,7 @@ public class DateUtils extends DateCode {
      * @return Date 前一天的起始时间
      */
     public static Date getDayBeforeStartTime() {
-        Date date = new Date();
+        var date = new Date();
         String dateStr = format(date, YEAR_MONTH_DAY);
         return getDayBeforeStartTime(dateStr);
     }
@@ -262,8 +261,8 @@ public class DateUtils extends DateCode {
      * @return Date 前一天的起始时间
      */
     public static Date getDayBeforeStartTime(String dateStr) {
-        Calendar calendar = Calendar.getInstance();
-        Date date = parseDate(dateStr, YEAR_MONTH_DAY);
+        var calendar = Calendar.getInstance();
+        var date = parseDate(dateStr, YEAR_MONTH_DAY);
         if (date == null) {
             return null;
         }
@@ -282,7 +281,7 @@ public class DateUtils extends DateCode {
      * @return Date 前一天的结束时间
      */
     public static Date getDayBeforeEndTime() {
-        Date date = new Date();
+        var date = new Date();
         String dateStr = format(date, YEAR_MONTH_DAY);
         return getDayBeforeEndTime(dateStr);
     }
@@ -294,8 +293,8 @@ public class DateUtils extends DateCode {
      * @return Date 前一天的结束时间
      */
     public static Date getDayBeforeEndTime(String dateStr) {
-        Calendar calendar = Calendar.getInstance();
-        Date date = parseDate(dateStr, YEAR_MONTH_DAY);
+        var calendar = Calendar.getInstance();
+        var date = parseDate(dateStr, YEAR_MONTH_DAY);
         if (date == null) {
             return null;
         }
@@ -844,20 +843,16 @@ public class DateUtils extends DateCode {
      * @return Boolean {@code true}今天
      */
     public static boolean isToday(String time, String formatStr) {
-        SimpleDateFormat format = new SimpleDateFormat(formatStr);
-        Date date = null;
-        try {
-            date = format.parse(time);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        var date = parseDate(time, formatStr);
+        if (date == null) {
             return false;
         }
         // 设置传入的时间
-        Calendar c1 = Calendar.getInstance();
-        c1.setTime(date);
-        int year1 = c1.get(Calendar.YEAR);
-        int month1 = c1.get(Calendar.MONTH) + 1;
-        int day1 = c1.get(Calendar.DAY_OF_MONTH);
+        var calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int year1 = calendar.get(Calendar.YEAR);
+        int month1 = calendar.get(Calendar.MONTH) + 1;
+        int day1 = calendar.get(Calendar.DAY_OF_MONTH);
         Calendar c2 = Calendar.getInstance();
         // 设置当前时间
         c2.setTime(new Date());
@@ -973,7 +968,7 @@ public class DateUtils extends DateCode {
      * @return boolean {@code true} 字符串格式正确
      */
     public static boolean isDateFormat(String timeStr, String pattern) {
-        if (timeStr == null || "".equals(timeStr)) {
+        if (EmptyUtils.isEmpty(timeStr)) {
             return false;
         }
         try {
@@ -985,10 +980,10 @@ public class DateUtils extends DateCode {
             } else {// 默认校验yyyy-MM-dd HH:mm:ss
                 regex = "\\d{4}-\\d{2}-\\d{2}\\s{1}\\d{2}:\\d{2}:\\d{2}";
             }
-            Pattern pat = Pattern.compile(regex);// 编译正则表达式
-            Matcher matcher = pat.matcher(timeStr);// 忽略大小写的写法
+            var patternObj = Pattern.compile(regex);// 编译正则表达式
+            var matcher = patternObj.matcher(timeStr);// 忽略大小写的写法
             if (matcher.matches()) {// 先验证格式
-                Date date = parseDate(timeStr, pattern);//转换格式
+                var date = parseDate(timeStr, pattern);//转换格式
                 return timeStr.equals(format(date, pattern));// 验证时间
             }
         } catch (Exception e) {
@@ -998,7 +993,7 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 设置Calendar的小时、分钟、秒、毫秒  
+     * 设置Calendar的小时、分钟、秒、毫秒
      *
      * @param calendar    日历
      * @param hour        小时
@@ -1036,9 +1031,9 @@ public class DateUtils extends DateCode {
         }
         SimpleDateFormat format = new SimpleDateFormat(YEAR_MONTH_DAY_HOUR_MIN_SEC);// 时间格式定义
         String nowDate = format.format(new Date());// 获取当前时间日期--nowDate
-        Calendar calc = Calendar.getInstance();// 获取30天前的时间日期--minDate
-        calc.add(Calendar.DAY_OF_MONTH, -day);
-        String minDate = format.format(calc.getTime());
+        Calendar calendar = Calendar.getInstance();// 获取30天前的时间日期--minDate
+        calendar.add(Calendar.DAY_OF_MONTH, -day);
+        String minDate = format.format(calendar.getTime());
         try {
             // 设置lenient为false. 否则SimpleDateFormat会比较宽松地验证日期，比如2007/02/29会被接受，并转换成2007/03/01
             format.setLenient(false);

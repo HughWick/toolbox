@@ -41,8 +41,10 @@ public class DateTest {
     @Test
     void test03() {
         Date date1 = new Date();
-        System.out.println("--->>" + date1);
-        System.out.println("--->>" + DateUtils.dateStrToDate(date1.toString()));
+        System.out.println("--1->>" + date1);
+        System.out.println("--2->>" + DateUtils.isToday(date1));
+        System.out.println("--2->>" + DateUtils.isToday(DateUtils.ofPattern(date1)));
+        System.out.println("-3-->>" + DateUtils.dateStrToDate(date1.toString()));
     }
 
     @Test
