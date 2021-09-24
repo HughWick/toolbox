@@ -7,10 +7,14 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+/**
+ * 日期测试类
+ */
 public class DateTest {
 
     @Test
-    public void test01() {
+    void test01() {
         String str = "2020-06-04 13:00:21";
         System.out.println("--1->" + DateUtils.isDateFormat(str));
         System.out.println("-2-->" + DateUtils.parseDate(str));
@@ -23,30 +27,33 @@ public class DateTest {
     }
 
     @Test
-    public void test02() {
+    void test02() {
 //        String str = "2020-06-04 13:00:21";
-        System.out.println("--->" + DateUtils.setMonthFirstDay(new Date()));
-        System.out.println("--->" + DateUtils.setMonthLastDay(new Date()));
-        System.out.println("--->" + DateUtils.getMonthBeforeStartTime());
-        System.out.println("--->" + DateUtils.getMonthBeforeEndTime());
+        System.out.println("-1-->" + DateUtils.setMonthFirstDay(new Date()));
+        System.out.println("-2-->" + DateUtils.setMonthLastDay(new Date()));
+        System.out.println("-3-->" + DateUtils.getMonthBeforeStartTime());
+        System.out.println("-4-->" + DateUtils.getMonthBeforeEndTime());
+        System.out.println("-5-->" + DateUtils.ofPattern(new Date()));
+        System.out.println("-6-->" + DateUtils.format(new Date()));
+        assertEquals("a", "a");
     }
 
     @Test
-    public void test03() {
+    void test03() {
         Date date1 = new Date();
         System.out.println("--->>" + date1);
         System.out.println("--->>" + DateUtils.dateStrToDate(date1.toString()));
     }
 
     @Test
-    public void test04() {
+    void test04() {
         System.out.println("-距离凌晨还剩余多少毫秒-->>" + DateUtils.getEarlyMorningSec());
         System.out.println("--获取小时整点时间->>" + DateUtils.getIniHour());
         System.out.println("--获取当前小时的结束时间点->>" + DateUtils.getEndHour());
     }
 
     @Test
-    public void test05() {
+    void test05() {
         Date begin = DateUtils.parseTimestamp(1617943680000L);
         Date end = DateUtils.parseTimestamp(1617948600000L);
         System.out.println("--1->>" + DateUtils.minutesDifference(begin, end));

@@ -1,11 +1,13 @@
 package com.github.hugh.secret;
 
 import com.github.hugh.util.secrect.DesEncDecUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+
 
 /**
  * @author AS
@@ -49,6 +51,20 @@ public class DesEncDecTest {
             String decode = URLDecoder.decode(encodeURL1, StandardCharsets.UTF_8);
             System.out.println("-decode--->>" + decode);
             System.out.println("--解密->>" + desEnc.decrypt(decode));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void decode() {
+        DesEncDecUtils desEnc = DesEncDecUtils.getInstance("box_security");
+        try {
+            String str = "vpYJRBSOYCmNanjH0Oe2Ul1BiSuZ6VQG7QvqCQMDqftMBe2YnvzJfx7Es2rvl0kAzxCzD9Pd5os%3D";
+            String decode = URLDecoder.decode(str, StandardCharsets.UTF_8);
+            System.out.println("-decode--->>" + decode);
+            System.out.println("--解密->>" + desEnc.decrypt(decode));
+            Assertions.assertEquals("http://qr.hnlot.com.cn/box/openDoor?boxCode=8EBFA26E46", desEnc.decrypt(decode));
         } catch (Exception e) {
             e.printStackTrace();
         }

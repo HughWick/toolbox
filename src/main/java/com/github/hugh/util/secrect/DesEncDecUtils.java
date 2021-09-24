@@ -1,9 +1,6 @@
 package com.github.hugh.util.secrect;
 
-import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
+import javax.crypto.*;
 import javax.crypto.spec.DESKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
@@ -54,9 +51,10 @@ public class DesEncDecUtils {
      *
      * @param str 字符串
      * @return String 加密后的字符串
-     * @throws Exception
+     * @throws BadPaddingException
+     * @throws IllegalBlockSizeException
      */
-    public String encrypt(String str) throws Exception {
+    public String encrypt(String str) throws BadPaddingException, IllegalBlockSizeException {
         // Encode the string into bytes using utf-8
         byte[] utf8 = str.getBytes(StandardCharsets.UTF_8);
         // Encrypt

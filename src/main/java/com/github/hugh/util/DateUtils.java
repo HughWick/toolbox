@@ -25,6 +25,17 @@ public class DateUtils extends DateCode {
     }
 
     /**
+     * 格式化完整的日期字符串
+     *
+     * @param date 日期对象
+     * @return String  yyyy-MM-dd HH:mm:ss
+     * @since 2.0.1
+     */
+    public static String ofPattern(Date date) {
+        return format(date, YEAR_MONTH_DAY_HOUR_MIN_SEC);
+    }
+
+    /**
      * 格式化日期
      *
      * @param date 日期对象
@@ -76,8 +87,8 @@ public class DateUtils extends DateCode {
      * @return String
      */
     public static String getDate(String format) {
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        return sdf.format(new Date());
+        var simpleDateFormat = new SimpleDateFormat(format);
+        return simpleDateFormat.format(new Date());
     }
 
     /**
@@ -87,11 +98,11 @@ public class DateUtils extends DateCode {
      * @return Date 日期对象
      */
     public static Date getDate(int day) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.DAY_OF_MONTH, day);
-        set(c, 0, 0, 0, 0);
-        return c.getTime();
+        var calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_MONTH, day);
+        set(calendar, 0, 0, 0, 0);
+        return calendar.getTime();
     }
 
     /**
@@ -167,9 +178,9 @@ public class DateUtils extends DateCode {
         if (EmptyUtils.isEmpty(dateStr)) {
             return null;
         }
-        SimpleDateFormat formats = new SimpleDateFormat(format);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         try {
-            return formats.parse(dateStr);
+            return simpleDateFormat.parse(dateStr);
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
@@ -1153,7 +1164,7 @@ public class DateUtils extends DateCode {
         calendar.add(Calendar.MINUTE, +min);
         return calendar.getTime();
     }
-    
+
     /**
      * 计算开始与结束时间相差秒数
      *
