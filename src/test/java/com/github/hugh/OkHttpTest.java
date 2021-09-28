@@ -8,6 +8,7 @@ import net.sf.json.JSONObject;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,18 +44,20 @@ public class OkHttpTest {
         }
     }
 
-
     @Test
     public void test02() throws InterruptedException {
         JSONObject params = new JSONObject();
         params.put("ZH", "admin");
         params.put("MM", "88888888");
         try {
-            System.out.println("--1->>" + OkHttpUtils.postFormCookie("https://www.hnlot.com.cn/ptpz/yonghu/login", params));
-//            Thread.sleep(5000);
-//            Thread.sleep(5000);
-            System.out.println("--2->>" + OkHttpUtils.postFormCookie("https://www.hnlot.com.cn/ptpz/juese/selectJueSe", params));
-            System.out.println("--3->>" + OkHttpUtils.postFormCookie("http://localhost:7040/knowledge/articles/test02", params));
+            System.out.println("--1->>" + OkHttpUtils.postFormCookie("https://cmmop.hnlot.com.cn/ptpz/yonghu/login", params));
+            System.out.println("--2->>" + OkHttpUtils.postFormCookie("https://cmmop.hnlot.com.cn/ptpz/juese/selectJueSe", params));
+//            System.out.println("--3->>" + OkHttpUtils.postFormCookie("http://localhost:7040/knowledge/articles/test02", params));
+            params.put("ip", "43.113.40.165");
+            params.put("appkey", "278377e1fb7f47c18691b9c33a3fd80e");
+            System.out.println("--4->>" + OkHttpUtils.postFormCookie("http://hyga.hnlot.com.cn/device/capturePicture/manual", params));
+        } catch (SocketTimeoutException socketTimeoutException) {
+            System.out.println("====超时===");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -114,11 +117,11 @@ public class OkHttpTest {
     public static void main(String[] args) throws IOException {
         OkHttpTest test = new OkHttpTest();
         test.tem();
-        val map =  new HashMap<>();
-        map.put("1",1);
-        map.put(1,1);
-        System.out.println("--->>"+map);
-        System.out.println("--->>"+ JsonObjectUtils.toJson(map));
+        val map = new HashMap<>();
+        map.put("1", 1);
+        map.put(1, 1);
+        System.out.println("--->>" + map);
+        System.out.println("--->>" + JsonObjectUtils.toJson(map));
 //        var str = "123c";
 //        str = "abcdef";
 //        System.out.println("--->>"+str);

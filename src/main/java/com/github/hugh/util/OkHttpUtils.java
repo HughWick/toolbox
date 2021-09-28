@@ -6,13 +6,13 @@ import com.github.hugh.support.instance.Instance;
 import com.github.hugh.util.gson.JsonObjectUtils;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import net.sf.json.JSONObject;
 import okhttp3.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.SocketTimeoutException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,9 +29,6 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class OkHttpUtils {
-    private OkHttpUtils() {
-
-    }
 
     /**
      * 链接超时为10秒
@@ -476,9 +473,6 @@ public class OkHttpUtils {
                 throw new ToolboxException("result params is null ");
             }
             return body1.string();
-        } catch (SocketTimeoutException timeEx) {
-            log.error("Request Time Out ,url:{}", request.url(), timeEx);
-            return null;
         }
     }
 
@@ -500,20 +494,20 @@ public class OkHttpUtils {
                 .setType(MultipartBody.FORM);
         if (MapUtils.isNotEmpty(params)) {
             for (Map.Entry<K, V> entry : params.entrySet()) {
-                String name = String.valueOf(entry.getKey());
-                String value = String.valueOf(entry.getValue());
+                val name = String.valueOf(entry.getKey());
+                val value = String.valueOf(entry.getValue());
                 requestBody.addFormDataPart(name, value);
             }
         }
         if (MapUtils.isNotEmpty(fileMap)) {
             for (Map.Entry<K, V> entry : fileMap.entrySet()) {
-                String name = String.valueOf(entry.getKey());
-                String path = String.valueOf(entry.getValue());
-                RequestBody fileBody = RequestBody.create(MediaType.parse(MULTIPART_FORM_DATA), new File(path));
+                val name = String.valueOf(entry.getKey());
+                val path = String.valueOf(entry.getValue());
+                val fileBody = RequestBody.create(MediaType.parse(MULTIPART_FORM_DATA), new File(path));
                 requestBody.addFormDataPart(fileName, name, fileBody);
             }
         }
-        Request request = new Request.Builder().url(url).post(requestBody.build()).build();
+        val request = new Request.Builder().url(url).post(requestBody.build()).build();
         return send(request);
     }
 }
