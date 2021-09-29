@@ -147,7 +147,7 @@ public class MapUtils {
      */
     public static <T, K, V> T toEntityNotEmpty(Class<T> cls, Map<K, V> params) throws Exception {
         AssertUtils.notNull(cls, "class");
-        T obj = cls.newInstance();
+        T obj = cls.getDeclaredConstructor().newInstance();
         return convertObjects(obj, params, true);
     }
 
@@ -188,7 +188,7 @@ public class MapUtils {
      */
     public static <T, K, V> T convertEntity(Class<T> cls, Map<K, V> params) throws Exception {
         AssertUtils.notNull(cls, "class");
-        T obj = cls.newInstance();
+        T obj = cls.getDeclaredConstructor().newInstance();
         return convertObjects(obj, params, false);
     }
 
