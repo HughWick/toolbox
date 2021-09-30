@@ -3,7 +3,6 @@ package com.github.hugh.util;
 import com.esotericsoftware.kryo.Kryo;
 import com.github.hugh.support.instance.Instance;
 
-import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -28,9 +27,9 @@ public class EntityUtils {
      * @throws IllegalAccessException    如果这个{@code Method}对象正在执行Java语言访问控制，并且底层方法不可访问。
      */
     public static <T> void copy(T source, T dest) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
-        BeanInfo sourceBean = Introspector.getBeanInfo(source.getClass(), java.lang.Object.class); // 获取属性
+        var sourceBean = Introspector.getBeanInfo(source.getClass(), java.lang.Object.class); // 获取属性
         PropertyDescriptor[] sourceProperty = sourceBean.getPropertyDescriptors();
-        BeanInfo destBean = Introspector.getBeanInfo(dest.getClass(), java.lang.Object.class);
+        var destBean = Introspector.getBeanInfo(dest.getClass(), java.lang.Object.class);
         PropertyDescriptor[] destProperty = destBean.getPropertyDescriptors();
         for (PropertyDescriptor propertyDescriptor : sourceProperty) {
             for (PropertyDescriptor descriptor : destProperty) {

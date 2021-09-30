@@ -271,7 +271,7 @@ public class OkHttpUtils {
      */
     public static <T> String get(String url, T params) throws IOException {
         AssertUtils.notEmpty(url, "url");
-        JSONObject jsonObject = JSONObject.fromObject(params);
+        var jsonObject = JSONObject.fromObject(params);
         url = UrlUtils.urlParam(url, jsonObject);
         return get(url);
     }
@@ -285,7 +285,7 @@ public class OkHttpUtils {
      */
     public static String get(String url) throws IOException {
         AssertUtils.notEmpty(url, "url");
-        Request request = new Request.Builder().url(url).build();
+        var request = new Request.Builder().url(url).build();
         return send(request, buildClient());
     }
 
@@ -301,8 +301,8 @@ public class OkHttpUtils {
      */
     public static String get(String url, JSONObject data, Map<String, String> headerContent) throws IOException {
         url = UrlUtils.urlParam(url, data);
-        Headers headers = Headers.of(headerContent);
-        Request request = new Request.Builder()
+        var headers = Headers.of(headerContent);
+        var request = new Request.Builder()
                 .url(url)
                 .headers(headers).build();
         return send(request);
@@ -320,8 +320,8 @@ public class OkHttpUtils {
      * @since 1.5.9
      */
     private static String post(String url, String params, MediaType mediaType) throws IOException {
-        RequestBody body = RequestBody.create(mediaType, params);
-        Request request = new Request.Builder().url(url).post(body).build();
+        var body = RequestBody.create(mediaType, params);
+        var request = new Request.Builder().url(url).post(body).build();
         return send(request, buildClient());
     }
 
@@ -336,8 +336,8 @@ public class OkHttpUtils {
      * @throws IOException IO异常
      */
     private static String post(String url, String params, MediaType mediaType, OkHttpClient okHttpClient) throws IOException {
-        RequestBody body = RequestBody.create(mediaType, params);
-        Request request = new Request.Builder().url(url).post(body).build();
+        var body = RequestBody.create(mediaType, params);
+        var request = new Request.Builder().url(url).post(body).build();
         return send(request, okHttpClient);
     }
 
@@ -363,7 +363,7 @@ public class OkHttpUtils {
      * @throws IOException IO异常
      */
     private static String send(Request request, OkHttpClient okHttpClient) throws IOException {
-        try (Response response = okHttpClient.newCall(request).execute()) {
+        try (var response = okHttpClient.newCall(request).execute()) {
             ResponseBody body1 = response.body();
             if (body1 == null) {
                 throw new ToolboxException("result params is null ");
@@ -390,20 +390,20 @@ public class OkHttpUtils {
                 .setType(MultipartBody.FORM);
         if (MapUtils.isNotEmpty(params)) {
             for (Map.Entry<K, V> entry : params.entrySet()) {
-                String name = String.valueOf(entry.getKey());
-                String value = String.valueOf(entry.getValue());
+                var name = String.valueOf(entry.getKey());
+                var value = String.valueOf(entry.getValue());
                 requestBody.addFormDataPart(name, value);
             }
         }
         if (MapUtils.isNotEmpty(fileMap)) {
             for (Map.Entry<K, V> entry : fileMap.entrySet()) {
-                String name = String.valueOf(entry.getKey());
-                String path = String.valueOf(entry.getValue());
-                RequestBody fileBody = RequestBody.create(MediaType.parse(MULTIPART_FORM_DATA), new File(path));
+                var name = String.valueOf(entry.getKey());
+                var path = String.valueOf(entry.getValue());
+                var fileBody = RequestBody.create(MediaType.parse(MULTIPART_FORM_DATA), new File(path));
                 requestBody.addFormDataPart(fileName, name, fileBody);
             }
         }
-        Request request = new Request.Builder().url(url).post(requestBody.build()).build();
+        var request = new Request.Builder().url(url).post(requestBody.build()).build();
         return send(request);
     }
 }

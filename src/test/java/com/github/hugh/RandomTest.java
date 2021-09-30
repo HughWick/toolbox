@@ -3,6 +3,7 @@ package com.github.hugh;
 import com.github.hugh.util.RandomUtils;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -12,7 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class RandomTest {
 
     @Test
-    public void test001() {
+    void test001() {
         System.out.println("--1->>" + RandomUtils.getRandom());
         System.out.println("--2->>" + RandomUtils.getSecureRandom());
         System.out.println("--3->>" + RandomUtils.randomString(3));
@@ -24,10 +25,21 @@ public class RandomTest {
     }
 
     @Test
-    public void test02() {
+    void test02() {
         for (int i = 0; i < 100; i++) {
             System.out.println("---->" + RandomUtils.number(4));
         }
+    }
+
+    @Test
+    void testRandomList() {
+        var list = new ArrayList<>();
+        list.add("1");
+        list.add("2");
+        list.add("3");
+        list.add("4");
+        list.add("5");
+        System.out.println(RandomUtils.random(list));
     }
 
     public static int number(int length) {
@@ -45,7 +57,7 @@ public class RandomTest {
     public static void main(String[] args) {
         while (true) {
 //            ThreadLocalRandom current = ThreadLocalRandom.current();
-            int r1 = ThreadLocalRandom.current().nextInt(200,300);
+            int r1 = ThreadLocalRandom.current().nextInt(200, 300);
             if ((200 <= r1) && (r1 < 300)) {
                 System.out.println(r1);
             } else {
