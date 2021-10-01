@@ -53,9 +53,9 @@ public class DoubleMathUtils {
      * @return 两个参数的和
      */
     public static double add(double v1, double v2) {
-        BigDecimal b1 = new BigDecimal(Double.toString(v1));
+        var bigDecimal1 = new BigDecimal(Double.toString(v1));
         BigDecimal b2 = new BigDecimal(Double.toString(v2));
-        return b1.add(b2).doubleValue();
+        return bigDecimal1.add(b2).doubleValue();
     }
 
     /**
@@ -140,8 +140,8 @@ public class DoubleMathUtils {
             // 如果是一个整数
             numberStr = String.valueOf((int) number);
         } else {
-            DecimalFormat df = new DecimalFormat("######0.00");
-            numberStr = df.format(number);
+            var decimalFormat = new DecimalFormat("######0.00");
+            numberStr = decimalFormat.format(number);
         }
         return numberStr;
     }

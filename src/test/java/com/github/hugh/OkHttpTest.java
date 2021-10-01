@@ -21,7 +21,7 @@ import java.util.UUID;
 public class OkHttpTest {
 
     @Test
-    public void test01() {
+    void test01() {
         var map = new HashMap<>();
         map.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
         Map head = new HashMap<>();

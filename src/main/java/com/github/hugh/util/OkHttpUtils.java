@@ -160,7 +160,7 @@ public class OkHttpUtils {
      */
     public static <T> String postForm(String url, T params, OkHttpClient okHttpClient) throws IOException {
         AssertUtils.notEmpty(url, "url");
-        JSONObject jsonObject = JSONObject.fromObject(params);
+        var jsonObject = JSONObject.fromObject(params);
         String urlParams = UrlUtils.jsonParse(jsonObject);
         return post(url, urlParams, FORM_TYPE, okHttpClient);
     }
@@ -194,11 +194,11 @@ public class OkHttpUtils {
      * @throws IOException IO流错误
      */
     public static <T> String postForm(String url, T params, Map<String, String> headerContent, OkHttpClient okHttpClient) throws IOException {
-        JSONObject jsonObject = JSONObject.fromObject(params);
+        var jsonObject = JSONObject.fromObject(params);
         String urlParams = UrlUtils.jsonParse(jsonObject);
-        RequestBody body = RequestBody.create(FORM_TYPE, urlParams);
-        Headers headers = Headers.of(headerContent);
-        Request request = new Request.Builder()
+        var body = RequestBody.create(FORM_TYPE, urlParams);
+        var headers = Headers.of(headerContent);
+        var request = new Request.Builder()
                 .url(url)
                 .headers(headers)
                 .post(body).build();
