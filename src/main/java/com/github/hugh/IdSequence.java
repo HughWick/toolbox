@@ -20,7 +20,7 @@ public class IdSequence {
      * @return String 19位数字字符串
      */
     public static String snowflake() {
-        Snowflake snowflake = Instance.getInstance().singleton(Snowflake.class);
+        var snowflake = Instance.getInstance().singleton(Snowflake.class);
         return String.valueOf(snowflake.nextId());
     }
 }

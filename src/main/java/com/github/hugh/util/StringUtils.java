@@ -3,8 +3,6 @@ package com.github.hugh.util;
 import com.github.hugh.constant.guava.CharMatchers;
 import com.google.common.base.CaseFormat;
 import jodd.util.StringUtil;
-
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -152,10 +150,10 @@ public class StringUtils {
      * @since 1.1.3
      */
     public static int varcharSize(String value) {
-        int length = 0;
-        String chinese = "[\u0391-\uFFE5]";
-        for (int i = 0; i < value.length(); i++) {  /* 获取字段值的长度，如果含中文字符，则每个中文字符长度为2，否则为1 */
-            String temp = value.substring(i, i + 1);  /* 获取一个字符 */
+        var length = 0;
+        var chinese = "[\u0391-\uFFE5]";
+        for (var i = 0; i < value.length(); i++) {  /* 获取字段值的长度，如果含中文字符，则每个中文字符长度为2，否则为1 */
+            var temp = value.substring(i, i + 1);  /* 获取一个字符 */
             if (temp.matches(chinese)) {     /* 判断是否为中文字符 */
                 length += 2;  /* 中文字符长度为2 */
             } else {
@@ -239,11 +237,11 @@ public class StringUtils {
      * @since 1.3.1
      */
     public static String getCamelCase(String inputString, boolean firstCharacterUppercase) {
-        StringBuilder sb = new StringBuilder();
-        boolean nextUpperCase = false;
-        for (int i = 0; i < inputString.length(); i++) {
-            char c = inputString.charAt(i);
-            switch (c) {
+        var stringBuilder = new StringBuilder();
+        var nextUpperCase = false;
+        for (var i = 0; i < inputString.length(); i++) {
+            var charAt = inputString.charAt(i);
+            switch (charAt) {
                 case '_':
                 case '-':
                 case '@':
@@ -252,24 +250,24 @@ public class StringUtils {
                 case ' ':
                 case '/':
                 case '&':
-                    if (sb.length() > 0) {
+                    if (stringBuilder.length() > 0) {
                         nextUpperCase = true;
                     }
                     break;
                 default:
                     if (nextUpperCase) {
-                        sb.append(Character.toUpperCase(c));
+                        stringBuilder.append(Character.toUpperCase(charAt));
                         nextUpperCase = false;
                     } else {
-                        sb.append(Character.toLowerCase(c));
+                        stringBuilder.append(Character.toLowerCase(charAt));
                     }
                     break;
             }
         }
         if (firstCharacterUppercase) {
-            sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+            stringBuilder.setCharAt(0, Character.toUpperCase(stringBuilder.charAt(0)));
         }
-        return sb.toString();
+        return stringBuilder.toString();
     }
 
     /**
@@ -284,8 +282,8 @@ public class StringUtils {
         if (StringUtil.isEmpty(string)) {
             return string;
         }
-        Matcher m = BLANK_PATTERN.matcher(string);
-        String result = m.replaceAll(replacement);
+        var matcher = BLANK_PATTERN.matcher(string);
+        String result = matcher.replaceAll(replacement);
         result = result.replace("\\u00A0", replacement);
         return result;
     }
@@ -320,12 +318,12 @@ public class StringUtils {
         if (source.isEmpty()) {
             return "";
         }
-        String beginChar = source.substring(0, 1);
+        var beginChar = source.substring(0, 1);
         if (beginChar.equalsIgnoreCase(beTrim)) {
             source = source.substring(1);
         }
         // 循环去掉字符串尾的beTrim字符
-        String endChar = source.substring(source.length() - 1);
+        var endChar = source.substring(source.length() - 1);
         if (endChar.equalsIgnoreCase(beTrim)) {
             source = source.substring(0, source.length() - 1);
         }
@@ -361,9 +359,9 @@ public class StringUtils {
      * @since 1.5.6
      */
     public static int indexOf(String string, String chr, int index) {
-        Pattern pattern = Pattern.compile(chr);
-        Matcher findMatcher = pattern.matcher(string);
-        int number = 0;
+        var pattern = Pattern.compile(chr);
+        var findMatcher = pattern.matcher(string);
+        var number = 0;
         while (findMatcher.find()) {
             number++;
             if (number == index) {//当指定出现次数满足时停止
