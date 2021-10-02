@@ -16,10 +16,19 @@ public class JsonObjects extends JsonObjectUtils {
 
     private JsonObject jsonObject;
 
+    /**
+     * 无参构造
+     */
     public JsonObjects() {
         this.jsonObject = new JsonObject();
     }
 
+    /**
+     * 带参构造
+     *
+     * @param object 参数
+     * @param <T>    参数类型
+     */
     public <T> JsonObjects(T object) {
         this.jsonObject = parse(object);
     }

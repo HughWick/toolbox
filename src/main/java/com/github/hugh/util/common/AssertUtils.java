@@ -13,7 +13,7 @@ import java.util.Collection;
  * @author hugh
  * @since 1.1.0
  */
-
+@Deprecated
 public class AssertUtils {
     private AssertUtils() {
     }

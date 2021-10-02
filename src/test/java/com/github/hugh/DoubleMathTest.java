@@ -3,6 +3,8 @@ package com.github.hugh;
 import com.github.hugh.util.DoubleMathUtils;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * @author AS
  * @date 2020/8/31 15:34
@@ -10,15 +12,18 @@ import org.junit.jupiter.api.Test;
 public class DoubleMathTest {
 
     @Test
-    public void test01() {
-        System.out.println("--->>" + DoubleMathUtils.add(1, 2));
-        System.out.println("--->>" + DoubleMathUtils.mul(1, 2));
-        System.out.println("--->>" + DoubleMathUtils.div(1, 2));
-        System.out.println("--->>" + DoubleMathUtils.div(1, 3, 5));
-        System.out.println("--->>" + DoubleMathUtils.round(1.000, 2));
-        System.out.println("--->>" + DoubleMathUtils.getString(1.00011));
-        System.out.println("--->>" + DoubleMathUtils.numberFormat.format(1.1234566123));
-        System.out.println("--->>" + DoubleMathUtils.numberGiveUp.format(1.1234566123));
+    void test01() {
+        double add = DoubleMathUtils.add(1, 2);
+        assertEquals(3, add);
+        double sub = DoubleMathUtils.sub(5, 4);
+        assertEquals(1, sub);
+        System.out.println("---2>>" + DoubleMathUtils.mul(1, 2));
+        System.out.println("--3->>" + DoubleMathUtils.div(1, 2));
+        System.out.println("--4->>" + DoubleMathUtils.div(1, 3, 5));
+        System.out.println("--5->>" + DoubleMathUtils.round(1.000, 2));
+        System.out.println("--6->>" + DoubleMathUtils.getString(1.00011));
+        System.out.println("--7->>" + DoubleMathUtils.numberFormat.format(1.1234566123));
+        System.out.println("--8->>" + DoubleMathUtils.numberGiveUp.format(1.1234566123));
     }
 
     @Test

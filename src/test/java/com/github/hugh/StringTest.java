@@ -3,10 +3,11 @@ package com.github.hugh;
 import com.github.hugh.util.StringUtils;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 //import static org.junit.jupiter.api.
 
@@ -93,7 +94,10 @@ public class StringTest {
     @Test
     void trimResults() {
         var str = "\t0.12 \n";
-        Assertions.assertEquals(str.strip(), str.trim());
+        assertNull(null);
+        String string = null;
+        assertNotNull(string,"字符串不能为空");
+        assertEquals(str.strip(), str.trim());
         System.out.println("--------------->>");
     }
 
@@ -102,7 +106,6 @@ public class StringTest {
         String init = "Bob is a Bird... Bob is a Plane... Bob is Superman!";
         String changed = init.replace("Bob is", "It's"); // Noncompliant  
         System.out.println(changed);
-
 //        CharMatcher.javaIsoControl()
         // changed = changed.replaceAll("\\.\\.\\.", ";"); // Noncompliant
 //        double threadcount = DoubleMathUtils.mul(16, 3);
