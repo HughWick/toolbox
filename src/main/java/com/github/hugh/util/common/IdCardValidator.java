@@ -357,7 +357,7 @@ public class IdCardValidator {
             sum = sum + Integer.parseInt(c + "") * iflag;
             iflag--;
         }
-        if (end.toUpperCase().equals("A")) {
+        if ("A".equalsIgnoreCase(end)) {
             sum = sum + 10;
         } else {
             sum = sum + Integer.parseInt(end);
