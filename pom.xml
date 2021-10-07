@@ -20,7 +20,7 @@
         <plugin.surefire.skip-it>false</plugin.surefire.skip-it>
         <plugin.surefire.ignore-failure>false</plugin.surefire.ignore-failure>
         <plugin.maven-source-plugin.version>2.2.1</plugin.maven-source-plugin.version>
-        <plugin.maven-javadoc-plugin.version>3.1.1</plugin.maven-javadoc-plugin.version>
+        <plugin.maven-javadoc-plugin.version>3.3.1</plugin.maven-javadoc-plugin.version>
         <plugin.maven-gpg-plugin.version>1.5</plugin.maven-gpg-plugin.version>
         <!--============================== other ==============================-->
         <okhttp.version>4.9.2</okhttp.version>

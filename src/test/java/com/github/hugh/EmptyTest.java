@@ -5,37 +5,38 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EmptyTest {
 
     @Test
-    public void isEmpty() {
+    void isEmpty() {
         String[] arr = {};
-        List<String> list = new ArrayList<>();
-        System.out.println("--1-->" + EmptyUtils.isEmpty("  "));
-        System.out.println("--2-->" + EmptyUtils.isEmpty("null"));
-        System.out.println("-3->" + EmptyUtils.isEmpty(new ArrayList<>()));
-        System.out.println("-4->" + EmptyUtils.isEmpty(new HashMap<>()));
-        System.out.println("-6-->" + EmptyUtils.isEmpty(12));
-        System.out.println("-7-->" + EmptyUtils.isEmpty("[]"));
+//        List<String> list = new ArrayList<>();
+        assertTrue(EmptyUtils.isEmpty("  "));
+        assertTrue(EmptyUtils.isEmpty("null"));
+        assertTrue(EmptyUtils.isEmpty(new ArrayList<>()));
         System.out.println("-8-->" + EmptyUtils.isEmpty(arr));
-        System.out.println("-9-->" + EmptyUtils.isEmpty(list));
+        assertTrue(EmptyUtils.isEmpty(new HashMap<>()));
+        assertFalse(EmptyUtils.isEmpty(12));
+        assertFalse(EmptyUtils.isEmpty("[]"));
+//        System.out.println("-9-->" + EmptyUtils.isEmpty(list));
     }
 
     @Test
-    public void isNotEmpty() {
+    void isNotEmpty() {
         System.out.println("---1>" + EmptyUtils.isNotEmpty("b"));
         System.out.println("2-->" + EmptyUtils.isNotEmpty(""));
         System.out.println("--3->" + EmptyUtils.isNotEmpty("[]"));
 //        System.out.println("--2->" + EmptyUtils.isNotEmpty("[]"));
     }
 
-
-    public static void main(String[] args) {
+    @Test
+    void test03() {
         String[] strArr = {"1"};
-        System.out.println("---->>"+strArr.length);
-        System.out.println(EmptyUtils.isEmpty(strArr));
-        System.out.println(EmptyUtils.isNotEmpty(strArr));
+        assertTrue(EmptyUtils.isNotEmpty(strArr));
+        assertFalse(EmptyUtils.isEmpty(strArr));
+        assertEquals(strArr.length, 1);
     }
 }
