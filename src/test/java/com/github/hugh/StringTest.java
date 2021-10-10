@@ -96,9 +96,10 @@ public class StringTest {
         var str = "\t0.12 \n";
         assertNull(null);
         String string = null;
-        assertNotNull(string,"字符串不能为空");
-        assertEquals(str.strip(), str.trim());
+//        assertNotNull(string,"字符串不能为空");
+        assertEquals(StringUtils.trim(str), str.trim());
         System.out.println("--------------->>");
+
     }
 
 

@@ -3,6 +3,7 @@ package com.github.hugh.util;
 import com.github.hugh.constant.guava.CharMatchers;
 import com.google.common.base.CaseFormat;
 import jodd.util.StringUtil;
+
 import java.util.regex.Pattern;
 
 /**
@@ -301,6 +302,19 @@ public class StringUtils {
     }
 
     /**
+     * 去除前后空格
+     * <p>由于{@link String#strip()}无法去除一些特定的字符，所以再调用一次{@link String#trim()}再次去除
+     * </p>
+     *
+     * @param value 字符串
+     * @return String
+     * @since 2.0.2
+     */
+    public static String trim(String value) {
+        return value.trim().strip();
+    }
+
+    /**
      * 去除前后指定字符
      *
      * <p>调用示例：System.out.println(trim(", ashuh  ",","));</p>
@@ -314,7 +328,7 @@ public class StringUtils {
         if (source == null) {
             return "";
         }
-        source = source.strip(); // 循环去掉字符串首的beTrim字符
+        source = source.strip().trim();
         if (source.isEmpty()) {
             return "";
         }
