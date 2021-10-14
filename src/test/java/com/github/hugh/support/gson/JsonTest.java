@@ -2,7 +2,6 @@ package com.github.hugh.support.gson;
 
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.model.Student;
-import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.OkHttpUtils;
 import com.github.hugh.util.gson.JsonObjectUtils;
 import com.github.hugh.util.gson.JsonObjects;
@@ -38,7 +37,7 @@ public class JsonTest {
         String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\"}";
         Gson gson = new Gson();
         Student student = gson.fromJson(str, Student.class);
-        System.out.println("--->>" + DateUtils.format(student.getCreate(), "yyyy-MM-dd HH:mm:ss"));
+//        System.out.println("--->>" + DateUtils.format(student.getCreate(), "yyyy-MM-dd HH:mm:ss"));
         System.out.println(gson.toJson(student));
         JsonObject jsonObject = JsonParser.parseString(str).getAsJsonObject();
         System.out.println(jsonObject);
