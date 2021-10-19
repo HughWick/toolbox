@@ -1,5 +1,7 @@
 package com.github.hugh.util.ip;
 
+import com.github.hugh.util.regex.RegexUtils;
+
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -383,5 +385,67 @@ public class IpUtils {
      */
     public static String getBeginIpStr(String ip, String maskBit) {
         return getIpFromLong(getBeginIpLong(ip, maskBit));
+    }
+
+    /**
+     * 比较两个ip地址是否在同一个网段中，如果两个都是合法地址，可以正常比较
+     * <p>
+     * 如果有其一不是合法地址则返回false
+     * </p>
+     * <p>
+     * 注意此处的ip地址指的是如“192.168.1.1”地址
+     * </p>
+     *
+     * @param ip1  第一个IP地址
+     * @param ip2  第二个IP地址
+     * @param mask 子网掩码
+     * @return boolean
+     */
+    public static boolean checkSameSegment(String ip1, String ip2, String mask) {
+        if (RegexUtils.isNotIp(ip1)) {
+            return false;
+        }
+        if (RegexUtils.isNotIp(ip2)) {
+            return false;
+        }
+        int maskInt = getIpV4Value(mask);
+        int ipValue1 = getIpV4Value(ip1);
+        int ipValue2 = getIpV4Value(ip2);
+        return (maskInt & ipValue1) == (maskInt & ipValue2);
+    }
+
+    /**
+     * 计算ipv4 地址int值
+     *
+     * @param ipOrMask ip或子网掩码
+     * @return int
+     */
+    public static int getIpV4Value(String ipOrMask) {
+        byte[] addr = getIpV4Bytes(ipOrMask);
+        int address1 = addr[3] & 0xFF;
+        address1 |= ((addr[2] << 8) & 0xFF00);
+        address1 |= ((addr[1] << 16) & 0xFF0000);
+        address1 |= ((addr[0] << 24) & 0xFF000000);
+        return address1;
+    }
+
+    /**
+     * 计算ipv4 地址int值
+     *
+     * @param ipOrMask ip或子网掩码
+     * @return byte[]
+     */
+    public static byte[] getIpV4Bytes(String ipOrMask) {
+        try {
+            String[] addrs = ipOrMask.split("\\.");
+            int length = addrs.length;
+            byte[] addr = new byte[length];
+            for (int index = 0; index < length; index++) {
+                addr[index] = (byte) (Integer.parseInt(addrs[index]) & 0xff);
+            }
+            return addr;
+        } catch (Exception e) {
+        }
+        return new byte[4];
     }
 }

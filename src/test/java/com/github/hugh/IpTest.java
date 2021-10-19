@@ -5,7 +5,6 @@ import com.github.hugh.util.regex.RegexUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
-import java.util.List;
 
 /**
  * @author AS
@@ -53,12 +52,24 @@ public class IpTest {
 //        System.out.println(IpUtils.ipToDouble("192.168.1.1"));
 
         //打印IP段所有IP（IP过多会内存溢出）
-      List<String> list = IpUtils.parseIpMaskRange(ip, mask);
-      for (String s : list){
-          System.out.println(s);
-      }
+//      List<String> list = IpUtils.parseIpMaskRange(ip, mask);
+//      for (String s : list){
+//          System.out.println(s);
+//      }
     }
 
+    @Test
+    void test03() {
+//        String ip1 = "168.1.1.11";
+//        String ip2 = "168.1.2.254";
+        String ip1 = "43.115.39.203";
+        String ip2 = "43.115.36.1";
+        String mask1 = "255.255.252.0";
+        System.out.println("11111-----ip3和ip4在同一个网段中=" + (IpUtils.checkSameSegment(ip1, ip2, mask1)));
+        System.out.println("222222222-----ip3和ip4在同一个网段中=" + (IpUtils.checkSameSegment(ip1, "43.113.36.1", mask1)));
+//        boolean b = IpUtils.checkSameSegment(ip1, ip2, mask1);
+//        System.out.println(b);
+    }
 
     public static void main(String[] args) {
         try {
