@@ -65,8 +65,9 @@ public class IpTest {
         String ip1 = "43.115.39.203";
         String ip2 = "43.115.36.1";
         String mask1 = "255.255.252.0";
-        System.out.println("11111-----ip3和ip4在同一个网段中=" + (IpUtils.checkSameSegment(ip1, ip2, mask1)));
-        System.out.println("222222222-----ip3和ip4在同一个网段中=" + (IpUtils.checkSameSegment(ip1, "43.113.36.1", mask1)));
+        System.out.println("11111-----ip3和ip4在同一个网段中=" + (IpUtils.checkSameSegment("555.168.0.1", ip2, mask1)));
+        System.out.println("222222222-----ip3和ip4在同一个网段中=" + (IpUtils.checkSameSegment(ip1, ip2, mask1)));
+        System.out.println("3333333333333-----ip3和ip4在同一个网段中=" + (IpUtils.checkSameSegment(ip1, "43.113.36.1", mask1)));
 //        boolean b = IpUtils.checkSameSegment(ip1, ip2, mask1);
 //        System.out.println(b);
     }

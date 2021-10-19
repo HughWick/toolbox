@@ -400,6 +400,7 @@ public class IpUtils {
      * @param ip2  第二个IP地址
      * @param mask 子网掩码
      * @return boolean
+     * @since 2.0.3
      */
     public static boolean checkSameSegment(String ip1, String ip2, String mask) {
         if (RegexUtils.isNotIp(ip1)) {
@@ -419,6 +420,7 @@ public class IpUtils {
      *
      * @param ipOrMask ip或子网掩码
      * @return int
+     * @since 2.0.3
      */
     public static int getIpV4Value(String ipOrMask) {
         byte[] addr = getIpV4Bytes(ipOrMask);
@@ -434,6 +436,7 @@ public class IpUtils {
      *
      * @param ipOrMask ip或子网掩码
      * @return byte[]
+     * @since 2.0.3
      */
     public static byte[] getIpV4Bytes(String ipOrMask) {
         try {
