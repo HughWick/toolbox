@@ -438,7 +438,7 @@ public class IpUtils {
      * @return boolean
      * @since 2.0.3
      */
-    public static boolean checkSameSegment(String ip1, String ip2, String mask) {
+    public static boolean isSameNetworkSegment(String ip1, String ip2, String mask) {
         if (RegexUtils.isNotIp(ip1)) {
             return false;
         }
@@ -449,6 +449,20 @@ public class IpUtils {
         int ipValue1 = getIpV4Value(ip1);
         int ipValue2 = getIpV4Value(ip2);
         return (maskInt & ipValue1) == (maskInt & ipValue2);
+    }
+
+    /**
+     * 两个IP不在同一网段内
+     *
+     * @param ip1  第一个IP地址
+     * @param ip2  第二个IP地址
+     * @param mask 子网掩码
+     * @return boolean
+     * @see #isSameNetworkSegment(String, String, String)
+     * @since 2.0.5
+     */
+    public static boolean isNotSameNetworkSegment(String ip1, String ip2, String mask) {
+        return !isSameNetworkSegment(ip1, ip2, mask);
     }
 
     /**

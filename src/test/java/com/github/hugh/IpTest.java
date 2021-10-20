@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * @author AS
  * @date 2020/9/11 16:42
@@ -66,21 +69,17 @@ public class IpTest {
         String ip2 = "43.115.36.1";
         String mask1 = "255.255.252.0";
         String mask2 = "255.255.255.0";
-        System.out.println("11111-----ip3和ip4在同一个网段中=" + (IpUtils.checkSameSegment("555.168.0.1", ip2, mask1)));
-        System.out.println("222222222-----ip3和ip4在同一个网段中=" + (IpUtils.checkSameSegment(ip1, ip2, mask1)));
-        System.out.println("3333333333333-----ip3和ip4在同一个网段中=" + (IpUtils.checkSameSegment(ip1, "43.113.36.1", mask1)));
-        System.out.println("4-----ip3和ip4在同一个网段中=" + (IpUtils.checkSameSegment("43.115.36.113", "43.115.36.1", mask1)));
-        System.out.println("5-----ip3和ip4在同一个网段中=" + (IpUtils.checkSameSegment("43.115.37.113", "43.115.36.1", mask1)));
-        System.out.println("6-----ip3和ip4在同一个网段中=" + (IpUtils.checkSameSegment("43.115.38.113", "43.115.36.1", mask1)));
-        System.out.println("7-----ip3和ip4在同一个网段中=" + (IpUtils.checkSameSegment("43.115.39.113", "43.115.36.1", mask1)));
-        System.out.println("8-----ip3和ip4在同一个网段中=" + (IpUtils.checkSameSegment("43.115.34.113", "43.115.34.1", mask2)));
-        System.out.println("9-----ip3和ip4在同一个网段中=" + (IpUtils.checkSameSegment("43.115.33.1", "43.115.33.155", mask2)));
-        System.out.println("10-----ip3和ip4在同一个网段中=" + (IpUtils.checkSameSegment("43.115.88.2", "43.115.88.1", mask1)));
-        System.out.println("11---=" + (IpUtils.checkSameSegment("43.115.87.2", "43.115.88.1", mask1)));
-        System.out.println("12---=" + (IpUtils.checkSameSegment("115.91.255.132", "43.115.88.1", mask1)));
-
-//        boolean b = IpUtils.checkSameSegment(ip1, ip2, mask1);
-//        System.out.println(b);
+        assertFalse(IpUtils.isSameNetworkSegment("555.168.0.1", ip2, mask1));
+        assertFalse(IpUtils.isSameNetworkSegment(ip1, "43.113.36.1", mask1));
+        assertTrue(IpUtils.isSameNetworkSegment(ip1, ip2, mask1));
+        assertTrue(IpUtils.isSameNetworkSegment("43.115.36.113", "43.115.36.1", mask1));
+        assertTrue(IpUtils.isSameNetworkSegment("43.115.37.113", "43.115.36.1", mask1));
+        assertTrue(IpUtils.isSameNetworkSegment("43.115.38.113", "43.115.36.1", mask1));
+        assertTrue(IpUtils.isSameNetworkSegment("43.115.39.113", "43.115.36.1", mask1));
+        assertTrue(IpUtils.isSameNetworkSegment("43.115.33.1", "43.115.33.155", mask2));
+        assertTrue(IpUtils.isSameNetworkSegment("43.115.88.2", "43.115.88.1", mask1));
+        assertTrue(IpUtils.isNotSameNetworkSegment("43.115.87.2", "43.115.88.1", mask1));
+        System.out.println("12---=" + (IpUtils.isSameNetworkSegment("115.91.255.132", "43.115.88.1", mask1)));
     }
 
     public static void main(String[] args) {
