@@ -34,7 +34,7 @@ public class MapUtils {
      * @param code 需要验证的code码
      * @return boolean {@code true} 一致
      */
-    public static boolean isSuccess(Map<?, ?> map, String key, String code) {
+    public static <K, V> boolean isSuccess(Map<K, V> map, K key, String code) {
         if (map == null) {
             return false;
         }
@@ -52,7 +52,7 @@ public class MapUtils {
      * @param code 值
      * @return boolean {@code true} 不一致
      */
-    public static boolean isFailure(Map<?, ?> map, String key, String code) {
+    public static <K, V> boolean isFailure(Map<K, V> map, K key, String code) {
         return !isSuccess(map, key, code);
     }
 
