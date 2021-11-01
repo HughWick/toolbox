@@ -30,7 +30,11 @@ public class JsonObjects extends JsonObjectUtils {
      * @param <T>    参数类型
      */
     public <T> JsonObjects(T object) {
-        this.jsonObject = parse(object);
+        if (object instanceof String) {
+            this.jsonObject = parse(object);
+        } else {
+            this.jsonObject = parse(toJson(object));
+        }
     }
 
     /**
