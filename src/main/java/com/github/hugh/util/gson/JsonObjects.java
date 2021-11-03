@@ -25,6 +25,7 @@ public class JsonObjects extends JsonObjectUtils {
 
     /**
      * 带参构造
+     * <p>支持字符于泛型</p>
      *
      * @param object 参数
      * @param <T>    参数类型
@@ -251,4 +252,6 @@ public class JsonObjects extends JsonObjectUtils {
     public JsonElement removeProperty(String key) {
         return this.jsonObject.remove(key);
     }
+
+    // TODO 待写获取对应对象的list结果返回
 }

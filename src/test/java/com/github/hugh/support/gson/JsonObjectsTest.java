@@ -3,11 +3,14 @@ package com.github.hugh.support.gson;
 import com.alibaba.fastjson.JSON;
 import com.github.hugh.model.Student;
 import com.github.hugh.model.dto.ResultDTO;
+import com.github.hugh.util.OkHttpUtils;
+import com.github.hugh.util.gson.JsonObjectUtils;
 import com.github.hugh.util.gson.JsonObjects;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import lombok.Data;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 
 /**
  * gson JsonObjects测试类
@@ -132,9 +135,13 @@ public class JsonObjectsTest {
         System.out.println("--2->" + jsonObjects.removeProperty("b").getAsString());
     }
 
-
-    @Data
-    class testCommand {
-        private int type;
+    @Test
+    void test06() throws IOException {
+        String s = OkHttpUtils.get("http://factory.hnlot.com.cn/v2/contracts/find");
+        ResultDTO resultDTO = new JsonObjects(s).formJson(ResultDTO.class);
+        JsonArray jsonArray = new JsonObjects(JsonObjectUtils.toJson(resultDTO.getData())).getJsonArray("list");
+        JsonArray jsonArray2 = new JsonObjects(resultDTO.getData()).getJsonArray("list");
+        System.out.println("--1->>" + jsonArray);
+        System.out.println("---2>>" + jsonArray2);
     }
 }
