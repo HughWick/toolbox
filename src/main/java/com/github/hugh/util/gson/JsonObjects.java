@@ -167,9 +167,9 @@ public class JsonObjects extends JsonObjectUtils {
     }
 
     /**
-     * 校验 {@link #jsonObject}中的key获取到的value值是否与相同
+     * 校验 {@link #jsonObject}中根据key获取到的value，是否当前传入的值相同
      *
-     * @param key   KEY
+     * @param key   键
      * @param value value
      * @return boolean {@code true} 相同
      * @since 1.5.11
