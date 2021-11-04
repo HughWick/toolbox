@@ -268,10 +268,10 @@ public class JsonObjects extends JsonObjectUtils {
      */
     public <E> List<E> toListObject(String key, Class<E> clazz) {
         List<E> resultList = new ArrayList<>();
-        JsonArray jsonArray1 = getJsonArray(this.jsonObject, key);
-        List<Object> objects = toArrayList(jsonArray1);
-        for (Object object : objects) {
-            E e = JSON.parseObject(toJson(object), clazz);
+        JsonArray jsonArray = getJsonArray(this.jsonObject, key);
+        assert jsonArray != null;
+        for (JsonElement jsonElement : jsonArray) {
+            E e = JSON.parseObject(jsonElement.toString(), clazz);
             resultList.add(e);
         }
         return resultList;

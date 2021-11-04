@@ -142,11 +142,14 @@ public class JsonObjectsTest {
     void test06() throws IOException {
         String s = OkHttpUtils.get("http://factory.hnlot.com.cn/v2/contracts/find");
         ResultDTO resultDTO = new JsonObjects(s).formJson(ResultDTO.class);
+        System.out.println("-resultDTO-->" + resultDTO);
         JsonArray jsonArray = new JsonObjects(JsonObjectUtils.toJson(resultDTO.getData())).getJsonArray("list");
         JsonArray jsonArray2 = new JsonObjects(resultDTO.getData()).getJsonArray("list");
         List<ContractsDO> list = new JsonObjects(resultDTO.getData()).toListObject("list", ContractsDO.class);
-        list.forEach(System.out::println);
-
+        list.forEach(e -> {
+            String s1 = JsonObjectUtils.toJson(e);
+            System.out.println(s1);
+        });
         System.out.println("--1->>" + jsonArray);
         System.out.println("---2>>" + jsonArray2);
     }
