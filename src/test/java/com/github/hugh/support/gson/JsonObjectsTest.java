@@ -8,9 +8,12 @@ import com.github.hugh.util.gson.JsonObjectUtils;
 import com.github.hugh.util.gson.JsonObjects;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import lombok.Data;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 
 /**
  * gson JsonObjects测试类
@@ -141,7 +144,25 @@ public class JsonObjectsTest {
         ResultDTO resultDTO = new JsonObjects(s).formJson(ResultDTO.class);
         JsonArray jsonArray = new JsonObjects(JsonObjectUtils.toJson(resultDTO.getData())).getJsonArray("list");
         JsonArray jsonArray2 = new JsonObjects(resultDTO.getData()).getJsonArray("list");
+        List<ContractsDO> list = new JsonObjects(resultDTO.getData()).toListObject("list", ContractsDO.class);
+        list.forEach(System.out::println);
+
         System.out.println("--1->>" + jsonArray);
         System.out.println("---2>>" + jsonArray2);
     }
+}
+
+@Data
+class ContractsDO {
+
+    public String code;// 合同编号
+    public String name;// 项目名称
+    public String projectName;// 项目名称
+    public String partyA;//甲方名称
+    public String partyB;//乙方名称
+    public String useSide;// 使用方
+    public String dateOfSigning;// 签订日期
+    public String installationAddress;//安装地点
+    public Date createDate;//安装地点
+
 }

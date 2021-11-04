@@ -1,9 +1,13 @@
 package com.github.hugh.util.gson;
 
+import com.alibaba.fastjson.JSON;
 import com.github.hugh.util.EmptyUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 由于使用{@link JsonObjectUtils}的方法获取值时需要每次将转{@link JsonObject}作为参数传入，所以该类在new 对象时将需要转换的参数传入，然后转换成{@link JsonObject}
@@ -253,5 +257,23 @@ public class JsonObjects extends JsonObjectUtils {
         return this.jsonObject.remove(key);
     }
 
-    // TODO 待写获取对应对象的list结果返回
+    /**
+     * 获取当前对象中的list数据，并且转换为对应的list实体集合
+     *
+     * @param key   获取集合的key
+     * @param clazz 需要转换的类
+     * @param <E>   类型
+     * @return List
+     * @since 2.0.5
+     */
+    public <E> List<E> toListObject(String key, Class<E> clazz) {
+        List<E> resultList = new ArrayList<>();
+        JsonArray jsonArray1 = getJsonArray(this.jsonObject, key);
+        List<Object> objects = toArrayList(jsonArray1);
+        for (Object object : objects) {
+            E e = JSON.parseObject(toJson(object), clazz);
+            resultList.add(e);
+        }
+        return resultList;
+    }
 }
