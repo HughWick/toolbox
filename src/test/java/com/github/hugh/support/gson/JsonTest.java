@@ -168,7 +168,7 @@ public class JsonTest {
         System.out.println("-8-->>" + JsonObjectUtils.toJson(student));
         Map<Object, Object> objectObjectMap = JsonObjectUtils.toMap(json2);
         System.out.println("-9-->>" + objectObjectMap);
-        Student student2 = JsonObjectUtils.fromJson(tmee, Student.class , DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
+        Student student2 = JsonObjectUtils.fromJson(tmee, Student.class, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
         System.out.println("=--10->>" + student2.getCreate());
     }
 
@@ -177,7 +177,7 @@ public class JsonTest {
         String str2 = "[{\"serialNo\":\"1339497989051277312\",\"createBy\":1,\"createDate\":1608196182000,\"updateBy\":\"xxxx\",\"updateDate\":1615444156000}]";
         JsonArray jsonElements = JsonObjectUtils.parseArray(str2);
         List<JsonObject> objects = JsonObjectUtils.toArrayList(jsonElements);
-        System.out.println("-====>>>" +objects);
+        System.out.println("-====>>>" + objects);
     }
 
     @Test
@@ -192,7 +192,6 @@ public class JsonTest {
         String str2 = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"1625024713000\",\"test\":}";
         Student student2 = JsonObjectUtils.fromJsonTimeStamp(str2, Student.class);
         System.out.println(student1.toString());
-
     }
 
 
