@@ -4,6 +4,7 @@ import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.support.instance.Instance;
 import com.github.hugh.util.common.AssertUtils;
 import com.github.hugh.util.gson.JsonObjectUtils;
+import com.github.hugh.util.gson.JsonObjects;
 import com.github.hugh.util.lang.UrlUtils;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
@@ -251,10 +252,102 @@ public class OkHttpUtils {
      * @throws IOException IO流错误
      * @since 1.3.0
      */
+    @Deprecated
     public static <T> JsonObject postFormReJsonObject(String url, T params) throws IOException {
         String result = postForm(url, params);
         try {
             return JsonObjectUtils.parse(result);
+        } catch (Exception e) {
+            throw new ToolboxException("url:" + url + ",返回结果参数格式错误:" + result);
+        }
+    }
+
+    /**
+     * 发送post json参数类型的请求，并且将结果集转换为 {@link JsonObjects}
+     *
+     * @param url URL
+     * @return JsonObjects
+     * @throws IOException
+     * @since 2.0.6
+     */
+    public static JsonObjects postJsonReJsonObjects(String url) throws IOException {
+        return postJsonReJsonObjects(url, null);
+    }
+
+    /**
+     * 发送post json参数类型的请求，并且将结果集转换为 {@link JsonObjects}
+     *
+     * @param url    URL
+     * @param params 参数
+     * @param <T>    类型
+     * @return JsonObjects
+     * @throws IOException
+     * @since 2.0.6
+     */
+    public static <T> JsonObjects postJsonReJsonObjects(String url, T params) throws IOException {
+        String result = postJson(url, params);
+        try {
+            return new JsonObjects(result);
+        } catch (Exception e) {
+            throw new ToolboxException("url:" + url + ",返回结果参数格式错误:" + result);
+        }
+    }
+
+    /**
+     * 发送无参的post表单参数类型请求，并且将结果集转换为 {@link JsonObjects}
+     *
+     * @param url URL
+     * @return JsonObjects
+     * @throws IOException
+     * @since 2.0.6
+     */
+    public static JsonObjects postFormReJsonObjects(String url) throws IOException {
+        return postFormReJsonObjects(url, null);
+    }
+
+    /**
+     * 发送post表单参数类型的请求，并且将结果集转换为 {@link JsonObjects}
+     *
+     * @param url    URL
+     * @param params 参数
+     * @param <T>    类型
+     * @return JsonObjects
+     * @throws IOException
+     * @since 2.0.6
+     */
+    public static <T> JsonObjects postFormReJsonObjects(String url, T params) throws IOException {
+        String result = postForm(url, params);
+        try {
+            return new JsonObjects(result);
+        } catch (Exception e) {
+            throw new ToolboxException("url:" + url + ",返回结果参数格式错误:" + result);
+        }
+    }
+
+    /**
+     * 发送get请求，并且将结果集转换为 {@link JsonObjects}
+     *
+     * @param url URL
+     * @return JsonObjects
+     * @since 2.0.6
+     */
+    public static JsonObjects getReJsonObjects(String url) throws IOException {
+        return getReJsonObjects(url, null);
+    }
+
+    /**
+     * 发送get请求，并且将结果集转换为 {@link JsonObjects}
+     *
+     * @param url    URL
+     * @param params 参数
+     * @param <T>    类型
+     * @return JsonObjects
+     * @since 2.0.6
+     */
+    public static <T> JsonObjects getReJsonObjects(String url, T params) throws IOException {
+        String result = get(url, params);
+        try {
+            return new JsonObjects(result);
         } catch (Exception e) {
             throw new ToolboxException("url:" + url + ",返回结果参数格式错误:" + result);
         }
