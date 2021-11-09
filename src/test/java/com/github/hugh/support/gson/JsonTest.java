@@ -188,10 +188,12 @@ public class JsonTest {
 
         JsonObjects jsonObjects = new JsonObjects(str);
         System.out.println(jsonObjects.fromJsonTimeStamp(Student.class));
+        Student student = jsonObjects.fromJsonTimeStamp(Student.class);
+        System.out.println(JsonObjectUtils.toJson(student));
 
-        String str2 = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"1625024713000\",\"test\":}";
-        Student student2 = JsonObjectUtils.fromJsonTimeStamp(str2, Student.class);
-        System.out.println(student1.toString());
+//        String str2 = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"1625024713000\",\"test\":}";
+//        Student student2 = JsonObjectUtils.fromJsonTimeStamp(str2, Student.class);
+//        System.out.println(student1.toString());
     }
 
 

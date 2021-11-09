@@ -350,26 +350,11 @@ public class JsonObjectUtils {
      * @since 1.6.13
      */
     public static <T> T fromJsonTimeStamp(String value, Class<T> classOfT) {
-        return fromJsonTimeStamp(value, classOfT, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
-    }
-
-    /**
-     * 将字符串转化为指定实体类
-     * <p>该方法主要作用与解析日期时、json字符串中的值为时间戳(long)类型时</p>
-     *
-     * @param value      json字符串
-     * @param classOfT   类
-     * @param <T>        实体类型
-     * @param dateFormat 时间格式
-     * @return T  实体
-     * @since 2.0.7
-     */
-    public static <T> T fromJsonTimeStamp(String value, Class<T> classOfT, String dateFormat) {
         GsonBuilder builder = new GsonBuilder();
         //注册一个日期解析器、将时间戳转换为Date 类型
         builder.registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (jsonElement, typeOfT, context) ->
                 new Date(jsonElement.getAsJsonPrimitive().getAsLong()));
-        Gson gson = builder.setDateFormat(dateFormat).create();
+        Gson gson = builder.create();
         return gson.fromJson(value, classOfT);
     }
 }
