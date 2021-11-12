@@ -11,21 +11,21 @@
 
     <artifactId>toolbox-db</artifactId>
     <packaging>jar</packaging>
-    <description>toolbox 公共工具类核心包</description>
+    <description>toolbox 数据库操作工具包</description>
     <properties>
         <mybatis-plus.version>3.3.2</mybatis-plus.version>
     </properties>
-   <dependencies>
-		<dependency>
-			<groupId>com.github.hughwick</groupId>
-			<artifactId>toolbox-core</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-       <!-- mybatis plus-->
-       <dependency>
-           <groupId>com.baomidou</groupId>
-           <artifactId>mybatis-plus</artifactId>
-           <version>${mybatis-plus.version}</version>
-       </dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>com.github.hughwick</groupId>
+            <artifactId>toolbox-core</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <!-- mybatis plus-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus</artifactId>
+            <version>${mybatis-plus.version}</version>
+        </dependency>
+    </dependencies>
 </project>
