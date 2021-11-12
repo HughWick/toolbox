@@ -33,5 +33,6 @@ public class QueryTest {
         map.put("updateDate_le", "2021-03-02 00:00:00");
         String targetSql = MybatisPlusQueryUtils.create(map).getTargetSql();
         System.out.println(targetSql);
+        System.out.println(MybatisPlusQueryUtils.createDef(map).getTargetSql());
     }
 }
