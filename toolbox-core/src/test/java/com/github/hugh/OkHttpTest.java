@@ -1,0 +1,147 @@
+package com.github.hugh;
+
+import com.github.hugh.util.OkHttpUtils;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import net.sf.json.JSONObject;
+import okhttp3.OkHttpClient;
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+/**
+ * @author AS
+ * @date 2020/8/31 16:41
+ */
+@Slf4j
+public class OkHttpTest {
+
+    @Test
+    void test01() {
+        String str = "https://sudo.191ec.com/silver-web-shop/manual/readInfo2";
+        var map = new HashMap<>();
+        map.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+        Map head = new HashMap<>();
+        head.put("a", "1");
+        JSONObject json = new JSONObject();
+        json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+        try {
+            System.out.println("-postJson-1>" + OkHttpUtils.postJson("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+            System.out.println("-postJson-2>>" + OkHttpUtils.postJson("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json.toString()));
+            System.out.println("--3>>" + OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+            System.out.println("--4> map>" + OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", map, head));
+//            System.out.println("--5->>" + OkHttpUtils.postFormReJSON("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+            System.out.println("get-1->>" + OkHttpUtils.get("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+            System.out.println("get-2->>" + OkHttpUtils.get("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", map));
+//            System.out.println("-get-3->>" + OkHttpUtils.get(""));
+            System.out.println("--7->>" + OkHttpUtils.postFormReJsonObject(str, json));
+            System.out.println("===8>>" + OkHttpUtils.getReJsonObjects(str, json));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Test
+    public void test02() throws InterruptedException {
+        JSONObject params = new JSONObject();
+        params.put("ZH", "admin");
+        params.put("MM", "88888888");
+        try {
+            System.out.println("--1->>" + OkHttpUtils.postFormCookie("http://www.hnlot.com.cn/ptpz/yonghu/login", params));
+            System.out.println("--2->>" + OkHttpUtils.postFormCookie("http://www.hnlot.com.cn/ptpz/juese/selectJueSe", params));
+            System.out.println("--3->>" + OkHttpUtils.postFormCookie("http://localhost:7040/knowledge/articles/test02", params));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void test03() throws IOException {
+        String url = "http://localhost:7900/testHeader";
+        JSONObject json = new JSONObject();
+        Map<String, String> headerContent = new HashMap<>();
+        headerContent.put("test_token", UUID.randomUUID().toString());
+        headerContent.put("test_token_02", UUID.randomUUID().toString());
+        headerContent.put("int_test", "123");
+        System.out.println("--->" + OkHttpUtils.postForm(url, json, headerContent));
+    }
+
+    @Test
+    public void test04() throws Exception {
+        String url = "http://localhost:7010/email/email/send";
+        val params = new HashMap<>();
+        params.put("recipient", "136438455@qq.com");
+        params.put("title", "标题");
+        val fileMap = new HashMap<>();
+        fileMap.put("鬼灭之刃1.jpg", "D:\\OneDrive\\图片\\鬼灭之刃\\78133846_p0.jpg");
+        fileMap.put("鬼灭之刃2.jpg", "D:\\OneDrive\\图片\\鬼灭之刃\\78382590_p4.jpg");
+        fileMap.put("鬼灭之刃3.jpg", "D:\\OneDrive\\图片\\鬼灭之刃\\79733019_p0.jpg");
+        String result = OkHttpUtils.upload(url, params, "file", fileMap);
+
+        System.out.println("--->" + result);
+    }
+
+    @Test
+    public void test05() throws Exception {
+        JSONObject json = new JSONObject();
+        val receiveUser = new ArrayList<>();
+        receiveUser.add("234260245@qq.com");
+        receiveUser.add("1378321226@qq.com");
+        receiveUser.add("729076704@qq.com");
+        json.put("recipient", receiveUser);
+        json.put("title", "测试标题");
+        json.put("content", "文本内容");
+        json.put("template", "模板0001");
+        System.out.println("---->" + json.toString());
+        String s = OkHttpUtils.postJson("http://localhost:7010/email/email/sendTemplates", json);
+        System.out.println("--->>" + s);
+    }
+
+//    public static OkHttpClient buildClient(int connectTimeout, int readTimeout) {
+//        OkHttpClient client = Instance.getInstance().singleton(OkHttpClient.class);
+//        client.newBuilder().connectTimeout(connectTimeout, TimeUnit.SECONDS)
+//                .readTimeout(readTimeout, TimeUnit.SECONDS)
+//                .retryOnConnectionFailure(true)
+//                .build();
+//        return client;
+//    }
+
+    @Test
+    void tem() throws IOException {
+        HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
+//        JSONObject json = new JSONObject();
+        objectObjectHashMap.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+//        log.info(OkHttpUtils.get("http://localhost:7040/knowledge/articles/test", json));
+        log.info(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", objectObjectHashMap));
+        log.info(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2"));
+        OkHttpClient okHttpClient = OkHttpUtils.buildClient(15, 15);
+        log.info(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", objectObjectHashMap, okHttpClient));
+        log.error(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", JSONObject.fromObject(objectObjectHashMap)));
+        log.error(OkHttpUtils.postForm("", JSONObject.fromObject(objectObjectHashMap)));
+    }
+
+    @Test
+    void testJsonObjects() throws IOException {
+        String ymUrl = "https://sudo.191ec.com/silver-web-shop/manual/readInfo2";
+        Map<String, Object> params = new HashMap<>();
+        params.put("size", 1);
+        String str = "http://factory.hnlot.com.cn/v2/contracts/find";
+        System.out.println("===1>>" + OkHttpUtils.getReJsonObjects(str));
+        System.out.println("===2>>" + OkHttpUtils.getReJsonObjects(str, params));
+        var map = new HashMap<>();
+        map.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+        System.out.println("===3>>" + OkHttpUtils.postFormReJsonObjects(ymUrl));
+        System.out.println("===4>>" + OkHttpUtils.postFormReJsonObjects(ymUrl, map));
+        var data = new HashMap<>();
+        data.put("appid", 2020114837);
+        data.put("appsecret", "1f091a6d2ad111ebbd3400163e0b8359");
+        String httpTop = "https://api.wl1688.net/iotc/getway ";
+        System.out.println("===5>>" + OkHttpUtils.postJsonReJsonObjects(httpTop));
+        System.out.println("===6>>" + OkHttpUtils.postJsonReJsonObjects(httpTop, data));
+    }
+}
