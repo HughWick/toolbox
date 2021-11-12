@@ -28,8 +28,22 @@ public class MybatisPlusQueryUtils {
     private static final String SORT = "sort";
 
     /**
+     * 创建mybatis plus查询实例
+     * <p>
+     * 默认添加 {@link QueryCode#DELETE_FLAG} 标识为0的条件
+     * </p>
+     *
+     * @param params 查询条件
+     * @return QueryWrapper
+     */
+    public static <T> QueryWrapper<T> createDef(Map<String, Object> params) {
+        QueryWrapper<T> queryWrapper = create(params);
+        queryWrapper.eq(QueryCode.DELETE_FLAG, 0);
+        return queryWrapper;
+    }
+
+    /**
      * 遍历所有Map中的键值对、并根据对应的属性进行mybatis plus 的查询语句赋值
-     * <li></li>
      *
      * @param params 查询条件
      * @return QueryWrapper
@@ -135,18 +149,6 @@ public class MybatisPlusQueryUtils {
      */
     private static String conversion(String str) {
         return CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, str);
-    }
-
-    /**
-     * 创建mybatis plus查询实例。并默认设定删除标识为0
-     *
-     * @param params 查询条件
-     * @return QueryWrapper
-     */
-    public static <T> QueryWrapper<T> createDef(Map<String, Object> params) {
-        QueryWrapper<T> queryWrapper = create(params);
-        queryWrapper.eq(QueryCode.DELETE_FLAG, 0);
-        return queryWrapper;
     }
 
     /**

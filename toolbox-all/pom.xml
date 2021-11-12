@@ -12,16 +12,16 @@
     <artifactId>toolbox-all</artifactId>
     <packaging>jar</packaging>
     <description>toolbox 公共工具类核心包</description>
-  <dependencies>
-		<dependency>
-			<groupId>com.github.hughwick</groupId>
-			<artifactId>toolbox-core</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-      <dependency>
-          <groupId>com.github.hughwick</groupId>
-          <artifactId>toolbox-db</artifactId>
-          <version>${project.parent.version}</version>
-      </dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>com.github.hughwick</groupId>
+            <artifactId>toolbox-core</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.hughwick</groupId>
+            <artifactId>toolbox-db</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+    </dependencies>
 </project>
