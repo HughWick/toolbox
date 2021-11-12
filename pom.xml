@@ -4,8 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.hughwick</groupId>
-    <artifactId>toolbox</artifactId>
-    <version>2.0.7</version>
+    <artifactId>toolbox-parent</artifactId>
+    <version>2.1.0</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>toolbox-core</module>
+    </modules>
 
     <properties>
         <!--============================== MAIN ==============================-->
@@ -179,11 +183,11 @@
             </plugin>
             <!--=================================== coveralls START ===================================-->
             <!--mvn cobertura:cobertura coveralls:report -DrepoToken=yourcoverallsprojectrepositorytoken-->
-<!--            <plugin>-->
-<!--                <groupId>org.kt3k.gradle.plugin</groupId>-->
-<!--                <artifactId>coveralls-gradle-plugin</artifactId>-->
-<!--                <version>${plugin.coveralls.version}</version>-->
-<!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.kt3k.gradle.plugin</groupId>-->
+            <!--                <artifactId>coveralls-gradle-plugin</artifactId>-->
+            <!--                <version>${plugin.coveralls.version}</version>-->
+            <!--            </plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
