@@ -1,7 +1,7 @@
-package com.github.hugh.annotation.constraints;
+package com.github.hugh.aop.constraints;
 
 
-import com.github.hugh.annotation.constraints.validator.DateFormatValidator;
+import com.github.hugh.aop.constraints.validator.DateFormatValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

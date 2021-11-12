@@ -1,6 +1,6 @@
-package com.github.hugh.annotation.constraints;
+package com.github.hugh.aop.constraints;
 
-import com.github.hugh.annotation.constraints.validator.IpV4Validator;
+import com.github.hugh.aop.constraints.validator.NotEmptyValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -12,23 +12,23 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * IpV4 校验注解
+ * 自定义的不为空验证注解
  *
  * @author hugh
- * @since 1.4.9
+ * @since  1.0.5
  */
-@Documented
-@Retention(RUNTIME)
 @Target({METHOD, FIELD, PARAMETER})
-@Constraint(validatedBy = IpV4Validator.class)//指向自定义验证类
-public @interface IpV4 {
+@Retention(RUNTIME)
+@Documented
+@Constraint(validatedBy = NotEmptyValidator.class)//指向自定义验证类
+public @interface NotEmpty {
 
     /**
-     * 返回信息
+     * 失败消息
      *
      * @return String
      */
-    String message() default "IP格式错误"; //这边可以标注默认的验证失败消息
+    String message() default "";
 
     /**
      * 值
@@ -38,14 +38,16 @@ public @interface IpV4 {
     String value() default "";
 
     /**
-     * 是否允许为空
-     * <p>默认不允许，也就是false时，不管value是空字符串或者null都进行Ip规则校验</p>
+     * 约束注解在验证时所属的组别
      *
-     * @return boolean
+     * @return Class
      */
-    boolean nullable() default false;
-
     Class<?>[] groups() default {};
 
+    /**
+     * 负载
+     *
+     * @return Class
+     */
     Class<? extends Payload>[] payload() default {};
 }

@@ -1,4 +1,4 @@
-package com.github.hugh.annotation;
+package com.github.hugh.aop;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

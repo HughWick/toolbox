@@ -1,6 +1,6 @@
-package com.github.hugh.annotation.constraints.validator;
+package com.github.hugh.aop.constraints.validator;
 
-import com.github.hugh.annotation.constraints.StringLength;
+import com.github.hugh.aop.constraints.StringLength;
 import com.github.hugh.util.StringUtils;
 
 import javax.validation.ConstraintValidator;

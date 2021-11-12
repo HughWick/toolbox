@@ -1,6 +1,6 @@
-package com.github.hugh.annotation.constraints;
+package com.github.hugh.aop.constraints;
 
-import com.github.hugh.annotation.constraints.validator.OrderValidator;
+import com.github.hugh.aop.constraints.validator.OrderValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

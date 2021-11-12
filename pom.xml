@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>toolbox-all</module>
+        <module>toolbox-aop</module>
         <module>toolbox-db</module>
         <module>toolbox-core</module>
     </modules>

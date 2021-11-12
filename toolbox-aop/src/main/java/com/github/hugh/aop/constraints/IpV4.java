@@ -1,6 +1,6 @@
-package com.github.hugh.annotation.constraints;
+package com.github.hugh.aop.constraints;
 
-import com.github.hugh.annotation.constraints.validator.PortValidator;
+import com.github.hugh.aop.constraints.validator.IpV4Validator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -12,23 +12,23 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * 端口验证
+ * IpV4 校验注解
  *
- * @author Hugh
- * @since 1.7.2
+ * @author hugh
+ * @since 1.4.9
  */
 @Documented
 @Retention(RUNTIME)
 @Target({METHOD, FIELD, PARAMETER})
-@Constraint(validatedBy = PortValidator.class)//指向自定义验证类
-public @interface Port {
+@Constraint(validatedBy = IpV4Validator.class)//指向自定义验证类
+public @interface IpV4 {
 
     /**
      * 返回信息
      *
      * @return String
      */
-    String message() default "端口错误";
+    String message() default "IP格式错误"; //这边可以标注默认的验证失败消息
 
     /**
      * 值

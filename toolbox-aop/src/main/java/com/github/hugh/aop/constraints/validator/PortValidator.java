@@ -1,6 +1,6 @@
-package com.github.hugh.annotation.constraints.validator;
+package com.github.hugh.aop.constraints.validator;
 
-import com.github.hugh.annotation.constraints.Port;
+import com.github.hugh.aop.constraints.Port;
 import com.github.hugh.util.regex.RegexUtils;
 
 import javax.validation.ConstraintValidator;
