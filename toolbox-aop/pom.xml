@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.github.hughwick</groupId>
+        <artifactId>toolbox-parent</artifactId>
+        <version>2.1.0</version>
+    </parent>
+
+    <artifactId>toolbox-aop</artifactId>
+    <packaging>jar</packaging>
+    <description>toolbox-aop工具包</description>
+    <properties>
+        <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.github.hughwick</groupId>
+            <artifactId>toolbox-core</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>${jakarta.validation-api.version}</version>
+        </dependency>
+    </dependencies>
+</project>
