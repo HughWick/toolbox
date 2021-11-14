@@ -13,7 +13,7 @@
 ```xml
 <dependency>
   <groupId>com.github.hughwick</groupId>
-  <artifactId>toolbox</artifactId>
+  <artifactId>toolbox-all</artifactId>
   <version>2.1.0</version>
 </dependency>
 ```
