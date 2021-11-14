@@ -1,6 +1,5 @@
 package com.github.hugh.crypto;
 
-import com.github.hugh.util.secrect.DesEncDecUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
