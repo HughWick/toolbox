@@ -1,4 +1,4 @@
-package com.github.hugh.util.secrect;
+package com.github.hugh.crypto;
 
 import javax.crypto.*;
 import javax.crypto.spec.DESKeySpec;
@@ -11,7 +11,7 @@ import java.security.spec.InvalidKeySpecException;
  * DES加密工具
  *
  * @author hugh
- * @since 1.2.0
+ * @since 2.0.1
  */
 public class DesEncDecUtils {
     private DesEncDecUtils() {

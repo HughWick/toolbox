@@ -1,4 +1,4 @@
-package com.github.hugh.util.secrect;
+package com.github.hugh.crypto;
 
 import com.github.hugh.util.EmptyUtils;
 
@@ -7,7 +7,7 @@ import com.github.hugh.util.EmptyUtils;
  * <p>encode: utf-8</p>
  *
  * @author hugh
- * @since 1.1.1
+ * @since  2.0.1
  */
 public class Crc16Utils {
 

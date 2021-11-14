@@ -1,7 +1,6 @@
-package com.github.hugh.secret;
+package com.github.hugh.crypto;
 
 import com.github.hugh.util.OkHttpUtils;
-import com.github.hugh.util.secrect.ShaUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

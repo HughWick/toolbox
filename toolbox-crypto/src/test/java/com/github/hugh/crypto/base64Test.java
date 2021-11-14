@@ -1,4 +1,4 @@
-package com.github.hugh.secret;
+package com.github.hugh.crypto;
 
 
 import com.github.hugh.util.base.Base64;

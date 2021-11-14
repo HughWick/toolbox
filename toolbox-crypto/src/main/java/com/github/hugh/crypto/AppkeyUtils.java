@@ -1,15 +1,14 @@
-package com.github.hugh.util.secrect;
+package com.github.hugh.crypto;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-
 /**
  * appkey生成工具类
  *
  * @author hugh
- * @version 1.0.0
+ * @since 2.0.1
  */
 public class AppkeyUtils {
     private AppkeyUtils() {

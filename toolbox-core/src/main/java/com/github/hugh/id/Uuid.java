@@ -1,9 +1,8 @@
 package com.github.hugh.id;
 
-import com.github.hugh.util.secrect.AppkeyUtils;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 在数据量较多的时候，
@@ -74,7 +73,8 @@ public class Uuid {
      * @return 分段后的内容
      */
     private static List<String> uuidUnits(int size) {
-        final String uuid32 = AppkeyUtils.generate();
+        UUID uuid = UUID.randomUUID();
+        String uuid32 = uuid.toString().replace("-", "");
         List<String> units = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             units.add(uuid32.substring(i * 2, i * 2 + 2));

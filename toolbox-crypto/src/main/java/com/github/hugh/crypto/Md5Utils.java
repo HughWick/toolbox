@@ -1,4 +1,4 @@
-package com.github.hugh.util.secrect;
+package com.github.hugh.crypto;
 
 import com.github.hugh.constant.EncryptCode;
 import com.github.hugh.exception.ToolboxException;
@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
  * md5 加密工具类
  *
  * @author hugh
- * @version 1.0.0
+ * @since  2.0.1
  */
 public class Md5Utils {
 

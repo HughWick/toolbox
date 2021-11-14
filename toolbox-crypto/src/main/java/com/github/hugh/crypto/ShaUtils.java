@@ -1,4 +1,4 @@
-package com.github.hugh.util.secrect;
+package com.github.hugh.crypto;
 
 import com.github.hugh.constant.EncryptCode;
 
@@ -6,7 +6,7 @@ import com.github.hugh.constant.EncryptCode;
  * sha 加密工具类
  *
  * @author hugh
- * @since 1.5.7
+ * @since 2.0.1
  */
 public class ShaUtils {
     private ShaUtils() {

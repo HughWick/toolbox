@@ -1,6 +1,5 @@
-package com.github.hugh.secret;
+package com.github.hugh.crypto;
 
-import com.github.hugh.util.secrect.Md5Utils;
 import org.junit.jupiter.api.Test;
 
 /**
