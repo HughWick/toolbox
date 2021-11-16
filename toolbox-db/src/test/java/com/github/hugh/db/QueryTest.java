@@ -1,5 +1,6 @@
 package com.github.hugh.db;
 
+import com.github.hugh.db.util.MybatisPlusQueryUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

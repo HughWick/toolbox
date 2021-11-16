@@ -83,6 +83,7 @@ public class MapUtils {
      * @return Map
      * @since 1.1.0
      */
+    @Deprecated
     public static Map<String, Object> cyclePar(HttpServletRequest request) {
         Map<String, Object> map = new HashMap<>();
         if (request == null) {
@@ -107,6 +108,7 @@ public class MapUtils {
      * @return Map
      * @since 1.1.0
      */
+    @Deprecated
     public static Map<String, Object> cycleQueryPar(HttpServletRequest request) {
         return cycleQueryPar(request, "page", "size");
     }
@@ -119,6 +121,7 @@ public class MapUtils {
      * @return Map
      * @since 1.1.0
      */
+    @Deprecated
     public static Map<String, Object> cycleQueryPar(HttpServletRequest request, String... keys) {
         Map<String, Object> map = cyclePar(request);
         for (String key : keys) {

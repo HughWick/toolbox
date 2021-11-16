@@ -1,4 +1,4 @@
-package com.github.hugh.db;
+package com.github.hugh.db.util;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.hugh.db.constants.QueryCode;
