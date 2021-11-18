@@ -1,7 +1,7 @@
 package com.github.hugh.db.constants;
 
 /**
- * 查询字段常量
+ * 标准的数据库字段常量命令
  *
  * @author hugh
  * @since 2.1.0

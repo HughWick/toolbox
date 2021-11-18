@@ -111,6 +111,16 @@ public class MapTest {
         MapUtils.setValue(map, "null", "1");
         System.out.println("--3>>" + map);
     }
+
+    @Test
+    void test05() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("page", 1);
+        map.put("size", 2);
+        map.put("id", 2);
+        MapUtils.removeKeys(map, "page", "size");
+        System.out.println(map);
+    }
 }
 
 

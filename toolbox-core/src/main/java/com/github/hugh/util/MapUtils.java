@@ -374,4 +374,20 @@ public class MapUtils {
         }
         map.put(key, value);
     }
+
+    /**
+     * 移除map中对应的key
+     *
+     * @param map  map
+     * @param keys keys
+     * @since 2.1.2
+     */
+    public static <K, V> void removeKeys(Map<K, V> map, String... keys) {
+        if (keys == null) {
+            return;
+        }
+        for (String key : keys) {
+            map.remove(key);
+        }
+    }
 }

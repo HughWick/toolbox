@@ -58,9 +58,7 @@ public class ServletUtils {
         if (keys == null) {
             return map;
         }
-        for (String key : keys) {
-            map.remove(key);
-        }
+        MapUtils.removeKeys(map, keys);
         return map;
     }
 }

@@ -32,6 +32,7 @@
         <plugin.maven-gpg-plugin.version>1.5</plugin.maven-gpg-plugin.version>
         <!--============================== other ==============================-->
         <lombok.version>1.18.22</lombok.version>
+        <spring-test.version>5.2.13.RELEASE</spring-test.version>
     </properties>
 
     <dependencies>
@@ -47,6 +48,12 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring-test.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.hugh.db.constants.QueryCode;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.ListUtils;
+import com.github.hugh.util.ServletUtils;
 import com.google.common.base.CaseFormat;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -36,9 +38,9 @@ public class MybatisPlusQueryUtils {
      * @param params 查询条件
      * @return QueryWrapper
      */
-    public static <T> QueryWrapper<T> createDef(Map<String, Object> params) {
+    public static <T, K, V> QueryWrapper<T> createDef(Map<String, String> params, K key, V value) {
         QueryWrapper<T> queryWrapper = create(params);
-        queryWrapper.eq(QueryCode.DELETE_FLAG, 0);
+        queryWrapper.eq((String) key, value);
         return queryWrapper;
     }
 
@@ -48,14 +50,14 @@ public class MybatisPlusQueryUtils {
      * @param params 查询条件
      * @return QueryWrapper
      */
-    public static <T> QueryWrapper<T> create(Map<String, Object> params) {
+    public static <T> QueryWrapper<T> create(Map<String, String> params) {
         if (params == null) {
             throw new NullPointerException();
         }
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
-        for (Map.Entry<String, Object> entry : params.entrySet()) {
+        for (Map.Entry<String, String> entry : params.entrySet()) {
             String key = entry.getKey();
-            Object value = entry.getValue();
+            String value = entry.getValue();
             boolean isOrStr = key.endsWith("_or"); // 结尾是否为or
             String tableField = conversion(key);//将key转化为与数据库列一致的名称
             if (EmptyUtils.isEmpty(value) || SORT.equals(key)) {//空时不操作
@@ -182,5 +184,64 @@ public class MybatisPlusQueryUtils {
             }
         }
         return true;
+    }
+
+    /**
+     * 解析请求头中所有键值对，并放入mybatis 查询对象中
+     * <p>根据deleteFlag标识区分是否，加入删除标识 {@link QueryCode#DELETE_FLAG} 标识为0的条件</p>
+     *
+     * @param request    请求头
+     * @param deleteFlag 是否增加删除标识的键值对
+     * @return QueryWrapper
+     * @since 2.1.2
+     */
+    private static <T, K> QueryWrapper<T> create(HttpServletRequest request, boolean deleteFlag, K key, Object value) {
+        Map<String, String> params = ServletUtils.getParams(request);
+        if (deleteFlag) {
+            return createDef(params, key, value);
+        } else {
+            return create(params);
+        }
+    }
+
+    /**
+     * 解析请求头中所有键值对，并防入mybatis 查询对象中
+     *
+     * @param request 请求头
+     * @param <T>     类型
+     * @return QueryWrapper
+     * @since 2.1.2
+     */
+    public static <T> QueryWrapper<T> create(HttpServletRequest request) {
+        return create(request, false, null, null);
+    }
+
+    /**
+     * 解析请求头中所有键值对，并防入mybatis 查询对象中
+     * <p>
+     * 加入删除标识 {@link QueryCode#DELETE_FLAG} 标识为0的条件</p>
+     * </p>
+     *
+     * @param request 请求头
+     * @param <T>     类型
+     * @return QueryWrapper
+     * @since 2.1.2
+     */
+    public static <T> QueryWrapper<T> createDef(HttpServletRequest request) {
+        return createDef(request, QueryCode.DELETE_FLAG, 0);
+    }
+
+    /**
+     * 创建一个放入默认值的查询条件
+     *
+     * @param request 请求头
+     * @param key     默认的key
+     * @param value   默认值
+     * @param <T>     类型
+     * @return QueryWrapper
+     * @since 2.1.2
+     */
+    public static <T, K, V> QueryWrapper<T> createDef(HttpServletRequest request, K key, V value) {
+        return create(request, true, key, value);
     }
 }
