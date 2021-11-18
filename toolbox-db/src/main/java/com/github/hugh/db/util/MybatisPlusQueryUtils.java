@@ -20,6 +20,21 @@ import java.util.Map;
 public class MybatisPlusQueryUtils {
 
     /**
+     * 大于等于
+     */
+    private static final String GE = "_GE";
+
+    /**
+     * 小于等于
+     */
+    private static final String LE = "_LE";
+
+    /**
+     * 模糊查询
+     */
+    private static final String LIKE = "_LIKE";
+
+    /**
      * 空字符串
      */
     private static final String EMPTY = "";
@@ -65,21 +80,21 @@ public class MybatisPlusQueryUtils {
                 queryWrapper.ge(QueryCode.CREATE_DATE, value);//开始日期 小于等于
             } else if (QueryCode.END_DATE.equals(tableField)) {
                 queryWrapper.le(QueryCode.CREATE_DATE, value);//结束日期 大于等于
-            } else if (tableField.endsWith("LIKE")) {//判断结尾是否为模糊查询
-                tableField = tableField.replace("_LIKE", EMPTY);//移除掉识别key
+            } else if (tableField.endsWith(LIKE)) {//判断结尾是否为模糊查询
+                tableField = tableField.replace(LIKE, EMPTY);//移除掉识别key
                 queryWrapper.like(tableField, value);
             } else if ("order".equals(key)) {
                 String sortValue = String.valueOf(params.get(SORT));
-                appendOrderSql(queryWrapper, String.valueOf(value), sortValue);
+                appendOrderSql(queryWrapper, value, sortValue);
             } else if (isOrStr) {
                 appendOrSql(queryWrapper, key, value);
             } else if (tableField.endsWith("_IN")) {
                 appendInSql(queryWrapper, tableField, value);
-            } else if (tableField.endsWith("_GE")) { // 大于等于
-                tableField = tableField.replace("_GE", EMPTY);//移除掉识别key
+            } else if (tableField.endsWith(GE)) {
+                tableField = tableField.replace(GE, EMPTY);
                 queryWrapper.ge(tableField, value);
-            } else if (tableField.endsWith("_LE")) {
-                tableField = tableField.replace("_LE", EMPTY);//移除掉识别key
+            } else if (tableField.endsWith(LE)) {
+                tableField = tableField.replace(LE, EMPTY);//移除掉识别key
                 queryWrapper.le(tableField, value);//小于等于
             } else {
                 queryWrapper.eq(tableField, value);
