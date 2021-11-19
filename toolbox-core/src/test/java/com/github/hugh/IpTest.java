@@ -79,6 +79,7 @@ public class IpTest {
         assertTrue(IpUtils.isSameNetworkSegment("43.115.33.1", "43.115.33.155", mask2));
         assertTrue(IpUtils.isSameNetworkSegment("43.115.88.2", "43.115.88.1", mask1));
         assertTrue(IpUtils.isNotSameNetworkSegment("43.115.87.2", "43.115.88.1", mask1));
+        assertTrue(IpUtils.isSameNetworkSegment("43.115.88.252", "43.115.88.1", mask1));
         System.out.println("12---=" + (IpUtils.isSameNetworkSegment("115.91.255.132", "43.115.88.1", mask1)));
     }
 
