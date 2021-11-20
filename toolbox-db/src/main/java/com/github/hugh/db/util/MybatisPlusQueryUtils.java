@@ -51,6 +51,9 @@ public class MybatisPlusQueryUtils {
      * </p>
      *
      * @param params 查询条件
+     * @param <K>    KEY
+     * @param <T>    实体类型
+     * @param <V>    VALUE
      * @return QueryWrapper
      */
     public static <T, K, V> QueryWrapper<T> createDef(Map<String, String> params, K key, V value) {
@@ -234,7 +237,7 @@ public class MybatisPlusQueryUtils {
     /**
      * 解析请求头中所有键值对，并防入mybatis 查询对象中
      * <p>
-     * 加入删除标识 {@link QueryCode#DELETE_FLAG} 标识为0的条件</p>
+     * 加入删除标识 {@link QueryCode#DELETE_FLAG} 标识为0的条件
      * </p>
      *
      * @param request 请求头
@@ -252,6 +255,8 @@ public class MybatisPlusQueryUtils {
      * @param request 请求头
      * @param key     默认的key
      * @param value   默认值
+     * @param <K>     KEY
+     * @param <V>     VALUE
      * @param <T>     类型
      * @return QueryWrapper
      * @since 2.1.2
