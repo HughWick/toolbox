@@ -1,6 +1,7 @@
 package com.github.hugh.db.util;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.hugh.db.constants.QueryCode;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.ListUtils;
@@ -33,6 +34,11 @@ public class MybatisPlusQueryUtils {
      * 模糊查询
      */
     private static final String LIKE = "_LIKE";
+
+    /**
+     * 多个等于
+     */
+    private static final String IN_FIELD_NAME = "_IN";
 
     /**
      * 空字符串
@@ -72,13 +78,13 @@ public class MybatisPlusQueryUtils {
         if (params == null) {
             throw new NullPointerException();
         }
-        QueryWrapper<T> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<T> queryWrapper = Wrappers.query();
         for (Map.Entry<String, String> entry : params.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            boolean isOrStr = key.endsWith("_or"); // 结尾是否为or
             String tableField = conversion(key);//将key转化为与数据库列一致的名称
-            if (EmptyUtils.isEmpty(value) || SORT.equals(key)) {//空时不操作
+            if (EmptyUtils.isEmpty(value) || SORT.equals(key)) {
+                //空时不操作
             } else if (QueryCode.START_DATE.equals(tableField)) {
                 queryWrapper.ge(QueryCode.CREATE_DATE, value);//开始日期 小于等于
             } else if (QueryCode.END_DATE.equals(tableField)) {
@@ -89,9 +95,9 @@ public class MybatisPlusQueryUtils {
             } else if ("order".equals(key)) {
                 String sortValue = String.valueOf(params.get(SORT));
                 appendOrderSql(queryWrapper, value, sortValue);
-            } else if (isOrStr) {
+            } else if (key.endsWith("_or")) { // 结尾是否为or
                 appendOrSql(queryWrapper, key, value);
-            } else if (tableField.endsWith("_IN")) {
+            } else if (tableField.endsWith(IN_FIELD_NAME)) {
                 appendInSql(queryWrapper, tableField, value);
             } else if (tableField.endsWith(GE)) {
                 tableField = tableField.replace(GE, EMPTY);
@@ -130,7 +136,7 @@ public class MybatisPlusQueryUtils {
      * @param <T>          类型
      */
     private static <T> void appendInSql(QueryWrapper<T> queryWrapper, String tableField, Object value) {
-        tableField = tableField.replace("_IN", EMPTY);
+        tableField = tableField.replace(IN_FIELD_NAME, EMPTY);
         List<?> objects = ListUtils.guavaStringToList(String.valueOf(value));
         // 转换成 in语句
         StringBuilder stringBuilder = new StringBuilder();

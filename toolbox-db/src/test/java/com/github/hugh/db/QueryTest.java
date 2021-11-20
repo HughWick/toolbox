@@ -2,6 +2,7 @@ package com.github.hugh.db;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.hugh.db.util.MybatisPlusQueryUtils;
+import com.google.common.base.CaseFormat;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -23,10 +24,29 @@ public class QueryTest {
         map.put("startDate", "2020-01-12 00:00:00");
         map.put("endDate", "2020-03-31 23:00:00");
         map.put("name_like", "里");
-        map.put("serialNumber_powerCode_meteringBoardCode_boxBatch__or", "123");
+
         map.put("order", "DESC");
         map.put("sort", "serialNumber");
+        String targetSql = MybatisPlusQueryUtils.create(map).getTargetSql();
+        System.out.println(targetSql);
+    }
+
+    @Test
+    void testOr(){
+        Map<String, String> map = new HashMap<>();
+        map.put("serialNumber_powerCode_meteringBoardCode_boxBatch__or", "123");
+        String targetSql = MybatisPlusQueryUtils.create(map).getTargetSql();
+        System.out.println(targetSql);
+    }
+
+    @Test
+    void testIn(){
+        Map<String, String> map = new HashMap<>();
         map.put("serialNumber_in", "123,abc,是,发");
+        String key = "name_IN";
+        map.put(key, "大写,ABC,@!#,{}");
+        String to = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key);
+        System.out.println("====LOWER_CAMEL===>>>"+to);
         String targetSql = MybatisPlusQueryUtils.create(map).getTargetSql();
         System.out.println(targetSql);
     }
