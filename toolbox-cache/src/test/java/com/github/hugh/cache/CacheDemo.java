@@ -1,4 +1,4 @@
-package com.github.hugh.guava;
+package com.github.hugh.cache;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;

@@ -1,4 +1,4 @@
-package com.github.hugh.support.cache;
+package com.github.hugh.cache.guava;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -19,9 +19,8 @@ import java.util.concurrent.TimeUnit;
  * </ul>
  *
  * @author hugh
- * @since 1.3.2
+ * @since 2.1.3
  */
-@Deprecated
 public class GuavaCache {
 
     /**
