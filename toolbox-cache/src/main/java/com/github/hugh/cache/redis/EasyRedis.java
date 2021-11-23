@@ -1,7 +1,6 @@
 package com.github.hugh.cache.redis;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.google.common.base.Suppliers;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -9,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * 简化版本的redis操作工具类
@@ -16,19 +16,27 @@ import java.util.Set;
  * @author Hugh
  * @sine 2.1.3
  **/
-@Getter
-@Setter
 public class EasyRedis {
+
+    /**
+     * 内存单例工厂
+     */
+    private static Supplier<EasyRedis> defaultEasyRedisSupp;
+
+    /**
+     * 设置指定数据库索引的单例工厂
+     */
+    private static Supplier<EasyRedis> easyRedisSupp;
 
     /**
      * redis库索引
      */
-    private int dbIndex;
-    private JedisPool jedisPool;
+    private final int dbIndex;
 
-    public EasyRedis() {
-
-    }
+    /**
+     * redis连接池
+     */
+    private final JedisPool jedisPool;
 
     public EasyRedis(JedisPool jedisPool) {
         this.jedisPool = jedisPool;
@@ -38,6 +46,47 @@ public class EasyRedis {
     public EasyRedis(JedisPool jedisPool, int dbIndex) {
         this.jedisPool = jedisPool;
         this.dbIndex = dbIndex;
+    }
+
+    /**
+     * 获取单例类
+     *
+     * @param jedisPool jedis连接池
+     * @return EasyRedis
+     */
+    public static synchronized EasyRedis getInstance(JedisPool jedisPool) {
+        if (defaultEasyRedisSupp == null) {
+            Supplier<EasyRedis> easyRedisSupplier = () -> new EasyRedis(jedisPool);
+            defaultEasyRedisSupp = Suppliers.memoize(easyRedisSupplier::get);
+        }
+        return defaultEasyRedisSupp.get();
+    }
+
+    /**
+     * 获取单例类
+     *
+     * @param jedisPool jedis连接池
+     * @param dbIndex   库索引
+     * @return EasyRedis
+     */
+    public static synchronized EasyRedis getInstance(JedisPool jedisPool, int dbIndex) {
+        return getInstance(jedisPool, dbIndex, false);
+    }
+
+    /**
+     * 获取单例类
+     *
+     * @param jedisPool jedis连接池
+     * @param dbIndex   库索引
+     * @param refresh   刷新标识
+     * @return EasyRedis
+     */
+    public static synchronized EasyRedis getInstance(JedisPool jedisPool, int dbIndex, boolean refresh) {
+        if (easyRedisSupp == null || refresh) {
+            Supplier<EasyRedis> easyRedisSupplier = () -> new EasyRedis(jedisPool, dbIndex);
+            easyRedisSupp = Suppliers.memoize(easyRedisSupplier::get);
+        }
+        return easyRedisSupp.get();
     }
 
     /**
