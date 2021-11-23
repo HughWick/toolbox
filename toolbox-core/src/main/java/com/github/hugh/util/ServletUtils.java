@@ -36,7 +36,7 @@ public class ServletUtils {
     /**
      * 遍历查询参数
      * <ul>
-     * <li>并且移除其中的page、size键</li>
+     * <li>并且移除其中的{@code page}、{@code size}键</li>
      * </ul>
      *
      * @param request 请求头

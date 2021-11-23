@@ -13,6 +13,7 @@
         <module>toolbox-db</module>
         <module>toolbox-core</module>
         <module>toolbox-crypto</module>
+        <module>toolbox-cache</module>
     </modules>
 
     <properties>
