@@ -195,7 +195,7 @@ public class EasyRedis {
      *
      * @param dbIndex 数据库索引
      * @param keys    多个键
-     * @return List<String>
+     * @return List
      */
     public List<String> mget(int dbIndex, String... keys) {
         Jedis jedis = jedisPool.getResource();
@@ -243,7 +243,8 @@ public class EasyRedis {
     /**
      * 删除多个key
      *
-     * @param keys KEY数组
+     * @param dbIndex 库索引
+     * @param keys    KEY数组
      * @return Long 被删除 key 的数量
      */
     public Long del(int dbIndex, String... keys) {
@@ -267,7 +268,8 @@ public class EasyRedis {
     /**
      * 删除多个key数组
      *
-     * @param keys 多个KEY数组
+     * @param dbIndex 库索引
+     * @param keys    多个KEY数组
      * @return Long
      */
     public Long del(int dbIndex, byte[]... keys) {
@@ -525,7 +527,7 @@ public class EasyRedis {
      * 获取整个路径db下所有key
      *
      * @param path 路径
-     * @return Set<String>
+     * @return Set
      */
     public Set<String> getAllKeys(String path) {
         Jedis jedis = jedisPool.getResource();
