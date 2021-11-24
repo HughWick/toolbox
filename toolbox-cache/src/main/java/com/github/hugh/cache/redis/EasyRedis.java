@@ -14,7 +14,7 @@ import java.util.function.Supplier;
  * 简化版本的redis操作工具类
  *
  * @author Hugh
- * @sine 2.1.3
+ * @since 2.1.3
  **/
 public class EasyRedis {
 

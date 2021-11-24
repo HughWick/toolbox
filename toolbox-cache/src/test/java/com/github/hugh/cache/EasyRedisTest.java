@@ -86,7 +86,7 @@ public class EasyRedisTest {
         }).start();
         new Thread(() -> {
             System.out.println("---5---");
-            EasyRedis easyRedis = EasyRedis.getInstance(jedisPool, 2 ,true);
+            EasyRedis easyRedis = EasyRedis.getInstance(jedisPool, 2, true);
             System.out.println("---5->>" + easyRedis);
         }).start();
         new Thread(() -> {
@@ -133,7 +133,9 @@ public class EasyRedisTest {
         String set = instance.set(key, value);
         System.out.println("=====1==>>" + set);
         instance.set("set_test_02", value, 1000);
-        instance.set(dbIndex, "set_test_03", value, 1000);
+        String key3 = "set_test_03";
+        instance.set(dbIndex, key3, value, 1000);
+        System.out.println("==-getkey3--->>" + instance.get(dbIndex, key3));
         String setBytes = instance.set("byte_test_01".getBytes(StandardCharsets.UTF_8), value.getBytes(StandardCharsets.UTF_8));
         System.out.println("====2>>>>>" + setBytes);
         instance.set(1, "byte_test_01".getBytes(StandardCharsets.UTF_8), value.getBytes(StandardCharsets.UTF_8));

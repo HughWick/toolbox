@@ -7,7 +7,7 @@ import lombok.Data;
 
 /**
  * @author Hugh
- * @sine
+ * @since
  **/
 public class SupplierTest {
     public static void main(String[] args) throws InterruptedException {
