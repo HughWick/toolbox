@@ -79,19 +79,19 @@ public class MybatisPlusQueryUtils {
      *     <p>sort字段的value值大小写都支持</p>
      *  </li>
      *  <li>
-     *      like查询的传值方式 例：{@code name_like} 转换后的sql语句为：{@code name} like ?
+     *      like查询的传值方式 例：{@code name_like}:{@code John} 转换后的sql语句为：{@code name} like '%John%'
      *  </li>
      *  <li>
      *      in查询的传值方式 例：{@code serialNumber_in}:{@code 1,2,3} 结果为 serialNumber in (1,2,3)
      *  </li>
      *  <li>
-     *      or查询的传值方式 例：{@code name_account_or}:{@code John} 结果为 NAME LIKE “John” OR ACCOUNT LIKE “John”
+     *      or查询的传值方式 例：{@code name_account_or}:{@code John} 结果为 NAME LIKE '%John%' OR ACCOUNT LIKE '%John%'
      *  </li>
      *  <li>
-     *      大于等于查询的传值方式,例:{@code age_ge}:{@code 18} 结果为:age >= 18
+     *      大于等于查询的传值方式,例:{@code age_ge}:{@code 18} 结果为:age {@code >=} 18
      *  </li>
      *  <li>
-     *      小于等于查询的传值方式,例:{@code age_le}:{@code 18} 结果为:age <= 18
+     *      小于等于查询的传值方式,例:{@code age_le}:{@code 18} 结果为:age {@code <=} 18
      *  </li>
      * </ul>
      *
