@@ -70,6 +70,30 @@ public class MybatisPlusQueryUtils {
 
     /**
      * 遍历所有Map中的键值对、并根据对应的属性进行mybatis plus 的查询语句赋值
+     * <ul>
+     *  <li>
+     *      默认将所有驼峰的key转换为对应下划线命名方式的key 例:{@code name}:{@code John} 结果为 name = John
+     *  </li>
+     *  <li>
+     *     根据指定字段进行排序的sql语句 例：{@code order}:{@code name}, {@code sort}:{@code desc|asc} 结果为: order by name ASC
+     *     <p>sort字段的value值大小写都支持</p>
+     *  </li>
+     *  <li>
+     *      like查询的传值方式 例：{@code name_like} 转换后的sql语句为：{@code name} like ?
+     *  </li>
+     *  <li>
+     *      in查询的传值方式 例：{@code serialNumber_in}:{@code 1,2,3} 结果为 serialNumber in (1,2,3)
+     *  </li>
+     *  <li>
+     *      or查询的传值方式 例：{@code name_account_or}:{@code John} 结果为 NAME LIKE “John” OR ACCOUNT LIKE “John”
+     *  </li>
+     *  <li>
+     *      大于等于查询的传值方式,例:{@code age_ge}:{@code 18} 结果为:age >= 18
+     *  </li>
+     *  <li>
+     *      小于等于查询的传值方式,例:{@code age_le}:{@code 18} 结果为:age <= 18
+     *  </li>
+     * </ul>
      *
      * @param params 查询条件
      * @return QueryWrapper

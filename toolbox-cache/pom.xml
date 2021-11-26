@@ -27,5 +27,11 @@
             <artifactId>jedis</artifactId>
             <version>${redis.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>3.0.4</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

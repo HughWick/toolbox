@@ -14,6 +14,16 @@ public class QueryCode {
     public static final String CREATE_DATE = "CREATE_DATE";
 
     /**
+     * 序列号
+     */
+    public static final String SERIAL_NO = "SERIAL_NO";
+
+    /**
+     * 序列号
+     */
+    public static final String SERIAL_NUMBER = "SERIAL_NUMBER";
+
+    /**
      * 开始日期
      */
     public static final String START_DATE = "START_DATE";
