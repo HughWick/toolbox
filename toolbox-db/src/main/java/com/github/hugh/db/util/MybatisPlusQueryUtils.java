@@ -104,9 +104,9 @@ public class MybatisPlusQueryUtils {
         }
         QueryWrapper<T> queryWrapper = Wrappers.query();
         for (Map.Entry<String, String> entry : params.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            String tableField = conversion(key);//将key转化为与数据库列一致的名称
+            var key = entry.getKey();
+            var value = entry.getValue();
+            var tableField = conversion(key);//将key转化为与数据库列一致的名称
             if (EmptyUtils.isEmpty(value) || SORT.equals(key)) {
                 //空时不操作
             } else if (QueryCode.START_DATE.equals(tableField)) {
@@ -161,11 +161,11 @@ public class MybatisPlusQueryUtils {
      */
     private static <T> void appendInSql(QueryWrapper<T> queryWrapper, String tableField, Object value) {
         tableField = tableField.replace(IN_FIELD_NAME, EMPTY);
-        List<?> objects = ListUtils.guavaStringToList(String.valueOf(value));
+        List<String> objects = ListUtils.guavaStringToList(String.valueOf(value));
         // 转换成 in语句
         StringBuilder stringBuilder = new StringBuilder();
-        for (Object no : objects) {
-            stringBuilder.append("'").append(no.toString()).append("'").append(",");
+        for (String string : objects) {
+            stringBuilder.append("'").append(string).append("'").append(",");
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         queryWrapper.inSql(tableField, stringBuilder.toString());
