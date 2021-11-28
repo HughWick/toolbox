@@ -449,7 +449,7 @@ public class EasyRedis {
      *
      * @param key   redis key
      * @param field hash表中的键
-     * @return String 返回给定字段的值。如果给定的字段或 key 不存在时，返回 nil 。
+     * @return String 返回给定字段的值。如果给定的字段或 key 不存在时，返回 null 。
      */
     public String hget(String key, String field) {
         return hget(dbIndex, key, field);
@@ -461,7 +461,7 @@ public class EasyRedis {
      * @param dbIndex 库索引
      * @param key     redis key
      * @param field   hash表中的键
-     * @return String 返回给定字段的值。如果给定的字段或 key 不存在时，返回 nil 。
+     * @return String 返回给定字段的值。如果给定的字段或 key 不存在时，返回 null 。
      */
     public String hget(int dbIndex, String key, String field) {
         Jedis jedis = jedisPool.getResource();

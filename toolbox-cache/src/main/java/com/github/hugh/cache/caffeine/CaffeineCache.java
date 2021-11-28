@@ -1,31 +1,30 @@
-package com.github.hugh.cache.guava;
+package com.github.hugh.cache.caffeine;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import com.github.benmanes.caffeine.cache.CacheLoader;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 
 import java.util.concurrent.TimeUnit;
 
 /**
- * 提供Goole Guava 缓存 {@link LoadingCache} 实例
+ * 高性能本地缓存
  * <p>它还提供了以下方法进行参数配置</p>
  * <ul>
- * <li>{@link CacheBuilder#newBuilder()}有以下参数可进行配置</li>
- * <li>{@link CacheBuilder#initialCapacity(int)}缓存容器的初始容量}</li>
- * <li>{@link CacheBuilder#maximumSize(long)}设置缓存最大容量，超过之后就会按照LRU最近虽少使用算法来移除缓存项}</li>
- * <li>{@link CacheBuilder#expireAfterWrite(long, TimeUnit)} 设置缓存n秒后没有创建/覆盖时会被回收、第一参数:时间长度,第二参数：时间单位}</li>
- * <li>{@link CacheBuilder#expireAfterAccess(long, TimeUnit)} (long, TimeUnit)} 设置缓存n秒后没有读写就会被回收、第一参数:时间长度,第二参数：时间单位}</li>
- * <li>{@link CacheBuilder#initialCapacity(int)}缓存容器的初始容量}</li>
+ * <li>{@link Caffeine#newBuilder()}有以下参数可进行配置</li>
+ * <li>{@link Caffeine#initialCapacity(int)}缓存容器的初始容量}</li>
+ * <li>{@link Caffeine#maximumSize(long)}设置缓存最大容量，超过之后就会按照LRU最近虽少使用算法来移除缓存项</li>
+ * <li>{@link Caffeine#expireAfterWrite(long, TimeUnit)} 设置缓存n秒后没有创建/覆盖时会被回收、第一参数:时间长度,第二参数：时间单位}</li>
+ * <li>{@link Caffeine#expireAfterAccess(long, TimeUnit)} (long, TimeUnit)} 设置缓存n秒后没有读写就会被回收、第一参数:时间长度,第二参数：时间单位}</li>
+ * <li>{@link Caffeine#initialCapacity(int)}缓存容器的初始容量}</li>
  * </ul>
- * <p>
- *     高性能，应该采用{@link com.github.benmanes.caffeine.cache.Caffeine}
- * </p>
  *
- * @author hugh
- * @since 2.1.3
- */
-@Deprecated
-public class GuavaCache {
+ * @author Hugh
+ * @since 2.1.5
+ **/
+public class CaffeineCache {
+
+    public CaffeineCache() {
+    }
 
     /**
      * 创建本地谷歌缓存
@@ -36,7 +35,7 @@ public class GuavaCache {
      * @return LoadingCache
      */
     public static <K, V> LoadingCache<K, V> create(CacheLoader<K, V> cacheLoader) {
-        return CacheBuilder.newBuilder().build(cacheLoader);
+        return Caffeine.newBuilder().build(cacheLoader);
     }
 
     /**
@@ -51,7 +50,7 @@ public class GuavaCache {
      * @return LoadingCache
      */
     public static <K, V> LoadingCache<K, V> create(int initialCapacity, int maximumSize, int expireAfterWrite, CacheLoader<K, V> cacheLoader) {
-        return CacheBuilder.newBuilder()
+        return Caffeine.newBuilder()
                 .initialCapacity(initialCapacity)
                 .maximumSize(maximumSize)
                 .expireAfterWrite(expireAfterWrite, TimeUnit.SECONDS)
@@ -83,7 +82,7 @@ public class GuavaCache {
      * @since 1.5.10
      */
     public static <K, V> LoadingCache<K, V> create(int expireAfterAccess, TimeUnit timeUnit, CacheLoader<K, V> cacheLoader) {
-        return CacheBuilder.newBuilder().expireAfterAccess(expireAfterAccess, timeUnit)
+        return Caffeine.newBuilder().expireAfterAccess(expireAfterAccess, timeUnit)
                 .build(cacheLoader);
     }
 }
