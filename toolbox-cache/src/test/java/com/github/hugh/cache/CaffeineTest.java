@@ -79,4 +79,23 @@ public class CaffeineTest {
 //        System.out.println("--4---->>" + BooleanCaffeineCache.isNotExists(keys));
     }
 
+    @Test
+    void testo3() throws InterruptedException {
+        String keys = "KEY_01";
+        Cache<String, String> expireAfterWrite = CaffeineCache.createExpireAfterWrite(1);
+//        Integer ifPresent = expireAfterWrite.getIfPresent(keys);
+        System.out.println(expireAfterWrite.getIfPresent(keys));
+        System.out.println("---1->>" + expireAfterWrite.get(keys, k -> "abc"));
+        System.out.println("---2->>" + expireAfterWrite.getIfPresent(keys));
+        Thread.sleep(1000);
+        System.out.println("---3->>" + expireAfterWrite.getIfPresent(keys));
+    }
+
+
+    @Test
+    void testo4() throws InterruptedException {
+        String keys = "KEY_01";
+        Cache<String, String> expireAfterWrite = CaffeineCache.createExpireAfterWrite(1 , k -> "abc");
+        System.out.println(expireAfterWrite.getIfPresent(keys));
+    }
 }
