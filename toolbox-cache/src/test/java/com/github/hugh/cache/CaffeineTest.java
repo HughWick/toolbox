@@ -80,7 +80,7 @@ public class CaffeineTest {
     }
 
     @Test
-    void testo3() throws InterruptedException {
+    void expireAfterWrite() throws InterruptedException {
         String keys = "KEY_01";
         Cache<String, String> expireAfterWrite = CaffeineCache.createExpireAfterWrite(1);
 //        Integer ifPresent = expireAfterWrite.getIfPresent(keys);
@@ -91,11 +91,25 @@ public class CaffeineTest {
         System.out.println("---3->>" + expireAfterWrite.getIfPresent(keys));
     }
 
+    @Test
+    void expireAfterAccess() throws InterruptedException {
+        String keys = "KEY_01";
+        Cache<Object, Object> expireAfterAccess = CaffeineCache.createExpireAfterAccess(1);
+        System.out.println(expireAfterAccess.getIfPresent(keys));
+        System.out.println("---1->>" + expireAfterAccess.get(keys, k -> "abc"));
+        System.out.println("---2->>" + expireAfterAccess.getIfPresent(keys));
+        Thread.sleep(1000);
+        System.out.println("---3->>" + expireAfterAccess.getIfPresent(keys));
+        Cache<Object, Object> expireAfterAccess2 = CaffeineCache.createExpireAfterAccess(1, (k) -> "scds");
+        System.out.println("---expireAfterAccess2->>" + expireAfterAccess2.get(keys, k -> "abc"));
+
+    }
+
 
     @Test
     void testo4() throws InterruptedException {
         String keys = "KEY_01";
-        Cache<String, String> expireAfterWrite = CaffeineCache.createExpireAfterWrite(1 , k -> "abc");
+        Cache<String, String> expireAfterWrite = CaffeineCache.createExpireAfterWrite(1, k -> "abc");
         System.out.println(expireAfterWrite.getIfPresent(keys));
     }
 }
