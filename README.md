@@ -8,6 +8,10 @@
 [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/hughwick/toolbox)
 # 快速开始
 
+## JDK版本
+
+jdk11+
+
 ## maven 引入
 
 ```xml
