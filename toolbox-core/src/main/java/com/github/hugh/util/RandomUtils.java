@@ -156,4 +156,16 @@ public class RandomUtils {
         var index = random.nextInt(size);
         return list.get(index);
     }
+
+    /**
+     * 获得指定范围内的随机数
+     *
+     * @param min 最小数（包含）
+     * @param max 最大数（不包含）
+     * @return int 随机数
+     * @since 2.1.6
+     */
+    public static int randomInt(int min, int max) {
+        return getRandom().nextInt(min, max);
+    }
 }

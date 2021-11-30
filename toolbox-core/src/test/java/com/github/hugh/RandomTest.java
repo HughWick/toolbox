@@ -19,9 +19,9 @@ public class RandomTest {
         System.out.println("--3->>" + RandomUtils.randomString(3));
         System.out.println("--4->>" + RandomUtils.randomChar(2));
         for (int i = 0; i < 10; i++) {
-            System.out.println("--5->>" + RandomUtils.randomNumber(2));
+            System.out.println("--5->>" + RandomUtils.randomNumber(3));
         }
-        System.out.println("--6->>" + RandomUtils.number(2));
+        System.out.println("--6->>" + RandomUtils.randomInt(600, 900));
     }
 
     @Test
