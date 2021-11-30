@@ -101,9 +101,9 @@ public class RandomUtils {
      * @return int 随机数
      */
     public static int number(int length) {
-        var stringBuilder = new StringBuilder();
-        for (var i = 0; i < length; i++) {
-            var number = ThreadLocalRandom.current().nextInt(10);//随机生成0-9的数字
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int number = getRandom().nextInt(10);//随机生成0-9的数字
             stringBuilder.append(number);
         }
         return stringBuilder.charAt(0) == '0' ? number(length) : Integer.parseInt(stringBuilder.toString());
@@ -128,13 +128,13 @@ public class RandomUtils {
      * @return 随机字符串
      */
     public static String randomString(String baseString, int length) {
-        final var stringBuilder = new StringBuilder();
+        final StringBuilder stringBuilder = new StringBuilder();
         if (length < 1) {
             length = 1;
         }
         int baseLength = baseString.length();
-        for (var i = 0; i < length; i++) {
-            var number = ThreadLocalRandom.current().nextInt(baseLength);
+        for (int i = 0; i < length; i++) {
+            int number = getRandom().nextInt(baseLength);
             stringBuilder.append(baseString.charAt(number));
         }
         return stringBuilder.toString();
@@ -152,8 +152,7 @@ public class RandomUtils {
             return null;
         }
         final int size = list.size();
-        final Random random = ThreadLocalRandom.current();
-        var index = random.nextInt(size);
+        int index = getRandom().nextInt(size);
         return list.get(index);
     }
 
