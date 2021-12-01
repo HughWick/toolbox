@@ -109,7 +109,25 @@ public class CaffeineTest {
     @Test
     void testo4() throws InterruptedException {
         String keys = "KEY_01";
-        Cache<String, String> expireAfterWrite = CaffeineCache.createExpireAfterWrite(1, k -> "abc");
+//        Cache<String, String> expireAfterWrite = CaffeineCache.createExpireAfterWrite(2, k -> "abc");
+        Cache<Object, Object> expireAfterWrite = CaffeineCache.createExpireAfterWrite(2);
+        System.out.println("---1->>" + expireAfterWrite.get(keys, k -> tem01()));
         System.out.println(expireAfterWrite.getIfPresent(keys));
+        new Thread(() -> {
+            try {
+                System.out.println(expireAfterWrite.get(keys, k -> tem01()));
+                Thread.sleep(1000);
+            } catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
+        }).start();
+        Thread.sleep(3000);
+        System.out.println("===>" + expireAfterWrite.getIfPresent(keys));
     }
+
+    private static String tem01() {
+        System.out.println("==进入==");
+        return "tem01";
+    }
+
 }
