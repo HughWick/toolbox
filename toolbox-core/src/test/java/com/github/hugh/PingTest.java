@@ -3,6 +3,8 @@ package com.github.hugh;
 import com.github.hugh.util.PingUtils;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 /**
  * @author AS
  * @date 2020/10/14 9:42
@@ -17,7 +19,12 @@ public class PingTest {
 
     @Test
     public void test02() {
-        System.out.println("--->>" + PingUtils.ping("192.168.1.45"));
+        System.out.println("--1->>" + PingUtils.ping("192.168.1.45"));
+        try {
+            System.out.println("--2->>" + PingUtils.getConnectedCount("192.168.1.45",5,4000));
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
     }
 
     @Test
