@@ -13,8 +13,8 @@
     <packaging>jar</packaging>
     <description>toolbox 公共工具类核心包</description>
     <properties>
-        <okhttp.version>4.9.2</okhttp.version>
         <commons-collections4.version>4.4</commons-collections4.version>
+        <okhttp.version>4.9.3</okhttp.version>
         <servlet-api.version>4.0.1</servlet-api.version>
         <json-lib.version>2.4</json-lib.version>
         <google-guava.version>31.0.1-jre</google-guava.version>
