@@ -25,34 +25,48 @@ public class PingUtils {
     }
 
     /**
-     * 单次ping IP是否能够正常访问
+     * 发送ping命令 并且验证ping次数是否与ping成功的次数相同
      *
      * @param ipAddress IP地址
      * @param pingCount ping次数
      * @param timeOut   超时时间毫秒
      * @return boolean {@code true}
+     * @since 2.1.6
      */
     public static boolean send(String ipAddress, int pingCount, int timeOut) {
+        try {
+            return getConnectedCount(ipAddress, pingCount, timeOut) == pingCount;
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 发送ping IP 命令，验证ip
+     *
+     * @param ipAddress IP
+     * @param pingCount ping次数
+     * @param timeOut   超时时间毫秒
+     * @return int  ping成功的次数
+     * @since 2.1.6
+     */
+    public static int getConnectedCount(String ipAddress, int pingCount, int timeOut) throws IOException {
         Runtime runtime = Runtime.getRuntime();
         String pingCommand = appendCmd(ipAddress, pingCount, timeOut);
-        try { // 执行命令并获取输出
-            Process process = runtime.exec(pingCommand);
-            if (process == null) {
-                return false;
+        Process process = runtime.exec(pingCommand);
+        if (process == null) {
+            return -1;
+        }
+        InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream());
+        try (BufferedReader in = new BufferedReader(inputStreamReader)) {
+            // 逐行检查输出,计算类似出现=23ms TTL=62字样的次数
+            int connectedCount = 0;
+            String line;
+            while ((line = in.readLine()) != null) {
+                connectedCount += getCheckResult(line);// 如果出现类似=23ms TTL=62这样的字样,出现的次数=测试次数则返回真
             }
-            InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream());
-            try (BufferedReader in = new BufferedReader(inputStreamReader)) {
-                // 逐行检查输出,计算类似出现=23ms TTL=62字样的次数
-                int connectedCount = 0;
-                String line;
-                while ((line = in.readLine()) != null) {
-                    connectedCount += getCheckResult(line);// 如果出现类似=23ms TTL=62这样的字样,出现的次数=测试次数则返回真
-                }
-                return connectedCount == pingCount;
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return false;// 出现异常则返回false
+            return connectedCount;
         }
     }
 
