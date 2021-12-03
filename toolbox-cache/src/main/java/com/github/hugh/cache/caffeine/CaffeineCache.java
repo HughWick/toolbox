@@ -52,7 +52,24 @@ public class CaffeineCache {
      * @since 2.1.5
      */
     public static <K, V> Cache<K, V> createExpireAfterAccess(int expireAfterAccess) {
-        return Caffeine.newBuilder().expireAfterAccess(expireAfterAccess, TimeUnit.SECONDS).build();
+        return createExpireAfterAccess(expireAfterAccess, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 创建本地缓存,手动加载的缓存
+     * <p>
+     * 在每次get key的时候指定一个同步的函数，如果key不存在就调用这个函数生成一个值。
+     * </p>
+     *
+     * @param expireAfterAccess 设置缓存n秒后没有读写就会被回收、单位：秒
+     * @param timeUnit          时间单位 {@link TimeUnit}
+     * @param <K>               key
+     * @param <V>               value
+     * @return Cache
+     * @since 2.1.6
+     */
+    public static <K, V> Cache<K, V> createExpireAfterAccess(int expireAfterAccess, TimeUnit timeUnit) {
+        return Caffeine.newBuilder().expireAfterAccess(expireAfterAccess, timeUnit).build();
     }
 
     /**
@@ -99,8 +116,25 @@ public class CaffeineCache {
      * @since 2.1.5
      */
     public static <K, V> Cache<K, V> createExpireAfterWrite(int expireAfterWrite) {
-        return Caffeine.newBuilder().expireAfterWrite(expireAfterWrite, TimeUnit.SECONDS).build();
+        return createExpireAfterWrite(expireAfterWrite, TimeUnit.SECONDS);
     }
+
+    /**
+     * 创建本地缓存、自定义设置超时时间
+     * <p>在每次get key的时候指定一个同步的函数，如果key不存在就调用这个函数生成一个值。</p>
+     * <p>在最后一次写入缓存后开始计时，在指定的时间后过期</p>
+     *
+     * @param expireAfterAccess 设置缓存n秒后没有读写就会被回收、单位：秒
+     * @param timeUnit          时间单位 {@link TimeUnit}
+     * @param <K>               key
+     * @param <V>               value
+     * @return Cache
+     * @since 2.1.6
+     */
+    public static <K, V> Cache<K, V> createExpireAfterWrite(int expireAfterAccess, TimeUnit timeUnit) {
+        return Caffeine.newBuilder().expireAfterWrite(expireAfterAccess, timeUnit).build();
+    }
+
 
     /**
      * 创建本地缓存、自定义设置超时时间单位
