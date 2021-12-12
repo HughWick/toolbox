@@ -144,4 +144,10 @@ public class OkHttpTest {
         System.out.println("===5>>" + OkHttpUtils.postJsonReJsonObjects(httpTop));
         System.out.println("===6>>" + OkHttpUtils.postJsonReJsonObjects(httpTop, data));
     }
+
+    @Test
+    void testlogs() {
+        var username = "${java:vm}";
+        log.error("username: {}", username);
+    }
 }
