@@ -5,6 +5,7 @@ import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.support.instance.Instance;
 import com.github.hugh.util.gson.adapter.MapTypeAdapter;
 import com.google.gson.*;
+import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.Reader;
@@ -237,6 +238,9 @@ public class JsonObjectUtils {
 
     /**
      * 将jsonArray 转换为{@link ArrayList}
+     * <p>
+     * 由于使用了{@link MapTypeAdapter} 转换器 ，默认返回的结果对象为{@link LinkedTreeMap}
+     * </p>
      *
      * @param jsonArray 数组
      * @return ArrayList 集合

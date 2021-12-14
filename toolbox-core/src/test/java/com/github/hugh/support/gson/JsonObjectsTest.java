@@ -8,6 +8,7 @@ import com.github.hugh.util.gson.JsonObjectUtils;
 import com.github.hugh.util.gson.JsonObjects;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.internal.LinkedTreeMap;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
 
@@ -139,19 +140,24 @@ public class JsonObjectsTest {
     }
 
     @Test
-    void test06() throws IOException {
+    void test06() throws IOException, ClassNotFoundException {
         String s = OkHttpUtils.get("http://factory.hnlot.com.cn/v2/contracts/find");
-        ResultDTO resultDTO = new JsonObjects(s).formJson(ResultDTO.class);
+        JsonObjects jsonObjects = new JsonObjects(s);
+        ResultDTO resultDTO = jsonObjects.formJson(ResultDTO.class);
+
         System.out.println("-resultDTO-->" + resultDTO);
         JsonArray jsonArray = new JsonObjects(JsonObjectUtils.toJson(resultDTO.getData())).getJsonArray("list");
-        JsonArray jsonArray2 = new JsonObjects(resultDTO.getData()).getJsonArray("list");
-        List<ContractsDO> list = new JsonObjects(resultDTO.getData()).toListObject("list", ContractsDO.class);
+        List<ContractsDO> list = new JsonObjects(resultDTO.getData()).toList("list", ContractsDO.class);
         list.forEach(e -> {
             String s1 = JsonObjectUtils.toJson(e);
             System.out.println(s1);
         });
         System.out.println("--1->>" + jsonArray);
-        System.out.println("---2>>" + jsonArray2);
+        List<LinkedTreeMap> jsonArray2 = new JsonObjects(resultDTO.getData()).toList("list");
+        jsonArray2.forEach(System.out::println);
+        List<ContractsDO> list1 = new JsonObjects(resultDTO.getData()).toList("list", ContractsDO.class);
+        list1.forEach(System.out::println);
+//        System.out.println("---2>>" + jsonArray2);
     }
 }
 

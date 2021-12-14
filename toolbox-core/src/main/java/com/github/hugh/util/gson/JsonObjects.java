@@ -2,9 +2,11 @@ package com.github.hugh.util.gson;
 
 import com.alibaba.fastjson.JSON;
 import com.github.hugh.util.EmptyUtils;
+import com.github.hugh.util.gson.adapter.MapTypeAdapter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -264,16 +266,34 @@ public class JsonObjects extends JsonObjectUtils {
      * @param clazz 需要转换的类
      * @param <E>   类型
      * @return List
-     * @since 2.0.5
+     * @since 2.1.7
      */
-    public <E> List<E> toListObject(String key, Class<E> clazz) {
+    public <E> List<E> toList(String key, Class<E> clazz) {
         List<E> resultList = new ArrayList<>();
         JsonArray jsonArray = getJsonArray(this.jsonObject, key);
         assert jsonArray != null;
+        if (clazz == null) {
+            return toArrayList(jsonArray);
+        }
         for (JsonElement jsonElement : jsonArray) {
             E e = JSON.parseObject(jsonElement.toString(), clazz);
             resultList.add(e);
         }
         return resultList;
+    }
+
+    /**
+     * 转化为list
+     * <p>
+     * 由于使用了{@link MapTypeAdapter} 转换器 ，默认返回的结果对象为{@link LinkedTreeMap}
+     * </p>
+     *
+     * @param key 获取集合的key
+     * @param <E> 类型
+     * @return List
+     * @since 2.1.7
+     */
+    public <E> List<E> toList(String key) {
+        return toList(key, null);
     }
 }
