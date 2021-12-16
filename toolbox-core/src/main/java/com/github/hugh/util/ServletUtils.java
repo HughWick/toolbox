@@ -19,8 +19,8 @@ public class ServletUtils {
      * @param request 客户端的请求
      * @return Map
      */
-    public static Map<String, String> getParams(HttpServletRequest request) {
-        Map<String, String> map = new HashMap<>();
+    public static <K, V> Map<K, V> getParams(HttpServletRequest request) {
+        Map map = new HashMap<>();
         if (request == null) {
             return map;
         }

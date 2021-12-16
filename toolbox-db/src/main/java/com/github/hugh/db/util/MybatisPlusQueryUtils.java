@@ -7,6 +7,7 @@ import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.ListUtils;
 import com.github.hugh.util.ServletUtils;
 import com.google.common.base.CaseFormat;
+import org.checkerframework.checker.units.qual.K;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -57,13 +58,15 @@ public class MybatisPlusQueryUtils {
      * </p>
      *
      * @param params 查询条件
+     * @param <E>    实体类型
      * @param <K>    KEY
-     * @param <T>    实体类型
      * @param <V>    VALUE
+     * @param <S>    额外参数的value
+     * @param <T>    额外参数的key
      * @return QueryWrapper
      */
-    public static <T, K, V> QueryWrapper<T> createDef(Map<String, String> params, K key, V value) {
-        QueryWrapper<T> queryWrapper = create(params);
+    public static <E, K, V, T, S> QueryWrapper<E> createDef(Map<K, V> params, T key, S value) {
+        QueryWrapper<E> queryWrapper = create(params);
         queryWrapper.eq((String) key, value);
         return queryWrapper;
     }
@@ -98,15 +101,15 @@ public class MybatisPlusQueryUtils {
      * @param params 查询条件
      * @return QueryWrapper
      */
-    public static <T> QueryWrapper<T> create(Map<String, String> params) {
+    public static <T, K, V> QueryWrapper<T> create(Map<K, V> params) {
         if (params == null) {
             throw new NullPointerException();
         }
         QueryWrapper<T> queryWrapper = Wrappers.query();
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            var key = entry.getKey();
-            var value = entry.getValue();
-            var tableField = conversion(key);//将key转化为与数据库列一致的名称
+        for (Map.Entry<K, V> entry : params.entrySet()) {
+            String key = String.valueOf(entry.getKey());
+            String value = String.valueOf(entry.getValue());
+            String tableField = conversion(key);//将key转化为与数据库列一致的名称
             if (EmptyUtils.isEmpty(value) || SORT.equals(key)) {
                 //空时不操作
             } else if (QueryCode.START_DATE.equals(tableField)) {
@@ -243,8 +246,8 @@ public class MybatisPlusQueryUtils {
      * @return QueryWrapper
      * @since 2.1.2
      */
-    private static <T, K> QueryWrapper<T> create(HttpServletRequest request, boolean deleteFlag, K key, Object value) {
-        Map<String, String> params = ServletUtils.getParams(request);
+    private static <T, K, V> QueryWrapper<T> create(HttpServletRequest request, boolean deleteFlag, K key, V value) {
+        Map<K, V> params = ServletUtils.getParams(request);
         if (deleteFlag) {
             return createDef(params, key, value);
         } else {
@@ -277,6 +280,23 @@ public class MybatisPlusQueryUtils {
      */
     public static <T> QueryWrapper<T> createDef(HttpServletRequest request) {
         return createDef(request, QueryCode.DELETE_FLAG, 0);
+    }
+
+    /**
+     * 解析请求头中所有键值对，并防入mybatis 查询对象中
+     * <p>
+     * 加入删除标识 {@link QueryCode#DELETE_FLAG} 标识为0的条件
+     * </p>
+     *
+     * @param params 参数
+     * @param <T>    类型
+     * @param <K>    KEY
+     * @param <V>    VALUE
+     * @return QueryWrapper
+     * @since 2.1.8
+     */
+    public static <T, K, V> QueryWrapper<T> createDef(Map<K, V> params) {
+        return createDef(params, QueryCode.DELETE_FLAG, 0);
     }
 
     /**

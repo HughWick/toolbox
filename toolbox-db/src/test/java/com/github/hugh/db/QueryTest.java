@@ -78,5 +78,8 @@ class QueryTest {
         System.out.println(objectQueryWrapper.getTargetSql());
         QueryWrapper<Object> objectQueryWrapper2 = MybatisPlusQueryUtils.createDef(request);
         System.out.println(objectQueryWrapper2.getTargetSql());
+        Map<String, String> map = new HashMap<>();
+        QueryWrapper<Object> defQueryWrapper = MybatisPlusQueryUtils.createDef(map);
+        System.out.println("--->>"+defQueryWrapper.getTargetSql());
     }
 }
