@@ -51,8 +51,9 @@ public class FileUtils {
             URL u = new URL(url);
             URLConnection uc = u.openConnection();
             InputStream in = uc.getInputStream();
-            if (url.equalsIgnoreCase(uc.getURL().toString()))
+            if (url.equalsIgnoreCase(uc.getURL().toString())) {
                 in.close();
+            }
             return true;
         } catch (Exception e) {
 //            e.printStackTrace();
@@ -78,7 +79,9 @@ public class FileUtils {
      */
     public static void delEmptyDir(File dir) {
         File[] dirs = dir.listFiles();
-        assert dirs != null;
+        if (dirs == null) {
+            return;
+        }
         for (File file : dirs) {
             if (file.isDirectory()) {
                 delEmptyDir(file);
@@ -113,8 +116,10 @@ public class FileUtils {
             if (files == null) {
                 return;
             }
-            for (File f : files)//遍历删除所有文件
+            //遍历删除所有文件
+            for (File f : files) {
                 deleteDir(f);
+            }
         }
         file.delete();
     }

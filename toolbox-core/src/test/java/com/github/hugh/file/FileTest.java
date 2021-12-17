@@ -35,7 +35,8 @@ public class FileTest {
     public void test01() {
         String path = "C:\\Users\\Lenovo\\Desktop\\新建文件夹\\bb9b12369c80588bbed1ea6ae744875e.jpg";
         try {
-            FileUtils.delFile(path);
+//            FileUtils.delFile(path);
+            FileUtils.delFile("C:\\Users\\Lenovo\\Desktop\\新建文件夹\\");
         } catch (IOException e) {
             e.printStackTrace();
         }
