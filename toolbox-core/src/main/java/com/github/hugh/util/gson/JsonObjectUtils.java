@@ -402,12 +402,8 @@ public class JsonObjectUtils {
      * @since 2.1.8
      */
     public static String getDateStr(JsonObject jsonObject, String key, String pattern) {
-        JsonElement jsonElement = get(jsonObject, key);
-        long asLong = isJsonNull(jsonElement) ? 0 : jsonElement.getAsLong();
-        if (asLong == 0) {
-            return null;
-        }
-        Date date = DateUtils.parseTimestamp(asLong);
+        long longValue = getLongValue(jsonObject, key);
+        Date date = DateUtils.parseTimestamp(longValue);
         return date == null ? null : DateUtils.format(date, pattern);
     }
 }
