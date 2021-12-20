@@ -3,6 +3,7 @@ package com.github.hugh.util.gson;
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.support.instance.Instance;
+import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.gson.adapter.MapTypeAdapter;
 import com.google.gson.*;
 import com.google.gson.internal.LinkedTreeMap;
@@ -360,5 +361,53 @@ public class JsonObjectUtils {
                 new Date(jsonElement.getAsJsonPrimitive().getAsLong()));
         Gson gson = builder.create();
         return gson.fromJson(value, classOfT);
+    }
+
+    /**
+     * 以空值安全的方式从JsonObject中获取一个Long后转换为{@link Date}}对象.
+     *
+     * @param jsonObject JsonObject
+     * @param key        Key
+     * @return Date json中获取key的Date值,没有返回{@code null}
+     * @since 2.1.8
+     */
+    public static Date getDate(JsonObject jsonObject, String key) {
+        JsonElement jsonElement = get(jsonObject, key);
+        long asLong = isJsonNull(jsonElement) ? 0 : jsonElement.getAsLong();
+        if (asLong == 0) {
+            return null;
+        }
+        return DateUtils.parseTimestamp(asLong);
+    }
+
+    /**
+     * 从JsonObject中获取一个完整时间的字符串
+     *
+     * @param jsonObject JsonObject
+     * @param key        Key
+     * @return String 完整时间格式的字符串:yyyy-MM-dd HH:mm:ss
+     * @since 2.1.8
+     */
+    public static String getDateStr(JsonObject jsonObject, String key) {
+        return getDateStr(jsonObject, key, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
+    }
+
+    /**
+     * 从JsonObject中获取一个时间的字符串
+     *
+     * @param jsonObject JsonObject
+     * @param key        Key
+     * @param pattern    时间格式
+     * @return String 时间格式的字符串
+     * @since 2.1.8
+     */
+    public static String getDateStr(JsonObject jsonObject, String key, String pattern) {
+        JsonElement jsonElement = get(jsonObject, key);
+        long asLong = isJsonNull(jsonElement) ? 0 : jsonElement.getAsLong();
+        if (asLong == 0) {
+            return null;
+        }
+        Date date = DateUtils.parseTimestamp(asLong);
+        return date == null ? null : DateUtils.format(date, pattern);
     }
 }

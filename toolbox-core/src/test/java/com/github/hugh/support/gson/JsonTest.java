@@ -181,8 +181,8 @@ public class JsonTest {
     }
 
     @Test
-    public void testTime() {
-        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"1625024713000\"}";
+    void testTime() {
+        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create2\":null,\"id\":1,\"name\":\"张三\",\"create\":\"1625024713000\"}";
         Student student1 = JsonObjectUtils.fromJsonTimeStamp(str, Student.class);
         System.out.println(student1.toString());
 
@@ -190,7 +190,14 @@ public class JsonTest {
         System.out.println(jsonObjects.fromJsonTimeStamp(Student.class));
         Student student = jsonObjects.fromJsonTimeStamp(Student.class);
         System.out.println(JsonObjectUtils.toJson(student));
-
+        Date date = jsonObjects.getDate("create");
+        System.out.println("---1-->>" + date);
+        String date2 = jsonObjects.getDateStr("create2");
+        System.out.println("---2-->>" + date2);
+        String date3 = jsonObjects.getDateStr("create");
+        System.out.println("---3-->>" + date3);
+        String date4 = jsonObjects.getDateStr("create", DateCode.YEAR_MONTH_DAY);
+        System.out.println("--3--?>" + date4);
 //        String str2 = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"1625024713000\",\"test\":}";
 //        Student student2 = JsonObjectUtils.fromJsonTimeStamp(str2, Student.class);
 //        System.out.println(student1.toString());

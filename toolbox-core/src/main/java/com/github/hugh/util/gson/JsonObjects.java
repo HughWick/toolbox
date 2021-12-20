@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -85,7 +86,7 @@ public class JsonObjects extends JsonObjectUtils {
     }
 
     /**
-     * 方便的方法获取{@link JsonObject}中对应key的{@link JsonObject}值。
+     * 获取{@link JsonObject}中对应key的{@link JsonObject}值。
      *
      * @param key 键
      * @return {@link JsonObject} json中获取key的JsonObject值,没有返回{@code null}
@@ -95,7 +96,7 @@ public class JsonObjects extends JsonObjectUtils {
     }
 
     /**
-     * 方便的方法获取{@link JsonObject}中对应key的字符串值。
+     * 获取{@link JsonObject}中对应key的字符串值。
      *
      * @param key 键
      * @return String json中获取key的Integer值,没有返回{@code null}
@@ -105,7 +106,7 @@ public class JsonObjects extends JsonObjectUtils {
     }
 
     /**
-     * 方便的方法获取{@link JsonObject}中对应key的int值。
+     * 获取{@link JsonObject}中对应key的int值。
      *
      * @param key 键
      * @return int 获取key的Integer值,没有返回{@code 0}
@@ -115,7 +116,7 @@ public class JsonObjects extends JsonObjectUtils {
     }
 
     /**
-     * 方便的方法获取{@link JsonObject}中对应key的{@link Integer}值。
+     * 获取{@link JsonObject}中对应key的{@link Integer}值。
      *
      * @param key KEY
      * @return Integer 获取key的{@link Integer}值,没有返回{@code null}
@@ -126,7 +127,7 @@ public class JsonObjects extends JsonObjectUtils {
     }
 
     /**
-     * 方便的方法获取{@link JsonObject}中对应key的double值。
+     * 获取{@link JsonObject}中对应key的double值。
      *
      * @param key 键
      * @return double json中获取key的Double值,没有返回{@code 0}
@@ -136,7 +137,7 @@ public class JsonObjects extends JsonObjectUtils {
     }
 
     /**
-     * 方便的方法获取{@link JsonObject}中对应key的{@link Double}值。
+     * 获取{@link JsonObject}中对应key的{@link Double}值。
      *
      * @param key Key
      * @return Double key的{@link Double}值,没有返回{@code null}
@@ -147,7 +148,7 @@ public class JsonObjects extends JsonObjectUtils {
     }
 
     /**
-     * 方便的方法获取{@link JsonObject}中对应key的long值。
+     * 获取{@link JsonObject}中对应key的long值。
      *
      * @param key 键
      * @return double json中获取key的long值,没有返回{@code 0}
@@ -295,5 +296,39 @@ public class JsonObjects extends JsonObjectUtils {
      */
     public <E> List<E> toList(String key) {
         return toList(key, null);
+    }
+
+    /**
+     * 获取{@link JsonObject}中对应key的{@link Date}。
+     *
+     * @param key 键
+     * @return Date 日期对象
+     * @since 2.1.8
+     */
+    public Date getDate(String key) {
+        return getDate(this.jsonObject, key);
+    }
+
+    /**
+     * 获取{@link JsonObject}中对应key的日期对象，并转化为字符串。
+     *
+     * @param key KEY
+     * @return String 完整时间格式的字符串:yyyy-MM-dd HH:mm:ss
+     * @since 2.1.8
+     */
+    public String getDateStr(String key) {
+        return getDateStr(this.jsonObject, key);
+    }
+
+    /**
+     * 获取{@link JsonObject}中对应key的日期对象，并转化为字符串。
+     *
+     * @param key     KEY
+     * @param pattern 时间格式
+     * @return String
+     * @since 2.1.8
+     */
+    public String getDateStr(String key, String pattern) {
+        return getDateStr(this.jsonObject, key, pattern);
     }
 }
