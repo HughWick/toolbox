@@ -173,7 +173,7 @@ public class JsonTest {
     }
 
     @Test
-    public void test08() {
+    void test08() {
         String str2 = "[{\"serialNo\":\"1339497989051277312\",\"createBy\":1,\"createDate\":1608196182000,\"updateBy\":\"xxxx\",\"updateDate\":1615444156000}]";
         JsonArray jsonElements = JsonObjectUtils.parseArray(str2);
         List<JsonObject> objects = JsonObjectUtils.toArrayList(jsonElements);
@@ -198,6 +198,7 @@ public class JsonTest {
         System.out.println("---3-->>" + date3);
         String date4 = jsonObjects.getDateStr("create", DateCode.YEAR_MONTH_DAY);
         System.out.println("--3--?>" + date4);
+
 //        String str2 = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"1625024713000\",\"test\":}";
 //        Student student2 = JsonObjectUtils.fromJsonTimeStamp(str2, Student.class);
 //        System.out.println(student1.toString());

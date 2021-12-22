@@ -221,7 +221,7 @@ public class DateUtils extends DateCode {
      * @since 1.3.10
      */
     public static Date parseTimestamp(long timestamp) {
-        if (timestamp < 0) {
+        if (timestamp <= 0) {
             return null;
         }
         String strTime = formatTimestamp(timestamp);
