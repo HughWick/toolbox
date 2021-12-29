@@ -239,6 +239,7 @@ public class RegexUtils {
      *
      * @param str 字符串
      * @return boolean
+     * @since 2.1.9
      */
     public static boolean isNumeric(String str) {
         if (EmptyUtils.isEmpty(str)) {
