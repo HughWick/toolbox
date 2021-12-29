@@ -4,7 +4,10 @@ import com.github.hugh.constant.DateCode;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.support.instance.Instance;
 import com.github.hugh.util.DateUtils;
+import com.github.hugh.util.EmptyUtils;
+import com.github.hugh.util.StringUtils;
 import com.github.hugh.util.gson.adapter.MapTypeAdapter;
+import com.github.hugh.util.regex.RegexUtils;
 import com.google.gson.*;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
@@ -394,6 +397,9 @@ public class JsonObjectUtils {
 
     /**
      * 从JsonObject中获取一个时间的字符串
+     * <p>
+     * 支持日期格式字符串：{@code yyyy-MM-dd HH:mm:ss} 、时间戳类型的字符串、日期对象字符串
+     * </p>
      *
      * @param jsonObject JsonObject
      * @param key        Key
@@ -402,8 +408,18 @@ public class JsonObjectUtils {
      * @since 2.1.8
      */
     public static String getDateStr(JsonObject jsonObject, String key, String pattern) {
-        long longValue = getLongValue(jsonObject, key);
-        Date date = DateUtils.parseTimestamp(longValue);
+        String string = getString(jsonObject, key);
+        if (EmptyUtils.isEmpty(string)) {
+            return null;
+        }
+        Date date;
+        if (DateUtils.isDateFormat(string)) {
+            return string;
+        } else if (RegexUtils.isNumeric(string)) {
+            date = DateUtils.parseTimestamp(Long.parseLong(string));
+        } else {
+            date = DateUtils.dateStrToDate(string);
+        }
         return date == null ? null : DateUtils.format(date, pattern);
     }
 }

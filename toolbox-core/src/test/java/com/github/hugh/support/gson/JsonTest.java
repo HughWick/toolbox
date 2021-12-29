@@ -52,34 +52,6 @@ public class JsonTest {
         System.out.println("--->>" + jsonObjects);
     }
 
-
-    @Test
-    public void test02() throws IOException {
-        JSONObject json = new JSONObject();
-        json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-        JsonObject jsonObject = OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json);
-        System.out.println("--1->>" + jsonObject.toString());
-        HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
-
-        objectObjectHashMap.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-        JsonObject jsonObject2 = OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", objectObjectHashMap);
-        System.out.println("--2->>" + jsonObject2.toString());
-        JsonObject jsonObject3 = OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json.toString());
-        System.out.println("--3->>" + jsonObject3.toString());
-        System.out.println("--getString->>" + JsonObjectUtils.getString(jsonObject, "msg1"));
-        System.out.println("--getString->>" + JsonObjectUtils.getString(jsonObject, "msg"));
-        System.out.println("-getInt-->>" + JsonObjectUtils.getInt(jsonObject, "status"));
-        System.out.println("--getInt->>" + JsonObjectUtils.getInt(jsonObject, "status2"));
-        System.out.println("--getInteger->>" + JsonObjectUtils.getInteger(jsonObject, "status"));
-        System.out.println("--getInteger->>" + JsonObjectUtils.getInteger(jsonObject, "status2"));
-        System.out.println("--getLong->>" + JsonObjectUtils.getLong(jsonObject, "status2"));
-        System.out.println("--getLongValue->>" + JsonObjectUtils.getLongValue(jsonObject, "status2"));
-        System.out.println("--getDouble->>" + JsonObjectUtils.getDouble(jsonObject, "status"));
-        System.out.println("--getDoubleValue->>" + JsonObjectUtils.getDoubleValue(jsonObject, "status2"));
-        System.out.println("--getBigDecimal->>" + JsonObjectUtils.getBigDecimal(jsonObject, "status2"));
-    }
-
-
     @Test
     public void test03() {
         JSONObject json = new JSONObject();

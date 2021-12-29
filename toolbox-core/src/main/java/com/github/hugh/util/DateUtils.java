@@ -177,7 +177,7 @@ public class DateUtils extends DateCode {
         if (EmptyUtils.isEmpty(dateStr)) {
             return null;
         }
-        var simpleDateFormat = new SimpleDateFormat(format);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         try {
             return simpleDateFormat.parse(dateStr);
         } catch (ParseException e) {
@@ -947,7 +947,6 @@ public class DateUtils extends DateCode {
         return end.getTime() > start.getTime();
     }
 
-
     /**
      * 判断是否是日期的格式
      * <p>默认校验格式：yyyy-MM-dd HH:mm:ss</p>
@@ -983,7 +982,7 @@ public class DateUtils extends DateCode {
             var patternObj = Pattern.compile(regex);// 编译正则表达式
             var matcher = patternObj.matcher(timeStr);// 忽略大小写的写法
             if (matcher.matches()) {// 先验证格式
-                var date = parseDate(timeStr, pattern);//转换格式
+                Date date = parseDate(timeStr, pattern);//转换格式
                 return timeStr.equals(format(date, pattern));// 验证时间
             }
         } catch (Exception e) {

@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
  * @author AS
  * @date 2020/9/11 15:42
  */
-public class RegexTest {
+class RegexTest {
 
     @Test
-    public void test01() {
+    void test01() {
         String str = "escapeWord[]";
         String str2 = "<>";
         String str3 = "1select>1";
@@ -20,9 +20,8 @@ public class RegexTest {
         System.out.println("-3-->>" + RegexUtils.isNotIp(str3));
     }
 
-
     @Test
-    public void test02() {
+    void test02() {
         String str1 = "123sf";
         String str2 = "_123sf";
         String str3 = "123sf@";
@@ -42,7 +41,7 @@ public class RegexTest {
     }
 
     @Test
-    public void test03() {
+    void test03() {
         String longitude = "112.94662109375";
         String longitude2 = "1019.48427455";
         String latitude = "28.219310709636";
@@ -56,7 +55,7 @@ public class RegexTest {
     }
 
     @Test
-    public void test04() {
+    void test04() {
         String str = "136438455@qq.com";
         String str2 = "136438455@qq";
         String str3 = null;
@@ -68,7 +67,7 @@ public class RegexTest {
     }
 
     @Test
-    public void test05() {
+    void test05() {
         String url = "www.baidu.com";
         String url1 = "http://www.baidu.com";
         String url2 = "http://www.baidu.com";
@@ -76,4 +75,16 @@ public class RegexTest {
         System.out.println("-2-->" + RegexUtils.isWebSite(url1));
         System.out.println("-3-->" + RegexUtils.isWebSite(url2));
     }
+
+    @Test
+    void test06() {
+        String str = "12324532a";
+        String str2 = "1232453";
+        String str3 = "1232453.11";
+        System.out.println("-1-->>" + RegexUtils.isNumeric(str));
+        System.out.println("--2->>" + RegexUtils.isNumeric(str2));
+        System.out.println("--3->>" + RegexUtils.isNumeric(str3));
+
+    }
+
 }

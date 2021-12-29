@@ -221,13 +221,32 @@ public class RegexUtils {
     }
 
     /**
-     * 是否为数字
+     * 是否包含数字
+     * <p>
+     * 该方法只能判断字符串中是否包含数字，如果需要判断字符串是否全为数字则调用{@link #isNumeric(String)}
+     * </p>
      *
      * @param string 字符
-     * @return boolean 结果
+     * @return boolean 包含数字返回{@code true}
      */
+    @Deprecated
     public static boolean isNumber(String string) {
         return isPatternMatch(string, NUMBER_PATTERN);
+    }
+
+    /**
+     * 判断字符串全是数字
+     *
+     * @param str 字符串
+     * @return boolean
+     */
+    public static boolean isNumeric(String str) {
+        if (EmptyUtils.isEmpty(str)) {
+            return false;
+        }
+        Pattern pattern = Pattern.compile("-?[0-9]+(\\\\.[0-9]+)?");
+        Matcher isNum = pattern.matcher(str);
+        return isNum.matches();
     }
 
     /**
