@@ -53,5 +53,7 @@ class JsonObjectUtilsTest {
         System.out.println("==2==-->>" + JsonObjectUtils.getDateStr(parse, "create2"));
         System.out.println("==3==-->>" + JsonObjectUtils.getDateStr(parse, "birthday"));
         System.out.println("==4==-->>" + JsonObjectUtils.getDateStr(parse, "createDate"));
+        System.out.println("===========================================================");
+        System.out.println("==1==-date->>" + JsonObjectUtils.getDate(parse, "create"));
     }
 }

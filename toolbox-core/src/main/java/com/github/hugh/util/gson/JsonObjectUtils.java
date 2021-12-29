@@ -5,7 +5,6 @@ import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.support.instance.Instance;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.EmptyUtils;
-import com.github.hugh.util.StringUtils;
 import com.github.hugh.util.gson.adapter.MapTypeAdapter;
 import com.github.hugh.util.regex.RegexUtils;
 import com.google.gson.*;
@@ -375,12 +374,11 @@ public class JsonObjectUtils {
      * @since 2.1.8
      */
     public static Date getDate(JsonObject jsonObject, String key) {
-        JsonElement jsonElement = get(jsonObject, key);
-        long asLong = isJsonNull(jsonElement) ? 0 : jsonElement.getAsLong();
-        if (asLong == 0) {
+        String dateStr = getDateStr(jsonObject, key);
+        if (EmptyUtils.isEmpty(dateStr)) {
             return null;
         }
-        return DateUtils.parseTimestamp(asLong);
+        return DateUtils.parse(dateStr);
     }
 
     /**
