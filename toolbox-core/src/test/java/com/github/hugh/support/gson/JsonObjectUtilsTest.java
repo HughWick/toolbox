@@ -1,20 +1,55 @@
 package com.github.hugh.support.gson;
 
+import com.github.hugh.constant.DateCode;
+import com.github.hugh.model.Student;
 import com.github.hugh.util.OkHttpUtils;
 import com.github.hugh.util.gson.JsonObjectUtils;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.sf.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * User: AS
  * Date: 2021/12/29 9:44
  */
 class JsonObjectUtilsTest {
+
+    @Test
+    void test() {
+        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\",\"id\":null,\"opType\":1}";
+        String arryStr = "{ " +
+                "\"client\":\"127.0.0.1\"," +
+                "\"servers\":[" +
+                "    \"8.8.8.8\"," +
+                "    \"8.8.4.4\"," +
+                "    \"156.154.70.1\"," +
+                "    \"156.154.71.1\" " +
+                "    ]}";
+        JsonObject parse = JsonObjectUtils.parse(arryStr);
+        JsonObject json2 = JsonObjectUtils.parse(str);
+        System.out.println("-1-->>" + parse);
+        Map map = JsonObjectUtils.toMap(parse);
+        System.out.println("-2-->>" + map.get("servers"));
+        JsonArray servers = JsonObjectUtils.getJsonArray(parse, "servers");
+        System.out.println("=--3->>" + servers);
+        System.out.println("=--4->>" + JsonObjectUtils.toArrayList(servers));
+        System.out.println("=--5->>" + JsonObjectUtils.fromJson(servers, LinkedList.class));
+//        String s = new Date().toString();
+        String strDate2 = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\"}";
+        Student student = JsonObjectUtils.fromJson(strDate2, Student.class);
+        System.out.println("=--7->>" + student.getCreate());
+        System.out.println("-8-->>" + JsonObjectUtils.toJson(student));
+        Map<Object, Object> objectObjectMap = JsonObjectUtils.toMap(json2);
+        System.out.println("-9-->>" + objectObjectMap);
+
+        String tmee = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06 12:11:20\"}";
+        Student student2 = JsonObjectUtils.fromJson(tmee, Student.class, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
+        System.out.println("=--10->>" + student2.getCreate());
+    }
 
     @Test
     void test02() throws IOException {
@@ -55,5 +90,34 @@ class JsonObjectUtilsTest {
         System.out.println("==4==-->>" + JsonObjectUtils.getDateStr(parse, "createDate"));
         System.out.println("===========================================================");
         System.out.println("==1==-date->>" + JsonObjectUtils.getDate(parse, "create"));
+    }
+
+    @Test
+    void testArray() {
+        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\",\"id\":null}";
+        JsonObject parse = JsonObjectUtils.parse(str);
+        System.out.println("--1->>" + parse);
+        String arr = "[1,2,3,4,5]";
+        JsonArray jsonArray = JsonObjectUtils.parseArray(arr);
+//        jsonArray.forEach(System.out::println);
+        System.out.println("-2-->>" + jsonArray);
+        String arr2 = null;
+        System.out.println("-3-->>" + JsonObjectUtils.parseArray(arr2));
+
+        String str2 = "[{\"serialNo\":\"1339497989051277312\",\"createBy\":1,\"createDate\":1608196182000,\"updateBy\":\"xxxx\",\"updateDate\":1615444156000}]";
+        JsonArray jsonElements = JsonObjectUtils.parseArray(str2);
+        List<JsonObject> objects = JsonObjectUtils.toArrayList(jsonElements);
+        System.out.println("-=4==>>>" + objects);
+    }
+
+    @Test
+    void testDate() {
+        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create2\":null,\"id\":1,\"name\":\"张三\",\"create\":\"1625024713000\"}";
+//        JsonObjects jsonObjects = new JsonObjects(str);
+        Student student1 = JsonObjectUtils.fromJsonTimeStamp(str, Student.class);
+        System.out.println(student1.toString());
+        System.out.println("--->>" + JsonObjectUtils.toJson(student1));
+//        Student student = jsonObjects.fromJsonTimeStamp(Student.class);
+//        System.out.println(JsonObjectUtils.toJson(student));
     }
 }

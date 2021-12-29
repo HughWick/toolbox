@@ -1,6 +1,7 @@
 package com.github.hugh.util.gson;
 
 import com.alibaba.fastjson.JSON;
+import com.github.hugh.constant.DateCode;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.gson.adapter.MapTypeAdapter;
 import com.google.gson.JsonArray;
@@ -200,6 +201,9 @@ public class JsonObjects extends JsonObjectUtils {
 
     /**
      * 将{@link #jsonObject} 转换为对应的实体
+     * <p>
+     * 默认使用yyyy-MM-dd HH:mm:ss 格式的字符串转化为{@link Date}对象
+     * </p>
      *
      * @param classOfT 实体类
      * @param <T>      泛型
@@ -207,7 +211,19 @@ public class JsonObjects extends JsonObjectUtils {
      * @since 1.6.7
      */
     public <T> T formJson(Class<T> classOfT) {
-        return fromJson(this.jsonObject, classOfT);
+        return fromJson(this.jsonObject.toString(), classOfT, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
+    }
+
+    /**
+     * 将{@link #jsonObject} 转换为对应的实体
+     *
+     * @param classOfT 实体类
+     * @param <T>      泛型
+     * @return T 实体
+     * @since 2.1.9
+     */
+    public <T> T formJson(Class<T> classOfT, String dateFormat) {
+        return fromJson(this.jsonObject.toString(), classOfT, dateFormat);
     }
 
     /**

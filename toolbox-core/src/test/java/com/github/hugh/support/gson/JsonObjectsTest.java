@@ -1,6 +1,7 @@
 package com.github.hugh.support.gson;
 
 import com.alibaba.fastjson.JSON;
+import com.github.hugh.constant.DateCode;
 import com.github.hugh.model.Student;
 import com.github.hugh.model.dto.ResultDTO;
 import com.github.hugh.util.OkHttpUtils;
@@ -140,7 +141,7 @@ public class JsonObjectsTest {
     }
 
     @Test
-    void test06() throws IOException, ClassNotFoundException {
+    void test06() throws IOException {
         String s = OkHttpUtils.get("http://factory.hnlot.com.cn/v2/contracts/find");
         JsonObjects jsonObjects = new JsonObjects(s);
         ResultDTO resultDTO = jsonObjects.formJson(ResultDTO.class);
@@ -150,7 +151,9 @@ public class JsonObjectsTest {
         List<ContractsDO> list = new JsonObjects(resultDTO.getData()).toList("list", ContractsDO.class);
         list.forEach(e -> {
             String s1 = JsonObjectUtils.toJson(e);
-            System.out.println(s1);
+            System.out.println( new JsonObjects(s1).formJson(ContractsDO.class));
+            System.out.println( new JsonObjects(s1).formJson(ContractsDO.class , DateCode.YEAR_MONTH_DAY));
+//            System.out.println( new JsonObjects(s1).formJson(ContractsDO.class));
         });
         System.out.println("--1->>" + jsonArray);
         List<LinkedTreeMap> jsonArray2 = new JsonObjects(resultDTO.getData()).toList("list");
