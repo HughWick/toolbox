@@ -121,7 +121,7 @@ public class ListTest {
     }
 
     @Test
-    public void test05() {
+    void test05() {
         String strings = "[\"Saab\", \"Volvo\", \"BMW\",[sub]]";
         String s1 = strings.substring(1);
         System.out.println("---1>>>" + s1);
@@ -134,26 +134,17 @@ public class ListTest {
         System.out.println("--4-->>" + jsonElements.get(0).getAsString());
     }
 
-    public static void main(String[] args) {
-        String str3 = "[1,2,3,4,5,[a,b],]";
-        List list1 = new ArrayList<>();
-        list1.add("1");
-        list1.add("2");
-        list1.add("3");
-        list1.add("4");
-        List list2 = new ArrayList<>();
-        list2.add("a");
-        list2.add("b");
-        List list3 = new ArrayList<>();
-        list1.add(list2);
-        System.out.println(list1.toString());
-//        String s = CharMatcher.or()
-//                .trimFrom(str3);
-//        String s = CharMatcher.any(CharMatcher.anyOf("aeiou")).trimFrom( str3, "[]");
-//        Splitter.on(",")
-//                .trimResults()//去除前后空格
-//                .trimResults(s)
-//                .omitEmptyStrings()//用于去除为空格的分割结果
-//                .splitToList(str3);
+    @Test
+    void test06() {
+        Set<String> allKeys = new HashSet<>();
+        allKeys.add("DEVICE:NETWORK:192.168.1.81");
+//        ArrayList<String> strings = Lists.newArrayList("DEVICE:NETWORK:192.168.1.81");
+        List<String> strings1 = ListUtils.guavaPartitionList(new ArrayList<>(allKeys), 0, 20);
+        System.out.println(strings1);
+        ArrayList<String> arrayList2 = Lists.newArrayList("DEVICE:NETWORK:192.168.1.81", "DEVICE:NETWORK:192.168.1.82");
+        List<String> strings2 = ListUtils.guavaPartitionList(arrayList2, 0, 20);
+        System.out.println("===>>" + strings2);
+        List<String> strings3 = ListUtils.guavaPartitionList(arrayList2, 1, 1);
+        System.out.println("=--2---->" + strings3);
     }
 }
