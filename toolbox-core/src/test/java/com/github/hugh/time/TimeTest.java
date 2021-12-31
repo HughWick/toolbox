@@ -25,21 +25,30 @@ public class TimeTest {
         String start = "2020-06-08 00:00:00";
         String end = "2020-06-10 00:00:00";
         System.out.println("--->>" + TimeUtils.isCrossDay(start, end));
-        System.out.println("--->>" + TimeUtils.isCrossDay(start, end,2));
+        System.out.println("--->>" + TimeUtils.isCrossDay(start, end, 2));
     }
 
     @Test
-    public void test03(){
+    public void test03() {
         String timeStart = "2019-12-11";
         String timeEnd = "2020-12-20";
         TimeUtils.collectLocalDates(timeStart, timeEnd).forEach(System.out::println);
     }
 
     @Test
-    public void test04(){
+    void test04() {
         String timeStart = "2019-12-11 00:00:00";
         String timeEnd = "2020-12-20 23:59:59";
         long l = TimeUtils.differMilli(timeStart, timeEnd);
         System.out.println(l);
+        System.out.println("---1>>" + TimeUtils.getMonth());
+        System.out.println("---2>>" + TimeUtils.getDay());
+        System.out.println("--3->>" + TimeUtils.isThisYear(12));
+    }
+
+    @Test
+    void test05() {
+        System.out.println("=2=昨日开始日期==>>" + TimeUtils.getYesterdayStartTime());
+        System.out.println("=4=昨日结束日期==>>" + TimeUtils.getYesterdayEndTime());
     }
 }

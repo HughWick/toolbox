@@ -45,6 +45,7 @@ public class TimeUtils extends DateCode {
     public static String now(String pattern) {
         return ofPattern(pattern, LocalDateTime.now());
     }
+
     /**
      * 统一格式化LocalDateTime 入口
      * <p>默认format为yyyy-MM-dd HH:mm:ss</p>
@@ -216,42 +217,6 @@ public class TimeUtils extends DateCode {
                 .with(TemporalAdjusters.firstDayOfMonth());// 设置月起始日
         LocalDateTime localDateTime = LocalDateTime.of(earlyLastMonth, LocalTime.MIN);
         return ofPattern(pattern, localDateTime);
-    }
-
-    /**
-     * 获取昨天时间
-     *
-     * @param format 格式，为空时默认为yyyy-MM-dd
-     * @param time   LocalTime
-     * @return String 日期字符串
-     */
-    private static String getYesterday(String format, LocalTime time) {
-        if (format == null || "".equals(format)) {
-            format = YEAR_MONTH_DAY;// 默认为：yyyy-MM-dd
-        }
-        if (time == null) {
-            time = LocalTime.MIN;// 默认为日的起始时间
-        }
-        LocalDateTime localDateTime = LocalDateTime.of(LocalDate.now().plusDays(-1), time);
-        return ofPattern(format, localDateTime);
-    }
-
-    /**
-     * 获取昨天起始日期
-     *
-     * @return String  yyyy-MM-dd HH:mm:ss 日期字符串
-     */
-    public static String getStartedYesterday() {
-        return getYesterday(YEAR_MONTH_DAY_HOUR_MIN_SEC, LocalTime.MIN);
-    }
-
-    /**
-     * 获取结束日期
-     *
-     * @return String  yyyy-MM-dd HH:mm:ss 日期字符串
-     */
-    public static String getEndedYesterday() {
-        return getYesterday(YEAR_MONTH_DAY_HOUR_MIN_SEC, LocalTime.MAX);
     }
 
     /**
