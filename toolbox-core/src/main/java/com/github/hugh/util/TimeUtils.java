@@ -25,6 +25,27 @@ public class TimeUtils extends DateCode {
     }
 
     /**
+     * 获取当前日期字符串
+     * <ul>
+     * <li>格式：yyyy-MM-dd HH:mm:ss</li>
+     * </ul>
+     *
+     * @return String
+     */
+    public static String now() {
+        return now(YEAR_MONTH_DAY_HOUR_MIN_SEC);
+    }
+
+    /**
+     * 将日期转为对应的日期格式字符串
+     *
+     * @param pattern 格式 例：yyyy-MM-dd HH:mm:ss yyyy-MM-dd
+     * @return String 字符串的日期
+     */
+    public static String now(String pattern) {
+        return ofPattern(pattern, LocalDateTime.now());
+    }
+    /**
      * 统一格式化LocalDateTime 入口
      * <p>默认format为yyyy-MM-dd HH:mm:ss</p>
      *
@@ -115,6 +136,7 @@ public class TimeUtils extends DateCode {
      *
      * @return String
      */
+    @Deprecated
     public static String getTime() {
         return getTime(YEAR_MONTH_DAY_HOUR_MIN_SEC);
     }
@@ -125,6 +147,7 @@ public class TimeUtils extends DateCode {
      * @param pattern 格式 例：yyyy-MM-dd HH:mm:ss yyyy-MM-dd
      * @return String 字符串的日期
      */
+    @Deprecated
     public static String getTime(String pattern) {
         return ofPattern(pattern, LocalDateTime.now());
     }

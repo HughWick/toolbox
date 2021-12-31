@@ -64,7 +64,8 @@ public class DateTest {
     }
 
     public static void main(String[] args) {
-        System.out.println("-----当前日期---->>" + TimeUtils.getTime());
+        System.out.println("--1---当前日期---->>" + TimeUtils.getTime());
+        System.out.println("--2---当前日期---->>" + TimeUtils.now());
         System.out.println("==昨日开始日期==>>" + TimeUtils.getStartedYesterday());
         System.out.println("--月的第1天--->>" + TimeUtils.firstDayOfMonth());
         System.out.println("----最后1天----->>" + TimeUtils.lastDayOfMonth());
