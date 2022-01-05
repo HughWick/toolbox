@@ -20,8 +20,8 @@ public class ServletTest {
 //        System.out.println(params);
         request.addParameter("page", "1");
         request.addParameter("size", "20");
-        Map<String, String> params = ServletUtils.getParams(request);
-        Map<String, String> params2 = ServletUtils.getParamsDeleteLimit(request);
+        Map<String, Object> params = ServletUtils.getParams(request);
+        Map<String, Object> params2 = ServletUtils.getParamsDeleteLimit(request);
         System.out.println(params);
         System.out.println(params2);
     }

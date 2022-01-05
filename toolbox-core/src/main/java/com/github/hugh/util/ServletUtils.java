@@ -42,7 +42,7 @@ public class ServletUtils {
      * @param request 请求头
      * @return Map
      */
-    public static Map<String, String> getParamsDeleteLimit(HttpServletRequest request) {
+    public static <K, V> Map<K, V> getParamsDeleteLimit(HttpServletRequest request) {
         return getParams(request, "page", "size");
     }
 
@@ -53,8 +53,8 @@ public class ServletUtils {
      * @param keys    需要删除的key
      * @return Map
      */
-    public static Map<String, String> getParams(HttpServletRequest request, String... keys) {
-        Map<String, String> map = getParams(request);
+    public static <K, V> Map<K, V> getParams(HttpServletRequest request, String... keys) {
+        Map map = getParams(request);
         if (keys == null) {
             return map;
         }
