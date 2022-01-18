@@ -20,15 +20,18 @@ import java.util.stream.Collectors;
 public class ListTest {
 
     @Test
-    public void test01() {
+    void test01() {
         var originList = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8);
         originList.add(9);
         System.out.println(originList);
 //        System.out.println("--->>" + ListUtils.guavaPartitionList(originList, 4, 3));
+        String s = ListUtils.listToString(originList);
+        System.out.println("---1->>" + s);
+        System.out.println("--2-->>" + ListUtils.guavaStringToList(s));
     }
 
     @Test
-    public void test02() {
+    void test02() {
         String[] array = {"1", "2", "3", "4", "5", "6", "7"};
         String strings = "[\"Saab\", \"Volvo\", \"BMW\" ,\"   \"]";
         String str = "{\"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\"}";

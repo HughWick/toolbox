@@ -110,4 +110,23 @@ public class ListUtils {
                 .omitEmptyStrings()//用于去除为空格的分割结果
                 .splitToList(string);
     }
+
+    /**
+     * list转字符串
+     * <p>
+     * 拼接格式为：A,B,C
+     * </p>
+     *
+     * @param list 源
+     * @return String
+     * @since 2.1.10
+     */
+    public static <T> String listToString(List<T> list) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (T o : list) {
+            stringBuilder.append(o).append(",");
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        return stringBuilder.toString();
+    }
 }
