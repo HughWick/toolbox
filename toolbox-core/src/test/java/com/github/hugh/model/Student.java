@@ -29,4 +29,18 @@ public class Student {
     //    private List list;
     private String sex;
 
+
+
+    private String account;
+    private String accountName;
+    private String accountType;
+    private String password;
+    private String phone;
+    private String phoneType;
+    private String ip;
+
+    private String role;
+    private String authorization;//权限
+
+
 }

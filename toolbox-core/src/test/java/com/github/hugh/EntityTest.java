@@ -4,8 +4,10 @@ import com.github.hugh.model.Student;
 import com.github.hugh.model.Student1;
 import com.github.hugh.util.EntityUtils;
 import com.github.hugh.util.MapUtils;
+import com.github.hugh.util.ip.IpUtils;
 import net.sf.json.JSONObject;
 import org.junit.jupiter.api.Test;
+import org.springframework.util.StopWatch;
 
 import java.util.*;
 
@@ -42,17 +44,43 @@ public class EntityTest {
         map.put("age", 2);
         map.put("name", "null");
         map.put("amount", 10.14);
+        map.put("account", UUID.randomUUID().toString());
+        map.put("accountName", UUID.randomUUID().toString());
+        map.put("accountType", UUID.randomUUID().toString());
+        map.put("password", UUID.randomUUID().toString());
+        map.put("phone", UUID.randomUUID().toString());
+        map.put("phoneType", "2");
+        map.put("role", UUID.randomUUID().toString());
+        map.put("authorization", UUID.randomUUID().toString());
+        map.put("ip", IpUtils.random());
         map.put("birthday", new Date());
         map.put("create", "2019-04-06 12:11:20");
         try {
+            StopWatch stopWatch = new StopWatch("测试转换");
+            stopWatch.start("开启map转实体");
             List<Student> list = new ArrayList<>();
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 100000; i++) {
                 map.put("id", i);
                 list.add(MapUtils.toEntityNotEmpty(Student.class, map));
             }
-            List<Student1> copy = EntityUtils.copy(list, Student1.class);
-            copy.forEach(System.out::println);
-//            System.out.println("===>>" + list.size());
+            stopWatch.stop();
+//            list.forEach(System.out::println);
+            List<Student1> item = new ArrayList<>();
+//            stopWatch.start("开启apache实体复制");
+//            for (Student student : list) {
+//                Student1 student1 = new Student1();
+//                EntityUtils.copy(student, student1);
+//                item.add(student1);
+//            }
+//            stopWatch.stop();
+            stopWatch.start("开启spring实体复制");
+            for (Student student : list) {
+                Student1 student1 = new Student1();
+                org.springframework.beans.BeanUtils.copyProperties(student, student1);
+                item.add(student1);
+            }
+            stopWatch.stop();
+            System.out.println(stopWatch.prettyPrint());
         } catch (Exception e) {
             e.printStackTrace();
         }
