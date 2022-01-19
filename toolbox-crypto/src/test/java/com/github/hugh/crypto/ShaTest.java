@@ -36,4 +36,44 @@ public class ShaTest {
         System.out.println("SHA512加密== " + ShaUtils.lowerCase512("123"));
 //        System.out.println("SHA256加密== " + hash("SHA-256", "123"));
     }
+
+    @Test
+   void get() throws IOException {
+        String appkey = "4a5de70025a7425dabeef6e8ea752976";
+        String appSecret = "NeMs1DFG8xFARwZeSlRZwlT22ayY5oIbkgZg1uCziQ3LfSgqcPN4qGydAt7s3jMW";
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        String signature = "";
+//        try {
+//            signature = MD5.getMD5((appkey + appSecret + timestamp).getBytes("UTF-8"));
+        signature = Md5Utils.lowerCase(appkey + appSecret + timestamp);
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("appkey", appkey);
+        params.put("timestamp", timestamp);
+        params.put("signature", signature);
+        params.put("type", "oauth_token");
+//        String resultStr = YmHttpUtil.HttpPost(UrlConfig.YIN_MENG_TOKEN, params);
+        String str = OkHttpUtils.postForm("https://ym.191ec.com/silver-web/oauth/token", params);
+        System.out.println("--->>" + str);
+//        if (StringEmptyUtils.isNotEmpty(resultStr)) {
+//            return JSONObject.fromObject(resultStr);
+//        } else {
+//            return ReturnUtils.error("请求获取tok失败,服务器繁忙！");
+//        }
+    }
+
+    @Test
+    void test02(){
+        String clientsign = ""; // 客戶端签名
+        String appkey =  "";
+        String timestamp = String.valueOf(System.currentTimeMillis());
+//        try {
+//            clientsign = MD5.getMD5((appkey + tok + paymentList.toString() + notifyurl + timestamp).getBytes("UTF-8"));
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//            return ReturnUtils.warn();
+//        }
+    }
 }
