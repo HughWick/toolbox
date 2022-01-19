@@ -384,4 +384,92 @@ public class StringUtils {
         }
         return findMatcher.start();
     }
+
+    /**
+     * 是否以指定字符串开头，忽略大小写
+     *
+     * @param str    被监测字符串
+     * @param prefix 开头字符串
+     * @return 是否以指定字符串开头
+     * @since 2.1.11
+     */
+    public static boolean startWithIgnoreCase(CharSequence str, CharSequence prefix) {
+        return startWith(str, prefix, true);
+    }
+
+    /**
+     * 是否以指定字符串开头<br>
+     * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false
+     *
+     * @param str        被监测字符串
+     * @param prefix     开头字符串
+     * @param ignoreCase 是否忽略大小写
+     * @return 是否以指定字符串开头
+     * @since 2.1.11
+     */
+    public static boolean startWith(CharSequence str, CharSequence prefix, boolean ignoreCase) {
+        return startWith(str, prefix, ignoreCase, false);
+    }
+
+    /**
+     * 是否以指定字符串开头<br>
+     * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false
+     *
+     * @param str          被监测字符串
+     * @param prefix       开头字符串
+     * @param ignoreCase   是否忽略大小写
+     * @param ignoreEquals 是否忽略字符串相等的情况
+     * @return boolean 是否以指定字符串开头
+     * @since 2.1.11
+     */
+    public static boolean startWith(CharSequence str, CharSequence prefix, boolean ignoreCase, boolean ignoreEquals) {
+        if (null == str || null == prefix) {
+            if (ignoreEquals) {
+                return false;
+            }
+            return null == str && null == prefix;
+        }
+        boolean isStartWith;
+        if (ignoreCase) {
+            isStartWith = str.toString().toLowerCase().startsWith(prefix.toString().toLowerCase());
+        } else {
+            isStartWith = str.toString().startsWith(prefix.toString());
+        }
+
+        if (isStartWith) {
+            return (!ignoreEquals) || (!equals(str, prefix, ignoreCase));
+        }
+        return false;
+    }
+
+    /**
+     * 比较两个字符串是否相等，规则如下
+     * <ul>
+     *     <li>str1和str2都为{@code null}</li>
+     *     <li>忽略大小写使用{@link String#equalsIgnoreCase(String)}判断相等</li>
+     *     <li>不忽略大小写使用{@link String#contentEquals(CharSequence)}判断相等</li>
+     * </ul>
+     *
+     * @param str1       要比较的字符串1
+     * @param str2       要比较的字符串2
+     * @param ignoreCase 是否忽略大小写
+     * @return 如果两个字符串相同，或者都是{@code null}，则返回{@code true}
+     * @since 3.2.0
+     */
+    public static boolean equals(CharSequence str1, CharSequence str2, boolean ignoreCase) {
+        if (null == str1) {
+            // 只有两个都为null才判断相等
+            return str2 == null;
+        }
+        if (null == str2) {
+            // 字符串2空，字符串1非空，直接false
+            return false;
+        }
+
+        if (ignoreCase) {
+            return str1.toString().equalsIgnoreCase(str2.toString());
+        } else {
+            return str1.toString().contentEquals(str2);
+        }
+    }
 }
