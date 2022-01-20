@@ -19,14 +19,14 @@ public class SecureUtils {
     }
 
     /**
-     * 数据加密
+     * 数据加密生成签名
      *
      * @param appkey    key
      * @param token     token
      * @param data      数据
      * @param notifyUrl 回调URL
      * @param timestamp 时间戳
-     * @return String
+     * @return String 签名
      */
     public static String signature(String appkey, String token, String data, String notifyUrl, String timestamp) {
         return Md5Utils.lowerCase(appkey + token + data + notifyUrl + timestamp);

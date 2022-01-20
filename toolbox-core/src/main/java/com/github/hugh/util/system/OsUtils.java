@@ -21,4 +21,14 @@ public class OsUtils {
         String os = System.getProperty("os.name");
         return os.toLowerCase().startsWith("win");
     }
+
+    /**
+     * 当前系统为linux
+     *
+     * @return boolean {@code true} linux
+     * @since 2.1.11
+     */
+    public static boolean isLinux() {
+        return System.getProperty("os.name").toLowerCase().contains("linux");
+    }
 }
