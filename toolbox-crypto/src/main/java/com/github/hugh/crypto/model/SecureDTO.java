@@ -4,8 +4,9 @@ import lombok.Data;
 
 /**
  * 密钥实体信息类
- * User: AS
- * Date: 2022/1/20 9:02
+ *
+ * @author hugh
+ * @since 2.1.11
  */
 @Data
 public class SecureDTO {

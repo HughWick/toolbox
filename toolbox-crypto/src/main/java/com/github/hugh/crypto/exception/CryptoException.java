@@ -2,8 +2,9 @@ package com.github.hugh.crypto.exception;
 
 /**
  * 验证异常
- * User: AS
- * Date: 2022/1/20 10:25
+ *
+ * @author hugh
+ * @since 2.0.1
  */
 public class CryptoException extends RuntimeException {
     public CryptoException() {
