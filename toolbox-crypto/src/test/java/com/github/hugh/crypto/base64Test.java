@@ -25,11 +25,14 @@ public class base64Test {
 
     @Test
     public void test02() {
-        String str = "123";
+        String str = "123zvb@!";
         String s1 = Base64.encode(str);
         System.out.println("-1-->>" + s1);
+        System.out.println("-1-->>" + Base64.encodeToString(str.getBytes()));
         String decode = Base64.decode(s1);
         System.out.println("--2->>" + decode);
+        System.out.println("--2->>" + Base64.decodeToString(s1.getBytes()));
+//        System.out.println("--2->>" + Base64.decode(str.getBytes()));
     }
 
 

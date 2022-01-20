@@ -39,6 +39,17 @@ public class Base64 {
     }
 
     /**
+     * 将字符串转换成base64 编码
+     *
+     * @param bytes 数据信息
+     * @return 结果
+     * @since 2.1.11
+     */
+    public static String encodeToString(byte[] bytes) {
+        return new String(encode(bytes));
+    }
+
+    /**
      * 将base64编码的数组解码成原始数据
      * <p>使用JDK8自带的{@link java.util.Base64}</p>
      *
@@ -47,6 +58,17 @@ public class Base64 {
      */
     public static byte[] decode(byte[] bytes) {
         return java.util.Base64.getDecoder().decode(bytes);
+    }
+
+    /**
+     * 将base64编码的数组解码成原始数据的字符串
+     *
+     * @param bytes 数据
+     * @return String 结果
+     * @since 2.1.11
+     */
+    public static String decodeToString(byte[] bytes) {
+        return new String(decode(bytes));
     }
 
     /**
