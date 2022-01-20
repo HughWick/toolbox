@@ -121,6 +121,33 @@ public class MapTest {
         MapUtils.removeKeys(map, "page", "size");
         System.out.println(map);
     }
+
+    @Test
+    void testSort() {
+        Map map = new HashMap<>();
+        map.put("z", 1);
+        map.put("a", 1);
+        map.put("w", 1);
+        map.put("i", 1);
+        map.put("n", 1);
+        map.put("m", 1);
+        map.put("e", 1);
+        System.out.println("--->原来>!>>>>" + map);
+//        System.out.println("--2->>!>>>>" + MapUtils.sortMap(map));
+        System.out.println("--6->>!>>>>" + MapUtils.sortByKeyAsc(map));
+//        Assertions.assertEquals(MapUtils.sortMap(map) ,MapUtils.sortByKeyAsc(map));
+        map.clear();
+        map.put("2", "a");
+        map.put("5", "i");
+        map.put("1", "z");
+        map.put("3", "c");
+        map.put("6", "w");
+        map.put("4", "n");
+        System.out.println("--3->排序前>!>>>>" + map);
+        System.out.println("--4->>!>>>>" + MapUtils.sortByValueDesc(map));
+        System.out.println("--5->>!>>>>" + MapUtils.sortByValueAsc(map));
+        System.out.println("--5->>!>>>>" + MapUtils.sortByKeyDesc(map));
+    }
 }
 
 

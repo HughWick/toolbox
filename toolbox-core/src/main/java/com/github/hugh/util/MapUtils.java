@@ -10,10 +10,7 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Map 工具类
@@ -389,5 +386,65 @@ public class MapUtils {
         for (String key : keys) {
             map.remove(key);
         }
+    }
+
+    /**
+     * 遍历map中的所有value、根据value值降序排序
+     *
+     * @param map 需要排序的参数
+     * @param <K> 键
+     * @param <V> 值
+     * @return map
+     * @since 2.1.11
+     */
+    public static <K, V extends Comparable<? super V>> Map<K, V> sortByValueDesc(Map<K, V> map) {
+        Map<K, V> result = new LinkedHashMap<>();
+        map.entrySet().stream().sorted(Map.Entry.<K, V>comparingByValue().reversed()).forEachOrdered(e -> result.put(e.getKey(), e.getValue()));
+        return result;
+    }
+
+    /**
+     * 遍历map中的所有value、根据value值升序排序
+     *
+     * @param map 需要排序的参数
+     * @param <K> 键
+     * @param <V> 值
+     * @return map
+     * @since 2.1.11
+     */
+    public static   <K, V extends Comparable<? super V>> Map<K, V> sortByValueAsc(Map<K, V> map) {
+        Map<K, V> result = new LinkedHashMap<>();
+        map.entrySet().stream().sorted(Map.Entry.comparingByValue()).forEachOrdered(e -> result.put(e.getKey(), e.getValue()));
+        return result;
+    }
+
+    /**
+     * 集合内的数据按key的字母降序排序
+     *
+     * @param <K> 键
+     * @param <V> 值
+     * @param map 需要排序的参数
+     * @return map 按字母排序后的map
+     * @since 2.1.11
+     */
+    public static  <K extends Comparable<? super K>, V> Map<K, V> sortByKeyDesc(Map<K, V> map) {
+        Map<K, V> result = new LinkedHashMap<>();
+        map.entrySet().stream().sorted(Map.Entry.<K, V>comparingByKey().reversed()).forEachOrdered(e -> result.put(e.getKey(), e.getValue()));
+        return result;
+    }
+
+    /**
+     * 集合内的数据按key的字母升序排序
+     *
+     * @param <K> 键
+     * @param <V> 值
+     * @param map 需要排序的参数
+     * @return map 按字母排序后的map
+     * @since 2.1.11
+     */
+    public static  <K extends Comparable<? super K>, V> Map<K, V> sortByKeyAsc(Map<K, V> map) {
+        Map<K, V> result = new LinkedHashMap<>();
+        map.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEachOrdered(e -> result.put(e.getKey(), e.getValue()));
+        return result;
     }
 }

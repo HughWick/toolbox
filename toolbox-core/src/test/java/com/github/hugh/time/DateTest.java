@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * 日期测试类
  */
@@ -61,7 +62,19 @@ public class DateTest {
         System.out.println("--1->>" + DateUtils.minutesDifference(begin, end));
         System.out.println("--2->>" + DateUtils.secondsDifference(begin, end));
         System.out.println("3--->>" + DateUtils.format(DateUtils.getMin(begin, 5), DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
+
+        Date date = DateUtils.parseDate("2022-01-22 00:00:00");
+        boolean b = DateUtils.checkTimeOut(date, 2);
+        System.out.println("---4-->>>" + b);
+        System.out.println("---5-->>>" + DateUtils.checkTimeOut(DateUtils.parseDate("2022-01-22 10:00:00"), 2));
     }
+
+    @Test
+    void test06() {
+        Date date = DateUtils.parseTimestamp(1617943680000L);
+
+    }
+
 
     public static void main(String[] args) {
         System.out.println("--1---当前日期---->>" + TimeUtils.getTime());
