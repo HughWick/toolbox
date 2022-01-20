@@ -18,12 +18,5 @@
             <artifactId>toolbox-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcmail-jdk16 -->
-<!--        <dependency>-->
-<!--            <groupId>org.bouncycastle</groupId>-->
-<!--            <artifactId>bcmail-jdk16</artifactId>-->
-<!--            <version>1.46</version>-->
-<!--        </dependency>-->
-
     </dependencies>
 </project>
