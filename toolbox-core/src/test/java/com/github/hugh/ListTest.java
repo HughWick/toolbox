@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.google.gson.JsonArray;
 import org.junit.jupiter.api.Test;
+import org.springframework.util.StopWatch;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,13 +22,22 @@ public class ListTest {
 
     @Test
     void test01() {
-        var originList = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8);
-        originList.add(9);
-        System.out.println(originList);
+//        var originList = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8);
+//        originList.add(9);
+        List<String> originList = new ArrayList<>();
+        for (int i = 0; i < 1000000; i++) {
+            originList.add(i+"");
+        }
+//        System.out.println(originList);
 //        System.out.println("--->>" + ListUtils.guavaPartitionList(originList, 4, 3));
+        StopWatch stopWatch =new StopWatch();
+        stopWatch.start("开始");
         String s = ListUtils.listToString(originList);
-        System.out.println("---1->>" + s);
-        System.out.println("--2-->>" + ListUtils.guavaStringToList(s));
+        stopWatch.stop();
+        System.out.println(stopWatch.prettyPrint());
+
+//        System.out.println("---1->>" + s);
+//        System.out.println("--2-->>" + ListUtils.guavaStringToList(s));
     }
 
     @Test

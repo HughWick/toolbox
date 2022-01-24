@@ -118,15 +118,26 @@ public class ListUtils {
      * </p>
      *
      * @param list 源
+     * @param <T>  类型
+     * @return String
+     * @since 2.1.11
+     */
+    public static <T> String listToString(List<T> list) {
+        return listToString(list, ",");
+    }
+
+    /**
+     * list转字符串
+     * <p>
+     * 拼接格式为：A,B,C
+     * </p>
+     *
+     * @param list 源
+     * @param <T>  类型
      * @return String
      * @since 2.1.10
      */
-    public static <T> String listToString(List<T> list) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (T o : list) {
-            stringBuilder.append(o).append(",");
-        }
-        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-        return stringBuilder.toString();
+    public static <T> String listToString(List<T> list, String separator) {
+        return org.apache.commons.lang.StringUtils.join(list.toArray(), separator);
     }
 }
