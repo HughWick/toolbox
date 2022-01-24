@@ -25,7 +25,7 @@ public class ListTest {
 //        var originList = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8);
 //        originList.add(9);
         List<String> originList = new ArrayList<>();
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < 100; i++) {
             originList.add(i+"");
         }
 //        System.out.println(originList);
@@ -36,8 +36,8 @@ public class ListTest {
         stopWatch.stop();
         System.out.println(stopWatch.prettyPrint());
 
-//        System.out.println("---1->>" + s);
-//        System.out.println("--2-->>" + ListUtils.guavaStringToList(s));
+        System.out.println("---1->>" + s);
+        System.out.println("--2-->>" + ListUtils.guavaStringToList(s));
     }
 
     @Test
