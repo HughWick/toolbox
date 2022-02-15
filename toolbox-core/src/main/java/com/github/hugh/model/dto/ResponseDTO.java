@@ -23,7 +23,6 @@ public class ResponseDTO {
      * <p>当前实体类中的对应与传入的code一致</p>
      *
      * @param code code
-     * @since 1.7.0
      */
     public boolean equalCode(String code) {
         return this.code.equals(code);

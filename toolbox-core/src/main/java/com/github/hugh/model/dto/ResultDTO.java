@@ -1,5 +1,6 @@
 package com.github.hugh.model.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,29 +12,8 @@ import lombok.Data;
  */
 @Data
 @Builder
+@AllArgsConstructor
 public class ResultDTO<T> {
-
-    /**
-     * code、提示信息
-     *
-     * @param code    code
-     * @param message 提示信息
-     */
-    public ResultDTO(String code, String message) {
-        this.code = code;
-        this.message = message;
-    }
-
-    /**
-     * @param code    code
-     * @param message 提示信息
-     * @param data    数据
-     */
-    public ResultDTO(String code, String message, T data) {
-        this.code = code;
-        this.message = message;
-        this.data = data;
-    }
 
     private String code; // code
     private String message; // 提示信息
@@ -60,5 +40,16 @@ public class ResultDTO<T> {
      */
     public boolean notEqualCode(String code) {
         return !equalCode(code);
+    }
+
+    /**
+     * code、提示信息
+     *
+     * @param code    code
+     * @param message 提示信息
+     */
+    public ResultDTO(String code, String message) {
+        this.code = code;
+        this.message = message;
     }
 }

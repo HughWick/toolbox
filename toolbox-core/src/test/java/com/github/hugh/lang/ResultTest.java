@@ -35,7 +35,6 @@ public class ResultTest {
 //        System.out.println("--2->" + ResultUtils.isEquals(dto, "0000"));
 //        System.out.println("--3->" + ResultUtils.isNotEquals(dto, "0000"));
         val map = new HashMap<>();
-
         System.out.println("--4->" + JsonObjectUtils.toJson(new ResultDTO<>("000", "操作成功", map)));
 //        System.out.println("--5->>" + dto.isEquals("0000"));
 //        System.out.println("--6->>" + dto.isNotEquals("0000"));
