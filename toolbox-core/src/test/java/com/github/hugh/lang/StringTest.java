@@ -1,4 +1,4 @@
-package com.github.hugh;
+package com.github.hugh.lang;
 
 import com.github.hugh.util.StringUtils;
 import com.google.common.base.CharMatcher;
@@ -69,7 +69,7 @@ public class StringTest {
     }
 
     @Test
-    void test06() {
+    void testAfter() {
         String string = "http://hyga.hnlot.com.cn:8000/capture/DaHua/capture/6G0BEB9GA12F70A/2021/1/17/9946090cb09b4986af8615174e862b9e.jpg";
         String string2 = "https://www.hnlot.com.cn/DaHua/capture/4M061F3PAA33D78/2020/10/27/e242edb022494a12a778c4cddecf2a48.jpg";
         System.out.println("--1-->>" + StringUtils.after(string, "/", 4));

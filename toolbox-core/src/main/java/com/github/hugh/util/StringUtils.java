@@ -435,7 +435,6 @@ public class StringUtils {
         } else {
             isStartWith = str.toString().startsWith(prefix.toString());
         }
-
         if (isStartWith) {
             return (!ignoreEquals) || (!equals(str, prefix, ignoreCase));
         }
@@ -465,7 +464,6 @@ public class StringUtils {
             // 字符串2空，字符串1非空，直接false
             return false;
         }
-
         if (ignoreCase) {
             return str1.toString().equalsIgnoreCase(str2.toString());
         } else {

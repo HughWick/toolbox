@@ -1,4 +1,4 @@
-package com.github.hugh;
+package com.github.hugh.lang;
 
 import com.github.hugh.model.dto.ResultDTO;
 import com.github.hugh.util.gson.JsonObjectUtils;
