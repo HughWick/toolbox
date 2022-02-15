@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * 统一返回信息实体类
+ * 统一返回接口相应实体类
  *
  * @author hugh
  * @since 2.1.11
