@@ -14,6 +14,11 @@ import javax.validation.ConstraintValidatorContext;
  */
 public class NotEmptyValidator implements ConstraintValidator<NotEmpty, String> {
 
+    @Override
+    public void initialize(NotEmpty notEmpty) {
+
+    }
+
     /**
      * 校验value是否不为空、
      * <p>{@code false} 则抛出校验异常</p>
