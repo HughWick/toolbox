@@ -1,5 +1,7 @@
 package com.github.hugh.model.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,11 +13,16 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
+@ApiModel("接口统一返回信息对象v2")
 public class ResponseDTO {
 
+    @ApiModelProperty(required = true, value = "状态码", example = "0")
     private String code; // code
+    @ApiModelProperty(required = true, value = "提示信息", example = "success")
     private String message; // 提示信息
+    @ApiModelProperty(required = true, value = "接口路径", example = "/api/user")
     private String path;// 路径
+    @ApiModelProperty(required = true, value = "时间", example = "2020-01-01 12:00:00")
     private String date;// 时间
 
     /**
