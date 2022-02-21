@@ -13,7 +13,7 @@ public class ResponseTest {
 
     @Test
     void test01() {
-        ResponseDTO dto1 = new ResponseDTO("0000", "ssss" , "/" , TimeUtils.now());
+        ResponseDTO dto1 = new ResponseDTO("0000", "ssss" , "/" , TimeUtils.now() );
         System.out.println(dto1);
         System.out.println("--1->" + JsonObjectUtils.toJson(dto1));
         System.out.println("===2=>>>" + dto1.equalCode("0000"));
