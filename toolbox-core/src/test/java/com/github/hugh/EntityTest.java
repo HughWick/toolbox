@@ -23,15 +23,17 @@ public class EntityTest {
         Map<String, Object> map = new HashMap<>();
         map.put("id", 1);
         map.put("age", 2);
-        map.put("name", "null");
+        map.put("name", "名称");
         map.put("amount", 10.14);
+        map.put("accountName", "真是姓名");
         map.put("birthday", new Date());
         map.put("create", "2019-04-06 12:11:20");
         try {
             Student student = MapUtils.toEntityNotEmpty(Student.class, map);
             Student student2 = new Student();
             EntityUtils.copy(student, student2);
-            System.out.println(EntityUtils.copy(student, Student1::new));
+            System.out.println("--1.8->>" + EntityUtils.copy(student, Student1::new));
+            System.out.println("--1.8-忽略>>" + EntityUtils.copy(student, Student1::new , "name" , "accountName"));
             System.out.println(student + "<----->" + student2);
             System.out.println("-1-->>" + JSONObject.fromObject(student));
             System.out.println("-2-->>" + JSONObject.fromObject(student2));

@@ -39,8 +39,23 @@ public class EntityUtils {
      * @since 2.1.13
      */
     public static <S, T> T copy(S source, Supplier<T> target) {
+        return copy(source, target, (String[]) null);
+    }
+
+    /**
+     * 实现两个实体类属性之间的复制
+     *
+     * @param <S>              源
+     * @param <T>              目标
+     * @param source           源文
+     * @param target           复制目标
+     * @param ignoreProperties 需要忽略的属性
+     * @return T 目标实体类
+     * @since 2.1.13
+     */
+    public static <S, T> T copy(S source, Supplier<T> target, String... ignoreProperties) {
         T t = target.get();
-        BeanUtils.copyProperties(source, t);
+        BeanUtils.copyProperties(source, t, ignoreProperties);
         return t;
     }
 
