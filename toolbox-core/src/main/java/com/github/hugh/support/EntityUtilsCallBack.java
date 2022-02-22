@@ -10,5 +10,11 @@ package com.github.hugh.support;
 @FunctionalInterface
 public interface EntityUtilsCallBack<S, T> {
 
-    void callBack(S t, T s);
+    /**
+     * 实体属性复制回调方法
+     *
+     * @param sources 源-对象类型
+     * @param target  目标对象类型
+     */
+    void callBack(S sources, T target);
 }
