@@ -100,10 +100,30 @@ public class EntityUtils {
      * @since 2.1.12
      */
     public static <S, T> List<T> copyListProperties(List<S> sources, Supplier<T> target, EntityUtilsCallBack<S, T> callBack) {
+        return copyListProperties(sources, target, callBack, (String[]) null);
+    }
+
+    /**
+     * 复制list集合
+     * <p>
+     * 使用场景：Entity、Bo、Vo层数据的复制，因为BeanUtils.copyProperties只能给目标对象的属性赋值，却不能在List集合下循环赋值，因此添加该方法
+     * 如：{@code List<AdminEntity> }赋值到 {@code List<AdminVo>} ，{@code List<AdminVo>}中的 AdminVo 属性都会被赋予到值
+     * S: 数据源类 ，T: 目标类::new(eg: AdminVo::new)
+     *
+     * @param <T>              目标对象类型
+     * @param <S>              源-对象类型
+     * @param sources          源
+     * @param target           目标类
+     * @param callBack         回调方法，属性复制完成后进行调用
+     * @param ignoreProperties 需要忽略的属性
+     * @return List 赋值后新的集合
+     * @since 2.1.13
+     */
+    public static <S, T> List<T> copyListProperties(List<S> sources, Supplier<T> target, EntityUtilsCallBack<S, T> callBack, String... ignoreProperties) {
         List<T> list = new ArrayList<>(sources.size());
         for (S source : sources) {
             T t = target.get();
-            BeanUtils.copyProperties(source, t);
+            BeanUtils.copyProperties(source, t, ignoreProperties);
             if (callBack != null) {
                 // 回调
                 callBack.callBack(source, t);
@@ -112,4 +132,5 @@ public class EntityUtils {
         }
         return list;
     }
+
 }
