@@ -1,7 +1,7 @@
 package com.github.hugh.util;
 
 import com.esotericsoftware.kryo.Kryo;
-import com.github.hugh.support.BeansUtilsCallBack;
+import com.github.hugh.support.EntityUtilsCallBack;
 import com.github.hugh.support.instance.Instance;
 import org.springframework.beans.BeanUtils;
 
@@ -64,10 +64,10 @@ public class EntityUtils {
      * @param <S>      源-对象类型
      * @param sources  源
      * @param target   目标类
-     * @param callBack 回调方法
+     * @param callBack 回调方法，属性复制完成后进行调用
      * @since 2.1.12
      */
-    public static <S, T> List<T> copyListProperties(List<S> sources, Supplier<T> target, BeansUtilsCallBack<S, T> callBack) {
+    public static <S, T> List<T> copyListProperties(List<S> sources, Supplier<T> target, EntityUtilsCallBack<S, T> callBack) {
         List<T> list = new ArrayList<>(sources.size());
         for (S source : sources) {
             T t = target.get();

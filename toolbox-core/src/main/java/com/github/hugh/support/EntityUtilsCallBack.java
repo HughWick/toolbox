@@ -8,7 +8,7 @@ package com.github.hugh.support;
  * @since 2.1.12
  */
 @FunctionalInterface
-public interface BeansUtilsCallBack<S, T> {
+public interface EntityUtilsCallBack<S, T> {
 
     void callBack(S t, T s);
 }
