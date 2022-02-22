@@ -65,6 +65,7 @@ public class EntityUtils {
      * @param sources  源
      * @param target   目标类
      * @param callBack 回调方法，属性复制完成后进行调用
+     * @return List 赋值后新的集合
      * @since 2.1.12
      */
     public static <S, T> List<T> copyListProperties(List<S> sources, Supplier<T> target, EntityUtilsCallBack<S, T> callBack) {
