@@ -31,6 +31,7 @@ public class EntityTest {
             Student student = MapUtils.toEntityNotEmpty(Student.class, map);
             Student student2 = new Student();
             EntityUtils.copy(student, student2);
+            System.out.println(EntityUtils.copy(student, Student1::new));
             System.out.println(student + "<----->" + student2);
             System.out.println("-1-->>" + JSONObject.fromObject(student));
             System.out.println("-2-->>" + JSONObject.fromObject(student2));
@@ -127,7 +128,7 @@ public class EntityTest {
         map.put("birthday", new Date());
         map.put("create", "2019-04-06 12:11:20");
         Student student = MapUtils.toEntityNotEmpty(Student.class, map);
-        List<Student> list = Lists.newArrayList(student , EntityUtils.deepClone(student));
+        List<Student> list = Lists.newArrayList(student, EntityUtils.deepClone(student));
 
         System.out.println("---1->>" + list);
         List<Student1> student1s = EntityUtils.copyListProperties(list, Student1::new);

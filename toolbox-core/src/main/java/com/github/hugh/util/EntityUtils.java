@@ -29,6 +29,22 @@ public class EntityUtils {
     }
 
     /**
+     * 实现两个实体类属性之间的复制
+     *
+     * @param <S>    源
+     * @param <T>    目标
+     * @param source 源文
+     * @param target 复制目标
+     * @return T 目标实体类
+     * @since 2.1.13
+     */
+    public static <S, T> T copy(S source, Supplier<T> target) {
+        T t = target.get();
+        BeanUtils.copyProperties(source, t);
+        return t;
+    }
+
+    /**
      * 通过Kryo框架深拷贝
      *
      * @param <T>    实体类型
