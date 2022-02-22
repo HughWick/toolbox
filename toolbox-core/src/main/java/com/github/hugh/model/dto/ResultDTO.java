@@ -22,7 +22,7 @@ public class ResultDTO<T> {
     private String code; // code
     @ApiModelProperty(required = true, value = "提示信息", example = "success")
     private String message; // 提示信息
-    @ApiModelProperty(required = true, value = "数据", example = "{\"name\":\"blues\"}")
+    @ApiModelProperty(required = true, value = "数据")
     private T data; // 数据
 
     /**
