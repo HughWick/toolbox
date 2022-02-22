@@ -1,8 +1,13 @@
 package com.github.hugh.util;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.github.hugh.support.BeansUtilsCallBack;
 import com.github.hugh.support.instance.Instance;
 import org.springframework.beans.BeanUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * 实体操作工具类
@@ -32,5 +37,47 @@ public class EntityUtils {
      */
     public static <T> T deepClone(T source) {
         return Instance.getInstance().singleton(Kryo.class).copy(source);
+    }
+
+    /**
+     * 复制list 集合属性
+     *
+     * @param <T>     目标对象类型
+     * @param <S>     源-对象类型
+     * @param sources 源
+     * @param target  目标类
+     * @return List
+     * @since 2.1.12
+     */
+    public static <S, T> List<T> copyListProperties(List<S> sources, Supplier<T> target) {
+        return copyListProperties(sources, target, null);
+    }
+
+    /**
+     * 复制list集合
+     * <p>
+     * 使用场景：Entity、Bo、Vo层数据的复制，因为BeanUtils.copyProperties只能给目标对象的属性赋值，却不能在List集合下循环赋值，因此添加该方法
+     * 如：List<AdminEntity> 赋值到 List<AdminVo> ，List<AdminVo>中的 AdminVo 属性都会被赋予到值
+     * S: 数据源类 ，T: 目标类::new(eg: AdminVo::new)
+     *
+     * @param <T>      目标对象类型
+     * @param <S>      源-对象类型
+     * @param sources  源
+     * @param target   目标类
+     * @param callBack 回调方法
+     * @since 2.1.12
+     */
+    public static <S, T> List<T> copyListProperties(List<S> sources, Supplier<T> target, BeansUtilsCallBack<S, T> callBack) {
+        List<T> list = new ArrayList<>(sources.size());
+        for (S source : sources) {
+            T t = target.get();
+            BeanUtils.copyProperties(source, t);
+            if (callBack != null) {
+                // 回调
+                callBack.callBack(source, t);
+            }
+            list.add(t);
+        }
+        return list;
     }
 }

@@ -5,6 +5,7 @@ import com.github.hugh.model.Student1;
 import com.github.hugh.util.EntityUtils;
 import com.github.hugh.util.MapUtils;
 import com.github.hugh.util.ip.IpUtils;
+import com.google.common.collect.Lists;
 import net.sf.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.StopWatch;
@@ -111,8 +112,30 @@ public class EntityTest {
     }
 
     @Test
-    public void cloneTest02() {
+    void cloneTest02() {
         Student student2 = new Student();
         Student o1 = EntityUtils.deepClone(student2);
+    }
+
+    @Test
+    void testListCopy() throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", 1);
+        map.put("age", 2);
+        map.put("name", "null");
+        map.put("amount", 10.14);
+        map.put("birthday", new Date());
+        map.put("create", "2019-04-06 12:11:20");
+        Student student = MapUtils.toEntityNotEmpty(Student.class, map);
+        List<Student> list = Lists.newArrayList(student , EntityUtils.deepClone(student));
+
+        System.out.println("---1->>" + list);
+        List<Student1> student1s = EntityUtils.copyListProperties(list, Student1::new);
+        System.out.println("===2==>>" + student1s);
+        List<Student1> student1ss = EntityUtils.copyListProperties(list, Student1::new, (st, student1) -> {
+//            System.out.println("---->>" + st);
+            student1.setName("回调设置名称");
+        });
+        System.out.println("--->>" + student1ss);
     }
 }
