@@ -9,11 +9,6 @@ package com.github.hugh.db.constants;
 public class QueryCode {
 
     /**
-     * 库表中的创建日期
-     */
-    public static final String CREATE_DATE = "CREATE_DATE";
-
-    /**
      * 序列号
      */
     public static final String SERIAL_NO = "SERIAL_NO";
@@ -37,4 +32,14 @@ public class QueryCode {
      * 删除标识
      */
     public static final String DELETE_FLAG = "DELETE_FLAG";
+
+    /**
+     * 库表中的创建日期
+     */
+    public static final String CREATE_DATE = "CREATE_DATE";
+
+    /**
+     * 创建人
+     */
+    public static final String CREATE_BY = "CREATE_BY";
 }
