@@ -1,6 +1,6 @@
 package com.github.hugh.util.ip;
 
-import com.github.hugh.model.dto.Ip2regionDTO;
+import com.github.hugh.bean.dto.Ip2regionDTO;
 import com.github.hugh.util.gson.JsonObjectUtils;
 import com.github.hugh.util.io.StreamUtils;
 import com.google.gson.JsonObject;

@@ -1,4 +1,4 @@
-package com.github.hugh.model.dto;
+package com.github.hugh.bean.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

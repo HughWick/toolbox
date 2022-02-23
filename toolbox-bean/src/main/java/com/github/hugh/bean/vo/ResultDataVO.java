@@ -1,4 +1,4 @@
-package com.github.hugh.model.vo;
+package com.github.hugh.bean.vo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;

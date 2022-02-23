@@ -1,37 +1,35 @@
-package com.github.hugh.model.dto;
+package com.github.hugh.bean.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
 /**
- * 统一返回信息实体类
+ * 统一返回接口相应实体类
  *
  * @author hugh
- * @since 1.5.0
+ * @since 2.1.11
  */
 @Data
-@Builder
 @AllArgsConstructor
-@ApiModel("接口统一返回信息对象")
-public class ResultDTO<T> {
+@ApiModel("接口统一返回信息对象v2")
+public class ResponseDTO {
 
-    @ApiModelProperty(required = true, value = "接口状态码", example = "0")
+    @ApiModelProperty(required = true, value = "状态码", example = "0")
     private String code; // code
     @ApiModelProperty(required = true, value = "提示信息", example = "success")
     private String message; // 提示信息
-    @ApiModelProperty(required = true, value = "数据")
-    private T data; // 数据
+    @ApiModelProperty(required = true, value = "接口路径", example = "/api/user")
+    private String path;// 路径
+    @ApiModelProperty(required = true, value = "时间", example = "2020-01-01 12:00:00")
+    private String date;// 时间
 
     /**
      * 判断code码是否一样
      * <p>当前实体类中的对应与传入的code一致</p>
      *
      * @param code code
-     * @return boolean
-     * @since 1.7.0
      */
     public boolean equalCode(String code) {
         return this.code.equals(code);
@@ -42,20 +40,8 @@ public class ResultDTO<T> {
      *
      * @param code code
      * @return boolean
-     * @since 1.7.0
      */
     public boolean notEqualCode(String code) {
         return !equalCode(code);
-    }
-
-    /**
-     * code、提示信息
-     *
-     * @param code    code
-     * @param message 提示信息
-     */
-    public ResultDTO(String code, String message) {
-        this.code = code;
-        this.message = message;
     }
 }

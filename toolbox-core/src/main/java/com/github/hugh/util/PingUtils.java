@@ -1,7 +1,7 @@
 package com.github.hugh.util;
 
+import com.github.hugh.bean.dto.PingDTO;
 import com.github.hugh.constant.CharsetCode;
-import com.github.hugh.model.dto.PingDTO;
 import com.github.hugh.util.system.OsUtils;
 
 import java.io.BufferedReader;
