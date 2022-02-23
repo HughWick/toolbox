@@ -22,9 +22,9 @@ JDK 11+
 | jedis  | redis clients |
 | caffeine  | 高性能本地缓存 |
 | commons-collections4  | apache 工具类 |
-| okhttp  | 高性能http |
+| okhttp3  | 高性能http |
 | javax.servlet-api  | 单元格 |
-| kryo  | Kryo是一个快速高效的Java序列化框架 |
+| kryo  | 快速高效的Java序列化框架 |
 | guava  | 谷歌套件 |
 | thumbnailator  | 图片压缩 |
 | json-lib  | json |
@@ -32,7 +32,7 @@ JDK 11+
 | fastjson  | 阿里高性能json |
 | slf4j-simple  | 日志工具包 |
 | ip2region  | IP地址库 |
-| rxjava  | 本地消息队列 |
+| rxjava  | 高性能本地消息队列 |
 
 ## maven 引入
 
