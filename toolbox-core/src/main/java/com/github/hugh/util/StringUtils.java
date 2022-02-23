@@ -2,7 +2,6 @@ package com.github.hugh.util;
 
 import com.github.hugh.constant.guava.CharMatchers;
 import com.google.common.base.CaseFormat;
-import jodd.util.StringUtil;
 
 import java.util.regex.Pattern;
 
@@ -206,7 +205,7 @@ public class StringUtils {
      * @since 1.3.1
      */
     public static String camelToUnderline(String camelStr) {
-        if (StringUtil.isEmpty(camelStr)) {
+        if (EmptyUtils.isEmpty(camelStr)) {
             return null;
         }
         return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, camelStr);
@@ -280,7 +279,7 @@ public class StringUtils {
      * @since 1.3.1
      */
     public static String replaceAnyBlank(final String string, final String replacement) {
-        if (StringUtil.isEmpty(string)) {
+        if (EmptyUtils.isEmpty(string)) {
             return string;
         }
         var matcher = BLANK_PATTERN.matcher(string);

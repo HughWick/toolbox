@@ -1,7 +1,7 @@
 package com.github.hugh.util.common;
 
+import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.ListUtils;
-import jodd.util.StringUtil;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -51,7 +51,7 @@ public class AssertUtils {
      * @param name   字符串的名称
      */
     public static void notEmpty(String string, String name) {
-        if (StringUtil.isEmpty(string)) {
+        if (EmptyUtils.isEmpty(string)) {
             throw new IllegalArgumentException(name + " can not be null!");
         }
     }
@@ -70,7 +70,6 @@ public class AssertUtils {
 //        }
 //    }
 
-
     /**
      * 指定长度是否等于某个值
      * 1.空值校验则认为长度为0；
@@ -81,7 +80,7 @@ public class AssertUtils {
      * @return {@code true} 是
      */
     public static boolean isEqualsLen(String string, int len) {
-        if (StringUtil.isEmpty(string)) {
+        if (EmptyUtils.isEmpty(string)) {
             return 0 == len;
         }
         return string.length() == len;
@@ -108,7 +107,7 @@ public class AssertUtils {
      * @return {@code true} 是
      */
     public static boolean isFitMaxLen(String string, int maxLen) {
-        if (StringUtil.isEmpty(string)) {
+        if (EmptyUtils.isEmpty(string)) {
             return 0 <= maxLen;
         }
         return string.length() <= maxLen;
@@ -135,7 +134,7 @@ public class AssertUtils {
      * @return {@code true} 是
      */
     public static boolean isFitMinLen(String string, int minLen) {
-        if (StringUtil.isEmpty(string)) {
+        if (EmptyUtils.isEmpty(string)) {
             return 0 >= minLen;
         }
         return string.length() >= minLen;
@@ -217,7 +216,7 @@ public class AssertUtils {
      */
     private static String buildErrorMsg(Object except, Object real, String msg) {
         String resultMsg = msg;
-        if (StringUtil.isEmpty(resultMsg)) {
+        if (EmptyUtils.isEmpty(resultMsg)) {
             resultMsg = "与期望值不符合!";
         }
         return String.format("Except:<%s>, Real:<%s>, Msg:<%s>", except, real, resultMsg);

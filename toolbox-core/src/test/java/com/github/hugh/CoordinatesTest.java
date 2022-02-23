@@ -1,7 +1,7 @@
 package com.github.hugh;
 
-import com.github.hugh.model.dto.GgaDTO;
-import com.github.hugh.model.dto.GpsDTO;
+import com.github.hugh.bean.dto.GgaDTO;
+import com.github.hugh.bean.dto.GpsDTO;
 import com.github.hugh.util.CoordinatesUtils;
 import org.junit.jupiter.api.Test;
 

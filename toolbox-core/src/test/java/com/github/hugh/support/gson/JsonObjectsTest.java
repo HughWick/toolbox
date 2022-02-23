@@ -1,9 +1,9 @@
 package com.github.hugh.support.gson;
 
 import com.alibaba.fastjson.JSON;
+import com.github.hugh.bean.dto.ResultDTO;
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.model.Student;
-import com.github.hugh.model.dto.ResultDTO;
 import com.github.hugh.util.OkHttpUtils;
 import com.github.hugh.util.gson.JsonObjectUtils;
 import com.github.hugh.util.gson.JsonObjects;

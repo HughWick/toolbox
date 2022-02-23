@@ -3,7 +3,6 @@ package com.github.hugh.util.io;
 import com.github.hugh.constant.CharsetCode;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.system.OsUtils;
-import jodd.io.StreamUtil;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -38,7 +37,7 @@ public class StreamUtils {
             } catch (Exception localException2) {
                 ClassLoader localClassLoader = Thread.currentThread().getContextClassLoader();
                 if (localClassLoader == null) {
-                    localClassLoader = StreamUtil.class.getClassLoader();
+                    localClassLoader = StreamUtils.class.getClassLoader();
                 }
                 if (OsUtils.isWindows()) {
                     inputStream = localClassLoader.getClass().getResourceAsStream(filePath);

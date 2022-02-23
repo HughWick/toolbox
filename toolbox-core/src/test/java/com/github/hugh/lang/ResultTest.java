@@ -1,6 +1,6 @@
 package com.github.hugh.lang;
 
-import com.github.hugh.model.dto.ResultDTO;
+import com.github.hugh.bean.dto.ResultDTO;
 import com.github.hugh.util.gson.JsonObjectUtils;
 import lombok.val;
 import org.junit.jupiter.api.Test;

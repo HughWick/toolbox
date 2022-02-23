@@ -1,6 +1,6 @@
 package com.github.hugh.lang;
 
-import com.github.hugh.model.dto.ResponseDTO;
+import com.github.hugh.bean.dto.ResponseDTO;
 import com.github.hugh.util.TimeUtils;
 import com.github.hugh.util.gson.JsonObjectUtils;
 import org.junit.jupiter.api.Test;

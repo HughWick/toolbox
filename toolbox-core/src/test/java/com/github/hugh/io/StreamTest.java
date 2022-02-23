@@ -19,8 +19,9 @@ public class StreamTest {
 
     @Test
     public void test01() {
-        InputStream inputStream = StreamUtils.getInputStream(DB_PATH);
-        StreamUtils.toFile(inputStream, "D:\\battery-report.html");
+//        InputStream inputStream = StreamUtils.getInputStream(DB_PATH);
+        InputStream inputStream = StreamUtils.getInputStream("D:\\OneDrive\\Documents\\账本.xlsx");
+        StreamUtils.toFile(inputStream, "D:\\test.db");
         System.out.println("==END===");
     }
 

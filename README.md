@@ -23,12 +23,12 @@ JDK 11+
 | caffeine  | 高性能本地缓存 |
 | commons-collections4  | apache 工具类 |
 | okhttp3  | 高性能http |
-| javax.servlet-api  | 单元格 |
+| javax.servlet-api  | Servlet API |
 | kryo  | 快速高效的Java序列化框架 |
 | guava  | 谷歌套件 |
 | thumbnailator  | 图片压缩 |
 | json-lib  | json |
-| gson  | gson |
+| gson  | Google Gson |
 | fastjson  | 阿里高性能json |
 | slf4j-simple  | 日志工具包 |
 | ip2region  | IP地址库 |
