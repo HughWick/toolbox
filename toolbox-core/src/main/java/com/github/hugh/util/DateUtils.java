@@ -225,7 +225,6 @@ public class DateUtils extends DateCode {
             return null;
         }
         String strTime = formatTimestamp(timestamp);
-        System.out.println("---nei===>>"+strTime);
         return parse(strTime);
     }
 
