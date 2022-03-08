@@ -1,4 +1,4 @@
-package com.github.hugh.guava;
+package com.github.hugh.mq;
 
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;

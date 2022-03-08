@@ -20,5 +20,5 @@ public class ResultDataVO<T> {
     private List<T> list;//
     @ApiModelProperty(required = true, value = "总数")
     private long totalCount;
-
+ 
 }

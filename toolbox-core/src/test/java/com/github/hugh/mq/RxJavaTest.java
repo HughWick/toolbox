@@ -1,4 +1,4 @@
-package com.github.hugh.guava;
+package com.github.hugh.mq;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
