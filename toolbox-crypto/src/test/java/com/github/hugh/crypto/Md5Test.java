@@ -12,10 +12,10 @@ public class Md5Test {
     public void md5(){
         System.out.println("--1->"+ Md5Utils.lowerCase("1234"));
         System.out.println("-2-->"+ Md5Utils.lowerCase("88888888"));
-        System.out.println("-2-->"+ Md5Utils.lowerCase("8566889"));
+        System.out.println("-3-->"+ Md5Utils.lowerCase("8566889"));
         //f854b68c6f8b2195704f76e05aaa65a1
-        System.out.println("-2-->"+ Md5Utils.lowerCase("huahua"));
-        System.out.println("-3-->"+ Md5Utils.upperCase("1234"));
+        System.out.println("-4-->"+ Md5Utils.lowerCase("huahua"));
+        System.out.println("-5-->"+ Md5Utils.upperCase("1234"));
     }
 
 }
