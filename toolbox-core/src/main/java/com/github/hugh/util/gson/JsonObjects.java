@@ -12,6 +12,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 由于使用{@link JsonObjectUtils}的方法获取值时需要每次将转{@link JsonObject}作为参数传入，所以该类在new 对象时将需要转换的参数传入，然后转换成{@link JsonObject}
@@ -346,5 +347,17 @@ public class JsonObjects extends JsonObjectUtils {
      */
     public String getDateStr(String key, String pattern) {
         return getDateStr(this.jsonObject, key, pattern);
+    }
+
+    /**
+     * 将json对象转化为map
+     *
+     * @param <K> KEY
+     * @param <V> VALUE
+     * @return Map
+     * @since 2.2.2
+     */
+    public <K, V> Map<K, V> toMap() {
+        return toMap(this.jsonObject);
     }
 }
