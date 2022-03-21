@@ -3,6 +3,7 @@ package com.github.hugh.support.gson;
 import com.alibaba.fastjson.JSON;
 import com.github.hugh.bean.dto.ResultDTO;
 import com.github.hugh.constant.DateCode;
+import com.github.hugh.model.GsonTest;
 import com.github.hugh.model.Student;
 import com.github.hugh.util.OkHttpUtils;
 import com.github.hugh.util.gson.JsonObjectUtils;
@@ -161,6 +162,18 @@ public class JsonObjectsTest {
         List<ContractsDO> list1 = new JsonObjects(resultDTO.getData()).toList("list", ContractsDO.class);
         list1.forEach(System.out::println);
 //        System.out.println("---2>>" + jsonArray2);
+    }
+
+    @Test
+    void length(){
+        var str = "{code:006,message:测试,age:18,created:1625024713000,amount:199.88,switchs:true}";
+        JsonObjects jsonObjects = new JsonObjects(str);
+//        System.out.println("-1-->>"+jsonObjects.toJson());
+        System.out.println("-1-->>"+jsonObjects.fromJsonTimeStamp(GsonTest.class));
+        var str2 = "{\"code\":\"006\",\"message\":\"测试\",\"age\":\"18\",\"created\":\"2022-03-21 18:02:11\",\"amount\":\"199.88\",\"switchs\":\"true\"}";
+        System.out.println("=2===>>"+new JsonObjects(str2).formJson(GsonTest.class));
+        var str3 = "{code:006,message:测试,age:18,created:2022-03-21 18:02:11,amount:199.88,switchs:true}";
+        System.out.println("=3===>>"+new JsonObjects(str2).formJson(GsonTest.class));
     }
 }
 
