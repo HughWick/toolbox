@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.github.hughwick</groupId>
+        <artifactId>toolbox-parent</artifactId>
+        <version>2.2.1</version>
+    </parent>
+
+    <artifactId>toolbox-test</artifactId>
+    <packaging>jar</packaging>
+    <description>toolbox 全部工具包</description>
+    <dependencies>
+        <dependency>
+            <groupId>com.github.hughwick</groupId>
+            <artifactId>toolbox-core</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.hughwick</groupId>
+            <artifactId>toolbox-db</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.hughwick</groupId>
+            <artifactId>toolbox-aop</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.hughwick</groupId>
+            <artifactId>toolbox-crypto</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.hughwick</groupId>
+            <artifactId>toolbox-cache</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.hughwick</groupId>
+            <artifactId>toolbox-bean</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!--命令：mvn test 生成xml txt测试报告 （maven-surefire-plugin mvn默认使用插件,可以不用配置） -->
+            <!--命令：mvn surefire-report:report 生成测试报告html -->
+            <!--junit5 下方插件的version要大于2.22.0，否则无法执行test-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${plugin.surefire.version}</version>
+                <configuration>
+                    <skipTests>${plugin.surefire.skip-it}</skipTests>
+                    <testFailureIgnore>${plugin.surefire.ignore-failure}</testFailureIgnore>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${plugin.jacoco.version}</version>
+                <executions>
+                    <!--整合所有子模块报告-->
+                    <execution>
+                        <id>report-aggregate</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
