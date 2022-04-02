@@ -8,13 +8,13 @@
     <version>2.2.1</version>
     <packaging>pom</packaging>
     <modules>
-        <module>toolbox-all</module>
-        <module>toolbox-aop</module>
-        <module>toolbox-db</module>
-        <module>toolbox-core</module>
-        <module>toolbox-crypto</module>
-        <module>toolbox-cache</module>
-        <module>toolbox-bean</module>
+        <module>toolbox-all/</module>
+        <module>toolbox-aop/</module>
+        <module>toolbox-db/</module>
+        <module>toolbox-core/</module>
+        <module>toolbox-crypto/</module>
+        <module>toolbox-cache/</module>
+        <module>toolbox-bean/</module>
     </modules>
 
     <properties>
@@ -90,38 +90,6 @@
                 </configuration>
             </plugin>
             <!--=================================== coveralls START ===================================-->
-            <!--mvn cobertura:cobertura coveralls:report -DrepoToken=yourcoverallsprojectrepositorytoken-->
-            <!--            <plugin>-->
-            <!--                <groupId>org.kt3k.gradle.plugin</groupId>-->
-            <!--                <artifactId>coveralls-gradle-plugin</artifactId>-->
-            <!--                <version>${plugin.coveralls.version}</version>-->
-            <!--            </plugin>-->
-<!--         jdk11 不起作用   -->
-<!--            <plugin>-->
-<!--                <groupId>org.codehaus.mojo</groupId>-->
-<!--                <artifactId>cobertura-maven-plugin</artifactId>-->
-<!--                <version>${plugin.cobertura.version}</version>-->
-<!--                <configuration>-->
-<!--                    <format>xml</format>-->
-<!--                    <maxmem>256m</maxmem>-->
-<!--                    &lt;!&ndash; aggregated reports for multi-module projects &ndash;&gt;-->
-<!--                    <aggregate>true</aggregate>-->
-<!--                    <check/>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-<!--            <plugin>-->
-<!--                <groupId>org.jacoco</groupId>-->
-<!--                <artifactId>jacoco-maven-plugin</artifactId>-->
-<!--                <version>0.8.6</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>prepare-agent</id>-->
-<!--                        <goals>-->
-<!--                            <goal>prepare-agent</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
