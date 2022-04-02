@@ -7,6 +7,9 @@ import org.springframework.util.StopWatch;
 import java.io.IOException;
 import java.net.InetAddress;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * @author Hugh
  * @since
@@ -42,5 +45,14 @@ public class NetworkTest {
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
+    }
+
+    @Test
+    void testSocket() {
+        boolean connect = NetworkUtils.isConnect("192.168.1.87", 9567);
+        assertTrue(connect);
+        boolean connect2 = NetworkUtils.isConnect("192.168.1.86", 9567);
+        assertFalse(connect2);
+//        System.out.println("-->>" + connect);
     }
 }

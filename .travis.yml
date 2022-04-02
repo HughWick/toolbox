@@ -2,10 +2,9 @@ language: java
 sudo: false # faster builds
 jdk:
   - oraclejdk11
-#  - openjdk11
-#branches:
-#  only:
-#    - 2.2.X
+env:
+  global:
+    - CODECOV_TOKEN=:8aa94f39-8dbc-4ee0-9517-617e02ff49fb
 #script:
 ##  - jdk_switcher use openjdk10
 ##  - # do stuff with OpenJDK 10

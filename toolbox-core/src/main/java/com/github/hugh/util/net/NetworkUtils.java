@@ -1,6 +1,9 @@
 package com.github.hugh.util.net;
 
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 
 /**
  * 网络工具类
@@ -33,5 +36,68 @@ public class NetworkUtils {
         } catch (Exception ex) {
             return false;
         }
+    }
+
+    /**
+     * 创建Socket并连接到指定地址的服务器
+     *
+     * @param hostname 地址
+     * @param port     端口
+     * @return {@link Socket}
+     * @throws IOException IO异常
+     */
+    public static Socket connect(String hostname, int port) throws IOException {
+        return connect(hostname, port, -1);
+    }
+
+    /**
+     * 创建Socket并连接到指定地址的服务器
+     *
+     * @param hostname          地址
+     * @param port              端口
+     * @param connectionTimeout 连接超时
+     * @return {@link Socket}
+     * @throws IOException IO异常
+     */
+    public static Socket connect(final String hostname, int port, int connectionTimeout) throws IOException {
+        return connect(new InetSocketAddress(hostname, port), connectionTimeout);
+    }
+
+    /**
+     * 创建Socket并连接到指定地址的服务器
+     *
+     * @param address           地址
+     * @param connectionTimeout 连接超时时间、单位：毫秒
+     * @return {@link Socket}
+     * @throws IOException IO异常
+     */
+    public static Socket connect(InetSocketAddress address, int connectionTimeout) throws IOException {
+        final Socket socket = new Socket();
+        try (socket){
+            if (connectionTimeout <= 0) {
+                socket.connect(address);
+            } else {
+                socket.connect(address, connectionTimeout);
+            }
+        } catch (IOException e) {
+            throw new IOException(e);
+        }
+        return socket;
+    }
+
+    /**
+     * 测试tcp连接
+     *
+     * @param hostname 主机名称
+     * @param port     端口
+     * @return boolean
+     */
+    public static boolean isConnect(String hostname, int port) {
+        try {
+            connect(hostname, port, 3000);
+            return true;
+        } catch (IOException ignored) {
+        }
+        return false;
     }
 }
