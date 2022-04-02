@@ -15,7 +15,7 @@
         <module>toolbox-crypto</module>
         <module>toolbox-cache</module>
         <module>toolbox-bean</module>
-        <module>toolbox-test</module>
+<!--        <module>toolbox-test</module>-->
     </modules>
 
     <properties>
