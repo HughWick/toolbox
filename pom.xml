@@ -63,12 +63,6 @@
             <version>${spring-test.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
-<!--        <dependency>-->
-<!--            <groupId>javax.xml.bind</groupId>-->
-<!--            <artifactId>jaxb-api</artifactId>-->
-<!--            <version>2.3.1</version>-->
-<!--        </dependency>-->
     </dependencies>
 
     <build>
@@ -102,38 +96,32 @@
             <!--                <artifactId>coveralls-gradle-plugin</artifactId>-->
             <!--                <version>${plugin.coveralls.version}</version>-->
             <!--            </plugin>-->
+<!--         jdk11 不起作用   -->
 <!--            <plugin>-->
-<!--                &lt;!&ndash; https://mvnrepository.com/artifact/org.eluder.coveralls/coveralls-maven-plugin &ndash;&gt;-->
-<!--                <groupId>org.eluder.coveralls</groupId>-->
-<!--                <artifactId>coveralls-maven-plugin</artifactId>-->
-<!--                <version>4.3.0</version>-->
+<!--                <groupId>org.codehaus.mojo</groupId>-->
+<!--                <artifactId>cobertura-maven-plugin</artifactId>-->
+<!--                <version>${plugin.cobertura.version}</version>-->
+<!--                <configuration>-->
+<!--                    <format>xml</format>-->
+<!--                    <maxmem>256m</maxmem>-->
+<!--                    &lt;!&ndash; aggregated reports for multi-module projects &ndash;&gt;-->
+<!--                    <aggregate>true</aggregate>-->
+<!--                    <check/>-->
+<!--                </configuration>-->
 <!--            </plugin>-->
-            <!--         jdk11 不起作用   -->
-            <!--            <plugin>-->
-            <!--                <groupId>org.codehaus.mojo</groupId>-->
-            <!--                <artifactId>cobertura-maven-plugin</artifactId>-->
-            <!--                <version>${plugin.cobertura.version}</version>-->
-            <!--                <configuration>-->
-            <!--                    <format>xml</format>-->
-            <!--                    <maxmem>256m</maxmem>-->
-            <!--                    &lt;!&ndash; aggregated reports for multi-module projects &ndash;&gt;-->
-            <!--                    <aggregate>true</aggregate>-->
-            <!--                    <check/>-->
-            <!--                </configuration>-->
-            <!--            </plugin>-->
-            <!--            <plugin>-->
-            <!--                <groupId>org.jacoco</groupId>-->
-            <!--                <artifactId>jacoco-maven-plugin</artifactId>-->
-            <!--                <version>0.8.6</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <id>prepare-agent</id>-->
-            <!--                        <goals>-->
-            <!--                            <goal>prepare-agent</goal>-->
-            <!--                        </goals>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--            </plugin>-->
+<!--            <plugin>-->
+<!--                <groupId>org.jacoco</groupId>-->
+<!--                <artifactId>jacoco-maven-plugin</artifactId>-->
+<!--                <version>0.8.6</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>prepare-agent</id>-->
+<!--                        <goals>-->
+<!--                            <goal>prepare-agent</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
