@@ -2,17 +2,6 @@ language: java
 sudo: false # faster builds
 jdk:
   - oraclejdk11
-env:
-  global:
-    - CODECOV_TOKEN=8aa94f39-8dbc-4ee0-9517-617e02ff49fb
-#script:
-##  - jdk_switcher use openjdk10
-##  - # do stuff with OpenJDK 10
-#  - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
-#  - chmod +x $TRAVIS_BUILD_DIR/install-jdk.sh
-#  - export JAVA_HOME=$HOME/openjdk11
-#  - $TRAVIS_BUILD_DIR/install-jdk.sh -F 11 --target $JAVA_HOME
-#script: mvn cobertura:cobertura
 after_success:
 #  - mvn clean cobertura:cobertura coveralls:report
-  - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash) -t 8aa94f39-8dbc-4ee0-9517-617e02ff49fb
