@@ -8,13 +8,13 @@
     <version>2.2.1</version>
     <packaging>pom</packaging>
     <modules>
-        <module>toolbox-all/</module>
-        <module>toolbox-aop/</module>
-        <module>toolbox-db/</module>
-        <module>toolbox-core/</module>
-        <module>toolbox-crypto/</module>
-        <module>toolbox-cache/</module>
-        <module>toolbox-bean/</module>
+        <module>toolbox-all</module>
+        <module>toolbox-aop</module>
+        <module>toolbox-db</module>
+        <module>toolbox-core</module>
+        <module>toolbox-crypto</module>
+        <module>toolbox-cache</module>
+        <module>toolbox-bean</module>
     </modules>
 
     <properties>
@@ -96,18 +96,33 @@
                 <version>0.8.7</version>
                 <executions>
                     <execution>
+                        <id>default-prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>report</id>
+                        <id>default-report</id>
                         <phase>test</phase>
                         <goals>
-                            <goal>report</goal>
+                            <goal>report-aggregate</goal>
                         </goals>
                     </execution>
                 </executions>
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>prepare-agent</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                    <execution>-->
+<!--                        <id>report</id>-->
+<!--                        <phase>test</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>report</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
             </plugin>
             <!--=================================== coveralls END ===================================-->
             <!--sonar-->
