@@ -64,12 +64,11 @@
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.3.1</version>
-        </dependency>
-
+<!--        <dependency>-->
+<!--            <groupId>javax.xml.bind</groupId>-->
+<!--            <artifactId>jaxb-api</artifactId>-->
+<!--            <version>2.3.1</version>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>
@@ -103,12 +102,12 @@
             <!--                <artifactId>coveralls-gradle-plugin</artifactId>-->
             <!--                <version>${plugin.coveralls.version}</version>-->
             <!--            </plugin>-->
-            <plugin>
-                <!-- https://mvnrepository.com/artifact/org.eluder.coveralls/coveralls-maven-plugin -->
-                <groupId>org.eluder.coveralls</groupId>
-                <artifactId>coveralls-maven-plugin</artifactId>
-                <version>4.3.0</version>
-            </plugin>
+<!--            <plugin>-->
+<!--                &lt;!&ndash; https://mvnrepository.com/artifact/org.eluder.coveralls/coveralls-maven-plugin &ndash;&gt;-->
+<!--                <groupId>org.eluder.coveralls</groupId>-->
+<!--                <artifactId>coveralls-maven-plugin</artifactId>-->
+<!--                <version>4.3.0</version>-->
+<!--            </plugin>-->
             <!--         jdk11 不起作用   -->
             <!--            <plugin>-->
             <!--                <groupId>org.codehaus.mojo</groupId>-->

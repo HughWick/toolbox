@@ -4,7 +4,7 @@ jdk:
   - oraclejdk11
 env:
   global:
-    - CODECOV_TOKEN=:8aa94f39-8dbc-4ee0-9517-617e02ff49fb
+    - CODECOV_TOKEN=8aa94f39-8dbc-4ee0-9517-617e02ff49fb
 #script:
 ##  - jdk_switcher use openjdk10
 ##  - # do stuff with OpenJDK 10
