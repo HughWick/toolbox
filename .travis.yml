@@ -6,12 +6,8 @@ cache:
   - $HOME/.m2
 jdk:
   - openjdk11
-#jdk:
-#- openjdk8
 env:
   global:
     - CODECOV_TOKEN=8aa94f39-8dbc-4ee0-9517-617e02ff49fb
-#script: mvn cobertura:cobertura
 after_success:
-#  - mvn clean cobertura:cobertura coveralls:report
   - bash <(curl -s https://codecov.io/bash)
