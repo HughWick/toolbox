@@ -21,7 +21,7 @@
         <google-gson.version>2.9.0</google-gson.version>
         <kryo.version>4.0.2</kryo.version>
         <thumbnailator.version>0.4.17</thumbnailator.version>
-        <fastjson.version>1.2.79</fastjson.version>
+        <fastjson.version>1.2.80</fastjson.version>
         <slf4j-simple.version>1.7.36</slf4j-simple.version>
         <ip2region.version>1.7.2</ip2region.version>
         <rxjava.version>3.1.4</rxjava.version>
