@@ -6,8 +6,6 @@ cache:
   - $HOME/.m2
 jdk:
   - openjdk11
-script:
-  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 env:
   global:
     - CODECOV_TOKEN=8aa94f39-8dbc-4ee0-9517-617e02ff49fb
