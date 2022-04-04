@@ -15,7 +15,6 @@
         <module>toolbox-crypto</module>
         <module>toolbox-cache</module>
         <module>toolbox-bean</module>
-<!--        <module>toolbox-test</module>-->
     </modules>
 
     <properties>
@@ -37,7 +36,7 @@
         <plugin.jacoco.version>0.8.7</plugin.jacoco.version>
         <!--============================== other ==============================-->
         <lombok.version>1.18.22</lombok.version>
-        <spring-test.version>5.2.19.RELEASE</spring-test.version>
+        <spring-test.version>5.2.20.RELEASE</spring-test.version>
     </properties>
 
     <dependencies>
