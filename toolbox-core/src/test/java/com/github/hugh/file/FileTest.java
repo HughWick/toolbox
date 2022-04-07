@@ -82,6 +82,20 @@ public class FileTest {
     public void test05() throws IOException {
         byte[] bytes = FileUtils.toByteArray(DEL_PATH);
         System.out.println("--->>" + bytes.length);
-        byte[] bytes2 = FileUtils.toByteArray(DEL_PATH+"2");
+        byte[] bytes2 = FileUtils.toByteArray(DEL_PATH + "2");
+    }
+
+    @Test
+    public void testSizeCalc() {
+        String head = "C:\\Users\\Hugh\\Desktop\\";
+        String path = head + "FIGqfQdakAQeRiG.jpg";
+        File directory = new File(path);//设定为当前文件夹
+        System.out.println("--B->>" + FileUtils.formatFileSize(new File(head + "updateFile.http").length()));
+        System.out.println("--KB->>" + FileUtils.formatFileSize(new File(head + "FO2ufhraAAA-hpu.jpg").length()));
+        System.out.println("--MB->>" + FileUtils.formatFileSize(directory.length()));
+        System.out.println("--GB->>" + FileUtils.formatFileSize(new File("G:\\Learn\\骑\\奥田咲\\SSNI-057 全裸のままマキシワンピースを着させられて… 奥田咲.mp4").length()));
+        System.out.println("--path->>" + FileUtils.formatFileSize(head + "updateFile.http"));
+        System.out.println("--file->>" + FileUtils.formatFileSize(new File(head + "FO2ufhraAAA-hpu.jpg")));
+
     }
 }

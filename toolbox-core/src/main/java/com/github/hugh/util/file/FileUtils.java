@@ -1,6 +1,7 @@
 package com.github.hugh.util.file;
 
 import com.github.hugh.exception.ToolboxException;
+import com.github.hugh.util.DoubleMathUtils;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.StringUtils;
 import com.google.common.io.Files;
@@ -12,6 +13,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.text.DecimalFormat;
 
 /**
  * 文件工具类
@@ -249,5 +251,54 @@ public class FileUtils {
             throw new ToolboxException("file not exists !");
         }
         return Files.asByteSource(file).read();
+    }
+
+    /**
+     * 文件大小换算
+     *
+     * @param fileSize 文件大小
+     * @return String 格式化后的文件大小：XX MB、XX GB
+     * @since 2.2.2
+     */
+    public static String formatFileSize(long fileSize) {
+        DecimalFormat df = new DecimalFormat("#.00");
+        String wrongSize = "0";
+        if (fileSize <= 0) {
+            return wrongSize;
+        }
+        if (fileSize < 1024) {
+            return df.format((double) fileSize) + "B";
+        } else if (fileSize < 1048576) {
+            return DoubleMathUtils.div(fileSize, 1024, 2) + "KB";
+        } else if (fileSize < 1073741824) {
+            return DoubleMathUtils.div(fileSize, 1048576, 2) + "MB";
+        } else {
+            return DoubleMathUtils.div(fileSize, 1073741824, 2) + "GB";
+        }
+    }
+
+    /**
+     * 文件大小换算
+     *
+     * @param file 文件
+     * @return String 格式化后的文件大小：XX MB、XX GB
+     * @since 2.2.2
+     */
+    public static String formatFileSize(File file) {
+        if (!file.exists() || !file.isFile()) {
+            return "-1";
+        }
+        return formatFileSize(file.length());
+    }
+
+    /**
+     * 文件大小换算
+     *
+     * @param path 文件路径
+     * @return String 格式化后的文件大小：XX MB、XX GB
+     * @since 2.2.2
+     */
+    public static String formatFileSize(String path) {
+        return formatFileSize(new File(path));
     }
 }
