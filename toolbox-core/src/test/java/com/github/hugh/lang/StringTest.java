@@ -58,7 +58,7 @@ public class StringTest {
     }
 
     @Test
-    void test05() {
+    void testChinese() {
         var str = "[a, b, [c]]]";
         System.out.println("==2=>>>" + StringUtils.trim(str, "]"));
         System.out.println("==2=>>>" + StringUtils.trim(str, "["));

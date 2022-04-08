@@ -4,6 +4,8 @@ package com.github.hugh.crypto;
 import com.github.hugh.util.base.Base64;
 import org.junit.jupiter.api.Test;
 
+import java.io.UnsupportedEncodingException;
+
 
 /**
  * @author AS
@@ -11,16 +13,17 @@ import org.junit.jupiter.api.Test;
  */
 public class base64Test {
 
-//    @Test
-//    public void test01() {
-//        String str = "123";
+    @Test
+    void test01() throws UnsupportedEncodingException {
+        String str = "中";
+        System.out.println("--->>"+str.getBytes("gb2312").length);
 //        String s1 = Base64.encode(str);
 //        System.out.println("-1-->>" + s1);
 //        System.out.println("--2->>" + Base64.encode(""));
 //        System.out.println("--3->>" + Base64.decode(""));
 //        String decode = Base64.decode(s1);
 //        System.out.println("--->>" + decode);
-//    }
+    }
 
 
     @Test
