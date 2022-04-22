@@ -25,11 +25,18 @@ class JsonObjectUtilsTest {
         Student student = JsonObjectUtils.fromJson(strDate2, Student.class);
 //        JsonObject parse = JsonObjectUtils.parse(student);
 //        System.out.println("=--1->>" + parse);
-        System.out.println("=--2->>" + JsonObjectUtils.fromJson(student , Student.class));
+        System.out.println("=--2->>" + JsonObjectUtils.fromJson(student, Student.class));
         System.out.println("-2-->>" + JsonObjectUtils.toJson(student));
         JsonObject item = new JsonObject();
         item.addProperty("country", "国家");// 国家
-        System.out.println("-3-->>" +JsonObjectUtils.fromJson(item, Ip2regionDTO.class));
+        System.out.println("-3-->>" + JsonObjectUtils.fromJson(item, Ip2regionDTO.class));
+    }
+
+    @Test
+    void testFormJsonDate() {
+        String tmee = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06 12:11:20\"}";
+        Student student2 = JsonObjectUtils.fromJson(tmee, Student.class, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
+        System.out.println("=--1>>" + student2.getCreate());
     }
 
     @Test
@@ -59,10 +66,6 @@ class JsonObjectUtilsTest {
 //        System.out.println("-8-->>" + JsonObjectUtils.toJson(student));
         Map<Object, Object> objectObjectMap = JsonObjectUtils.toMap(json2);
         System.out.println("-9-->>" + objectObjectMap);
-
-        String tmee = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06 12:11:20\"}";
-        Student student2 = JsonObjectUtils.fromJson(tmee, Student.class, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
-        System.out.println("=--10->>" + student2.getCreate());
     }
 
     @Test

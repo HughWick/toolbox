@@ -288,12 +288,7 @@ public class JsonObjectUtils {
      * @since 2.2.3
      */
     public static <E, T> T fromJson(E json, Class<T> classOfT) {
-        if (json instanceof JsonElement) {
-            return gson().fromJson((JsonElement) json, classOfT);
-        } else if (json instanceof String) {
-            return gson().fromJson((String) json, classOfT);
-        }
-        return gson().fromJson(toJson(json), classOfT);
+        return fromJson(json, classOfT, null);
     }
 
     /**
@@ -302,12 +297,22 @@ public class JsonObjectUtils {
      * @param json       json字符串
      * @param classOfT   实体class
      * @param dateFormat 日期格式
+     * @param <E>        入参json类型
      * @param <T>        实体类型
      * @return 1.4.10
      */
-    public static <T> T fromJson(String json, Class<T> classOfT, String dateFormat) {
-        Gson gson = new GsonBuilder().setDateFormat(dateFormat).create();
-        return gson.fromJson(json, classOfT);
+    public static <E, T> T fromJson(E json, Class<T> classOfT, String dateFormat) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        if (EmptyUtils.isNotEmpty(dateFormat)) {
+            gsonBuilder.setDateFormat(dateFormat);
+        }
+        Gson gson = gsonBuilder.create();
+        if (json instanceof JsonElement) {
+            return gson.fromJson((JsonElement) json, classOfT);
+        } else if (json instanceof String) {
+            return gson.fromJson((String) json, classOfT);
+        }
+        return gson.fromJson(toJson(json), classOfT);
     }
 
     /**
