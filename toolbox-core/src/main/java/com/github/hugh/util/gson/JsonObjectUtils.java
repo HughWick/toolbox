@@ -11,7 +11,6 @@ import com.google.gson.*;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.Reader;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.*;
@@ -279,30 +278,22 @@ public class JsonObjectUtils {
     }
 
     /**
-     * 将Json转换为指定实体
-     * <p>由于{@link Gson#fromJson(Reader, Type)}无法静态调用，故而这里进行二次封装</p>
+     * 统一任意json对象或字符串转实体类方法
      *
-     * @param json     参数
-     * @param classOfT 转换类型
-     * @param <T>      转换泛型
-     * @return T
-     * @since 1.3.7
-     */
-    public static <T> T fromJson(JsonElement json, Class<T> classOfT) {
-        return gson().fromJson(json, classOfT);
-    }
-
-    /**
-     * 将Json字符串转换为指定实体
-     *
-     * @param json     字符串json
+     * @param json     json
      * @param classOfT 实体类
-     * @param <T>      实体
+     * @param <E>      入参json类型
+     * @param <T>      实体类型
      * @return T 实体类
-     * @since 1.3.12
+     * @since 2.2.3
      */
-    public static <T> T fromJson(String json, Class<T> classOfT) {
-        return gson().fromJson(json, classOfT);
+    public static <E, T> T fromJson(E json, Class<T> classOfT) {
+        if (json instanceof JsonElement) {
+            return gson().fromJson((JsonElement) json, classOfT);
+        } else if (json instanceof String) {
+            return gson().fromJson((String) json, classOfT);
+        }
+        return gson().fromJson(toJson(json), classOfT);
     }
 
     /**

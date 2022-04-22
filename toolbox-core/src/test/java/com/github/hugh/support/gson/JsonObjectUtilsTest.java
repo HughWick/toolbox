@@ -1,5 +1,6 @@
 package com.github.hugh.support.gson;
 
+import com.github.hugh.bean.dto.Ip2regionDTO;
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.model.Student;
 import com.github.hugh.util.OkHttpUtils;
@@ -17,6 +18,19 @@ import java.util.*;
  * Date: 2021/12/29 9:44
  */
 class JsonObjectUtilsTest {
+
+    @Test
+    void testFormJson() {
+        String strDate2 = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\"}";
+        Student student = JsonObjectUtils.fromJson(strDate2, Student.class);
+//        JsonObject parse = JsonObjectUtils.parse(student);
+//        System.out.println("=--1->>" + parse);
+        System.out.println("=--2->>" + JsonObjectUtils.fromJson(student , Student.class));
+        System.out.println("-2-->>" + JsonObjectUtils.toJson(student));
+        JsonObject item = new JsonObject();
+        item.addProperty("country", "国家");// 国家
+        System.out.println("-3-->>" +JsonObjectUtils.fromJson(item, Ip2regionDTO.class));
+    }
 
     @Test
     void test() {
@@ -39,10 +53,10 @@ class JsonObjectUtilsTest {
         System.out.println("=--4->>" + JsonObjectUtils.toArrayList(servers));
         System.out.println("=--5->>" + JsonObjectUtils.fromJson(servers, LinkedList.class));
 //        String s = new Date().toString();
-        String strDate2 = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\"}";
-        Student student = JsonObjectUtils.fromJson(strDate2, Student.class);
-        System.out.println("=--7->>" + student.getCreate());
-        System.out.println("-8-->>" + JsonObjectUtils.toJson(student));
+//        String strDate2 = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\"}";
+//        Student student = JsonObjectUtils.fromJson(strDate2, Student.class);
+//        System.out.println("=--7->>" + student.getCreate());
+//        System.out.println("-8-->>" + JsonObjectUtils.toJson(student));
         Map<Object, Object> objectObjectMap = JsonObjectUtils.toMap(json2);
         System.out.println("-9-->>" + objectObjectMap);
 
