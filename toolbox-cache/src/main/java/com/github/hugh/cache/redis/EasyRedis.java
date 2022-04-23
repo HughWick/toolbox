@@ -525,11 +525,25 @@ public class EasyRedis {
 
     /**
      * 获取整个路径db下所有key
+     * <p>
+     * 默认对象创建时的db索引
+     * </p>
      *
      * @param path 路径
      * @return Set
      */
     public Set<String> getAllKeys(String path) {
+        return getAllKeys(this.dbIndex, path);
+    }
+
+    /**
+     * 获取整个路径db下所有key
+     *
+     * @param dbIndex 数据库索引标识
+     * @param path    路径 {@code  NAME:*}
+     * @return Set
+     */
+    public Set<String> getAllKeys(int dbIndex, String path) {
         Jedis jedis = jedisPool.getResource();
         jedis.select(dbIndex);
         Set<String> keys = jedis.keys(path);

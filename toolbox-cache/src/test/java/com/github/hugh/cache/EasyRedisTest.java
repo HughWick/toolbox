@@ -4,6 +4,7 @@ import com.github.hugh.cache.redis.EasyRedis;
 import com.google.common.base.Suppliers;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -16,12 +17,13 @@ import java.util.function.Supplier;
  * User: AS
  * Date: 2021/11/11 10:44
  */
+@Configuration
 public class EasyRedisTest {
 
     /**
      * 初始化redis连接池
      */
-    @Bean(name = "JedisPool")
+    @Bean
     public JedisPool redisPoolFactory() {
 //        log.info("初始化redis pool。start...");
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
@@ -110,15 +112,15 @@ public class EasyRedisTest {
 //        System.out.println(new EasyRedis(redisPoolFactory()));
         try {
             Thread.sleep(2000);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ignored) {
         }
     }
 
     @Test
     void test01() {
-        JedisPool jedisPool = redisPoolFactory();
-        System.out.println("---->>" + redisPoolFactory());
-        System.out.println(new EasyRedis(jedisPool));
+//        JedisPool jedisPool = redisPoolFactory();
+//        System.out.println("---->>" + redisPoolFactory());
+//        System.out.println(new EasyRedis(jedisPool));
 //        EasyRedis instance = EasyRedis.getInstance(redisPoolFactory());
 //        System.out.println("===>>" + instance);
 //        System.out.println("===>>" + EasyRedis.getInstance(redisPoolFactory()));

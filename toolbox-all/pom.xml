@@ -47,25 +47,11 @@
 
     <build>
         <plugins>
-            <!--命令：mvn test 生成xml txt测试报告 （maven-surefire-plugin mvn默认使用插件,可以不用配置） -->
-            <!--命令：mvn surefire-report:report 生成测试报告html -->
-            <!--junit5 下方插件的version要大于2.22.0，否则无法执行test-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${plugin.surefire.version}</version>
-                <configuration>
-                    <skipTests>${plugin.surefire.skip-it}</skipTests>
-                    <testFailureIgnore>${plugin.surefire.ignore-failure}</testFailureIgnore>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${plugin.jacoco.version}</version>
                 <executions>
-                    <!--整合所有子模块报告-->
                     <execution>
                         <id>report-aggregate</id>
                         <phase>test</phase>

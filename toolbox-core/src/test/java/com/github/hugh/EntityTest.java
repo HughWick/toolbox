@@ -63,7 +63,7 @@ public class EntityTest {
             StopWatch stopWatch = new StopWatch("测试转换");
             stopWatch.start("开启map转实体");
             List<Student> list = new ArrayList<>();
-            for (int i = 0; i < 100000; i++) {
+            for (int i = 0; i < 1000; i++) {
                 map.put("id", i);
                 list.add(MapUtils.toEntityNotEmpty(Student.class, map));
             }

@@ -66,7 +66,7 @@ public class FileTest {
 
     @Test
     public void test04() {
-        String str = "http://hyga.hnlot.com.cn:8000/capture/DaHua/quality/6D0529FPAG95B23/2021/2/3/836ee391c4a749f2a5c1a0b4b6cda6a5.jpg";
+        String str = "https://pbs.twimg.com/media/FQI5rKPagAAVo1B?format=jpg&name=large";
         //图片保存路径
         String filePath = "D:\\img\\";
         // 截取最后/后的字符串
@@ -76,7 +76,7 @@ public class FileTest {
         System.out.println("===END====");
     }
 
-    private static final String DEL_PATH = "D:\\battery-report.html";
+    private static final String DEL_PATH = "D:\\test.db";
 
     @Test
     public void test05() throws IOException {

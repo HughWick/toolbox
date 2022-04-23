@@ -1,8 +1,5 @@
-package com.github.hugh;
-
 import com.github.hugh.util.EmptyUtils;
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 

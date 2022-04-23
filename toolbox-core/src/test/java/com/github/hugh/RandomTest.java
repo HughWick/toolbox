@@ -4,7 +4,6 @@ import com.github.hugh.util.RandomUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author AS
@@ -42,34 +41,15 @@ public class RandomTest {
         System.out.println(RandomUtils.random(list));
     }
 
-    public static int number(int length) {
-        int num = 1;
-        double random = Math.random();
-        if (random < 0.1D) {
-            random += 0.1D;
-        }
-        for (int i = 0; i < length; i++) {
-            num *= 10;
-        }
-        return (int) (random * num);
-    }
-
-    public static void main(String[] args) {
-        while (true) {
-//            ThreadLocalRandom current = ThreadLocalRandom.current();
-            int r1 = ThreadLocalRandom.current().nextInt(200, 300);
-            if ((200 <= r1) && (r1 < 300)) {
-                System.out.println(r1);
-            } else {
-                System.out.println("Error!");
-                break;
-            }
-//            try {
-//                Thread.sleep(200);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-        }
-    }
-
+//    public static int number(int length) {
+//        int num = 1;
+//        double random = Math.random();
+//        if (random < 0.1D) {
+//            random += 0.1D;
+//        }
+//        for (int i = 0; i < length; i++) {
+//            num *= 10;
+//        }
+//        return (int) (random * num);
+//    }
 }

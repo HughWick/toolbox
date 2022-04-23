@@ -1,5 +1,3 @@
-package com.github.hugh;
-
 import com.github.hugh.util.PingUtils;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +7,7 @@ import java.io.IOException;
  * @author AS
  * @date 2020/10/14 9:42
  */
-public class TestPing {
+public class PingUtilsTest {
 
     @Test
     public void test() {

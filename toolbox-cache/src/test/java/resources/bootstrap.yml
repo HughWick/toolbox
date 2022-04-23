@@ -1,0 +1,5 @@
+spring:
+  redis:
+    host: 43.128.14.188
+    port: 9991
+    password: password123@
