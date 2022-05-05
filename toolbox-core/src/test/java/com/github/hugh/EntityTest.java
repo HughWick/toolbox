@@ -25,6 +25,7 @@ public class EntityTest {
         map.put("age", 2);
         map.put("name", "名称");
         map.put("amount", 10.14);
+        map.put("password", "密码123");
         map.put("accountName", "真是姓名");
         map.put("birthday", new Date());
         map.put("create", "2019-04-06 12:11:20");
@@ -32,8 +33,13 @@ public class EntityTest {
             Student student = MapUtils.toEntityNotEmpty(Student.class, map);
             Student student2 = new Student();
             EntityUtils.copy(student, student2);
-            System.out.println("--1.8->>" + EntityUtils.copy(student, Student1::new));
-            System.out.println("--1.8-忽略>>" + EntityUtils.copy(student, Student1::new, "name", "accountName"));
+            System.out.println("--1->>" + EntityUtils.copy(student, Student1::new));
+            System.out.println("--2-忽略>>" + EntityUtils.copy(student, Student1::new, "name", "accountName"));
+            System.out.println("--3>>" + EntityUtils.copy(student, Student1::new, (s, t) -> {
+                t.setAccount("银行账号");
+            }));
+            System.out.println("--4>>" + EntityUtils.copy(student, Student1::new, (s, t) -> {
+            }, "password"));
             System.out.println(student + "<----->" + student2);
             System.out.println("-1-->>" + JSONObject.fromObject(student));
             System.out.println("-2-->>" + JSONObject.fromObject(student2));

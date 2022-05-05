@@ -60,6 +60,21 @@ public class EntityUtils {
     /**
      * 实现两个实体类属性之间的复制，并支持赋值后结果处理
      *
+     * @param source   源
+     * @param target   目标
+     * @param callBack 回调方法，属性复制完成后进行调用
+     * @param <S>      源
+     * @param <T>      目标
+     * @return T 目标实体类
+     * @since 2.2.4
+     */
+    public static <S, T> T copy(S source, Supplier<T> target, EntityUtilsCallBack<S, T> callBack) {
+        return copy(source, target, callBack, (String[]) null);
+    }
+
+    /**
+     * 实现两个实体类属性之间的复制，并支持赋值后结果处理与忽略字段
+     *
      * @param source           源
      * @param target           目标
      * @param callBack         回调方法，属性复制完成后进行调用
@@ -152,5 +167,4 @@ public class EntityUtils {
         }
         return list;
     }
-
 }
