@@ -212,7 +212,7 @@ public class JsonObjects extends JsonObjectUtils {
      * @since 1.6.7
      */
     public <T> T formJson(Class<T> classOfT) {
-        return fromJson(this.jsonObject.toString(), classOfT, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
+        return fromJson(this.jsonObject, classOfT, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
     }
 
     /**
@@ -224,7 +224,7 @@ public class JsonObjects extends JsonObjectUtils {
      * @since 2.1.9
      */
     public <T> T formJson(Class<T> classOfT, String dateFormat) {
-        return fromJson(this.jsonObject.toString(), classOfT, dateFormat);
+        return fromJson(this.jsonObject, classOfT, dateFormat);
     }
 
     /**

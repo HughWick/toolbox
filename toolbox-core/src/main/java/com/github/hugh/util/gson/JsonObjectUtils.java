@@ -306,13 +306,7 @@ public class JsonObjectUtils {
         if (EmptyUtils.isNotEmpty(dateFormat)) {
             gsonBuilder.setDateFormat(dateFormat);
         }
-        Gson gson = gsonBuilder.create();
-        if (json instanceof JsonElement) {
-            return gson.fromJson((JsonElement) json, classOfT);
-        } else if (json instanceof String) {
-            return gson.fromJson((String) json, classOfT);
-        }
-        return gson.fromJson(toJson(json), classOfT);
+        return fromJson(gsonBuilder, json, classOfT);
     }
 
     /**
@@ -345,20 +339,21 @@ public class JsonObjectUtils {
     /**
      * 将字符串转化为指定实体类
      * <p>该方法主要作用与解析日期时、json字符串中的值为时间戳(long)类型时</p>
+     * <p>版本2.2.5 之后入参更新为泛型</p>
      *
      * @param value    json字符串
      * @param classOfT 类
+     * @param <E>      入参类型
      * @param <T>      实体类型
      * @return T 实体
-     * @since 1.6.13
+     * @since 2.2.5
      */
-    public static <T> T fromJsonTimeStamp(String value, Class<T> classOfT) {
+    public static <E, T> T fromJsonTimeStamp(E value, Class<T> classOfT) {
         GsonBuilder builder = new GsonBuilder();
         //注册一个日期解析器、将时间戳转换为Date 类型
         builder.registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (jsonElement, typeOfT, context) ->
                 new Date(jsonElement.getAsJsonPrimitive().getAsLong()));
-        Gson gson = builder.create();
-        return gson.fromJson(value, classOfT);
+        return fromJson(builder, value, classOfT);
     }
 
     /**
@@ -415,5 +410,25 @@ public class JsonObjectUtils {
             date = DateUtils.dateStrToDate(string);
         }
         return date == null ? null : DateUtils.format(date, pattern);
+    }
+
+    /**
+     * json对象转换为实体类
+     *
+     * @param gsonBuilder gson 指定转换参数类
+     * @param json        json
+     * @param classOfT    目标类
+     * @param <E>         入参类型
+     * @param <T>         出参类型
+     * @return T
+     */
+    private static <E, T> T fromJson(GsonBuilder gsonBuilder, E json, Class<T> classOfT) {
+        Gson gson = gsonBuilder.create();
+        if (json instanceof JsonElement) {
+            return gson.fromJson((JsonElement) json, classOfT);
+        } else if (json instanceof String) {
+            return gson.fromJson((String) json, classOfT);
+        }
+        return gson.fromJson(toJson(json), classOfT);
     }
 }

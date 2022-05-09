@@ -128,13 +128,13 @@ class JsonObjectUtilsTest {
     }
 
     @Test
-    void testDate() {
+    void testTimeStamp() {
         String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create2\":null,\"id\":1,\"name\":\"张三\",\"create\":\"1625024713000\"}";
 //        JsonObjects jsonObjects = new JsonObjects(str);
         Student student1 = JsonObjectUtils.fromJsonTimeStamp(str, Student.class);
         System.out.println(student1.toString());
-        System.out.println("--->>" + JsonObjectUtils.toJson(student1));
-//        Student student = jsonObjects.fromJsonTimeStamp(Student.class);
-//        System.out.println(JsonObjectUtils.toJson(student));
+        System.out.println("--1->>" + JsonObjectUtils.toJson(student1));
+        JsonObject parse = JsonObjectUtils.parse(str);
+        System.out.println("---2->>" + JsonObjectUtils.fromJsonTimeStamp(parse, Student.class));
     }
 }
