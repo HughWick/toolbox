@@ -5,6 +5,7 @@ import com.github.hugh.constant.DateCode;
 import com.github.hugh.model.Student;
 import com.github.hugh.util.OkHttpUtils;
 import com.github.hugh.util.gson.JsonObjectUtils;
+import com.github.hugh.util.gson.JsonObjects;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.sf.json.JSONObject;
@@ -12,6 +13,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * User: AS
@@ -121,10 +124,12 @@ class JsonObjectUtilsTest {
         String arr2 = null;
         System.out.println("-3-->>" + JsonObjectUtils.parseArray(arr2));
 
-        String str2 = "[{\"serialNo\":\"1339497989051277312\",\"createBy\":1,\"createDate\":1608196182000,\"updateBy\":\"xxxx\",\"updateDate\":1615444156000}]";
+        String str2 = "[{\"serialNo\":\"1339497989051277312\",\"createBy\":1,\"createDate\":1608196182000,\"updateBy\":\"xxxx\",\"updateDate\":1615444156000,\"name\":\"张三\"}]";
         JsonArray jsonElements = JsonObjectUtils.parseArray(str2);
         List<JsonObject> objects = JsonObjectUtils.toArrayList(jsonElements);
         System.out.println("-=4==>>>" + objects);
+        List<Student> students = JsonObjectUtils.toArrayList(jsonElements, Student.class);
+        students.forEach(System.out::println);
     }
 
     @Test
@@ -136,5 +141,14 @@ class JsonObjectUtilsTest {
         System.out.println("--1->>" + JsonObjectUtils.toJson(student1));
         JsonObject parse = JsonObjectUtils.parse(str);
         System.out.println("---2->>" + JsonObjectUtils.fromJsonTimeStamp(parse, Student.class));
+    }
+
+    @Test
+    void testConKey() throws IOException {
+        JSONObject json = new JSONObject();
+        json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+        JsonObjects jsonObject = OkHttpUtils.postJsonReJsonObjects("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json);
+        assertTrue(jsonObject.containsKey("msg"));
+        assertFalse(jsonObject.containsKey("msg1"));
     }
 }

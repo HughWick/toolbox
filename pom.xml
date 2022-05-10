@@ -33,8 +33,8 @@
         <plugin.maven-gpg-plugin.version>1.5</plugin.maven-gpg-plugin.version>
         <plugin.jacoco.version>0.8.8</plugin.jacoco.version>
         <!--============================== other ==============================-->
-        <lombok.version>1.18.22</lombok.version>
-        <spring-test.version>5.2.20.RELEASE</spring-test.version>
+        <lombok.version>1.18.24</lombok.version>
+        <spring-test.version>5.3.19</spring-test.version>
     </properties>
 
     <dependencies>

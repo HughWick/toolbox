@@ -360,4 +360,15 @@ public class JsonObjects extends JsonObjectUtils {
     public <K, V> Map<K, V> toMap() {
         return toMap(this.jsonObject);
     }
+
+    /**
+     * 判断key是否存在
+     *
+     * @param propertyName key名称
+     * @return boolean
+     * @since 2.2.5
+     */
+    public boolean containsKey(String propertyName) {
+        return containsKey(this.jsonObject, propertyName);
+    }
 }

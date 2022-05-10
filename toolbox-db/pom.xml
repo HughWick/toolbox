@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
     <description>toolbox 数据库操作工具包</description>
     <properties>
-        <mybatis-plus.version>3.4.3.4</mybatis-plus.version>
+        <mybatis-plus.version>3.5.1</mybatis-plus.version>
     </properties>
     <dependencies>
         <dependency>
@@ -25,6 +25,11 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-plus.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter-test</artifactId>
             <version>${mybatis-plus.version}</version>
         </dependency>
     </dependencies>

@@ -1,5 +1,6 @@
 package com.github.hugh.util.gson;
 
+import com.alibaba.fastjson.JSON;
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.support.instance.Instance;
@@ -245,7 +246,8 @@ public class JsonObjectUtils {
      * </p>
      *
      * @param jsonArray 数组
-     * @return ArrayList 集合
+     * @param <T>       泛型
+     * @return List 集合
      * @since 1.3.7
      */
     public static <T> List<T> toArrayList(JsonArray jsonArray) {
@@ -255,6 +257,24 @@ public class JsonObjectUtils {
         Gson gson = gsonBuilder
                 .registerTypeAdapter(type, new MapTypeAdapter()).create();
         return gson.fromJson(jsonArray, type);
+    }
+
+    /**
+     * json数组转 list实体对象
+     *
+     * @param jsonArray json数组
+     * @param clazz     对象
+     * @param <T>       泛型
+     * @return List
+     * @since 2.2.5
+     */
+    public static <T> List<T> toArrayList(JsonArray jsonArray, Class<T> clazz) {
+        List<T> resultList = new ArrayList<>();
+        for (JsonElement jsonElement : jsonArray) {
+            T e = JSON.parseObject(jsonElement.toString(), clazz);
+            resultList.add(e);
+        }
+        return resultList;
     }
 
     /**
@@ -430,5 +450,20 @@ public class JsonObjectUtils {
             return gson.fromJson((String) json, classOfT);
         }
         return gson.fromJson(toJson(json), classOfT);
+    }
+
+    /**
+     * 判断key是否存在
+     *
+     * @param jsonObject   json对象
+     * @param propertyName 属性名称
+     * @return boolean 存在返回true
+     * @since 2.2.5
+     */
+    public static boolean containsKey(JsonObject jsonObject, String propertyName) {
+        if (jsonObject == null) {
+            return false;
+        }
+        return jsonObject.has(propertyName);
     }
 }
