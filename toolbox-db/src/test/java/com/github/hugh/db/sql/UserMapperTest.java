@@ -1,4 +1,4 @@
-package com.github.hugh.db;
+package com.github.hugh.db.sql;
 
 import com.baomidou.mybatisplus.test.autoconfigure.MybatisPlusTest;
 import com.github.hugh.db.mapper.UserMapper;

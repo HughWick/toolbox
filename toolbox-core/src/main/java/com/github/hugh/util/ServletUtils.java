@@ -2,7 +2,7 @@ package com.github.hugh.util;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -20,7 +20,7 @@ public class ServletUtils {
      * @return Map
      */
     public static <K, V> Map<K, V> getParams(HttpServletRequest request) {
-        Map map = new HashMap<>();
+        Map map = new LinkedHashMap<>();
         if (request == null) {
             return map;
         }

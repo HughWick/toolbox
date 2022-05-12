@@ -1,4 +1,4 @@
-package com.github.hugh.db;
+package com.github.hugh.db.sql;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
