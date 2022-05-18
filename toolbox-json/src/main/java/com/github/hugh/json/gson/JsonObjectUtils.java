@@ -1,12 +1,12 @@
 package com.github.hugh.json.gson;
 
 import com.alibaba.fastjson.JSON;
-import com.github.hugh.constant.DateCode;
-import com.github.hugh.exception.ToolboxException;
+import com.github.hugh.json.exception.ToolboxJsonException;
 import com.github.hugh.json.gson.adapter.MapTypeAdapter;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.regex.RegexUtils;
+import com.google.common.base.Suppliers;
 import com.google.gson.*;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
@@ -14,6 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * 针对Gson进行二次封装处理工具类
@@ -23,15 +24,29 @@ import java.util.*;
  */
 public class JsonObjectUtils {
 
-//    /**
-//     * 单例的创建Gson
-//     *
-//     * @return Gson
-//     * @since 1.3.12
-//     */
-//    public static Gson gson() {
-//        return Instance.getInstance().singleton(Gson.class);
-//    }
+    /**
+     * [年-月-日 时:分:秒]完整的日期格式
+     */
+    protected static final String YEAR_MONTH_DAY_HOUR_MIN_SEC = "yyyy-MM-dd HH:mm:ss";
+
+    /**
+     * 单例模式
+     */
+    private static Supplier<Gson> gsonSupplier;
+
+    /**
+     * 单例的创建Gson
+     *
+     * @return Gson
+     * @since 1.3.12
+     */
+    public synchronized static Gson getInstance() {
+        if (gsonSupplier == null) {
+            Supplier<Gson> easyRedisSupplier = Gson::new;
+            gsonSupplier = Suppliers.memoize(easyRedisSupplier::get);
+        }
+        return gsonSupplier.get();
+    }
 
     /**
      * 以空值安全的方式从JsonObject中获取一个String.
@@ -208,7 +223,7 @@ public class JsonObjectUtils {
      */
     private static JsonElement get(JsonObject jsonObject, String key) {
         if (jsonObject == null) {
-            throw new ToolboxException("JsonObject is null !");
+            throw new ToolboxJsonException("JsonObject is null !");
         }
         return jsonObject.get(key);
     }
@@ -352,7 +367,7 @@ public class JsonObjectUtils {
      * @since 1.3.12
      */
     public static <T> String toJson(T entity) {
-        return toJson(entity, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
+        return toJson(entity, YEAR_MONTH_DAY_HOUR_MIN_SEC);
     }
 
     /**
@@ -414,7 +429,7 @@ public class JsonObjectUtils {
      * @since 2.1.8
      */
     public static String getDateStr(JsonObject jsonObject, String key) {
-        return getDateStr(jsonObject, key, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
+        return getDateStr(jsonObject, key, YEAR_MONTH_DAY_HOUR_MIN_SEC);
     }
 
     /**

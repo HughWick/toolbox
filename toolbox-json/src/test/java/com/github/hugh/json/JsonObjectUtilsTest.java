@@ -1,9 +1,8 @@
 package com.github.hugh.json;
 
-import com.github.hugh.bean.dto.Ip2regionDTO;
-import com.github.hugh.constant.DateCode;
 import com.github.hugh.json.gson.JsonObjectUtils;
 import com.github.hugh.json.model.Student;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -17,6 +16,8 @@ import java.util.*;
  */
 class JsonObjectUtilsTest {
 
+    static final String YEAR_MONTH_DAY_HOUR_MIN_SEC = "yyyy-MM-dd HH:mm:ss";
+
     @Test
     void testFormJson() {
         String strDate2 = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\"}";
@@ -27,13 +28,13 @@ class JsonObjectUtilsTest {
         System.out.println("-2-->>" + JsonObjectUtils.toJson(student));
         JsonObject item = new JsonObject();
         item.addProperty("country", "国家");// 国家
-        System.out.println("-3-->>" + JsonObjectUtils.fromJson(item, Ip2regionDTO.class));
+//        System.out.println("-3-->>" + JsonObjectUtils.fromJson(item, Ip2regionDTO.class));
     }
 
     @Test
     void testFormJsonDate() {
         String tmee = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06 12:11:20\"}";
-        Student student2 = JsonObjectUtils.fromJson(tmee, Student.class, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
+        Student student2 = JsonObjectUtils.fromJson(tmee, Student.class, YEAR_MONTH_DAY_HOUR_MIN_SEC);
         System.out.println("=--1>>" + student2.getCreate());
     }
 
@@ -157,18 +158,45 @@ class JsonObjectUtilsTest {
     }
 
     @Test
-    void testForEach(){
+    void testForEach() {
         Map<String, Object> map = new HashMap<>();
         map.put("a", 1);
         Map<String, Object> map2 = new HashMap<>();
-        map2.put("b_2","1223_sad");
+        map2.put("b_2", "1223_sad");
         map.put("b", map2);
         JsonObject parse = JsonObjectUtils.parse(map);
         assert parse != null;
         for (Map.Entry<String, JsonElement> entrySet : parse.entrySet()) {
-            System.out.println("key>"+entrySet.getKey());
-            System.out.println("222value>"+entrySet.getValue());
+            System.out.println("key>" + entrySet.getKey());
+            System.out.println("222value>" + entrySet.getValue());
             System.out.println("--------------------------");
         }
+    }
+
+    @Test
+    void testSingle() throws InterruptedException {
+        new Thread(() -> {
+            System.out.println("---4---");
+            Gson gson = JsonObjectUtils.getInstance();
+            System.out.println("---4->>" + System.identityHashCode(gson));
+        }).start();
+        new Thread(() -> {
+            System.out.println("---5---");
+            Gson gson = JsonObjectUtils.getInstance();
+            System.out.println("---5->>" + System.identityHashCode(gson));
+        }).start();
+        new Thread(() -> {
+            System.out.println("---6---");
+            Gson gson = JsonObjectUtils.getInstance();
+            System.out.println("---6->>" + System.identityHashCode(gson));
+        }).start();
+        new Thread(() -> {
+            System.out.println("---7---");
+            Gson gson = JsonObjectUtils.getInstance();
+            System.out.println("---7->>" + System.identityHashCode(gson));
+        }).start();
+
+        Thread.sleep(2000);
+        System.out.println("==END==");
     }
 }

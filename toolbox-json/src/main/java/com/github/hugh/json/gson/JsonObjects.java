@@ -209,7 +209,7 @@ public class JsonObjects extends JsonObjectUtils {
      * @since 1.6.7
      */
     public <T> T formJson(Class<T> classOfT) {
-        return fromJson(this.jsonObject, classOfT, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
+        return fromJson(this.jsonObject, classOfT, YEAR_MONTH_DAY_HOUR_MIN_SEC);
     }
 
     /**

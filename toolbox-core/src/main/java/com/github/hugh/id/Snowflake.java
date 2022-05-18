@@ -78,19 +78,19 @@ public class Snowflake {
      * @return 最大机器标识
      */
     protected static long getMaxWorkerId(long dataCenterId, long maxWorkerId) {
-        StringBuilder mpid = new StringBuilder();
-        mpid.append(dataCenterId);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(dataCenterId);
         String name = ManagementFactory.getRuntimeMXBean().getName();
         if (EmptyUtils.isNotEmpty(name)) {
             /*
              * GET jvmPid
              */
-            mpid.append(name.split("@")[0]);
+            stringBuilder.append(name.split("@")[0]);
         }
         /*
          * MAC + PID 的 hashcode 获取16个低位
          */
-        return (mpid.toString().hashCode() & 0xffff) % (maxWorkerId + 1);
+        return (stringBuilder.toString().hashCode() & 0xffff) % (maxWorkerId + 1);
     }
 
     /**
