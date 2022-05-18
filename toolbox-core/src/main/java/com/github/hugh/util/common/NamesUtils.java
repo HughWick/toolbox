@@ -1,7 +1,7 @@
 package com.github.hugh.util.common;
 
 import com.google.common.base.Strings;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 姓名工具类

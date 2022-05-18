@@ -1,6 +1,5 @@
 package com.github.hugh.crypto;
 
-import com.github.hugh.util.OkHttpUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -26,8 +25,8 @@ public class ShaTest {
         map.put("sign", sign);
         map.put("timestamp", timestamp);
         map.put("appkey", appkey);
-        String s = OkHttpUtils.postJson("https://restapi.getui.com/v2/BrzzkpEOaZ6tehriF2uKL1/auth", map);
-        System.out.println("--->>" + s);
+//        String s = OkHttpUtils.postJson("https://restapi.getui.com/v2/BrzzkpEOaZ6tehriF2uKL1/auth", map);
+//        System.out.println("--->>" + s);
     }
 
     public static void main(String[] args) {
@@ -35,33 +34,6 @@ public class ShaTest {
         System.out.println("SHA256加密== " + ShaUtils.lowerCase256("123"));
         System.out.println("SHA512加密== " + ShaUtils.lowerCase512("123"));
 //        System.out.println("SHA256加密== " + hash("SHA-256", "123"));
-    }
-
-    @Test
-   void get() throws IOException {
-        String appkey = "4a5de70025a7425dabeef6e8ea752976";
-        String appSecret = "NeMs1DFG8xFARwZeSlRZwlT22ayY5oIbkgZg1uCziQ3LfSgqcPN4qGydAt7s3jMW";
-        String timestamp = String.valueOf(System.currentTimeMillis());
-        String signature = "";
-//        try {
-//            signature = MD5.getMD5((appkey + appSecret + timestamp).getBytes("UTF-8"));
-        signature = Md5Utils.lowerCase(appkey + appSecret + timestamp);
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
-        Map<String, Object> params = new HashMap<>();
-        params.put("appkey", appkey);
-        params.put("timestamp", timestamp);
-        params.put("signature", signature);
-        params.put("type", "oauth_token");
-//        String resultStr = YmHttpUtil.HttpPost(UrlConfig.YIN_MENG_TOKEN, params);
-        String str = OkHttpUtils.postForm("https://ym.191ec.com/silver-web/oauth/token", params);
-        System.out.println("--->>" + str);
-//        if (StringEmptyUtils.isNotEmpty(resultStr)) {
-//            return JSONObject.fromObject(resultStr);
-//        } else {
-//            return ReturnUtils.error("请求获取tok失败,服务器繁忙！");
-//        }
     }
 
     @Test

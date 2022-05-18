@@ -1,13 +1,11 @@
-package com.github.hugh.support.gson;
+package com.github.hugh.json;
 
-import com.github.hugh.util.gson.JsonArrayUtils;
+import com.github.hugh.json.gson.JsonArrayUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-;
+;import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * User: AS

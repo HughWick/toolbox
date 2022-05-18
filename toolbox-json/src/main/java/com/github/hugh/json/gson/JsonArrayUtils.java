@@ -1,4 +1,4 @@
-package com.github.hugh.util.gson;
+package com.github.hugh.json.gson;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

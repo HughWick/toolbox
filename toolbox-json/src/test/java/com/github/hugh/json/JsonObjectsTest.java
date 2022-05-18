@@ -1,22 +1,16 @@
-package com.github.hugh.support.gson;
+package com.github.hugh.json;
 
 import com.alibaba.fastjson.JSON;
 import com.github.hugh.bean.dto.ResultDTO;
-import com.github.hugh.constant.DateCode;
-import com.github.hugh.model.GsonTest;
-import com.github.hugh.model.Student;
-import com.github.hugh.util.OkHttpUtils;
-import com.github.hugh.util.gson.JsonObjectUtils;
-import com.github.hugh.util.gson.JsonObjects;
+import com.github.hugh.json.gson.JsonObjects;
+import com.github.hugh.json.model.GsonTest;
+import com.github.hugh.json.model.Student;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.internal.LinkedTreeMap;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 /**
  * gson JsonObjects测试类
@@ -141,28 +135,28 @@ public class JsonObjectsTest {
         System.out.println("--2->" + jsonObjects.removeProperty("b").getAsString());
     }
 
-    @Test
-    void test06() throws IOException {
-        String s = OkHttpUtils.get("http://factory.hnlot.com.cn/v2/contracts/find");
-        JsonObjects jsonObjects = new JsonObjects(s);
-        ResultDTO resultDTO = jsonObjects.formJson(ResultDTO.class);
-
-        System.out.println("-resultDTO-->" + resultDTO);
-        JsonArray jsonArray = new JsonObjects(JsonObjectUtils.toJson(resultDTO.getData())).getJsonArray("list");
-        List<ContractsDO> list = new JsonObjects(resultDTO.getData()).toList("list", ContractsDO.class);
-        list.forEach(e -> {
-            String s1 = JsonObjectUtils.toJson(e);
-            System.out.println( new JsonObjects(s1).formJson(ContractsDO.class));
-            System.out.println( new JsonObjects(s1).formJson(ContractsDO.class , DateCode.YEAR_MONTH_DAY));
+//    @Test
+//    void test06() throws IOException {
+//        String s = OkHttpUtils.get("http://factory.hnlot.com.cn/v2/contracts/find");
+//        JsonObjects jsonObjects = new JsonObjects(s);
+//        ResultDTO resultDTO = jsonObjects.formJson(ResultDTO.class);
+//
+//        System.out.println("-resultDTO-->" + resultDTO);
+//        JsonArray jsonArray = new JsonObjects(JsonObjectUtils.toJson(resultDTO.getData())).getJsonArray("list");
+//        List<ContractsDO> list = new JsonObjects(resultDTO.getData()).toList("list", ContractsDO.class);
+//        list.forEach(e -> {
+//            String s1 = JsonObjectUtils.toJson(e);
 //            System.out.println( new JsonObjects(s1).formJson(ContractsDO.class));
-        });
-        System.out.println("--1->>" + jsonArray);
-        List<LinkedTreeMap> jsonArray2 = new JsonObjects(resultDTO.getData()).toList("list");
-        jsonArray2.forEach(System.out::println);
-        List<ContractsDO> list1 = new JsonObjects(resultDTO.getData()).toList("list", ContractsDO.class);
-        list1.forEach(System.out::println);
-//        System.out.println("---2>>" + jsonArray2);
-    }
+//            System.out.println( new JsonObjects(s1).formJson(ContractsDO.class , DateCode.YEAR_MONTH_DAY));
+////            System.out.println( new JsonObjects(s1).formJson(ContractsDO.class));
+//        });
+//        System.out.println("--1->>" + jsonArray);
+//        List<LinkedTreeMap> jsonArray2 = new JsonObjects(resultDTO.getData()).toList("list");
+//        jsonArray2.forEach(System.out::println);
+//        List<ContractsDO> list1 = new JsonObjects(resultDTO.getData()).toList("list", ContractsDO.class);
+//        list1.forEach(System.out::println);
+////        System.out.println("---2>>" + jsonArray2);
+//    }
 
     @Test
     void length(){

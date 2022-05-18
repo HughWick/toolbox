@@ -1,9 +1,7 @@
 package com.github.hugh.util.ip;
 
 import com.github.hugh.bean.dto.Ip2regionDTO;
-import com.github.hugh.util.gson.JsonObjectUtils;
 import com.github.hugh.util.io.StreamUtils;
-import com.google.gson.JsonObject;
 import org.lionsoul.ip2region.DataBlock;
 import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
@@ -45,36 +43,25 @@ public class Ip2regionUtils {
     }
 
     /**
-     * 根据IP地址获取 国家、省份、城市、运营商信息
-     * <p>例：{"country":"中国","region":"0","province":"广东省","city":"广州市","isp":"移动"}</p>
-     *
-     * @param ip IP
-     * @return {@link JsonObject}
-     */
-    public static JsonObject get(String ip) {
-        String str = getCityInfo(ip);
-        if (str == null) {
-            return null;
-        }
-        String[] arr = str.split("\\|");
-        JsonObject item = new JsonObject();
-        item.addProperty("country", arr[0]);// 国家
-        item.addProperty("region", arr[1]);// 大区：华中、华东、华北、华南、华西
-        item.addProperty("province", arr[2]);// 省份
-        item.addProperty("city", arr[3]);// 城市
-        item.addProperty("isp", arr[4]);// 运营商
-        return item;
-    }
-
-    /**
      * 根据IP地址解析国家、省份、城市、运营商信息
+     * <p>例：{"country":"中国","region":"0","province":"广东省","city":"广州市","isp":"移动"}</p>
      *
      * @param ip IP
      * @return {@link Ip2regionDTO}
      * @since 1.5.4
      */
     public static Ip2regionDTO parse(String ip) {
-        JsonObject jsonObject = get(ip);
-        return JsonObjectUtils.fromJson(jsonObject, Ip2regionDTO.class);
+        String str = getCityInfo(ip);
+        if (str == null) {
+            return null;
+        }
+        String[] arr = str.split("\\|");
+        Ip2regionDTO ip2regionDTO = new Ip2regionDTO();
+        ip2regionDTO.setCountry(arr[0]);
+        ip2regionDTO.setRegion(arr[1]);
+        ip2regionDTO.setProvince(arr[2]);
+        ip2regionDTO.setCity(arr[3]);
+        ip2regionDTO.setIsp(arr[4]);
+        return ip2regionDTO;
     }
 }

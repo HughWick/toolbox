@@ -6,7 +6,6 @@ import com.github.hugh.util.EntityUtils;
 import com.github.hugh.util.MapUtils;
 import com.github.hugh.util.ip.IpUtils;
 import com.google.common.collect.Lists;
-import net.sf.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.StopWatch;
 
@@ -41,8 +40,8 @@ public class EntityTest {
             System.out.println("--4>>" + EntityUtils.copy(student, Student1::new, (s, t) -> {
             }, "password"));
             System.out.println(student + "<----->" + student2);
-            System.out.println("-1-->>" + JSONObject.fromObject(student));
-            System.out.println("-2-->>" + JSONObject.fromObject(student2));
+//            System.out.println("-1-->>" + JSONObject.fromObject(student));
+//            System.out.println("-2-->>" + JSONObject.fromObject(student2));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,8 +108,8 @@ public class EntityTest {
             Student student = MapUtils.toEntityNotEmpty(Student.class, map);
             Student o1 = EntityUtils.deepClone(student);
             System.out.println(student + "====" + o1);
-            System.out.println(JSONObject.fromObject(student));
-            System.out.println(JSONObject.fromObject(o1));
+//            System.out.println(JSONObject.fromObject(student));
+//            System.out.println(JSONObject.fromObject(o1));
             o1.setName("张三");
             System.out.println(o1);
             Student student2 = EntityUtils.deepClone(o1);

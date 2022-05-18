@@ -2,14 +2,11 @@ package com.github.hugh;
 
 import com.github.hugh.model.Student;
 import com.github.hugh.util.ListUtils;
-import com.github.hugh.util.gson.JsonObjectUtils;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
-import com.google.gson.JsonArray;
 import org.junit.jupiter.api.Test;
-import org.springframework.util.StopWatch;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,25 +17,6 @@ import java.util.stream.Collectors;
  */
 public class ListTest {
 
-    @Test
-    void test01() {
-//        var originList = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8);
-//        originList.add(9);
-        List<String> originList = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            originList.add(i+"");
-        }
-//        System.out.println(originList);
-//        System.out.println("--->>" + ListUtils.guavaPartitionList(originList, 4, 3));
-        StopWatch stopWatch =new StopWatch();
-        stopWatch.start("开始");
-        String s = ListUtils.listToString(originList);
-        stopWatch.stop();
-        System.out.println(stopWatch.prettyPrint());
-
-        System.out.println("---1->>" + s);
-        System.out.println("--2-->>" + ListUtils.guavaStringToList(s));
-    }
 
     @Test
     void test02() {
@@ -142,9 +120,9 @@ public class ListTest {
         System.out.println("---2>>" + s2);
         List strings1 = Splitter.on(",").trimResults().splitToList(s2);
         System.out.println("--3-->>" + strings1);
-        JsonArray jsonElements = JsonObjectUtils.parseArray(strings1.get(3));
-        System.out.println("--4-->>" + jsonElements.size());
-        System.out.println("--4-->>" + jsonElements.get(0).getAsString());
+//        JsonArray jsonElements = JsonObjectUtils.parseArray(strings1.get(3));
+//        System.out.println("--4-->>" + jsonElements.size());
+//        System.out.println("--4-->>" + jsonElements.get(0).getAsString());
     }
 
     @Test
@@ -159,5 +137,17 @@ public class ListTest {
         System.out.println("===>>" + strings2);
         List<String> strings3 = ListUtils.guavaPartitionList(arrayList2, 1, 1);
         System.out.println("=--2---->" + strings3);
+    }
+
+    @Test
+    void testListToString() {
+        List<String> originList = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            originList.add(i + "");
+        }
+        String s = ListUtils.listToString(originList);
+        System.out.println("===>>" + s);
+        String s2 = ListUtils.listToString(originList, ";");
+        System.out.println("---2--->" + s2);
     }
 }

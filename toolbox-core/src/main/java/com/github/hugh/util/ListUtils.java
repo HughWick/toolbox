@@ -138,6 +138,11 @@ public class ListUtils {
      * @since 2.1.10
      */
     public static <T> String listToString(List<T> list, String separator) {
-        return org.apache.commons.lang.StringUtils.join(list.toArray(), separator);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (T object : list) {
+            stringBuilder.append(object).append(separator);
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        return stringBuilder.toString();
     }
 }

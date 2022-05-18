@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.github.hughwick</groupId>
         <artifactId>toolbox-parent</artifactId>
-        <version>2.2.4</version>
+        <version>2.3.0</version>
     </parent>
 
     <artifactId>toolbox-core</artifactId>
@@ -16,12 +16,9 @@
         <commons-collections4.version>4.4</commons-collections4.version>
         <okhttp.version>4.9.3</okhttp.version>
         <servlet-api.version>4.0.1</servlet-api.version>
-        <json-lib.version>2.4</json-lib.version>
         <google-guava.version>31.1-jre</google-guava.version>
-        <google-gson.version>2.9.0</google-gson.version>
         <kryo.version>4.0.2</kryo.version>
         <thumbnailator.version>0.4.17</thumbnailator.version>
-        <fastjson.version>1.2.80</fastjson.version>
         <slf4j-simple.version>1.7.36</slf4j-simple.version>
         <ip2region.version>1.7.2</ip2region.version>
         <rxjava.version>3.1.4</rxjava.version>
@@ -65,22 +62,6 @@
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
             <version>${thumbnailator.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.json-lib</groupId>
-            <artifactId>json-lib</artifactId>
-            <version>${json-lib.version}</version>
-            <classifier>jdk15</classifier>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${google-gson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

@@ -1,18 +1,15 @@
-package com.github.hugh.util.gson;
+package com.github.hugh.json.gson;
 
 import com.alibaba.fastjson.JSON;
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.util.EmptyUtils;
-import com.github.hugh.util.gson.adapter.MapTypeAdapter;
+import com.github.hugh.json.gson.adapter.MapTypeAdapter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 由于使用{@link JsonObjectUtils}的方法获取值时需要每次将转{@link JsonObject}作为参数传入，所以该类在new 对象时将需要转换的参数传入，然后转换成{@link JsonObject}
@@ -370,5 +367,15 @@ public class JsonObjects extends JsonObjectUtils {
      */
     public boolean containsKey(String propertyName) {
         return containsKey(this.jsonObject, propertyName);
+    }
+
+    /**
+     * 返回这个对象的一个成员集合。这个集合是有顺序的，而这个顺序是在 元素被添加。
+     *
+     * @return Set
+     * @since 2.3.0
+     */
+    public Set<Map.Entry<String, JsonElement>> entrySet() {
+        return this.jsonObject.entrySet();
     }
 }

@@ -3,7 +3,6 @@ package com.github.hugh;
 import com.github.hugh.model.Student;
 import com.github.hugh.util.MapUtils;
 import com.github.hugh.util.SerializeUtils;
-import net.sf.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -41,7 +40,7 @@ public class SerializeTest {
             System.out.println("-1-->" + bytes);
             Student student = (Student) SerializeUtils.toObject(bytes);
             System.out.println("--->" + student);
-            System.out.println("--->" + JSONObject.fromObject(student));
+//            System.out.println("--->" + JSONObject.fromObject(student));
         } catch (Exception e) {
             e.printStackTrace();
         }

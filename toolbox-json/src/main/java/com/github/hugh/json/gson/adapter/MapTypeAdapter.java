@@ -1,4 +1,4 @@
-package com.github.hugh.util.gson.adapter;
+package com.github.hugh.json.gson.adapter;
 
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;

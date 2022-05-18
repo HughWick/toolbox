@@ -3,8 +3,6 @@ package com.github.hugh;
 import com.github.hugh.model.Student;
 import com.github.hugh.util.EntityUtils;
 import com.github.hugh.util.MapUtils;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -28,11 +26,11 @@ public class MapTest {
         map.put("create", "2019-04-06 12:11:20");
         try {
             Object o = MapUtils.toEntityNotEmpty(Student.class, map);
-            System.out.println(JSONObject.fromObject(o));
+//            System.out.println(JSONObject.fromObject(o));
             Student student = new Student();
             EntityUtils.copy(o, student);
             student.setName("张三");
-            System.out.println(JSONObject.fromObject(student));
+//            System.out.println(JSONObject.fromObject(student));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,39 +63,39 @@ public class MapTest {
         System.out.println("-5-->" + MapUtils.getDouble(map, "amount"));
     }
 
-    @Test
-    public void test03() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", 1);
-        map.put("age", 2);
-        map.put("name", "null");
-        map.put("amount", 10.14);
-        map.put("birthday", new Date());
-        map.put("create", "2019-04-06 12:11:20");
-        JSONArray arr = new JSONArray();
-        arr.add("a");
-        arr.add("b");
-        JSONArray arr2 = new JSONArray();
-        arr2.add("c");
-        arr.add(arr2.toString());
-        map.put("list", arr.toString());
-        System.out.println("--->>" + map);
-        try {
-            Student Student1 = MapUtils.toEntityNotEmpty(Student.class, map);
-            System.out.println(JSONObject.fromObject(Student1));
-            map.put("age", 22233);
-            Student Student12 = MapUtils.convertEntity(Student1, map);
-            System.out.println(JSONObject.fromObject(Student12));
-//            Object o = Student12.getList().get(2);
-//            System.out.println("--->>>>>" + JSONArray.fromObject(o));
-//            String s = JsonObjectUtils.toJson(Student1);
-//            Student Student3 = MapUtils.toEntity(Student1, JsonObjectUtils.parse(s));
-//            System.out.println(JSONObject.fromObject(Student3));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    @Test
+//    public void test03() {
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("id", 1);
+//        map.put("age", 2);
+//        map.put("name", "null");
+//        map.put("amount", 10.14);
+//        map.put("birthday", new Date());
+//        map.put("create", "2019-04-06 12:11:20");
+//        JSONArray arr = new JSONArray();
+//        arr.add("a");
+//        arr.add("b");
+//        JSONArray arr2 = new JSONArray();
+//        arr2.add("c");
+//        arr.add(arr2.toString());
+//        map.put("list", arr.toString());
+//        System.out.println("--->>" + map);
+//        try {
+//            Student Student1 = MapUtils.toEntityNotEmpty(Student.class, map);
+//            System.out.println(JSONObject.fromObject(Student1));
+//            map.put("age", 22233);
+//            Student Student12 = MapUtils.convertEntity(Student1, map);
+//            System.out.println(JSONObject.fromObject(Student12));
+////            Object o = Student12.getList().get(2);
+////            System.out.println("--->>>>>" + JSONArray.fromObject(o));
+////            String s = JsonObjectUtils.toJson(Student1);
+////            Student Student3 = MapUtils.toEntity(Student1, JsonObjectUtils.parse(s));
+////            System.out.println(JSONObject.fromObject(Student3));
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Test
     public void test04() {

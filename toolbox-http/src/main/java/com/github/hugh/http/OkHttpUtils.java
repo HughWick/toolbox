@@ -1,15 +1,13 @@
-package com.github.hugh.util;
+package com.github.hugh.http;
 
-import com.github.hugh.exception.ToolboxException;
-import com.github.hugh.support.instance.Instance;
-import com.github.hugh.util.common.AssertUtils;
-import com.github.hugh.util.gson.JsonObjectUtils;
-import com.github.hugh.util.gson.JsonObjects;
-import com.github.hugh.util.lang.UrlUtils;
+import com.github.hugh.http.exception.HttpException;
+import com.github.hugh.json.gson.JsonObjectUtils;
+import com.github.hugh.json.gson.JsonObjects;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONObject;
 import okhttp3.*;
+import org.apache.commons.collections.MapUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,7 +62,7 @@ public class OkHttpUtils {
      * @since 1.3.3
      */
     public static OkHttpClient buildClient(int connectTimeout, int readTimeout) {
-        OkHttpClient client = Instance.getInstance().singleton(OkHttpClient.class);
+        OkHttpClient client = new OkHttpClient();
         client.newBuilder().connectTimeout(connectTimeout, TimeUnit.SECONDS)
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
@@ -108,17 +106,17 @@ public class OkHttpUtils {
     private static final OkHttpClient COOKIE_CLIENT = new OkHttpClient.Builder()
             .cookieJar(new CookieJar() {
                 @Override
-                public void saveFromResponse(HttpUrl httpUrl, List<Cookie> list) {
+                public void saveFromResponse(@NotNull HttpUrl httpUrl, @NotNull List<Cookie> list) {
                     COOKIE_STORE.put(httpUrl.host(), list);
                 }
 
                 @Override
-                public List<Cookie> loadForRequest(HttpUrl httpUrl) {
+                public List<Cookie> loadForRequest(@NotNull HttpUrl httpUrl) {
                     List<Cookie> cookies = COOKIE_STORE.get(httpUrl.host());
                     return cookies != null ? cookies : new ArrayList<>();
                 }
-            }).connectTimeout(10, TimeUnit.SECONDS) // 设置连接超时
-            .readTimeout(10, TimeUnit.SECONDS)// 设置读超时
+            }).connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS) // 设置连接超时
+            .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)// 设置读超时
             .build();
 
     /**
@@ -145,7 +143,7 @@ public class OkHttpUtils {
      * @throws IOException IO流错误
      */
     public static <T> String postForm(String url, T params) throws IOException {
-        return postForm(url, JSONObject.fromObject(params), buildClient());
+        return postForm(url, params, buildClient());
     }
 
     /**
@@ -160,9 +158,7 @@ public class OkHttpUtils {
      * @throws IOException IO流错误
      */
     public static <T> String postForm(String url, T params, OkHttpClient okHttpClient) throws IOException {
-        AssertUtils.notEmpty(url, "url");
-        var jsonObject = JSONObject.fromObject(params);
-        String urlParams = UrlUtils.jsonParse(jsonObject);
+        String urlParams = UrlUtils.jsonParse(params);
         return post(url, urlParams, FORM_TYPE, okHttpClient);
     }
 
@@ -195,11 +191,10 @@ public class OkHttpUtils {
      * @throws IOException IO流错误
      */
     public static <T> String postForm(String url, T params, Map<String, String> headerContent, OkHttpClient okHttpClient) throws IOException {
-        var jsonObject = JSONObject.fromObject(params);
-        String urlParams = UrlUtils.jsonParse(jsonObject);
-        var body = RequestBody.create(FORM_TYPE, urlParams);
-        var headers = Headers.of(headerContent);
-        var request = new Request.Builder()
+        String urlParams = UrlUtils.jsonParse(params);
+        RequestBody body = RequestBody.create(FORM_TYPE, urlParams);
+        Headers headers = Headers.of(headerContent);
+        Request request = new Request.Builder()
                 .url(url)
                 .headers(headers)
                 .post(body).build();
@@ -215,13 +210,13 @@ public class OkHttpUtils {
      *
      * @param url  请求URL
      * @param json 参数
+     * @param <P>  参数类型
      * @return String
      * @throws IOException IO流错误
      * @since 1.2.4
      */
-    public static String postFormCookie(String url, JSONObject json) throws IOException {
-        String params = UrlUtils.jsonParse(json);
-        return post(url, params, FORM_TYPE, COOKIE_CLIENT);
+    public static <P> String postFormCookie(String url, P json) throws IOException {
+        return postForm(url, json, COOKIE_CLIENT);
     }
 
     /**
@@ -238,7 +233,7 @@ public class OkHttpUtils {
         if (params instanceof String) {
             return post(url, String.valueOf(params), JSON_TYPE);
         }
-        return post(url, JSONObject.fromObject(params).toString(), JSON_TYPE);
+        return post(url, new JsonObjects(params).toJson(), JSON_TYPE);
     }
 
     /**
@@ -258,7 +253,7 @@ public class OkHttpUtils {
         try {
             return JsonObjectUtils.parse(result);
         } catch (Exception e) {
-            throw new ToolboxException("url:" + url + ",返回结果参数格式错误:" + result);
+            throw new HttpException("url:" + url + ",返回结果参数格式错误:" + result);
         }
     }
 
@@ -289,7 +284,7 @@ public class OkHttpUtils {
         try {
             return new JsonObjects(result);
         } catch (Exception e) {
-            throw new ToolboxException("url:" + url + ",返回结果参数格式错误:" + result);
+            throw new HttpException("url:" + url + ",返回结果参数格式错误:" + result);
         }
     }
 
@@ -320,7 +315,7 @@ public class OkHttpUtils {
         try {
             return new JsonObjects(result);
         } catch (Exception e) {
-            throw new ToolboxException("url:" + url + ",返回结果参数格式错误:" + result);
+            throw new HttpException("url:" + url + ",返回结果参数格式错误:" + result);
         }
     }
 
@@ -349,7 +344,7 @@ public class OkHttpUtils {
         try {
             return new JsonObjects(result);
         } catch (Exception e) {
-            throw new ToolboxException("url:" + url + ",返回结果参数格式错误:" + result);
+            throw new HttpException("url:" + url + ",返回结果参数格式错误:" + result);
         }
     }
 
@@ -363,9 +358,7 @@ public class OkHttpUtils {
      * @return String
      */
     public static <T> String get(String url, T params) throws IOException {
-        AssertUtils.notEmpty(url, "url");
-        var jsonObject = JSONObject.fromObject(params);
-        url = UrlUtils.urlParam(url, jsonObject);
+        url = UrlUtils.urlParam(url, params);
         return get(url);
     }
 
@@ -377,9 +370,18 @@ public class OkHttpUtils {
      * @return String
      */
     public static String get(String url) throws IOException {
-        AssertUtils.notEmpty(url, "url");
-        var request = new Request.Builder().url(url).build();
+        Request request = new Request.Builder().url(url).build();
         return send(request, buildClient());
+    }
+
+    public static JsonObjects getByCookieReJsonObjects(String url) throws IOException {
+        Request request = new Request.Builder().url(url).build();
+        String result = send(request, COOKIE_CLIENT);
+        try {
+            return new JsonObjects(result);
+        } catch (Exception e) {
+            throw new HttpException("url:" + url + ",返回结果参数格式错误:" + result);
+        }
     }
 
     /**
@@ -392,10 +394,10 @@ public class OkHttpUtils {
      * @throws IOException IO流错误
      * @since 1.3.0
      */
-    public static String get(String url, JSONObject data, Map<String, String> headerContent) throws IOException {
+    public static <P> String get(String url, P data, Map<String, String> headerContent) throws IOException {
         url = UrlUtils.urlParam(url, data);
-        var headers = Headers.of(headerContent);
-        var request = new Request.Builder()
+        Headers headers = Headers.of(headerContent);
+        Request request = new Request.Builder()
                 .url(url)
                 .headers(headers).build();
         return send(request);
@@ -413,8 +415,8 @@ public class OkHttpUtils {
      * @since 1.5.9
      */
     private static String post(String url, String params, MediaType mediaType) throws IOException {
-        var body = RequestBody.create(mediaType, params);
-        var request = new Request.Builder().url(url).post(body).build();
+        RequestBody body = RequestBody.create(mediaType, params);
+        Request request = new Request.Builder().url(url).post(body).build();
         return send(request, buildClient());
     }
 
@@ -429,8 +431,8 @@ public class OkHttpUtils {
      * @throws IOException IO异常
      */
     private static String post(String url, String params, MediaType mediaType, OkHttpClient okHttpClient) throws IOException {
-        var body = RequestBody.create(mediaType, params);
-        var request = new Request.Builder().url(url).post(body).build();
+        RequestBody body = RequestBody.create(mediaType, params);
+        Request request = new Request.Builder().url(url).post(body).build();
         return send(request, okHttpClient);
     }
 
@@ -456,10 +458,10 @@ public class OkHttpUtils {
      * @throws IOException IO异常
      */
     private static String send(Request request, OkHttpClient okHttpClient) throws IOException {
-        try (var response = okHttpClient.newCall(request).execute()) {
+        try (Response response = okHttpClient.newCall(request).execute()) {
             ResponseBody body1 = response.body();
             if (body1 == null) {
-                throw new ToolboxException("result params is null ");
+                throw new HttpException("result params is null ");
             }
             return body1.string();
         }
@@ -483,20 +485,20 @@ public class OkHttpUtils {
                 .setType(MultipartBody.FORM);
         if (MapUtils.isNotEmpty(params)) {
             for (Map.Entry<K, V> entry : params.entrySet()) {
-                var name = String.valueOf(entry.getKey());
-                var value = String.valueOf(entry.getValue());
+                String name = String.valueOf(entry.getKey());
+                String value = String.valueOf(entry.getValue());
                 requestBody.addFormDataPart(name, value);
             }
         }
         if (MapUtils.isNotEmpty(fileMap)) {
             for (Map.Entry<K, V> entry : fileMap.entrySet()) {
-                var name = String.valueOf(entry.getKey());
-                var path = String.valueOf(entry.getValue());
-                var fileBody = RequestBody.create(MediaType.parse(MULTIPART_FORM_DATA), new File(path));
+                String name = String.valueOf(entry.getKey());
+                String path = String.valueOf(entry.getValue());
+                RequestBody fileBody = RequestBody.create(MediaType.parse(MULTIPART_FORM_DATA), new File(path));
                 requestBody.addFormDataPart(fileName, name, fileBody);
             }
         }
-        var request = new Request.Builder().url(url).post(requestBody.build()).build();
+        Request request = new Request.Builder().url(url).post(requestBody.build()).build();
         return send(request);
     }
 }

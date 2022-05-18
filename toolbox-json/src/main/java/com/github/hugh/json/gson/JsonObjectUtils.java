@@ -1,12 +1,11 @@
-package com.github.hugh.util.gson;
+package com.github.hugh.json.gson;
 
 import com.alibaba.fastjson.JSON;
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.exception.ToolboxException;
-import com.github.hugh.support.instance.Instance;
+import com.github.hugh.json.gson.adapter.MapTypeAdapter;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.EmptyUtils;
-import com.github.hugh.util.gson.adapter.MapTypeAdapter;
 import com.github.hugh.util.regex.RegexUtils;
 import com.google.gson.*;
 import com.google.gson.internal.LinkedTreeMap;
@@ -24,15 +23,15 @@ import java.util.*;
  */
 public class JsonObjectUtils {
 
-    /**
-     * 单例的创建Gson
-     *
-     * @return Gson
-     * @since 1.3.12
-     */
-    public static Gson gson() {
-        return Instance.getInstance().singleton(Gson.class);
-    }
+//    /**
+//     * 单例的创建Gson
+//     *
+//     * @return Gson
+//     * @since 1.3.12
+//     */
+//    public static Gson gson() {
+//        return Instance.getInstance().singleton(Gson.class);
+//    }
 
     /**
      * 以空值安全的方式从JsonObject中获取一个String.
@@ -47,6 +46,20 @@ public class JsonObjectUtils {
      */
     public static String getString(JsonObject jsonObject, String key) {
         JsonElement jsonElement = get(jsonObject, key);
+        return getAsString(jsonElement);
+    }
+
+    /**
+     * 方便的方法来获得这个元素的字符串值。
+     * <p>
+     * 由于gson 的{@link JsonObject#get(String)}方法返回字符串时前后带有双引号，所以需要再调用{@link JsonElement#getAsString()}
+     * </p>
+     *
+     * @param jsonElement json元素对象
+     * @return String
+     * @since 2.3.0
+     */
+    public static String getAsString(JsonElement jsonElement) {
         return isJsonNull(jsonElement) ? null : jsonElement.getAsString();
     }
 

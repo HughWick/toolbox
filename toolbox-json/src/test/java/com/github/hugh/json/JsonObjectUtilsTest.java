@@ -1,20 +1,15 @@
-package com.github.hugh.support.gson;
+package com.github.hugh.json;
 
 import com.github.hugh.bean.dto.Ip2regionDTO;
 import com.github.hugh.constant.DateCode;
-import com.github.hugh.model.Student;
-import com.github.hugh.util.OkHttpUtils;
-import com.github.hugh.util.gson.JsonObjectUtils;
-import com.github.hugh.util.gson.JsonObjects;
+import com.github.hugh.json.gson.JsonObjectUtils;
+import com.github.hugh.json.model.Student;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.sf.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * User: AS
@@ -71,31 +66,31 @@ class JsonObjectUtilsTest {
         System.out.println("-9-->>" + objectObjectMap);
     }
 
-    @Test
-    void test02() throws IOException {
-        JSONObject json = new JSONObject();
-        json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-        JsonObject jsonObject = OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json);
-        System.out.println("--1->>" + jsonObject.toString());
-        HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
-
-        objectObjectHashMap.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-        JsonObject jsonObject2 = OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", objectObjectHashMap);
-        System.out.println("--2->>" + jsonObject2.toString());
-        JsonObject jsonObject3 = OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json.toString());
-        System.out.println("--3->>" + jsonObject3.toString());
-        System.out.println("--getString->>" + JsonObjectUtils.getString(jsonObject, "msg1"));
-        System.out.println("--getString->>" + JsonObjectUtils.getString(jsonObject, "msg"));
-        System.out.println("-getInt-->>" + JsonObjectUtils.getInt(jsonObject, "status"));
-        System.out.println("--getInt->>" + JsonObjectUtils.getInt(jsonObject, "status2"));
-        System.out.println("--getInteger->>" + JsonObjectUtils.getInteger(jsonObject, "status"));
-        System.out.println("--getInteger->>" + JsonObjectUtils.getInteger(jsonObject, "status2"));
-        System.out.println("--getLong->>" + JsonObjectUtils.getLong(jsonObject, "status2"));
-        System.out.println("--getLongValue->>" + JsonObjectUtils.getLongValue(jsonObject, "status2"));
-        System.out.println("--getDouble->>" + JsonObjectUtils.getDouble(jsonObject, "status"));
-        System.out.println("--getDoubleValue->>" + JsonObjectUtils.getDoubleValue(jsonObject, "status2"));
-        System.out.println("--getBigDecimal->>" + JsonObjectUtils.getBigDecimal(jsonObject, "status2"));
-    }
+//    @Test
+//    void test02() throws IOException {
+//        JSONObject json = new JSONObject();
+//        json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+//        JsonObject jsonObject = OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json);
+//        System.out.println("--1->>" + jsonObject.toString());
+//        HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
+//
+//        objectObjectHashMap.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+//        JsonObject jsonObject2 = OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", objectObjectHashMap);
+//        System.out.println("--2->>" + jsonObject2.toString());
+//        JsonObject jsonObject3 = OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json.toString());
+//        System.out.println("--3->>" + jsonObject3.toString());
+//        System.out.println("--getString->>" + JsonObjectUtils.getString(jsonObject, "msg1"));
+//        System.out.println("--getString->>" + JsonObjectUtils.getString(jsonObject, "msg"));
+//        System.out.println("-getInt-->>" + JsonObjectUtils.getInt(jsonObject, "status"));
+//        System.out.println("--getInt->>" + JsonObjectUtils.getInt(jsonObject, "status2"));
+//        System.out.println("--getInteger->>" + JsonObjectUtils.getInteger(jsonObject, "status"));
+//        System.out.println("--getInteger->>" + JsonObjectUtils.getInteger(jsonObject, "status2"));
+//        System.out.println("--getLong->>" + JsonObjectUtils.getLong(jsonObject, "status2"));
+//        System.out.println("--getLongValue->>" + JsonObjectUtils.getLongValue(jsonObject, "status2"));
+//        System.out.println("--getDouble->>" + JsonObjectUtils.getDouble(jsonObject, "status"));
+//        System.out.println("--getDoubleValue->>" + JsonObjectUtils.getDoubleValue(jsonObject, "status2"));
+//        System.out.println("--getBigDecimal->>" + JsonObjectUtils.getBigDecimal(jsonObject, "status2"));
+//    }
 
     @Test
     void testGetDate() {
@@ -143,12 +138,37 @@ class JsonObjectUtilsTest {
         System.out.println("---2->>" + JsonObjectUtils.fromJsonTimeStamp(parse, Student.class));
     }
 
+//    @Test
+//    void testConKey() throws IOException {
+//        JSONObject json = new JSONObject();
+//        json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+//        JsonObjects jsonObject = OkHttpUtils.postJsonReJsonObjects("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json);
+//        assertTrue(jsonObject.containsKey("msg"));
+//        assertFalse(jsonObject.containsKey("msg1"));
+//    }
+
     @Test
-    void testConKey() throws IOException {
-        JSONObject json = new JSONObject();
-        json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-        JsonObjects jsonObject = OkHttpUtils.postJsonReJsonObjects("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json);
-        assertTrue(jsonObject.containsKey("msg"));
-        assertFalse(jsonObject.containsKey("msg1"));
+    void testMapToJson() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("a", 1);
+        JsonObject parse = JsonObjectUtils.parse(map);
+        assert parse != null;
+        System.out.println("---->>" + JsonObjectUtils.toJson(parse));
+    }
+
+    @Test
+    void testForEach(){
+        Map<String, Object> map = new HashMap<>();
+        map.put("a", 1);
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("b_2","1223_sad");
+        map.put("b", map2);
+        JsonObject parse = JsonObjectUtils.parse(map);
+        assert parse != null;
+        for (Map.Entry<String, JsonElement> entrySet : parse.entrySet()) {
+            System.out.println("key>"+entrySet.getKey());
+            System.out.println("222value>"+entrySet.getValue());
+            System.out.println("--------------------------");
+        }
     }
 }

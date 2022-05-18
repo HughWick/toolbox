@@ -1,19 +1,16 @@
-package com.github.hugh.support.gson;
+package com.github.hugh.json;
 
 import com.github.hugh.constant.DateCode;
-import com.github.hugh.model.Student;
-import com.github.hugh.util.OkHttpUtils;
-import com.github.hugh.util.gson.JsonObjectUtils;
-import com.github.hugh.util.gson.JsonObjects;
+import com.github.hugh.json.gson.JsonObjectUtils;
+import com.github.hugh.json.gson.JsonObjects;
+import com.github.hugh.json.model.Student;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.sf.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.Date;
 
 /**
  * @author AS
@@ -52,35 +49,35 @@ public class JsonTest {
         System.out.println("--->>" + jsonObjects);
     }
 
-    @Test
-    public void test03() {
-        JSONObject json = new JSONObject();
-        json.put("ZH", "admin");
-        json.put("MM", "88888888");
-        try {
-            JsonObject jsonObject = OkHttpUtils.postFormReJsonObject("https://www.hnlot.com.cn/ptpz/yonghu/login", json);
-            assert jsonObject != null;
-            System.out.println("--getJsonObject->>" + JsonObjectUtils.getJsonObject(jsonObject, "data"));
-            JsonObject data = JsonObjectUtils.getJsonObject(jsonObject, "data");
-            System.out.println("--getString->>" + JsonObjectUtils.getString(data, "access_token"));
-            JsonArray menus = JsonObjectUtils.getJsonArray(data, "menus");
-            for (int i = 0; i < menus.size(); i++) {
-                System.out.println("--JsonArray遍历->" + menus.get(i));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    @Test
+//    public void test03() {
+//        JSONObject json = new JSONObject();
+//        json.put("ZH", "admin");
+//        json.put("MM", "88888888");
+//        try {
+//            JsonObject jsonObject = OkHttpUtils.postFormReJsonObject("https://www.hnlot.com.cn/ptpz/yonghu/login", json);
+//            assert jsonObject != null;
+//            System.out.println("--getJsonObject->>" + JsonObjectUtils.getJsonObject(jsonObject, "data"));
+//            JsonObject data = JsonObjectUtils.getJsonObject(jsonObject, "data");
+//            System.out.println("--getString->>" + JsonObjectUtils.getString(data, "access_token"));
+//            JsonArray menus = JsonObjectUtils.getJsonArray(data, "menus");
+//            for (int i = 0; i < menus.size(); i++) {
+//                System.out.println("--JsonArray遍历->" + menus.get(i));
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-    @Test
-    public void test04() throws IOException {
-        Map<String, String> header = new HashMap<>();
-        header.put("token", UUID.randomUUID().toString());
-        JSONObject json = new JSONObject();
-        json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-        String str = OkHttpUtils.get("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json, header);
-        System.out.println("--->" + JsonParser.parseString(str).getAsJsonObject());
-    }
+//    @Test
+//    public void test04() throws IOException {
+//        Map<String, String> header = new HashMap<>();
+//        header.put("token", UUID.randomUUID().toString());
+//        JSONObject json = new JSONObject();
+//        json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+//        String str = OkHttpUtils.get("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json, header);
+//        System.out.println("--->" + JsonParser.parseString(str).getAsJsonObject());
+//    }
 
 
     @Test
