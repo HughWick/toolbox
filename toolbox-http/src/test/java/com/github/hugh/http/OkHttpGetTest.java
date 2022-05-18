@@ -55,4 +55,13 @@ public class OkHttpGetTest {
 //        }
     }
 
+    @Test
+    void testGet2() throws IOException {
+        String url = "https://ym.191ec.com/silver-web-shop/vshop/getCMTotal";
+        Map<String, String> params = new HashMap<>();
+//        params.put("Cookie:","SESSION=efd29682-fbb7-49c1-96e3-4ecb5dd0e311");
+        String s = OkHttpUtils.get(url, null, params);
+        System.out.println(s);
+    }
+
 }

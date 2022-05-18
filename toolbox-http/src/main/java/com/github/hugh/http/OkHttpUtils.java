@@ -1,6 +1,6 @@
 package com.github.hugh.http;
 
-import com.github.hugh.http.exception.HttpException;
+import com.github.hugh.http.exception.ToolboxHttpException;
 import com.github.hugh.json.gson.JsonObjectUtils;
 import com.github.hugh.json.gson.JsonObjects;
 import com.google.gson.JsonObject;
@@ -253,7 +253,7 @@ public class OkHttpUtils {
         try {
             return JsonObjectUtils.parse(result);
         } catch (Exception e) {
-            throw new HttpException("url:" + url + ",返回结果参数格式错误:" + result);
+            throw new ToolboxHttpException("url:" + url + ",返回结果参数格式错误:" + result);
         }
     }
 
@@ -284,7 +284,7 @@ public class OkHttpUtils {
         try {
             return new JsonObjects(result);
         } catch (Exception e) {
-            throw new HttpException("url:" + url + ",返回结果参数格式错误:" + result);
+            throw new ToolboxHttpException("url:" + url + ",返回结果参数格式错误:" + result);
         }
     }
 
@@ -315,7 +315,7 @@ public class OkHttpUtils {
         try {
             return new JsonObjects(result);
         } catch (Exception e) {
-            throw new HttpException("url:" + url + ",返回结果参数格式错误:" + result);
+            throw new ToolboxHttpException("url:" + url + ",返回结果参数格式错误:" + result);
         }
     }
 
@@ -344,7 +344,7 @@ public class OkHttpUtils {
         try {
             return new JsonObjects(result);
         } catch (Exception e) {
-            throw new HttpException("url:" + url + ",返回结果参数格式错误:" + result);
+            throw new ToolboxHttpException("url:" + url + ",返回结果参数格式错误:" + result);
         }
     }
 
@@ -374,13 +374,21 @@ public class OkHttpUtils {
         return send(request, buildClient());
     }
 
+    /**
+     * 发送带cookie 的get请求
+     *
+     * @param url URL
+     * @return JsonObjects
+     * @throws IOException
+     * @since 2.3.0
+     */
     public static JsonObjects getByCookieReJsonObjects(String url) throws IOException {
         Request request = new Request.Builder().url(url).build();
         String result = send(request, COOKIE_CLIENT);
         try {
             return new JsonObjects(result);
         } catch (Exception e) {
-            throw new HttpException("url:" + url + ",返回结果参数格式错误:" + result);
+            throw new ToolboxHttpException("url:" + url + ",返回结果参数格式错误:" + result);
         }
     }
 
@@ -461,7 +469,7 @@ public class OkHttpUtils {
         try (Response response = okHttpClient.newCall(request).execute()) {
             ResponseBody body1 = response.body();
             if (body1 == null) {
-                throw new HttpException("result params is null ");
+                throw new ToolboxHttpException("result params is null ");
             }
             return body1.string();
         }
