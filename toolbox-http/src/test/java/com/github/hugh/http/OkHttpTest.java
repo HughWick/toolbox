@@ -30,21 +30,6 @@ public class OkHttpTest {
     }
 
     @Test
-    public void test04() throws Exception {
-        String url = "http://localhost:7010/email/email/send";
-        val params = new HashMap<>();
-        params.put("recipient", "136438455@qq.com");
-        params.put("title", "标题");
-        val fileMap = new HashMap<>();
-        fileMap.put("鬼灭之刃1.jpg", "D:\\OneDrive\\图片\\鬼灭之刃\\78133846_p0.jpg");
-        fileMap.put("鬼灭之刃2.jpg", "D:\\OneDrive\\图片\\鬼灭之刃\\78382590_p4.jpg");
-        fileMap.put("鬼灭之刃3.jpg", "D:\\OneDrive\\图片\\鬼灭之刃\\79733019_p0.jpg");
-        String result = OkHttpUtils.upload(url, params, "file", fileMap);
-
-        System.out.println("--->" + result);
-    }
-
-    @Test
     public void test05() throws Exception {
         JSONObject json = new JSONObject();
         val receiveUser = new ArrayList<>();

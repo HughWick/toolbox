@@ -40,7 +40,7 @@ class JsonObjectUtilsTest {
 
     @Test
     void test() {
-        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\",\"id\":null,\"opType\":1}";
+        String str = "{\"age\":2,\"amount\":10.14,\"money\":12.3456,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\",\"id\":null,\"opType\":1}";
         String arryStr = "{ " +
                 "\"client\":\"127.0.0.1\"," +
                 "\"servers\":[" +
@@ -58,6 +58,7 @@ class JsonObjectUtilsTest {
         System.out.println("=--3->>" + servers);
         System.out.println("=--4->>" + JsonObjectUtils.toArrayList(servers));
         System.out.println("=--5->>" + JsonObjectUtils.fromJson(servers, LinkedList.class));
+        System.out.println("=--6->>" + JsonObjectUtils.getBigDecimal(json2,"money"));
 //        String s = new Date().toString();
 //        String strDate2 = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\"}";
 //        Student student = JsonObjectUtils.fromJson(strDate2, Student.class);

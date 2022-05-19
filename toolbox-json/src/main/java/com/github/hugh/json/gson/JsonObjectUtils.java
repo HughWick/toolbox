@@ -40,7 +40,7 @@ public class JsonObjectUtils {
      * @return Gson
      * @since 1.3.12
      */
-    public synchronized static Gson getInstance() {
+    public static synchronized Gson getInstance() {
         if (gsonSupplier == null) {
             Supplier<Gson> easyRedisSupplier = Gson::new;
             gsonSupplier = Suppliers.memoize(easyRedisSupplier::get);

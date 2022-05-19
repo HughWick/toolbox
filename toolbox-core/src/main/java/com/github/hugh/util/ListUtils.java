@@ -5,6 +5,7 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -104,11 +105,12 @@ public class ListUtils {
      * @since 1.1.0
      */
     public static List<String> guavaStringToList(String string, String separator, CharMatcher charMatcher) {
-        return Splitter.on(separator)
+        List<String> strings = Splitter.on(separator)
                 .trimResults()//去除前后空格
                 .trimResults(charMatcher)
                 .omitEmptyStrings()//用于去除为空格的分割结果
                 .splitToList(string);
+        return new ArrayList<>(strings);
     }
 
     /**

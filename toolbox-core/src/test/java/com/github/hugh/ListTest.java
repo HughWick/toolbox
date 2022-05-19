@@ -2,6 +2,7 @@ package com.github.hugh;
 
 import com.github.hugh.model.Student;
 import com.github.hugh.util.ListUtils;
+import com.github.hugh.util.regex.RegexUtils;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
@@ -20,6 +21,7 @@ public class ListTest {
 
     @Test
     void test02() {
+        String single = "1db";
         String[] array = {"1", "2", "3", "4", "5", "6", "7"};
         String strings = "[\"Saab\", \"Volvo\", \"BMW\" ,\"   \"]";
         String str = "{\"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\"}";
@@ -28,6 +30,7 @@ public class ListTest {
         String str4 = "[1,2,3,4,5,6, \"7\"]";
         String str5 = "[[a,b,c],1,2,3,4,5,6, \"7\",89]";
         ListUtils.guavaStringToList(strings).forEach(System.out::println);
+        System.out.println("--->>" + ListUtils.guavaStringToList(single));
         System.out.println("-1-->>" + ListUtils.guavaStringToList(strings));
         ListUtils.guavaStringToList(str).forEach(System.out::println);
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -149,5 +152,19 @@ public class ListTest {
         System.out.println("===>>" + s);
         String s2 = ListUtils.listToString(originList, ";");
         System.out.println("---2--->" + s2);
+    }
+
+    @Test
+    void testListRemoveIf() {
+        List<String> strings = ListUtils.guavaStringToList("136438455@qq.com");
+        strings.add("123");
+        System.out.println("===>" + strings.toString());
+        strings.removeIf(RegexUtils::isNotEmail);
+        strings.forEach(System.out::println);
+
+
+//        List<String> list = Lists.newArrayList("123","136438455@qq.com","xiaozhi10201@gmail.com");
+//        list.removeIf(string -> !RegexUtils.isEmail(string));
+//        list.forEach(System.out::println);
     }
 }
