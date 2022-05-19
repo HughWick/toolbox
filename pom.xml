@@ -36,7 +36,7 @@
         <plugin.jacoco.version>0.8.8</plugin.jacoco.version>
         <!--============================== other ==============================-->
         <lombok.version>1.18.24</lombok.version>
-        <spring-test.version>5.3.19</spring-test.version>
+        <spring.version>5.3.20</spring.version>
     </properties>
 
     <dependencies>
@@ -55,13 +55,13 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>${spring-test.version}</version>
+            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${spring-test.version}</version>
+            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -14,7 +14,6 @@
     <description>toolbox 工具类实体类包</description>
     <properties>
         <knife4j.version>3.0.3</knife4j.version>
-        <spring-beans.version>5.3.19</spring-beans.version>
     </properties>
 
     <dependencies>
@@ -33,7 +32,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <version>${spring-beans.version}</version>
+            <version>${spring.version}</version>
         </dependency>
     </dependencies>
 </project>
