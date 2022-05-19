@@ -18,7 +18,7 @@
         <servlet-api.version>4.0.1</servlet-api.version>
         <google-guava.version>31.1-jre</google-guava.version>
         <kryo.version>4.0.2</kryo.version>
-        <thumbnailator.version>0.4.17</thumbnailator.version>
+<!--        <thumbnailator.version>0.4.17</thumbnailator.version>-->
         <slf4j-simple.version>1.7.36</slf4j-simple.version>
         <ip2region.version>1.7.2</ip2region.version>
         <rxjava.version>3.1.4</rxjava.version>
@@ -58,11 +58,11 @@
             <version>${google-guava.version}</version>
         </dependency>
         <!-- 图片压缩 https://mvnrepository.com/artifact/net.coobird/thumbnailator -->
-        <dependency>
-            <groupId>net.coobird</groupId>
-            <artifactId>thumbnailator</artifactId>
-            <version>${thumbnailator.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>net.coobird</groupId>-->
+<!--            <artifactId>thumbnailator</artifactId>-->
+<!--            <version>${thumbnailator.version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
