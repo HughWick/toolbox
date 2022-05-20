@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -229,21 +231,6 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 判断日期是否是本日，本周，本月
-     *
-     * @param time    需要判断的时间
-     * @param pattern 日期格式
-     * @return boolean
-     */
-    public static boolean isThisTime(long time, String pattern) {
-        var date = new Date(time);
-        var simpleDateFormat = new SimpleDateFormat(pattern);
-        String param = simpleDateFormat.format(date);// 参数时间
-        String now = simpleDateFormat.format(new Date());// 当前时间
-        return param.equals(now);
-    }
-
-    /**
      * 根据当前时间的一天前的起始时间
      *
      * @return Date 前一天的起始时间
@@ -339,11 +326,7 @@ public class DateUtils extends DateCode {
     public static String setMonthFirstDay(Date date) {
         // 获取前月的第一天
         Calendar calendar = Calendar.getInstance();// 获取当前日期
-        if (date != null) {
-            calendar.setTime(date);
-        } else {
-            calendar.setTime(new Date());
-        }
+        calendar.setTime(Objects.requireNonNullElseGet(date, Date::new));
         calendar.add(Calendar.MONTH, 0);
         calendar.set(Calendar.DAY_OF_MONTH, 1);// 设置为1号,当前日期既为本月第一天
         return format(calendar.getTime(), YEAR_MONTH_DAY_HOUR_MIN_SEC);
@@ -473,11 +456,7 @@ public class DateUtils extends DateCode {
      */
     public static Date getHourAgo(Date date) {
         Calendar calendar = Calendar.getInstance();
-        if (date == null) {
-            calendar.setTime(new Date());
-        } else {
-            calendar.setTime(date);
-        }
+        calendar.setTime(Objects.requireNonNullElseGet(date, Date::new));
         // 小时-1
         calendar.set(Calendar.HOUR, calendar.get(Calendar.HOUR) - 1);
         return calendar.getTime();
@@ -864,27 +843,6 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 校验日期是否与格式一致
-     *
-     * @param time   日期
-     * @param format 格式
-     * @return boolean 正确返回true、其他返回false
-     */
-    public static boolean isValidDate(String time, String format) {
-        if (com.github.hugh.util.EmptyUtils.isEmpty(time) || com.github.hugh.util.EmptyUtils.isEmpty(format)) {
-            return false;
-        }
-        try {
-            // 转换为日期
-            Date date = parseDate(time, format);
-            // 再将日期转换成对应格式，进行校验是否与字符串一致
-            return time.equals(format(date, format));
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    /**
      * 获取小时整点时间
      *
      * @return Date 日期对象 {@code 2019-07-25 14:00:00}
@@ -979,8 +937,8 @@ public class DateUtils extends DateCode {
             } else {// 默认校验yyyy-MM-dd HH:mm:ss
                 regex = "\\d{4}-\\d{2}-\\d{2}\\s{1}\\d{2}:\\d{2}:\\d{2}";
             }
-            var patternObj = Pattern.compile(regex);// 编译正则表达式
-            var matcher = patternObj.matcher(timeStr);// 忽略大小写的写法
+            Pattern patternObj = Pattern.compile(regex);// 编译正则表达式
+            Matcher matcher = patternObj.matcher(timeStr);// 忽略大小写的写法
             if (matcher.matches()) {// 先验证格式
                 Date date = parseDate(timeStr, pattern);//转换格式
                 return timeStr.equals(format(date, pattern));// 验证时间
@@ -1005,16 +963,6 @@ public class DateUtils extends DateCode {
         calendar.set(Calendar.MINUTE, minute);
         calendar.set(Calendar.SECOND, second);
         calendar.set(Calendar.MILLISECOND, milliSecond);
-    }
-
-    /**
-     * 验证字符串时间，是否在30天内
-     *
-     * @param date 日期
-     * @return boolean 30天内返回ture、其他返回false
-     */
-    public static boolean isValidDate(Date date) {
-        return isValidDate(date, 30);
     }
 
     /**
@@ -1052,7 +1000,7 @@ public class DateUtils extends DateCode {
      * @param endStr   结束日期字符串 支持格式：yyyy-MM-dd | yyyy-MM-dd HH:mm:ss
      * @return boolean 不是同一年返回true
      */
-    public static boolean isAcrossYear(String startStr, String endStr) {
+    public static boolean isNotAcrossYear(String startStr, String endStr) {
         Date start;
         if (isDateFormat(startStr)) {
             start = parseDate(startStr, YEAR_MONTH_DAY_HOUR_MIN_SEC);
@@ -1069,7 +1017,7 @@ public class DateUtils extends DateCode {
         } else {
             return true;
         }
-        return isAcrossYear(start, end);
+        return isNotAcrossYear(start, end);
     }
 
     /**
@@ -1079,7 +1027,7 @@ public class DateUtils extends DateCode {
      * @param end   结束日期
      * @return boolean 不是同一年返回true
      */
-    private static boolean isAcrossYear(Date start, Date end) {
+    private static boolean isNotAcrossYear(Date start, Date end) {
         if (start == null) {
             return true;// 空值直接返回
         }

@@ -51,4 +51,15 @@ public class TimeTest {
         System.out.println("=2=昨日开始日期==>>" + TimeUtils.getYesterdayStartTime());
         System.out.println("=4=昨日结束日期==>>" + TimeUtils.getYesterdayEndTime());
     }
+
+    @Test
+    void testTime(){
+        System.out.println("--1---当前日期---->>" + TimeUtils.getTime());
+        System.out.println("--2---当前日期---->>" + TimeUtils.now());
+        System.out.println("--月的第1天--->>" + TimeUtils.firstDayOfMonth());
+        System.out.println("----最后1天----->>" + TimeUtils.lastDayOfMonth());
+        System.out.println("---上个月的第1天------>>" + TimeUtils.earlyLastMonth());
+        System.out.println("---上个月的最后1天------>>" + TimeUtils.endOfLastMonth());
+        System.out.println("--在当前系统时间之后-->>" + TimeUtils.exceedSystem("2020-04-17 13:59:59"));
+    }
 }

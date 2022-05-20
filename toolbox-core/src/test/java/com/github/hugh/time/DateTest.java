@@ -3,11 +3,13 @@ package com.github.hugh.time;
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.TimeUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * 日期测试类
@@ -70,25 +72,28 @@ public class DateTest {
     }
 
     @Test
-    void test06() {
-        Date date = DateUtils.parseTimestamp(1617943680000L);
-
+    void testIsAcrossYear() {
+        String startStr = "2020-01-04";
+        String endStr = "2020-01-04";
+        boolean acrossYear = DateUtils.isNotAcrossYear(startStr, endStr);
+        assertFalse(acrossYear);
+        boolean acrossYear2 = DateUtils.isNotAcrossYear(startStr, "2022-04-04");
+        assertTrue(acrossYear2);
     }
 
-
-    public static void main(String[] args) {
-        System.out.println("--1---当前日期---->>" + TimeUtils.getTime());
-        System.out.println("--2---当前日期---->>" + TimeUtils.now());
-        System.out.println("--月的第1天--->>" + TimeUtils.firstDayOfMonth());
-        System.out.println("----最后1天----->>" + TimeUtils.lastDayOfMonth());
-        System.out.println("---上个月的第1天------>>" + TimeUtils.earlyLastMonth());
-        System.out.println("---上个月的最后1天------>>" + TimeUtils.endOfLastMonth());
-        System.out.println("--在当前系统时间之后-->>" + TimeUtils.exceedSystem("2020-04-17 13:59:59"));
-        String str = "2020-06-04 13:00:21";
-        String s = DateUtils.toStringTime(str);
-        System.out.println(s);
-        System.out.println(DateUtils.toStringDate(s));
-        System.out.println(DateUtils.parse(str));
+    @Test
+    void testIsValidDate() {
+        String timeStart = "2022-05-11 00:00:00";
+        boolean validDate = DateUtils.isValidDate(DateUtils.parse(timeStart), 30);
+        assertTrue(validDate);
+        assertFalse(DateUtils.isValidDate(DateUtils.parse(timeStart), 3));
     }
 
+    @Test
+    void testIsDateFormat() {
+        String timeStart = "2022-05-11 00:00:00";
+        boolean dateFormat = DateUtils.isDateFormat(timeStart, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
+        assertTrue(dateFormat);
+        assertFalse(DateUtils.isDateFormat(timeStart + "a", DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
+    }
 }
