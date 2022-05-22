@@ -1,7 +1,7 @@
 package com.github.hugh.util;
 
 import com.github.hugh.exception.ToolboxException;
-import com.google.common.base.Splitter;
+import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
 import java.beans.BeanInfo;
@@ -129,9 +129,9 @@ public class MapUtils {
      * 将map,转换成对应class对象的实体类
      * <ul>
      * <li>注:</li>
-     * <li>1.map中的key必须与实体中的常量key一致.</li>
-     * <li>2.通过class创建一个新的实例,后调用{@link #convertObjects(Object, Map, boolean)}赋值.</li>
-     * <li>3.调用{@link EmptyUtils#isNotEmpty(Object)}字符串非空判断,如果字符串为空则不进行实体赋值.转换方式与{@link #convertObjects(Object, Map, boolean)}.</li>
+     * <li>1、map中的key必须与实体中的常量key一致.</li>
+     * <li>2、通过class创建一个新的实例,后调用{@link #convertObjects(Object, Map, boolean)}赋值.</li>
+     * <li>3、调用{@link EmptyUtils#isNotEmpty(Object)}字符串非空判断，如果字符串为空则不进行实体赋值。转换方式与{@link #convertObjects(Object, Map, boolean)}一致.</li>
      * </ul>
      *
      * @param cls    实体类class
@@ -144,7 +144,6 @@ public class MapUtils {
      * @since 1.2.3
      */
     public static <T, K, V> T toEntityNotEmpty(Class<T> cls, Map<K, V> params) throws Exception {
-//        AssertUtils.notNull(cls, "class");
         T obj = cls.getDeclaredConstructor().newInstance();
         return convertObjects(obj, params, true);
     }
@@ -153,8 +152,8 @@ public class MapUtils {
      * map转换为实体对象,并赋值
      * <ul>
      * <li>注:</li>
-     * <li>1.map中的key必须与实体中的常量key一致.</li>
-     * <li>2.调用{@link EmptyUtils#isNotEmpty(Object)}字符串非空判断,如果字符串为空则不进行实体赋值.转换方式与{@link #convertObjects(Object, Map, boolean)}.</li>
+     * <li>1、map中的key必须与实体中的常量key一致.</li>
+     * <li>2、调用{@link EmptyUtils#isNotEmpty(Object)}字符串非空判断,如果字符串为空则不进行实体赋值，转换方式与{@link #convertObjects(Object, Map, boolean)}一致.</li>
      * </ul>
      *
      * @param object 实体对象
@@ -162,7 +161,6 @@ public class MapUtils {
      * @since 1.4.0
      */
     public static <T, K, V> T toEntityNotEmpty(T object, Map<K, V> params) throws Exception {
-//        AssertUtils.notNull(object, "object");
         return convertObjects(object, params, true);
     }
 
@@ -185,7 +183,6 @@ public class MapUtils {
      * @since 1.4.0
      */
     public static <T, K, V> T convertEntity(Class<T> cls, Map<K, V> params) throws Exception {
-//        AssertUtils.notNull(cls, "class");
         T obj = cls.getDeclaredConstructor().newInstance();
         return convertObjects(obj, params, false);
     }
@@ -209,7 +206,6 @@ public class MapUtils {
      * @since 1.4.0
      */
     public static <T, K, V> T convertEntity(T object, Map<K, V> params) throws Exception {
-//        AssertUtils.notNull(object, "object");
         return convertObjects(object, params, false);
     }
 
@@ -227,6 +223,7 @@ public class MapUtils {
      * @since 1.4.0
      */
     private static <T> T convertObjects(T bean, Map params, boolean empty) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
+        Assert.notNull(bean, "bean is null");
         Class<?> aClass = bean.getClass();
         BeanInfo beanInfo = Introspector.getBeanInfo(aClass);
         PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
@@ -245,7 +242,7 @@ public class MapUtils {
                         break;
                     case "int":
                     case "Integer":
-                        value = Integer.parseInt(String.valueOf(value).strip());
+                        value = Integer.parseInt(String.valueOf(value).trim().strip());
                         break;
                     case "long":
                     case "Long":
@@ -263,8 +260,7 @@ public class MapUtils {
                         }
                         break;
                     case "List":
-                        String trim = trim(String.valueOf(value));
-                        value = Splitter.on(",").trimResults().splitToList(trim);
+                        value = ListUtils.guavaStringToList(String.valueOf(value));
                         break;
                     default:
                         throw new ToolboxException("Unknown type : " + descriptor.getPropertyType().getSimpleName());
@@ -273,20 +269,6 @@ public class MapUtils {
             }
         }
         return bean;
-    }
-
-    /**
-     * 修剪掉前后各一位字符
-     *
-     * @param source 源
-     * @return String
-     */
-    private static String trim(String source) {
-        if (EmptyUtils.isEmpty(source)) {
-            return "";
-        }
-        String s1 = source.substring(1);
-        return s1.substring(0, s1.length() - 1);
     }
 
     /**

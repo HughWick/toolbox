@@ -3,6 +3,7 @@ package com.github.hugh.util;
 import com.github.hugh.constant.guava.CharMatchers;
 import com.google.common.base.CaseFormat;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -237,10 +238,10 @@ public class StringUtils {
      * @since 1.3.1
      */
     public static String getCamelCase(String inputString, boolean firstCharacterUppercase) {
-        var stringBuilder = new StringBuilder();
-        var nextUpperCase = false;
+        StringBuilder stringBuilder = new StringBuilder();
+        boolean nextUpperCase = false;
         for (var i = 0; i < inputString.length(); i++) {
-            var charAt = inputString.charAt(i);
+            char charAt = inputString.charAt(i);
             switch (charAt) {
                 case '_':
                 case '-':
@@ -282,7 +283,7 @@ public class StringUtils {
         if (EmptyUtils.isEmpty(string)) {
             return string;
         }
-        var matcher = BLANK_PATTERN.matcher(string);
+        Matcher matcher = BLANK_PATTERN.matcher(string);
         String result = matcher.replaceAll(replacement);
         result = result.replace("\\u00A0", replacement);
         return result;
@@ -331,12 +332,12 @@ public class StringUtils {
         if (source.isEmpty()) {
             return "";
         }
-        var beginChar = source.substring(0, 1);
+        String beginChar = source.substring(0, 1);
         if (beginChar.equalsIgnoreCase(beTrim)) {
             source = source.substring(1);
         }
         // 循环去掉字符串尾的beTrim字符
-        var endChar = source.substring(source.length() - 1);
+        String endChar = source.substring(source.length() - 1);
         if (endChar.equalsIgnoreCase(beTrim)) {
             source = source.substring(0, source.length() - 1);
         }
@@ -372,8 +373,8 @@ public class StringUtils {
      * @since 1.5.6
      */
     public static int indexOf(String string, String chr, int index) {
-        var pattern = Pattern.compile(chr);
-        var findMatcher = pattern.matcher(string);
+        Pattern pattern = Pattern.compile(chr);
+        Matcher findMatcher = pattern.matcher(string);
         var number = 0;
         while (findMatcher.find()) {
             number++;
@@ -468,5 +469,19 @@ public class StringUtils {
         } else {
             return str1.toString().contentEquals(str2);
         }
+    }
+
+    /**
+     * 修剪掉前后各一位字符
+     *
+     * @param source 源
+     * @return String
+     */
+    public static String trimLastPlace(String source) {
+        if (EmptyUtils.isEmpty(source)) {
+            return "";
+        }
+        String s1 = source.substring(1);
+        return s1.substring(0, s1.length() - 1);
     }
 }

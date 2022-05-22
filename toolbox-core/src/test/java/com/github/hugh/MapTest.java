@@ -4,6 +4,7 @@ import com.github.hugh.model.Student;
 import com.github.hugh.util.EntityUtils;
 import com.github.hugh.util.MapUtils;
 import org.junit.jupiter.api.Test;
+import org.springframework.util.StopWatch;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -81,36 +82,44 @@ public class MapTest {
         Map<String, Object> map = new HashMap<>();
         map.put("page", 1);
         map.put("size", 2);
+        for (int i = 0; i < 6000000; i++) {
+            map.put(i++ + "", i);
+
+        }
         map.put("id", 2);
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start("测试删除");
         MapUtils.removeKeys(map, "page", "size");
-        System.out.println(map);
+        stopWatch.stop();
+        System.out.println(stopWatch.prettyPrint());
+//        System.out.println(map);
     }
 
     @Test
     void testSort() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("z", 1);
-        map.put("a", 1);
-        map.put("w", 1);
-        map.put("i", 1);
-        map.put("n", 1);
-        map.put("m", 1);
-        map.put("e", 1);
-        System.out.println("--->原来>!>>>>" + map);
+        Map<String, Integer> map1 = new HashMap<>();
+        map1.put("z", 1);
+        map1.put("a", 1);
+        map1.put("w", 1);
+        map1.put("i", 1);
+        map1.put("n", 1);
+        map1.put("m", 1);
+        map1.put("e", 1);
+        System.out.println("--->原来>!>>>>" + map1);
 //        System.out.println("--2->>!>>>>" + MapUtils.sortMap(map));
-        System.out.println("--6->>!>>>>" + MapUtils.sortByKeyAsc(map));
+        System.out.println("--6->>!>>>>" + MapUtils.sortByKeyAsc(map1));
 //        Assertions.assertEquals(MapUtils.sortMap(map) ,MapUtils.sortByKeyAsc(map));
-        map.clear();
-        map.put("2", "a");
-        map.put("5", "i");
-        map.put("1", "z");
-        map.put("3", "c");
-        map.put("6", "w");
-        map.put("4", "n");
-        System.out.println("--3->排序前>!>>>>" + map);
-//        System.out.println("--4->>!>>>>" + MapUtils.sortByValueDesc(map));
-//        System.out.println("--5->>!>>>>" + MapUtils.sortByValueAsc(map));
-        System.out.println("--6->>!>>>>" + MapUtils.sortByKeyDesc(map));
+        Map<String, String> stringMap = new HashMap<>();
+        stringMap.put("2", "a");
+        stringMap.put("5", "i");
+        stringMap.put("1", "z");
+        stringMap.put("3", "c");
+        stringMap.put("6", "w");
+        stringMap.put("4", "n");
+        System.out.println("--3->排序前>!>>>>" + stringMap);
+        System.out.println("--4->>!>>>>" + MapUtils.sortByValueDesc(stringMap));
+        System.out.println("--5->>!>>>>" + MapUtils.sortByValueAsc(stringMap));
+        System.out.println("--6->>!>>>>" + MapUtils.sortByKeyDesc(stringMap));
     }
 
     @Test
@@ -123,6 +132,42 @@ public class MapTest {
         map.put("6", "w");
         map.put("4", "n");
         System.out.println("--4->>!>>>>" + MapUtils.sortByValueDesc(map));
+    }
+
+    @Test
+    void testMapToEntity() throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", 1);
+        map.put("age", 2);
+        map.put("name", "null");
+        map.put("amount", 10.14);
+        map.put("sex", "women");
+        map.put("list", "1,2,3,4");
+        map.put("birthday", new Date());
+        map.put("create", "2019-04-06 12:11:20");
+        Student o = MapUtils.toEntityNotEmpty(Student.class, map);
+        Student student = MapUtils.toEntityNotEmpty(new Student(), map);
+        System.out.println("--->" + o);
+        System.out.println("-1==>>" + student);
+//        Student student3 = MapUtils.toEntityNotEmpty(null, map);
+        System.out.println("----");
+    }
+
+    @Test
+    void testConvertEntity() throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", 1);
+        map.put("age", 2);
+        map.put("name", "null");
+        map.put("amount", 10.14);
+        map.put("sex", "women");
+        map.put("list", "1,2,3,4");
+        map.put("birthday", new Date());
+        map.put("create", "2019-04-06 12:11:20");
+        Student o = MapUtils.convertEntity(Student.class, map);
+        System.out.println("--->>" + o);
+        Student student1 = MapUtils.convertEntity(new Student(), map);
+        System.out.println("--===>>"+ student1);
     }
 
 }

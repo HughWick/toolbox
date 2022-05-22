@@ -3,6 +3,7 @@ package com.github.hugh.model;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author AS
@@ -26,9 +27,8 @@ public class Student {
     private double amount;
     //    private Date birthday;
     private Date create;
-    //    private List list;
+    private List list;
     private String sex;
-
 
 
     private String account;
