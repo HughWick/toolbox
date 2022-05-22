@@ -46,7 +46,7 @@ public class MapTest {
     }
 
     @Test
-    public void test02() {
+    public void testGetValue() {
         Map<String, Object> map = new HashMap<>();
         map.put("id", 1);
         map.put("age", 2);
@@ -63,42 +63,8 @@ public class MapTest {
         System.out.println("-5-->" + MapUtils.getDouble(map, "amount"));
     }
 
-//    @Test
-//    public void test03() {
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("id", 1);
-//        map.put("age", 2);
-//        map.put("name", "null");
-//        map.put("amount", 10.14);
-//        map.put("birthday", new Date());
-//        map.put("create", "2019-04-06 12:11:20");
-//        JSONArray arr = new JSONArray();
-//        arr.add("a");
-//        arr.add("b");
-//        JSONArray arr2 = new JSONArray();
-//        arr2.add("c");
-//        arr.add(arr2.toString());
-//        map.put("list", arr.toString());
-//        System.out.println("--->>" + map);
-//        try {
-//            Student Student1 = MapUtils.toEntityNotEmpty(Student.class, map);
-//            System.out.println(JSONObject.fromObject(Student1));
-//            map.put("age", 22233);
-//            Student Student12 = MapUtils.convertEntity(Student1, map);
-//            System.out.println(JSONObject.fromObject(Student12));
-////            Object o = Student12.getList().get(2);
-////            System.out.println("--->>>>>" + JSONArray.fromObject(o));
-////            String s = JsonObjectUtils.toJson(Student1);
-////            Student Student3 = MapUtils.toEntity(Student1, JsonObjectUtils.parse(s));
-////            System.out.println(JSONObject.fromObject(Student3));
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     @Test
-    public void test04() {
+    public void testSetValue() {
         Map<String, Object> map = new HashMap<>();
         MapUtils.setValue(map, "a", null);
         System.out.println("--1>>" + map);
@@ -111,7 +77,7 @@ public class MapTest {
     }
 
     @Test
-    void test05() {
+    void testRemoveKey() {
         Map<String, Object> map = new HashMap<>();
         map.put("page", 1);
         map.put("size", 2);
@@ -122,7 +88,7 @@ public class MapTest {
 
     @Test
     void testSort() {
-        Map map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("z", 1);
         map.put("a", 1);
         map.put("w", 1);
@@ -142,10 +108,23 @@ public class MapTest {
         map.put("6", "w");
         map.put("4", "n");
         System.out.println("--3->排序前>!>>>>" + map);
-        System.out.println("--4->>!>>>>" + MapUtils.sortByValueDesc(map));
-        System.out.println("--5->>!>>>>" + MapUtils.sortByValueAsc(map));
-        System.out.println("--5->>!>>>>" + MapUtils.sortByKeyDesc(map));
+//        System.out.println("--4->>!>>>>" + MapUtils.sortByValueDesc(map));
+//        System.out.println("--5->>!>>>>" + MapUtils.sortByValueAsc(map));
+        System.out.println("--6->>!>>>>" + MapUtils.sortByKeyDesc(map));
     }
+
+    @Test
+    void testSortByDesc() {
+        Map<String, String> map = new HashMap<>();
+        map.put("2", "a");
+        map.put("5", "i");
+        map.put("1", "z");
+        map.put("3", "c");
+        map.put("6", "w");
+        map.put("4", "n");
+        System.out.println("--4->>!>>>>" + MapUtils.sortByValueDesc(map));
+    }
+
 }
 
 

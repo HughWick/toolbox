@@ -1,7 +1,6 @@
 package com.github.hugh.util;
 
 import com.github.hugh.exception.ToolboxException;
-import com.github.hugh.util.common.AssertUtils;
 import com.google.common.base.Splitter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,13 +9,12 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.*;
 
 /**
  * Map 工具类
- * <ul>
- * <li>该类获取map中的值使用了{@link org.apache.commons.collections4.MapUtils}进行二次封装</li>
- * </ul>
  *
  * @author hugh
  * @since 1.0.2
@@ -146,7 +144,7 @@ public class MapUtils {
      * @since 1.2.3
      */
     public static <T, K, V> T toEntityNotEmpty(Class<T> cls, Map<K, V> params) throws Exception {
-        AssertUtils.notNull(cls, "class");
+//        AssertUtils.notNull(cls, "class");
         T obj = cls.getDeclaredConstructor().newInstance();
         return convertObjects(obj, params, true);
     }
@@ -164,7 +162,7 @@ public class MapUtils {
      * @since 1.4.0
      */
     public static <T, K, V> T toEntityNotEmpty(T object, Map<K, V> params) throws Exception {
-        AssertUtils.notNull(object, "object");
+//        AssertUtils.notNull(object, "object");
         return convertObjects(object, params, true);
     }
 
@@ -187,7 +185,7 @@ public class MapUtils {
      * @since 1.4.0
      */
     public static <T, K, V> T convertEntity(Class<T> cls, Map<K, V> params) throws Exception {
-        AssertUtils.notNull(cls, "class");
+//        AssertUtils.notNull(cls, "class");
         T obj = cls.getDeclaredConstructor().newInstance();
         return convertObjects(obj, params, false);
     }
@@ -211,7 +209,7 @@ public class MapUtils {
      * @since 1.4.0
      */
     public static <T, K, V> T convertEntity(T object, Map<K, V> params) throws Exception {
-        AssertUtils.notNull(object, "object");
+//        AssertUtils.notNull(object, "object");
         return convertObjects(object, params, false);
     }
 
@@ -300,19 +298,61 @@ public class MapUtils {
      * @return String
      */
     public static <K> String getString(Map<? super K, ?> map, K key) {
-        return org.apache.commons.collections4.MapUtils.getString(map, key);
+        if (map != null) {
+            final Object answer = map.get(key);
+            if (answer != null) {
+                return answer.toString();
+            }
+        }
+        return null;
     }
 
     /**
      * get参数后转换为Long
      *
-     * @param <K> key 的类型
      * @param map 参数
      * @param key 键
+     * @param <K> key 的类型
      * @return Long
      */
     public static <K> Long getLong(Map<? super K, ?> map, K key) {
-        return org.apache.commons.collections4.MapUtils.getLong(map, key);
+        final Number answer = getNumber(map, key);
+        if (answer == null) {
+            return null;
+        }
+        if (answer instanceof Long) {
+            return (Long) answer;
+        }
+        return answer.longValue();
+    }
+
+    /**
+     * 获取map中对应key的 number
+     *
+     * @param map 参数
+     * @param key 键
+     * @param <K> key 的类型
+     * @return number
+     * @since 2.3.1
+     */
+    public static <K> Number getNumber(final Map<? super K, ?> map, final K key) {
+        if (map != null) {
+            final Object answer = map.get(key);
+            if (answer != null) {
+                if (answer instanceof Number) {
+                    return (Number) answer;
+                }
+                if (answer instanceof String) {
+                    try {
+                        final String text = (String) answer;
+                        return NumberFormat.getInstance().parse(text);
+                    } catch (final ParseException e) { // NOPMD
+                        // failure means null is returned
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -324,7 +364,14 @@ public class MapUtils {
      * @return Integer
      */
     public static <K> Integer getInt(Map<? super K, ?> map, K key) {
-        return org.apache.commons.collections4.MapUtils.getInteger(map, key);
+        final Number answer = getNumber(map, key);
+        if (answer == null) {
+            return null;
+        }
+        if (answer instanceof Integer) {
+            return (Integer) answer;
+        }
+        return answer.intValue();
     }
 
     /**
@@ -336,7 +383,14 @@ public class MapUtils {
      * @return Double
      */
     public static <K> Double getDouble(Map<? super K, ?> map, K key) {
-        return org.apache.commons.collections4.MapUtils.getDouble(map, key);
+        final Number answer = getNumber(map, key);
+        if (answer == null) {
+            return null;
+        }
+        if (answer instanceof Double) {
+            return (Double) answer;
+        }
+        return answer.doubleValue();
     }
 
     /**
@@ -347,8 +401,14 @@ public class MapUtils {
      * @param key 键
      * @return Map
      */
-    public static <K> Map getMap(Map<? super K, ?> map, K key) {
-        return org.apache.commons.collections4.MapUtils.getMap(map, key);
+    public static <K> Map<?, ?> getMap(Map<? super K, ?> map, K key) {
+        if (map != null) {
+            final Object answer = map.get(key);
+            if (answer instanceof Map) {
+                return (Map<?, ?>) answer;
+            }
+        }
+        return null;
     }
 
     /**
@@ -412,7 +472,7 @@ public class MapUtils {
      * @return map
      * @since 2.1.11
      */
-    public static   <K, V extends Comparable<? super V>> Map<K, V> sortByValueAsc(Map<K, V> map) {
+    public static <K, V extends Comparable<? super V>> Map<K, V> sortByValueAsc(Map<K, V> map) {
         Map<K, V> result = new LinkedHashMap<>();
         map.entrySet().stream().sorted(Map.Entry.comparingByValue()).forEachOrdered(e -> result.put(e.getKey(), e.getValue()));
         return result;
@@ -427,7 +487,7 @@ public class MapUtils {
      * @return map 按字母排序后的map
      * @since 2.1.11
      */
-    public static  <K extends Comparable<? super K>, V> Map<K, V> sortByKeyDesc(Map<K, V> map) {
+    public static <K extends Comparable<? super K>, V> Map<K, V> sortByKeyDesc(Map<K, V> map) {
         Map<K, V> result = new LinkedHashMap<>();
         map.entrySet().stream().sorted(Map.Entry.<K, V>comparingByKey().reversed()).forEachOrdered(e -> result.put(e.getKey(), e.getValue()));
         return result;
@@ -442,7 +502,7 @@ public class MapUtils {
      * @return map 按字母排序后的map
      * @since 2.1.11
      */
-    public static  <K extends Comparable<? super K>, V> Map<K, V> sortByKeyAsc(Map<K, V> map) {
+    public static <K extends Comparable<? super K>, V> Map<K, V> sortByKeyAsc(Map<K, V> map) {
         Map<K, V> result = new LinkedHashMap<>();
         map.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEachOrdered(e -> result.put(e.getKey(), e.getValue()));
         return result;

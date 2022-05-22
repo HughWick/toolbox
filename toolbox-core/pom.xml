@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
     <description>toolbox 公共工具类核心包</description>
     <properties>
-        <commons-collections4.version>4.4</commons-collections4.version>
+<!--        <commons-collections4.version>4.4</commons-collections4.version>-->
         <okhttp.version>4.9.3</okhttp.version>
         <servlet-api.version>4.0.1</servlet-api.version>
         <google-guava.version>31.1-jre</google-guava.version>
@@ -30,11 +30,11 @@
             <artifactId>toolbox-bean</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>${commons-collections4.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.commons</groupId>-->
+<!--            <artifactId>commons-collections4</artifactId>-->
+<!--            <version>${commons-collections4.version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
