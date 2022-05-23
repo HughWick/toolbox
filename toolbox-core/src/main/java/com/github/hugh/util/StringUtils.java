@@ -476,12 +476,23 @@ public class StringUtils {
      *
      * @param source 源
      * @return String
+     * @since 2.3.1
      */
     public static String trimLastPlace(String source) {
         if (EmptyUtils.isEmpty(source)) {
             return "";
         }
-        String s1 = source.substring(1);
-        return s1.substring(0, s1.length() - 1);
+        return source.substring(0, source.length() - 1);
+    }
+
+    /**
+     * 修剪掉前后各一位字符
+     *
+     * @param source 源字符串
+     * @return String
+     * @since 2.3.1
+     */
+    public static String trimLastPlace(StringBuilder source) {
+        return trimLastPlace(source.toString());
     }
 }

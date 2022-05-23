@@ -1,13 +1,10 @@
 package com.github.hugh.lang;
 
 import com.github.hugh.util.StringUtils;
-import com.google.common.base.CharMatcher;
-import com.google.common.base.Splitter;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 //import static org.junit.jupiter.api.
 
@@ -77,21 +74,6 @@ public class StringTest {
     }
 
     @Test
-    void test07() {
-        String input = "<0ffff>0|Q|04<0x00100001>0|W||006<0x00100006>0|W||006";
-        String result = CharMatcher.is('<').collapseFrom(input, ',');
-        System.out.println(result);
-        String r2 = CharMatcher.is('>').collapseFrom(result, ':');
-        System.out.println(r2);
-        Map<String, String> map = Splitter.on(",")
-                .trimResults()
-                .omitEmptyStrings()
-                .withKeyValueSeparator(":")
-                .split(r2);
-        System.out.println(map);
-    }
-
-    @Test
     void trimResults() {
         var str = "\t0.12 \n";
         assertNull(null);
@@ -99,17 +81,15 @@ public class StringTest {
 //        assertNotNull(string,"字符串不能为空");
         assertEquals(StringUtils.trim(str), str.trim());
         System.out.println("--------------->>");
-
     }
 
-
-    public static void main(String[] args) {
-        String init = "Bob is a Bird... Bob is a Plane... Bob is Superman!";
-        String changed = init.replace("Bob is", "It's"); // Noncompliant  
-        System.out.println(changed);
-//        CharMatcher.javaIsoControl()
-        // changed = changed.replaceAll("\\.\\.\\.", ";"); // Noncompliant
-//        double threadcount = DoubleMathUtils.mul(16, 3);
-//        System.out.println("-=-threadcount ->>" + threadcount);
+    @Test
+    void testTrimLastPlace() {
+        StringBuilder stringBuilder = new StringBuilder("1,2,3,");
+        String str = "a,b,c,";
+        StringBuilder stringBuilder1 = null;
+        System.out.println("-1-->" + StringUtils.trimLastPlace(str));
+        System.out.println("---2>" + StringUtils.trimLastPlace(stringBuilder));
+        System.out.println("-333-->" + StringUtils.trimLastPlace(stringBuilder1));
     }
 }

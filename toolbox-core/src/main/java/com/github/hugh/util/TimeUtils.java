@@ -304,11 +304,11 @@ public class TimeUtils extends DateCode {
         if (EmptyUtils.isEmpty(startTime) || EmptyUtils.isEmpty(endTime)) {
             return -1;
         }
-        LocalDateTime start = TimeUtils.parseTime(startTime);
+        LocalDateTime start = parseTime(startTime);
         if (start == null) {
             return -1;
         }
-        LocalDateTime end = TimeUtils.parseTime(endTime);
+        LocalDateTime end = parseTime(endTime);
         if (end == null) {
             return -1;
         }

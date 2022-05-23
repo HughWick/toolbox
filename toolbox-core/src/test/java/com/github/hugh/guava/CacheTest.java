@@ -9,10 +9,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * guava 本地缓存测试类
+ *
  * @author AS
  * @date 2020/9/22 11:07
  */
-public class Test01 {
+public class CacheTest {
     //加载缓存
     private static CacheLoader<String, Boolean> cacheLoader = CacheLoader
             .from(key -> {

@@ -238,7 +238,7 @@ public class MapUtils {
      * @throws IllegalAccessException    没有访问权限的异常
      * @since 1.4.0
      */
-    private static <T> T convertObjects(T bean, Map params, boolean empty) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
+    private static <T, K, V> T convertObjects(T bean, Map<K, V> params, boolean empty) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
         Assert.notNull(bean, "bean is null");
         Class<?> aClass = bean.getClass();
         BeanInfo beanInfo = Introspector.getBeanInfo(aClass);
