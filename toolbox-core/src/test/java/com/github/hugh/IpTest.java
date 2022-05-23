@@ -80,18 +80,8 @@ public class IpTest {
         assertTrue(IpUtils.isSameNetworkSegment("43.115.88.2", "43.115.88.1", mask1));
         assertTrue(IpUtils.isNotSameNetworkSegment("43.115.87.2", "43.115.88.1", mask1));
         assertTrue(IpUtils.isSameNetworkSegment("43.115.88.252", "43.115.88.1", mask1));
-        System.out.println("12---=" + (IpUtils.isSameNetworkSegment("115.91.255.132", "43.115.88.1", mask1)));
-    }
+        assertTrue(IpUtils.isSameNetworkSegment("192.168.1.213", "192.168.2.2", mask2));
 
-    public static void main(String[] args) {
-        try {
-            String s = "123";
-            try (BufferedReader in = new BufferedReader(null)) {
-                int i = 1 / 0;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("====");
+        System.out.println("12---=" + (IpUtils.isSameNetworkSegment("115.91.255.132", "43.115.88.1", mask1)));
     }
 }

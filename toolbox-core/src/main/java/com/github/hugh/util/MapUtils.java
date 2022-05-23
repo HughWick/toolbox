@@ -140,10 +140,14 @@ public class MapUtils {
      * @param <K>    键泛型
      * @param <V>    value泛型
      * @return T 返回实体
-     * @throws Exception 错误异常
+     * @throws IntrospectionException    实体方法异常
+     * @throws InvocationTargetException 目标调用异常
+     * @throws IllegalAccessException    非法访问异常，注意它是检查(checked)异常，也就是需要显示捕获，此异常会在修饰符禁用访问的时候抛出，可以通过setAccessible(true)抑制修饰符检查来避免抛出此异常
+     * @throws NoSuchMethodException     没有找到该方法
+     * @throws InstantiationException    实例化异常
      * @since 1.2.3
      */
-    public static <T, K, V> T toEntityNotEmpty(Class<T> cls, Map<K, V> params) throws Exception {
+    public static <T, K, V> T toEntityNotEmpty(Class<T> cls, Map<K, V> params) throws IntrospectionException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         T obj = cls.getDeclaredConstructor().newInstance();
         return convertObjects(obj, params, true);
     }
@@ -158,9 +162,15 @@ public class MapUtils {
      *
      * @param object 实体对象
      * @param params 参数
+     * @param <T>    实体对象
+     * @param <K>    KEY
+     * @param <V>    value
+     * @throws IntrospectionException    实体方法异常
+     * @throws InvocationTargetException 目标调用异常
+     * @throws IllegalAccessException    非法访问异常，注意它是检查(checked)异常，也就是需要显示捕获，此异常会在修饰符禁用访问的时候抛出，可以通过setAccessible(true)抑制修饰符检查来避免抛出此异常
      * @since 1.4.0
      */
-    public static <T, K, V> T toEntityNotEmpty(T object, Map<K, V> params) throws Exception {
+    public static <T, K, V> T toEntityNotEmpty(T object, Map<K, V> params) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
         return convertObjects(object, params, true);
     }
 
@@ -179,10 +189,14 @@ public class MapUtils {
      * @param <K>    map中key
      * @param <V>    map-value
      * @return T 实体
-     * @throws Exception 错误信息
+     * @throws IntrospectionException    实体方法异常
+     * @throws InvocationTargetException 目标调用异常
+     * @throws IllegalAccessException    非法访问异常，注意它是检查(checked)异常，也就是需要显示捕获，此异常会在修饰符禁用访问的时候抛出，可以通过setAccessible(true)抑制修饰符检查来避免抛出此异常
+     * @throws NoSuchMethodException     没有找到该方法
+     * @throws InstantiationException    实例化异常
      * @since 1.4.0
      */
-    public static <T, K, V> T convertEntity(Class<T> cls, Map<K, V> params) throws Exception {
+    public static <T, K, V> T convertEntity(Class<T> cls, Map<K, V> params) throws IntrospectionException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         T obj = cls.getDeclaredConstructor().newInstance();
         return convertObjects(obj, params, false);
     }
@@ -202,10 +216,12 @@ public class MapUtils {
      * @param <K>    map中key
      * @param <V>    map-value
      * @return T 实体
-     * @throws Exception 错误信息
+     * @throws IntrospectionException    实体方法异常
+     * @throws InvocationTargetException 目标调用异常
+     * @throws IllegalAccessException    非法访问异常，注意它是检查(checked)异常，也就是需要显示捕获，此异常会在修饰符禁用访问的时候抛出，可以通过setAccessible(true)抑制修饰符检查来避免抛出此异常
      * @since 1.4.0
      */
-    public static <T, K, V> T convertEntity(T object, Map<K, V> params) throws Exception {
+    public static <T, K, V> T convertEntity(T object, Map<K, V> params) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
         return convertObjects(object, params, false);
     }
 
