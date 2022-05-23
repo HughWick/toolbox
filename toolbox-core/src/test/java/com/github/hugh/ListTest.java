@@ -145,7 +145,7 @@ public class ListTest {
     @Test
     void testListToString() {
         List<String> originList = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             originList.add(i + "");
         }
         String s = ListUtils.listToString(originList);

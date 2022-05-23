@@ -144,7 +144,6 @@ public class ListUtils {
         for (T object : list) {
             stringBuilder.append(object).append(separator);
         }
-        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-        return stringBuilder.toString();
+        return StringUtils.trimLastPlace(stringBuilder);
     }
 }
