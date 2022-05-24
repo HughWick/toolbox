@@ -1,9 +1,8 @@
 package com.github.hugh.json.gson;
 
 import com.alibaba.fastjson.JSON;
-import com.github.hugh.constant.DateCode;
-import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.json.gson.adapter.MapTypeAdapter;
+import com.github.hugh.util.EmptyUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

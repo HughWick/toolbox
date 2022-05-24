@@ -249,8 +249,7 @@ public class JsonObjectUtils {
      * @since 1.3.4
      */
     public static <T> JsonObject parse(T object) {
-        JsonElement jsonElement = JsonParser.parseString(String.valueOf(object));
-        return isJsonNull(jsonElement) ? null : jsonElement.getAsJsonObject();
+        return fromJson(object, JsonObject.class);
     }
 
     /**

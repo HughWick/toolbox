@@ -2,15 +2,20 @@ package com.github.hugh.json;
 
 import com.alibaba.fastjson.JSON;
 import com.github.hugh.bean.dto.ResultDTO;
+import com.github.hugh.constant.DateCode;
+import com.github.hugh.json.gson.JsonObjectUtils;
 import com.github.hugh.json.gson.JsonObjects;
 import com.github.hugh.json.model.GsonTest;
 import com.github.hugh.json.model.Student;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
+import com.google.gson.internal.LinkedTreeMap;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * gson JsonObjects测试类
@@ -48,13 +53,10 @@ public class JsonObjectsTest {
         String str = "{}";
         JsonObjects json = new JsonObjects(str);
         System.out.println("--1-->>" + json.isNull());
-        String str2 = null;
-        JsonObjects json2 = new JsonObjects(str2);
-        System.out.println("--2-->>" + json2.isNull());
-        System.out.println("--3-->>" + json2.isNotNull());
-        JsonObject jsopn = new JsonObject();
-        System.out.println("---->>" + new JsonObjects(jsopn));
-        System.out.println("---->>" + new JsonObjects(jsopn));
+        System.out.println("--2-->>" + json.isNotNull());
+//        String str2 = null;
+//        JsonObjects json2 = new JsonObjects(str2);
+//        System.out.println("--3-->>" + json2.isNotNull());
     }
 
     @Test
@@ -136,39 +138,57 @@ public class JsonObjectsTest {
         System.out.println("--2->" + jsonObjects.removeProperty("b").getAsString());
     }
 
-//    @Test
-//    void test06() throws IOException {
-//        String s = OkHttpUtils.get("http://factory.hnlot.com.cn/v2/contracts/find");
-//        JsonObjects jsonObjects = new JsonObjects(s);
-//        ResultDTO resultDTO = jsonObjects.formJson(ResultDTO.class);
-//
-//        System.out.println("-resultDTO-->" + resultDTO);
-//        JsonArray jsonArray = new JsonObjects(JsonObjectUtils.toJson(resultDTO.getData())).getJsonArray("list");
-//        List<ContractsDO> list = new JsonObjects(resultDTO.getData()).toList("list", ContractsDO.class);
-//        list.forEach(e -> {
-//            String s1 = JsonObjectUtils.toJson(e);
+    @Test
+    void testToList() {
+        String str = "{\"list\":[{\"code\":\"THXX-HTDJ-20220322-01\",\"createBy\":\"童娟\",\"createDate\":1647910685000,\"dateOfSigning\":\"2022-03-22\",\"deleteBy\":\"\",\"deleteFlag\":0,\"id\":37,\"installationAddress\":\"\",\"name\":\"研发出库（广西大化）合同\",\"partyA\":\"\",\"partyB\":\"\",\"projectName\":\"研发出库（广西大化）合同\",\"serialNo\":\"1506072686843924480\",\"updateBy\":\"\",\"useSide\":\"2022-03-21 18:02:11\"}," +
+                "{\"code\":\"THXX-HTDJ-202203021\",\"createBy\":\"肖正\",\"createDate\":1646277296000,\"dateOfSigning\":\"\",\"deleteBy\":\"\",\"deleteFlag\":0,\"id\":36,\"installationAddress\":\"\",\"name\":\"广西大化产品增补合同\",\"partyA\":\"\",\"partyB\":\"\",\"projectName\":\"广西大化产品增补\",\"serialNo\":\"1499221758891266048\",\"updateBy\":\"\",\"useSide\":\"\"}]}";
+        List<ContractsDO> list = new JsonObjects(str).toList("list", ContractsDO.class);
+        list.forEach(e -> {
+            String s1 = JsonObjectUtils.toJson(e);
+            System.out.println(new JsonObjects(s1).formJson(ContractsDO.class));
+            System.out.println(new JsonObjects(s1).formJson(ContractsDO.class, DateCode.YEAR_MONTH_DAY));
 //            System.out.println( new JsonObjects(s1).formJson(ContractsDO.class));
-//            System.out.println( new JsonObjects(s1).formJson(ContractsDO.class , DateCode.YEAR_MONTH_DAY));
-////            System.out.println( new JsonObjects(s1).formJson(ContractsDO.class));
-//        });
-//        System.out.println("--1->>" + jsonArray);
-//        List<LinkedTreeMap> jsonArray2 = new JsonObjects(resultDTO.getData()).toList("list");
-//        jsonArray2.forEach(System.out::println);
+        });
+        List<LinkedTreeMap> jsonArray2 = new JsonObjects(str).toList("list");
+        jsonArray2.forEach(System.out::println);
 //        List<ContractsDO> list1 = new JsonObjects(resultDTO.getData()).toList("list", ContractsDO.class);
 //        list1.forEach(System.out::println);
-////        System.out.println("---2>>" + jsonArray2);
-//    }
+//        System.out.println("---2>>" + jsonArray2);
+    }
 
     @Test
-    void length(){
+    void testFromJsonObject() {
         var str = "{code:006,message:测试,age:18,created:1625024713000,amount:199.88,switchs:true}";
         JsonObjects jsonObjects = new JsonObjects(str);
-//        System.out.println("-1-->>"+jsonObjects.toJson());
-        System.out.println("-1-->>"+jsonObjects.fromJsonTimeStamp(GsonTest.class));
+        System.out.println("-1-->>" + jsonObjects.toJson());
+        System.out.println("-1-->>" + jsonObjects.fromJsonTimeStamp(GsonTest.class));
         var str2 = "{\"code\":\"006\",\"message\":\"测试\",\"age\":\"18\",\"created\":\"2022-03-21 18:02:11\",\"amount\":\"199.88\",\"switchs\":\"true\"}";
-        System.out.println("=2===>>"+new JsonObjects(str2).formJson(GsonTest.class));
-        var str3 = "{code:006,message:测试,age:18,created:2022-03-21 18:02:11,amount:199.88,switchs:true}";
-        System.out.println("=3===>>"+new JsonObjects(str2).formJson(GsonTest.class));
+        System.out.println("=2===>>" + new JsonObjects(str2).formJson(GsonTest.class));
+        System.out.println("=3===>>" + new JsonObjects(str2).formJson(GsonTest.class));
+    }
+
+    @Test
+    void testEntrySet() {
+//        var str1 = "{code:006,message:测试,age:18,created:2022-03-21 18:02:11,amount:199.88,switchs:true}";
+//        System.out.println(new JsonObjects(str1).toJson());
+        var str2 = "{code:006,message:测试,age:18,created:16250247130001,amount:199.88,switchs:true}";
+        System.out.println(new JsonObjects(str2).toJson());
+        var str3 = "{\"code\":\"006\",\"message\":\"测试\",\"age\":\"18\",\"created\":\"2022-03-21 18:02:11\",\"amount\":\"199.88\",\"switchs\":\"true\"}";
+        JsonObjects jsonObjects = new JsonObjects(str3);
+        for (Map.Entry<String, JsonElement> entrySet : jsonObjects.entrySet()) {
+            System.out.println("===>>" + entrySet.getKey());
+        }
+    }
+
+    @Test
+    void testDate() {
+        String str = "{\"age\":1,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1888,\"name\":\"张三\",\"create\":\"16250247130001\"}";
+        System.out.println(new JsonObjects(str).toJson());
+        String str2 = "{\"age\":2,\"amount\":15.14,\"birthday\":null,\"create\":null,\"id\":null,\"name\":\"张三\",\"create\":\"2022-03-21 18:02:11\"}";
+        System.out.println(new JsonObjects(str2).toJson());
+        String str3 = "{\"age\":2,\"amount\":15.14,\"birthday\":null,\"create\":null,\"id\":null,\"name\":\"张三\",\"create\":2022-03-21}";
+        System.out.println(new JsonObjects(str3).toJson());
+
     }
 }
 
@@ -180,9 +200,10 @@ class ContractsDO {
     public String projectName;// 项目名称
     public String partyA;//甲方名称
     public String partyB;//乙方名称
-    public String useSide;// 使用方
+    public Date useSide;// 使用方
     public String dateOfSigning;// 签订日期
     public String installationAddress;//安装地点
-    public Date createDate;//安装地点
+    private Date createDate;//安装地点
+//    private Date Up
 
 }

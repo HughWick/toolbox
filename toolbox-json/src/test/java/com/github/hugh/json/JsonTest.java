@@ -20,7 +20,7 @@ public class JsonTest {
 
     @Test
     public void toJsonObject() {
-        String jsonString = "{\"name\":\"xiaolin\",\"value\":\"\",\"port\":\"\"}";
+        String jsonString = "{\"name\":\"xiaolin\",\"value\":\"\",\"port\":\"1\"}";
         JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
         System.out.println(jsonObject);
         System.out.println(jsonObject.get("port").getAsInt());
@@ -114,22 +114,5 @@ public class JsonTest {
 //        String str2 = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"1625024713000\",\"test\":}";
 //        Student student2 = JsonObjectUtils.fromJsonTimeStamp(str2, Student.class);
 //        System.out.println(student1.toString());
-    }
-
-
-    public static void main(String[] args) {
-        JsonObject msgObj = new JsonObject();
-        msgObj.addProperty("test", "null");
-        msgObj.addProperty("test1", "1233");
-        msgObj.addProperty("test2", "1234");
-        msgObj.addProperty("test3", "1235");
-        System.out.println(msgObj.toString());
-//        String msgStr = msgObj.toString();
-//        Gson g = new Gson();
-//        JsonObject obj = g.fromJson(msgStr, JsonObject.class);
-//        System.out.println(obj.get("test"));
-//        for (Map.Entry<String, JsonElement> set : obj.entrySet()) {//通过遍历获取key和value
-//            System.out.println(set.getKey() + "_" + set.getValue().getAsInt());
-//        }
     }
 }

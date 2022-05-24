@@ -39,6 +39,16 @@ class JsonObjectUtilsTest {
     }
 
     @Test
+    void testTimeStamp() {
+        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create2\":null,\"id\":1,\"name\":\"张三\",\"create\":\"1625024713000\"}";
+        Student student1 = JsonObjectUtils.fromJsonTimeStamp(str, Student.class);
+        System.out.println(student1.toString());
+        System.out.println("--1->>" + JsonObjectUtils.toJson(student1));
+        JsonObject parse = JsonObjectUtils.parse(str);
+        System.out.println("---2->>" + JsonObjectUtils.fromJsonTimeStamp(parse, Student.class));
+    }
+
+    @Test
     void test() {
         String str = "{\"age\":2,\"amount\":10.14,\"money\":12.3456,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\",\"id\":null,\"opType\":1}";
         String arryStr = "{ " +
@@ -67,32 +77,6 @@ class JsonObjectUtilsTest {
         Map<Object, Object> objectObjectMap = JsonObjectUtils.toMap(json2);
         System.out.println("-9-->>" + objectObjectMap);
     }
-
-//    @Test
-//    void test02() throws IOException {
-//        JSONObject json = new JSONObject();
-//        json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-//        JsonObject jsonObject = OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json);
-//        System.out.println("--1->>" + jsonObject.toString());
-//        HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
-//
-//        objectObjectHashMap.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-//        JsonObject jsonObject2 = OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", objectObjectHashMap);
-//        System.out.println("--2->>" + jsonObject2.toString());
-//        JsonObject jsonObject3 = OkHttpUtils.postFormReJsonObject("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json.toString());
-//        System.out.println("--3->>" + jsonObject3.toString());
-//        System.out.println("--getString->>" + JsonObjectUtils.getString(jsonObject, "msg1"));
-//        System.out.println("--getString->>" + JsonObjectUtils.getString(jsonObject, "msg"));
-//        System.out.println("-getInt-->>" + JsonObjectUtils.getInt(jsonObject, "status"));
-//        System.out.println("--getInt->>" + JsonObjectUtils.getInt(jsonObject, "status2"));
-//        System.out.println("--getInteger->>" + JsonObjectUtils.getInteger(jsonObject, "status"));
-//        System.out.println("--getInteger->>" + JsonObjectUtils.getInteger(jsonObject, "status2"));
-//        System.out.println("--getLong->>" + JsonObjectUtils.getLong(jsonObject, "status2"));
-//        System.out.println("--getLongValue->>" + JsonObjectUtils.getLongValue(jsonObject, "status2"));
-//        System.out.println("--getDouble->>" + JsonObjectUtils.getDouble(jsonObject, "status"));
-//        System.out.println("--getDoubleValue->>" + JsonObjectUtils.getDoubleValue(jsonObject, "status2"));
-//        System.out.println("--getBigDecimal->>" + JsonObjectUtils.getBigDecimal(jsonObject, "status2"));
-//    }
 
     @Test
     void testGetDate() {
@@ -128,26 +112,6 @@ class JsonObjectUtilsTest {
         List<Student> students = JsonObjectUtils.toArrayList(jsonElements, Student.class);
         students.forEach(System.out::println);
     }
-
-    @Test
-    void testTimeStamp() {
-        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create2\":null,\"id\":1,\"name\":\"张三\",\"create\":\"1625024713000\"}";
-//        JsonObjects jsonObjects = new JsonObjects(str);
-        Student student1 = JsonObjectUtils.fromJsonTimeStamp(str, Student.class);
-        System.out.println(student1.toString());
-        System.out.println("--1->>" + JsonObjectUtils.toJson(student1));
-        JsonObject parse = JsonObjectUtils.parse(str);
-        System.out.println("---2->>" + JsonObjectUtils.fromJsonTimeStamp(parse, Student.class));
-    }
-
-//    @Test
-//    void testConKey() throws IOException {
-//        JSONObject json = new JSONObject();
-//        json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-//        JsonObjects jsonObject = OkHttpUtils.postJsonReJsonObjects("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json);
-//        assertTrue(jsonObject.containsKey("msg"));
-//        assertFalse(jsonObject.containsKey("msg1"));
-//    }
 
     @Test
     void testMapToJson() {
