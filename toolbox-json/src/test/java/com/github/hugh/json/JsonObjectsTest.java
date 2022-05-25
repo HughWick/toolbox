@@ -3,19 +3,21 @@ package com.github.hugh.json;
 import com.alibaba.fastjson.JSON;
 import com.github.hugh.bean.dto.ResultDTO;
 import com.github.hugh.constant.DateCode;
+import com.github.hugh.json.exception.ToolboxJsonException;
 import com.github.hugh.json.gson.JsonObjectUtils;
 import com.github.hugh.json.gson.JsonObjects;
 import com.github.hugh.json.model.GsonTest;
 import com.github.hugh.json.model.Student;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * gson JsonObjects测试类
@@ -128,14 +130,20 @@ public class JsonObjectsTest {
     }
 
     @Test
-    public void test05() {
+    public void testAddProperty() {
         JsonObjects jsonObjects = new JsonObjects();
-        System.out.println(jsonObjects);
-        jsonObjects.addProperty("a", "111");
-        jsonObjects.addProperty("b", "2222");
-        System.out.println("--->" + jsonObjects.isEquals("a", "s"));
-        System.out.println("--->" + jsonObjects.isEquals("abs", "s"));
-        System.out.println("--2->" + jsonObjects.removeProperty("b").getAsString());
+        jsonObjects.addProperty("string", "111");
+        jsonObjects.addProperty("int", 22);
+        jsonObjects.addProperty("double", 12.34);
+        jsonObjects.addProperty("long", 12345678998123124L);
+        jsonObjects.addProperty("boolean", true);
+        System.out.println("--toJson->" + jsonObjects.toJson());
+        assertFalse(jsonObjects.isEquals("a", "s"));
+        assertTrue(jsonObjects.isEquals("string", "111"));
+        assertNull(jsonObjects.removeProperty("b"));
+        assertThrowsExactly(ToolboxJsonException.class, () -> jsonObjects.addProperty("List", new ArrayList<>()));
+        assertThrowsExactly(ToolboxJsonException.class, () -> jsonObjects.addProperty("map", new HashMap<>()));
+        assertThrowsExactly(ToolboxJsonException.class, () -> jsonObjects.addProperty("JsonObject", new JsonObject()));
     }
 
     @Test

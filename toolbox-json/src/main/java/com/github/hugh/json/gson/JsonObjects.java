@@ -1,6 +1,7 @@
 package com.github.hugh.json.gson;
 
 import com.alibaba.fastjson.JSON;
+import com.github.hugh.json.exception.ToolboxJsonException;
 import com.github.hugh.json.gson.adapter.MapTypeAdapter;
 import com.github.hugh.util.EmptyUtils;
 import com.google.gson.JsonArray;
@@ -259,6 +260,16 @@ public class JsonObjects extends JsonObjectUtils {
         }
         if (value instanceof String) {
             this.jsonObject.addProperty(key, (String) value);
+        } else if (value instanceof Integer) {
+            this.jsonObject.addProperty(key, (Integer) value);
+        } else if (value instanceof Double) {
+            this.jsonObject.addProperty(key, (Double) value);
+        } else if (value instanceof Long) {
+            this.jsonObject.addProperty(key, (Long) value);
+        } else if (value instanceof Boolean) {
+            this.jsonObject.addProperty(key, (Boolean) value);
+        } else {
+            throw new ToolboxJsonException("Not supported type : " + value.getClass().getName());
         }
     }
 

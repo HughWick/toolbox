@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
     <description>toolbox 工具类JSON包</description>
     <properties>
-        <json-lib.version>2.4</json-lib.version>
+<!--        <json-lib.version>2.4</json-lib.version>-->
         <google-gson.version>2.9.0</google-gson.version>
         <fastjson.version>1.2.80</fastjson.version>
     </properties>
