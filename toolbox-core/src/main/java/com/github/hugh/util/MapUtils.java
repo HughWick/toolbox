@@ -57,8 +57,8 @@ public class MapUtils {
      * @param map 参数
      * @return boolean {@code true} 空
      */
-    public static boolean isEmpty(Map<?, ?> map) {
-        return map == null || map.size() == 0;
+    public static boolean isEmpty(final Map<?, ?> map) {
+        return map == null || map.isEmpty();
     }
 
     /**

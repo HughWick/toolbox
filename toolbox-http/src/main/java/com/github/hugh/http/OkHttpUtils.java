@@ -3,10 +3,10 @@ package com.github.hugh.http;
 import com.github.hugh.http.exception.ToolboxHttpException;
 import com.github.hugh.json.gson.JsonObjectUtils;
 import com.github.hugh.json.gson.JsonObjects;
+import com.github.hugh.util.MapUtils;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
-import org.apache.commons.collections.MapUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
