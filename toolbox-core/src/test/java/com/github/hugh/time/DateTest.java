@@ -2,14 +2,11 @@ package com.github.hugh.time;
 
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.util.DateUtils;
-import com.github.hugh.util.TimeUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * 日期测试类
@@ -34,6 +31,7 @@ public class DateTest {
 //        String str = "2020-06-04 13:00:21";
         System.out.println("-1-->" + DateUtils.setMonthFirstDay(new Date()));
         System.out.println("-2-->" + DateUtils.setMonthLastDay(new Date()));
+        System.out.println("-2-null->" + DateUtils.setMonthLastDay(null));
         System.out.println("-3-->" + DateUtils.getMonthBeforeStartTime());
         System.out.println("-4-->" + DateUtils.getMonthBeforeEndTime());
         System.out.println("-5-->" + DateUtils.ofPattern(new Date()));

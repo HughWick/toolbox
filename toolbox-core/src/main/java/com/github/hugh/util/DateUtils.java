@@ -340,11 +340,7 @@ public class DateUtils extends DateCode {
      */
     public static String setMonthLastDay(Date date) {
         Calendar calendar = Calendar.getInstance();
-        if (date != null) {
-            calendar.setTime(date);
-        } else {
-            calendar.setTime(new Date());
-        }
+        calendar.setTime(Objects.requireNonNullElseGet(date, Date::new));
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
@@ -491,11 +487,7 @@ public class DateUtils extends DateCode {
      */
     public static Date getWeekAgo(Date date) {
         Calendar calendar = Calendar.getInstance();
-        if (date == null) {
-            calendar.setTime(new Date());
-        } else {
-            calendar.setTime(date);
-        }
+        calendar.setTime(Objects.requireNonNullElseGet(date, Date::new));
         // 过去七天
         calendar.add(Calendar.DATE, -7);
         return calendar.getTime();
