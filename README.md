@@ -25,7 +25,6 @@ JDK 11+
 | javax.servlet-api  | Servlet API |
 | kryo  | 快速高效的Java序列化框架 |
 | guava  | 谷歌套件 |
-| json-lib  | json |
 | gson  | Google Gson |
 | fastjson  | 阿里高性能json |
 | slf4j-simple  | 日志工具包 |
