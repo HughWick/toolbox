@@ -1,12 +1,16 @@
 package com.github.hugh.http;
 
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
+import com.github.hugh.json.gson.JsonObjects;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Okhttp get请求测试
+ */
 public class OkHttpGetTest {
 
     @Test
@@ -14,13 +18,11 @@ public class OkHttpGetTest {
         String str = "https://sudo.191ec.com/silver-web-shop/manual/readInfo2";
         var map = new HashMap<>();
         map.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-        Map<String, Object> head = new HashMap<>();
-        head.put("a", "1");
-        JSONObject json = new JSONObject();
-        json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-        System.out.println("get-1->>" + OkHttpUtils.get("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+        JsonObjects json = new JsonObjects();
+        json.addProperty("recipientAddr", "湖南省湘西土家族苗族自治州花垣县花垣镇花垣县公安局农业园警务执勤室");
+        System.out.println("get-1->>" + OkHttpUtils.get("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json.toJson()));
         System.out.println("get-2->>" + OkHttpUtils.get("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", map));
-        System.out.println("get===8>>" + OkHttpUtils.getReJsonObjects(str, json));
+//        System.out.println("get===8>>" + OkHttpUtils.getReJsonObjects(str, json));
         Map<String, Object> params = new HashMap<>();
         params.put("size", 1);
         String str2 = "http://factory.hnlot.com.cn/v2/contracts/find";

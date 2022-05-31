@@ -3,6 +3,7 @@ package com.github.hugh.http;
 import com.github.hugh.json.gson.JsonObjectUtils;
 import com.github.hugh.json.gson.JsonObjects;
 import com.github.hugh.util.EmptyUtils;
+import com.github.hugh.util.StringUtils;
 import com.google.gson.JsonElement;
 
 import java.net.URLEncoder;
@@ -49,16 +50,18 @@ public class UrlUtils {
             return "";
         }
         JsonObjects jsonObjects = new JsonObjects(json);
+        if (jsonObjects.isNull()) {
+            return "";
+        }
         StringBuilder stringBuilder = new StringBuilder();
         for (Map.Entry<String, JsonElement> entrySet : jsonObjects.entrySet()) {
-            String asString = JsonObjectUtils.getAsString(entrySet.getValue()) ;
+            String asString = JsonObjectUtils.getAsString(entrySet.getValue());
             if (asString == null) {
                 asString = "";
             }
             String value = URLEncoder.encode(asString, StandardCharsets.UTF_8);//将参数转换为urlEncoder码
             stringBuilder.append(entrySet.getKey()).append("=").append(value).append("&");
         }
-        stringBuilder.deleteCharAt(stringBuilder.length() - 1); // 删除结尾符号
-        return stringBuilder.toString();
+        return StringUtils.trimLastPlace(stringBuilder);
     }
 }

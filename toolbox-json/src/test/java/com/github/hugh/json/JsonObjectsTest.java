@@ -166,6 +166,8 @@ public class JsonObjectsTest {
 
     @Test
     void testFromJsonObject() {
+//        var str1 = "{code:006,message:测试,age:18,created:2022-03-21 18:02:11,amount:199.88,switchs:true}";
+//        System.out.println(new JsonObjects(str1).toJson());
         var str = "{code:006,message:测试,age:18,created:1625024713000,amount:199.88,switchs:true}";
         JsonObjects jsonObjects = new JsonObjects(str);
         System.out.println("-1-->>" + jsonObjects.toJson());
@@ -177,8 +179,6 @@ public class JsonObjectsTest {
 
     @Test
     void testEntrySet() {
-//        var str1 = "{code:006,message:测试,age:18,created:2022-03-21 18:02:11,amount:199.88,switchs:true}";
-//        System.out.println(new JsonObjects(str1).toJson());
         var str2 = "{code:006,message:测试,age:18,created:16250247130001,amount:199.88,switchs:true}";
         System.out.println(new JsonObjects(str2).toJson());
         var str3 = "{\"code\":\"006\",\"message\":\"测试\",\"age\":\"18\",\"created\":\"2022-03-21 18:02:11\",\"amount\":\"199.88\",\"switchs\":\"true\"}";

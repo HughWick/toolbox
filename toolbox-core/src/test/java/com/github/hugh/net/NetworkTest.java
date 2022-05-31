@@ -1,6 +1,7 @@
 package com.github.hugh.net;
 
 import com.github.hugh.util.net.NetworkUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.StopWatch;
 
@@ -14,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Hugh
  * @since
  **/
+@Slf4j
 public class NetworkTest {
 
     @Test
@@ -41,7 +43,8 @@ public class NetworkTest {
                 count++;
             }
             stopWatch.stop();
-            System.out.println(stopWatch.prettyPrint());
+            log.info(stopWatch.prettyPrint());
+//            System.out.println(stopWatch.prettyPrint());
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }

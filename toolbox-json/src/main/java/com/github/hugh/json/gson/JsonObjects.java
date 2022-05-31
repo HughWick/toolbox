@@ -45,12 +45,12 @@ public class JsonObjects extends JsonObjectUtils {
     }
 
     /**
-     * jsonObject 为空
+     * jsonObject对象为null、或者对象长度为0
      *
      * @return boolean {@code true} jsonObject为空
      */
     public boolean isNull() {
-        return isJsonNull(jsonObject);
+        return isJsonNull(jsonObject) || jsonObject.size() == 0;
     }
 
     /**

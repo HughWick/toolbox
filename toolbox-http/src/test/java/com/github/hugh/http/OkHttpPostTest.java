@@ -2,7 +2,6 @@ package com.github.hugh.http;
 
 import com.github.hugh.json.gson.JsonObjects;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONObject;
 import okhttp3.OkHttpClient;
 import org.junit.jupiter.api.Test;
 
@@ -41,8 +40,8 @@ public class OkHttpPostTest {
         log.info(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2"));
         OkHttpClient okHttpClient = OkHttpUtils.buildClient(15, 15);
         log.info(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", objectObjectHashMap, okHttpClient));
-        log.error(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", JSONObject.fromObject(objectObjectHashMap)));
-        log.error(OkHttpUtils.postForm("", JSONObject.fromObject(objectObjectHashMap)));
+//        log.error(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", JSONObject.fromObject(objectObjectHashMap)));
+//        log.error(OkHttpUtils.postForm("", JSONObject.fromObject(objectObjectHashMap)));
     }
 
     @Test
@@ -52,14 +51,14 @@ public class OkHttpPostTest {
         map.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
         Map<String, Object> head = new HashMap<>();
         head.put("a", "1");
-        JSONObject json = new JSONObject();
-        json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-        try {
-            System.out.println("-postJson-1>" + OkHttpUtils.postJson("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
-            System.out.println("-postJson-2>>" + OkHttpUtils.postJson("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json.toString()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        JSONObject json = new JSONObject();
+//        json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+//        try {
+//            System.out.println("-postJson-1>" + OkHttpUtils.postJson("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
+//            System.out.println("-postJson-2>>" + OkHttpUtils.postJson("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json.toString()));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Test
