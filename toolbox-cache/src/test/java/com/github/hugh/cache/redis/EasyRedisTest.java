@@ -1,4 +1,4 @@
-package com.github.hugh.cache;
+package com.github.hugh.cache.redis;
 
 import com.github.hugh.cache.redis.EasyRedis;
 import com.google.common.base.Suppliers;

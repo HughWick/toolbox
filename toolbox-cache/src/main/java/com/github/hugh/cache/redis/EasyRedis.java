@@ -126,7 +126,7 @@ public class EasyRedis {
         Jedis jedis = jedisPool.getResource();
         jedis.select(dbIndex);
         String result;
-        if (seconds == -1) {
+        if (seconds <= 0) {
             result = jedis.setex(key, 99, value);
             // 永不过期
             jedis.persist(key);
@@ -158,9 +158,31 @@ public class EasyRedis {
      * @return String
      */
     public String set(int dbIndex, byte[] key, byte[] value) {
+        return set(dbIndex, key, value, -1);
+    }
+
+    /**
+     * set 字节数组的key与value
+     * <p>-1，存储时间为永久</p>
+     *
+     * @param dbIndex 数据库索引
+     * @param key     key字节数组
+     * @param value   值数组
+     * @param seconds 时间数
+     * @return String
+     * @since 2.3.2
+     */
+    public String set(int dbIndex, byte[] key, byte[] value, int seconds) {
         Jedis jedis = jedisPool.getResource();
         jedis.select(dbIndex);
-        String result = jedis.set(key, value);
+        String result;
+        if (seconds <= 0) {
+            result = jedis.setex(key, 99, value);
+            // 永不过期
+            jedis.persist(key);
+        } else {
+            result = jedis.setex(key, seconds, value);
+        }
         jedis.close();
         return result;
     }
