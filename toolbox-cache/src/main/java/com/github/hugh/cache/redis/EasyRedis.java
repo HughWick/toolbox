@@ -150,6 +150,19 @@ public class EasyRedis {
 
     /**
      * set 字节数组的key与value
+     *
+     * @param key     键
+     * @param value   值
+     * @param seconds 时间，单位：秒
+     * @return String 成功返回：OK
+     * @since 2.3.2
+     */
+    public String set(byte[] key, byte[] value, int seconds) {
+        return set(dbIndex, key, value, seconds);
+    }
+
+    /**
+     * set 字节数组的key与value
      * <p>默认存储时间为永久</p>
      *
      * @param dbIndex 数据库索引
@@ -168,7 +181,7 @@ public class EasyRedis {
      * @param dbIndex 数据库索引
      * @param key     key字节数组
      * @param value   值数组
-     * @param seconds 时间数
+     * @param seconds 时间，单位：秒
      * @return String
      * @since 2.3.2
      */
