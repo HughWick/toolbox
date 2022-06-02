@@ -14,7 +14,7 @@
     <description>toolbox 缓存操作工具包</description>
     <properties>
         <redis.version>3.3.0</redis.version>
-        <caffeine.version>3.1.0</caffeine.version>
+        <caffeine.version>3.1.1</caffeine.version>
     </properties>
     <dependencies>
         <dependency>
