@@ -61,7 +61,7 @@ public class BaseConvertTest {
     }
 
     @Test
-    public void testTex02() {
+    void testTex02() {
         String tex = "7a686f75353937383831";
         System.out.println(BaseConvertUtils.hexToAscii(tex));
         String zhou597881 = BaseConvertUtils.asciiToHex("zhou597881");
@@ -77,13 +77,4 @@ public class BaseConvertTest {
         System.out.println(new String(bytes2));
     }
 
-
-    public static void main(String[] args) {
-        System.out.println("---1>>" + ControlEnum.ENABLE.getCode());
-        System.out.println("--2->>" + ControlEnum.ENABLE.getDesc());
-        System.out.println("--3->>" + ControlEnum.DISABLE.getDesc());
-        System.out.println("--4->>" + ControlEnum.DISABLE.getDesc());
-        System.out.println(ControlEnum.ENABLE);
-        System.out.println(ControlEnum.DISABLE);
-    }
 }

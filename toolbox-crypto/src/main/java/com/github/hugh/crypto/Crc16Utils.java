@@ -1,5 +1,6 @@
 package com.github.hugh.crypto;
 
+import com.github.hugh.crypto.exception.CryptoException;
 import com.github.hugh.util.EmptyUtils;
 
 /**
@@ -7,14 +8,14 @@ import com.github.hugh.util.EmptyUtils;
  * <p>encode: utf-8</p>
  *
  * @author hugh
- * @since  2.0.1
+ * @since 2.0.1
  */
 public class Crc16Utils {
 
     private Crc16Utils() {
     }
 
-    private static byte[] crc16_tab_h = {(byte) 0x00, (byte) 0xC1, (byte) 0x81, (byte) 0x40, (byte) 0x01, (byte) 0xC0,
+    private static final byte[] crc16_tab_h = {(byte) 0x00, (byte) 0xC1, (byte) 0x81, (byte) 0x40, (byte) 0x01, (byte) 0xC0,
             (byte) 0x80, (byte) 0x41, (byte) 0x01, (byte) 0xC0, (byte) 0x80, (byte) 0x41, (byte) 0x00, (byte) 0xC1,
             (byte) 0x81, (byte) 0x40, (byte) 0x01, (byte) 0xC0, (byte) 0x80, (byte) 0x41, (byte) 0x00, (byte) 0xC1,
             (byte) 0x81, (byte) 0x40, (byte) 0x00, (byte) 0xC1, (byte) 0x81, (byte) 0x40, (byte) 0x01, (byte) 0xC0,
@@ -48,7 +49,7 @@ public class Crc16Utils {
             (byte) 0x80, (byte) 0x41, (byte) 0x01, (byte) 0xC0, (byte) 0x80, (byte) 0x41, (byte) 0x00, (byte) 0xC1,
             (byte) 0x81, (byte) 0x40};
 
-    private static byte[] crc16_tab_l = {(byte) 0x00, (byte) 0xC0, (byte) 0xC1, (byte) 0x01, (byte) 0xC3, (byte) 0x03,
+    private static final byte[] crc16_tab_l = {(byte) 0x00, (byte) 0xC0, (byte) 0xC1, (byte) 0x01, (byte) 0xC3, (byte) 0x03,
             (byte) 0x02, (byte) 0xC2, (byte) 0xC6, (byte) 0x06, (byte) 0x07, (byte) 0xC7, (byte) 0x05, (byte) 0xC5,
             (byte) 0xC4, (byte) 0x04, (byte) 0xCC, (byte) 0x0C, (byte) 0x0D, (byte) 0xCD, (byte) 0x0F, (byte) 0xCF,
             (byte) 0xCE, (byte) 0x0E, (byte) 0x0A, (byte) 0xCA, (byte) 0xCB, (byte) 0x0B, (byte) 0xC9, (byte) 0x09,
@@ -147,7 +148,7 @@ public class Crc16Utils {
      */
     public static String generate(int length) {
         if (length < 0) {
-            throw new RuntimeException("length error !");
+            throw new CryptoException("length error !");
         }
         String random = AppkeyUtils.generate().substring(0, length);
         String code = random + getVerCode(random);//根据八位数随机码、计算一个crc16的校验码
@@ -161,8 +162,9 @@ public class Crc16Utils {
      * @return String 验证码
      */
     private static String getVerCode(String data) {
-        if (data == null)
+        if (data == null) {
             return null;
+        }
         int length = data.length() / 2;
         byte[] byteArray = new byte[length];
         for (int i = 0; i < length; i++) {
@@ -192,5 +194,135 @@ public class Crc16Utils {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /**
+     * 计算CRC16 modbus校验码
+     * <p>
+     * 默认将字符串转化为16进制
+     * </p>
+     * <p>
+     * 不交换高低位
+     * </p>
+     *
+     * @param data 需要校验的字符串
+     * @return String 校验码
+     * @since 2.3.3
+     */
+    public static String getModbusChecksum(String data) {
+        return getModbusChecksum(data, false);
+    }
+
+    /**
+     * 计算CRC16 modbus校验码
+     * <p>
+     * 默认将字符串转化为16进制
+     * </p>
+     *
+     * @param data     需要校验的字符串
+     * @param sequence 交换高低位开关：false-低位在前，高位在后、true-地位在后，高位在前
+     * @return String 校验码
+     * @since 2.3.3
+     */
+    public static String getModbusChecksum(String data, boolean sequence) {
+        data = data.replace(" ", "");
+        int len = data.length();
+        if (!((len % 2) == 0)) {
+            return "0000";
+        }
+        int num = len / 2;
+        byte[] para = new byte[num];
+        for (int i = 0; i < num; i++) {
+            int value = Integer.valueOf(data.substring(i * 2, 2 * (i + 1)), 16);
+            para[i] = (byte) value;
+        }
+        return getModbusChecksum(para, sequence);
+    }
+
+    /**
+     * 计算CRC16校验码
+     * <p>
+     * 不交换高低位
+     * </p>
+     *
+     * @param bytes 字节数组
+     * @return {@link String} 校验码
+     * @since 2.3.3
+     */
+    public static String getModbusChecksum(byte[] bytes) {
+        return getModbusChecksum(bytes, false);
+    }
+
+    /**
+     * 根据数组计算CRC16校验码
+     *
+     * @param bytes    字节数组
+     * @param sequence 交换高低位开关：false-低位在前，高位在后、true-地位在后，高位在前
+     * @return {@link String} 校验码
+     * @since 2.3.3
+     */
+    public static String getModbusChecksum(byte[] bytes, boolean sequence) {
+        //CRC寄存器全为1
+        int CRC = 0x0000ffff;
+        //多项式校验值
+        int polynomial = 0x0000a001;
+        for (byte aByte : bytes) {
+            CRC ^= (aByte & 0x000000ff);
+            for (int j = 0; j < 8; j++) {
+                if ((CRC & 0x00000001) != 0) {
+                    CRC >>= 1;
+                    CRC ^= polynomial;
+                } else {
+                    CRC >>= 1;
+                }
+            }
+        }
+        //结果转换为16进制
+        String result = Integer.toHexString(CRC).toUpperCase();
+        if (result.length() != 4) {
+            StringBuilder stringBuilder = new StringBuilder("0000");
+            result = stringBuilder.replace(4 - result.length(), 4, result).toString();
+        }
+        //交换高低位
+        if (sequence) {
+            return result.substring(2, 4) + result.substring(0, 2);
+        }
+        return result;
+    }
+
+    /**
+     * 验证modbus内容是否与校验码一致
+     * <p>
+     * 不交换高低位
+     * </p>
+     *
+     * @param data     需要甲酸校验码的字符串（不包含校验码）
+     * @param checksum 校验码，4位
+     * @return {@link String} 校验码
+     * @since 2.3.3
+     */
+    public static boolean verifyModbus(String data, String checksum) {
+        return verifyModbus(data, checksum, false);
+    }
+
+    /**
+     * 验证modbus内容是否与校验码一致
+     *
+     * @param data     需要甲酸校验码的字符串（不包含校验码）
+     * @param checksum 校验码，4位
+     * @param sequence 交换高低位开关：false-低位在前，高位在后、true-地位在后，高位在前
+     * @return {@link String} 校验码
+     * @since 2.3.3
+     */
+    public static boolean verifyModbus(String data, String checksum, boolean sequence) {
+        if (EmptyUtils.isEmpty(data)) {
+            throw new CryptoException("data is empty");
+        }
+        if (EmptyUtils.isEmpty(checksum)) {
+            throw new CryptoException("checksum is empty");
+        }
+        checksum = checksum.replace(" ", "").trim().strip();
+        String modbusChecksum = getModbusChecksum(data, sequence);
+        return modbusChecksum.equals(checksum);
     }
 }
