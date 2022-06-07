@@ -3,28 +3,25 @@ package com.github.hugh.crypto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
+ * des enc 加密测试
+ *
  * @author AS
  * @date 2020/9/18 15:10
  */
 public class DesEncDecTest {
 
-    public static void main(String[] args) throws Exception {
-        DesEncDecUtils Des = DesEncDecUtils.getInstance("yinmeng0000w");
-        System.out.println(Des.encrypt("13825004872"));
-        System.out.println(Des.encrypt("md5pass"));
-        System.out.println("===>>" + Des.decrypt("4LJigdM+uWM="));
-//        System.out.println(Des.decrypt(Des.encrypt("46010319821218091X")));
-    }
-
-
     @Test
-    public void test01() {
+    void test01() {
         DesEncDecUtils desEnc = DesEncDecUtils.getInstance("cmmop_app");
         try {
             String t1 = desEnc.encrypt("0ec4dbfdfb7945f0a6ca61fd14065a77");
@@ -40,7 +37,7 @@ public class DesEncDecTest {
     }
 
     @Test
-    void urlTest() {
+    void urlEncryptTest() {
         DesEncDecUtils desEnc = DesEncDecUtils.getInstance("box_security");
         try {
             String t1 = desEnc.encrypt("http://qr.hnlot.com.cn/box/openDoor?boxCode=19FE0E30CF");
@@ -63,9 +60,23 @@ public class DesEncDecTest {
             String decode = URLDecoder.decode(str, StandardCharsets.UTF_8);
             System.out.println("-decode--->>" + decode);
             System.out.println("--解密->>" + desEnc.decrypt(decode));
-            Assertions.assertEquals("http://qr.hnlot.com.cn/box/openDoor?boxCode=8EBFA26E46", desEnc.decrypt(decode));
+            assertEquals("http://qr.hnlot.com.cn/box/openDoor?boxCode=8EBFA26E46", desEnc.decrypt(decode));
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    void testCheck() throws BadPaddingException, IllegalBlockSizeException {
+        String key = "yinmeng0000w";
+        DesEncDecUtils Des = DesEncDecUtils.getInstance(key);
+        System.out.println(Des.encrypt("13825004872"));
+        String string1 = "md5pass";
+        String md5pass = Des.encrypt(string1);
+        String result = "4LJigdM+uWM=";
+        assertEquals(md5pass, result);
+        assertEquals(Des.decrypt(result), string1);
+        assertTrue(DesEncDecUtils.check(key, string1, result));
+//        System.out.println(Des.decrypt(Des.encrypt("46010319821218091X")));
     }
 }
