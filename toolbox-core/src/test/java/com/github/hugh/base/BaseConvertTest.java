@@ -1,8 +1,12 @@
 package com.github.hugh.base;
 
 import com.github.hugh.constant.enums.ControlEnum;
+import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.base.BaseConvertUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author AS
@@ -11,36 +15,48 @@ import org.junit.jupiter.api.Test;
 public class BaseConvertTest {
 
     @Test
-    public void test01() {
+    void test01() {
         System.out.println("=1==>>>>" + BaseConvertUtils.decToHex(84213840));
         System.out.println("=1==>>>>" + BaseConvertUtils.decToHex("140"));
         String binary = BaseConvertUtils.decToBinary(84213840);
         System.out.println("==2=>>>>" + binary);
-        System.out.println("==3=>>>>" + BaseConvertUtils.decToBinary(10, 12));
         System.out.println("--4-===>>" + BaseConvertUtils.binaryToDec(binary));
         System.out.println("--4-===>>" + BaseConvertUtils.binaryToDec(binary));
     }
 
+    // 16进制转字符串
     @Test
-    public void test02() {
+    void testHexToString() {
         String str = "61:62";
-        System.out.println("--1->>" + BaseConvertUtils.hexToString(str, ":"));
-//        System.out.println("--2->>" + BaseConvertUtils.hexToString(null, ":"));
+        assertEquals(BaseConvertUtils.hexToString(str, ":"), "ab");
+        Assertions.assertThrowsExactly(ToolboxException.class, () -> {
+            BaseConvertUtils.hexToString(str, null);
+        });
     }
 
+    // 十六进制转二进制
     @Test
-    public void test03() {
+    void testHexToBinary() {
         String str = "043F";
-        System.out.println("-1-->>" + BaseConvertUtils.hexToBinary(str, 15));
-        System.out.println("-2-->>" + BaseConvertUtils.hexToBinary(str));
-        System.out.println("==3=>>>>" + BaseConvertUtils.decToBinary(10, 12));
-        System.out.println("==4=>>>>" + BaseConvertUtils.decToBinary("10", 12));
-        System.out.println("==5=>>>>" + BaseConvertUtils.decToBinary("10"));
-        System.out.println("==6=>>>>" + BaseConvertUtils.hexToDecString("8C"));
+        assertEquals(BaseConvertUtils.hexToBinary(str, 15), "000010000111111");
+        assertEquals(BaseConvertUtils.hexToBinary(str), "10000111111");
+    }
+
+    // 十进制转二进制
+    @Test
+    void testDecToBinary() {
+        assertEquals(BaseConvertUtils.decToBinary(10, 12), "000000001010");
+        assertEquals(BaseConvertUtils.decToBinary(10), "1010");
+    }
+
+    // 十六进制转10进制字符串
+    @Test
+    void testHexToDecString() {
+        assertEquals(BaseConvertUtils.hexToDecString("8C"), "140");
     }
 
     @Test
-    public void testTex() {
+    void testTex() {
         String str = "043F";
         String str2 = "4A3F7F40";
         String str3 = "7869616f7a68693130323031";
