@@ -1,14 +1,20 @@
 package com.github.hugh.json;
 
+import com.github.hugh.bean.dto.Ip2regionDTO;
 import com.github.hugh.json.gson.JsonObjectUtils;
+import com.github.hugh.json.gson.JsonObjects;
 import com.github.hugh.json.model.Student;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * User: AS
@@ -28,7 +34,6 @@ class JsonObjectUtilsTest {
         System.out.println("-2-->>" + JsonObjectUtils.toJson(student));
         JsonObject item = new JsonObject();
         item.addProperty("country", "国家");// 国家
-//        System.out.println("-3-->>" + JsonObjectUtils.fromJson(item, Ip2regionDTO.class));
     }
 
     @Test
@@ -163,5 +168,13 @@ class JsonObjectUtilsTest {
 
         Thread.sleep(2000);
         System.out.println("==END==");
+    }
+
+    @Test
+    void testIsJson(){
+        String str = "{\"age\":1,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1888,\"name\":\"张三\",\"create\":\"16250247130001\"}";
+        var str2 = "{code:006,message:测试,age:18,created:2022-03-21 18:02:11,amount:199.88,switchs:true}";
+        assertTrue(JsonObjectUtils.isJson(str));
+        assertFalse(JsonObjectUtils.isJson(str2));
     }
 }

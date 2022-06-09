@@ -493,4 +493,20 @@ public class JsonObjectUtils {
         }
         return jsonObject.has(propertyName);
     }
+
+    /**
+     * 验证字符串是否为 json
+     *
+     * @param str 字符串
+     * @return boolean 能够正常解析返回{@code true}
+     * @since 2.3.3
+     */
+    public static boolean isJson(String str) {
+        try {
+            parse(str);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 }
