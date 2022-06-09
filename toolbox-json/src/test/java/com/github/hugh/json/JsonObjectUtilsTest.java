@@ -180,7 +180,6 @@ class JsonObjectUtilsTest {
         assertTrue(JsonObjectUtils.isJsonArray(array));
         String array2 = "1,2,3,4,5";
         assertFalse(JsonObjectUtils.isJsonArray(array2));
-
         assertTrue(JsonObjectUtils.isJsonValid(array));
     }
 }

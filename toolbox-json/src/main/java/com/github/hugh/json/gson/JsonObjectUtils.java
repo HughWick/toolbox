@@ -450,7 +450,7 @@ public class JsonObjectUtils {
         }
         Date date;
         if (DateUtils.isDateFormat(string)) {
-            return string;
+            return DateUtils.format(DateUtils.parse(string), pattern);
         } else if (RegexUtils.isNumeric(string)) {
             date = DateUtils.parseTimestamp(Long.parseLong(string));
         } else {
@@ -498,7 +498,7 @@ public class JsonObjectUtils {
      * 验证字符串是否为 {@link JsonObject} 或  {@link JsonArray}
      *
      * @param string 字符串
-     * @return boolean {@link JsonObject} 或  {@link JsonArray} 其中一种返回{@code true}
+     * @return boolean 是{@link JsonObject} 或  {@link JsonArray}其中一种返回{@code true}
      * @since 2.3.3
      */
     public static boolean isJsonValid(String string) {

@@ -13,11 +13,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
 import lombok.Data;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * gson JsonObjects测试类
@@ -25,16 +27,23 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author AS
  */
 public class JsonObjectsTest {
+
     @Test
-    public void test01() {
-        String str = "{\"age\":1,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1888,\"name\":\"张三\",\"create\":\"2019-04-06\"}";
+    void testGet() {
+        String str = "{\"age\":1,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1888,\"name\":\"张三\",\"create\":\"2019-04-06 12:32:11\"}";
         String str2 = "{\"age\":2,\"amount\":15.14,\"birthday\":null,\"create\":null,\"id\":null,\"name\":\"张三\",\"create\":\"2019-04-06\"}";
         JsonObjects json = new JsonObjects(str);
         JsonObjects json2 = new JsonObjects(str2);
         System.out.println(json);
         System.out.println(json.toJson());
         System.out.println(json.formJson(Student.class));
-        System.out.println("--1-->>>" + json.getString("age"));
+        assertEquals(json.getString("age"), "1");
+        assertEquals(json.getDateStr("create"), "2019-04-06 12:32:11");
+//        System.out.println("-->"+json.getDateStr("create", "yyyy-MM-dd"));
+        assertEquals(json.getDateStr("create", "yyyy-MM-dd"), "2019-04-06");
+//        assertEquals(json.getDate("create") , Date.class);
+        System.out.println("--->" + json.getDate("create"));
+//        assertEquals(json.getDateStr("create") , "2019-04-06 12:32:11");
         System.out.println("---2->>>" + json.getInt("id"));
         System.out.println("---3->>>" + json.getDoubleValue("amount"));
         System.out.println("--4-->>>" + json2.getString("age"));
