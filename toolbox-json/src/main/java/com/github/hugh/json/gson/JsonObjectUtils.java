@@ -495,16 +495,43 @@ public class JsonObjectUtils {
     }
 
     /**
-     * 验证字符串是否为 json
+     * 验证字符串是否为 {@link JsonObject} 或  {@link JsonArray}
      *
-     * @param str 字符串
-     * @return boolean 能够正常解析返回{@code true}
+     * @param string 字符串
+     * @return boolean {@link JsonObject} 或  {@link JsonArray} 其中一种返回{@code true}
      * @since 2.3.3
      */
-    public static boolean isJson(String str) {
+    public static boolean isJsonValid(String string) {
+        return isJsonObject(string) || isJsonArray(string);
+    }
+
+    /**
+     * 验证字符串是否为 {@link JsonObject}
+     *
+     * @param str 字符串
+     * @return boolean 能够解析返回{@code true}
+     * @since 2.3.3
+     */
+    public static boolean isJsonObject(String str) {
         try {
             parse(str);
         } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 验证字符串是否为 {@link JsonArray}
+     *
+     * @param str 字符串
+     * @return boolean 是返回{@code true}
+     * @since 2.3.3
+     */
+    public static boolean isJsonArray(String str) {
+        try {
+            parseArray(str);
+        } catch (Exception exception) {
             return false;
         }
         return true;
