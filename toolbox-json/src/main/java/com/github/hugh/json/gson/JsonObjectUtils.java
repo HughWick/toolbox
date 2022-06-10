@@ -536,4 +536,29 @@ public class JsonObjectUtils {
         }
         return true;
     }
+
+    /**
+     * 根据key获取json对象中的值是为空
+     *
+     * @param jsonObject {@link JsonObject}
+     * @param key        键
+     * @return boolean 空返回{@code true}
+     * @since 2.3.3
+     */
+    public static boolean isEmptyValue(JsonObject jsonObject, String key) {
+        String string = getString(jsonObject, key);
+        return EmptyUtils.isEmpty(string);
+    }
+
+    /**
+     * 根据key获取json对象中的值不为空空
+     *
+     * @param jsonObject {@link JsonObject}
+     * @param key        键
+     * @return boolean 不为空返回{@code true}
+     * @since 2.3.3
+     */
+    public static boolean isNotEmptyValue(JsonObject jsonObject, String key) {
+        return !isEmptyValue(jsonObject, key);
+    }
 }

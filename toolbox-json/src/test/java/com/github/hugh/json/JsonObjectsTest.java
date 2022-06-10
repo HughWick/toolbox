@@ -205,6 +205,15 @@ public class JsonObjectsTest {
         System.out.println(new JsonObjects(str2).toJson());
         String str3 = "{\"age\":2,\"amount\":15.14,\"birthday\":null,\"create\":null,\"id\":null,\"name\":\"张三\",\"create\":2022-03-21}";
         System.out.println(new JsonObjects(str3).toJson());
+    }
+
+    @Test
+    void testIsEmptyValue() {
+        String str = "{\"age\":1,\"amount\":10.14,\"birthday\":null,\"createBy\":null,\"id\":1888,\"name\":\"张三\",\"create\":\"16250247130001\"}";
+        assertTrue(new JsonObjects(str).isEmptyValue("createBy"));
+        assertFalse(new JsonObjects(str).isEmptyValue("age"));
+        assertTrue(new JsonObjects(str).isNotEmptyValue("amount"));
+        assertFalse(new JsonObjects(str).isNotEmptyValue("createBy"));
 
     }
 }

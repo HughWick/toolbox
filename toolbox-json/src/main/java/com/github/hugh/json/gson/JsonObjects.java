@@ -388,4 +388,26 @@ public class JsonObjects extends JsonObjectUtils {
     public Set<Map.Entry<String, JsonElement>> entrySet() {
         return this.jsonObject.entrySet();
     }
+
+    /**
+     * 根据key获取json对象中的值是为空
+     *
+     * @param key 键
+     * @return boolean
+     * @since 2.3.3
+     */
+    public boolean isEmptyValue(String key) {
+        return isEmptyValue(this.jsonObject, key);
+    }
+
+    /**
+     * 根据key获取json对象中的值不为空空
+     *
+     * @param key 键
+     * @return boolean
+     * @since 2.3.3
+     */
+    public boolean isNotEmptyValue(String key) {
+        return isNotEmptyValue(this.jsonObject, key);
+    }
 }
