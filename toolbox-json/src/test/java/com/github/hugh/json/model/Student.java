@@ -28,7 +28,7 @@ public class Student {
     private Date create;
     //    private List list;
     private String sex;
-
+    private long system;
 
 
     private String account;

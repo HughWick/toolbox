@@ -450,7 +450,7 @@ public class JsonObjectUtils {
         }
         Date date;
         if (DateUtils.isDateFormat(string)) {
-            return DateUtils.format(DateUtils.parse(string), pattern);
+            date = DateUtils.parse(string);
         } else if (RegexUtils.isNumeric(string)) {
             date = DateUtils.parseTimestamp(Long.parseLong(string));
         } else {

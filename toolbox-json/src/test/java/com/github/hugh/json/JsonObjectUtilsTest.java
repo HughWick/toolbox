@@ -45,7 +45,7 @@ class JsonObjectUtilsTest {
 
     @Test
     void testTimeStamp() {
-        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create2\":null,\"id\":1,\"name\":\"张三\",\"create\":\"1625024713000\"}";
+        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"system\":1625024713000,\"id\":1,\"name\":\"张三\",\"create\":\"1625024713000\"}";
         Student student1 = JsonObjectUtils.fromJsonTimeStamp(str, Student.class);
         System.out.println(student1.toString());
         System.out.println("--1->>" + JsonObjectUtils.toJson(student1));
