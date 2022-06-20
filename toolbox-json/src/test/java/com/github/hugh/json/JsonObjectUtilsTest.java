@@ -183,6 +183,7 @@ class JsonObjectUtilsTest {
         assertFalse(JsonObjectUtils.isJsonArray(array2));
         assertTrue(JsonObjectUtils.isNotJsonArray(array2));
         assertTrue(JsonObjectUtils.isJsonValid(array));
+        assertTrue(JsonObjectUtils.isNotJsonValid(str2));
 
         assertFalse(JsonObjectUtils.isNotJsonArray(array));
     }
