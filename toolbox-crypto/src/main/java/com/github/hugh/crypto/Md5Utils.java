@@ -5,6 +5,11 @@ import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.base.BaseConvertUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -12,7 +17,7 @@ import java.security.NoSuchAlgorithmException;
  * md5 加密工具类
  *
  * @author hugh
- * @since  2.0.1
+ * @since 2.0.1
  */
 public class Md5Utils {
 
@@ -57,6 +62,34 @@ public class Md5Utils {
             }
             return result;
         } catch (NoSuchAlgorithmException e) {
+            throw new ToolboxException(e);
+        }
+    }
+
+    /**
+     * 获取文件的md5值
+     *
+     * @param file 文件
+     * @return String 小写的字符串
+     * @since 2.3.4
+     */
+    public static String encryptFile(File file) {
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            MessageDigest digest = MessageDigest.getInstance(EncryptCode.MD5);
+            byte[] buffer = new byte[1024 * 1024 * 10];
+            int len;
+            while ((len = fileInputStream.read(buffer)) > 0) {
+                digest.update(buffer, 0, len);
+            }
+            String md5 = new BigInteger(1, digest.digest()).toString(16);
+            int length = 32 - md5.length();
+            if (length > 0) {
+                for (int i = 0; i < length; i++) {
+                    md5 = "0" + md5;
+                }
+            }
+            return md5;
+        } catch (NoSuchAlgorithmException | IOException e) {
             throw new ToolboxException(e);
         }
     }
