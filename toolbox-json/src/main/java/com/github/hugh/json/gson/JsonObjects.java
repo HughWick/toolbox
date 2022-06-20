@@ -188,6 +188,18 @@ public class JsonObjects extends JsonObjectUtils {
     }
 
     /**
+     * {@link JsonObject} 根据key获取value是否与传递的value不同
+     *
+     * @param key   键
+     * @param value 值
+     * @return boolean 不同返回{@code true}
+     * @since 2.3.4
+     */
+    public boolean isNotEquals(String key, String value) {
+        return !isEquals(key, value);
+    }
+
+    /**
      * 将{@link JsonObjects#jsonObject}内的json对象转换成json格式的字符串
      *
      * @return String

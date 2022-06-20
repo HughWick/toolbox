@@ -60,7 +60,7 @@ public class JsonObjectsTest {
     }
 
     @Test
-    public void test02() {
+    void testIsNull() {
         String str = "{}";
         JsonObjects json = new JsonObjects(str);
         System.out.println("--1-->>" + json.isNull());
@@ -149,6 +149,7 @@ public class JsonObjectsTest {
         System.out.println("--toJson->" + jsonObjects.toJson());
         assertFalse(jsonObjects.isEquals("a", "s"));
         assertTrue(jsonObjects.isEquals("string", "111"));
+        assertTrue(jsonObjects.isNotEquals("string", "11122"));
         assertNull(jsonObjects.removeProperty("b"));
         assertThrowsExactly(ToolboxJsonException.class, () -> jsonObjects.addProperty("List", new ArrayList<>()));
         assertThrowsExactly(ToolboxJsonException.class, () -> jsonObjects.addProperty("map", new HashMap<>()));

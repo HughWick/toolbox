@@ -506,6 +506,17 @@ public class JsonObjectUtils {
     }
 
     /**
+     * 字符串不是Json对象
+     *
+     * @param string 字符串
+     * @return boolean
+     * @since 2.3.4
+     */
+    public static boolean isNotJsonValid(String string) {
+        return !isJsonValid(string);
+    }
+
+    /**
      * 验证字符串是否为 {@link JsonObject}
      *
      * @param str 字符串
@@ -522,6 +533,17 @@ public class JsonObjectUtils {
     }
 
     /**
+     * 字符串不为{@link JsonObject}
+     *
+     * @param str 字符串
+     * @return boolean
+     * @since 2.3.4
+     */
+    public static boolean isNotJsonObject(String str) {
+        return !isJsonObject(str);
+    }
+
+    /**
      * 验证字符串是否为 {@link JsonArray}
      *
      * @param str 字符串
@@ -535,6 +557,17 @@ public class JsonObjectUtils {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 字符串不能转换为{@link JsonArray}
+     *
+     * @param str 字符串
+     * @return boolean
+     * @since 2.3.3
+     */
+    public static boolean isNotJsonArray(String str) {
+        return !isJsonArray(str);
     }
 
     /**
