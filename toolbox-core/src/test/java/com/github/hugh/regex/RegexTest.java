@@ -1,7 +1,11 @@
 package com.github.hugh.regex;
 
 import com.github.hugh.util.regex.RegexUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author AS
@@ -67,24 +71,22 @@ class RegexTest {
     }
 
     @Test
-    void test05() {
+    void testWebSite() {
         String url = "www.baidu.com";
         String url1 = "http://www.baidu.com";
-        String url2 = "http://www.baidu.com";
-        System.out.println("-1-->" + RegexUtils.isWebSite(url));
-        System.out.println("-2-->" + RegexUtils.isWebSite(url1));
-        System.out.println("-3-->" + RegexUtils.isWebSite(url2));
+        String url2 = "https://www.baidu.com";
+        assertFalse(RegexUtils.isWebSite(url));
+        assertTrue(RegexUtils.isWebSite(url1));
+        assertTrue(RegexUtils.isWebSite(url2));
     }
 
     @Test
-    void test06() {
+    void testNumeric() {
         String str = "12324532a";
         String str2 = "1232453";
         String str3 = "1232453.11";
-        System.out.println("-1-->>" + RegexUtils.isNumeric(str));
-        System.out.println("--2->>" + RegexUtils.isNumeric(str2));
-        System.out.println("--3->>" + RegexUtils.isNumeric(str3));
-
+        assertFalse(RegexUtils.isNumeric(str));
+        assertTrue(RegexUtils.isNumeric(str2));
+        assertFalse(RegexUtils.isNumeric(str3));
     }
-
 }
