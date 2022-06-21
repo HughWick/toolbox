@@ -585,4 +585,28 @@ public class EasyRedis {
         jedis.close();
         return keys;
     }
+
+    /**
+     * Redis Dbsize 命令用于返回当前数据库的 key 的数量。
+     *
+     * @return long
+     * @since 2.3.4
+     */
+    public long dbSize() {
+        return dbSize(this.dbIndex);
+    }
+
+    /**
+     * Redis Dbsize 命令用于返回当前数据库的 key 的数量。
+     *
+     * @param dbIndex redis库下标
+     * @since 2.3.4
+     */
+    public long dbSize(int dbIndex) {
+        Jedis jedis = jedisPool.getResource();
+        jedis.select(dbIndex);
+        Long aLong = jedis.dbSize();
+        jedis.close();
+        return aLong;
+    }
 }

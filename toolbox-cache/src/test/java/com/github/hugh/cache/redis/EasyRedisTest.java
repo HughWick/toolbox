@@ -45,7 +45,8 @@ public class EasyRedisTest {
         jedisPoolConfig.setTestOnBorrow(true);
         // 在空闲时检查有效性, 默认false
         jedisPoolConfig.setTestWhileIdle(true);
-        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "43.128.14.188", 9991, 10000, "password123@");
+//        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "43.128.14.188", 9991, 10000, "password123@");
+        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "192.168.1.81", 7779, 10000, "Th@8225586");
 //        log.info("初始化redis pool。end...");
         System.out.println("初始化redis pool。end...");
         return jedisPool;
@@ -214,5 +215,12 @@ public class EasyRedisTest {
         System.out.println(easyRedis.hgetAll(key));
         Long account = easyRedis.hdel(key, "account");
         System.out.println("===del=>" + account);
+    }
+
+    @Test
+    void dbsizeTest() {
+        EasyRedis easyRedis = supplier.get();
+        System.out.println("-->" + easyRedis.dbSize());
+        System.out.println("-->" + easyRedis.dbSize(4));
     }
 }
