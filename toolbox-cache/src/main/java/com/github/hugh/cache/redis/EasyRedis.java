@@ -241,6 +241,17 @@ public class EasyRedis {
     }
 
     /**
+     * 根据多个kye 获取list结果集
+     *
+     * @param keys 多个键
+     * @return List
+     * @since 2.3.4
+     */
+    public List<String> mget(String... keys) {
+        return mget(this.dbIndex, keys);
+    }
+
+    /**
      * 根据字节数组的key 查询数据
      *
      * @param key 键
