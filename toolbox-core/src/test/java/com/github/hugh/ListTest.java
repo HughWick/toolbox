@@ -7,6 +7,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -161,10 +162,14 @@ public class ListTest {
         System.out.println("===>" + strings.toString());
         strings.removeIf(RegexUtils::isNotEmail);
         strings.forEach(System.out::println);
+    }
 
-
-//        List<String> list = Lists.newArrayList("123","136438455@qq.com","xiaozhi10201@gmail.com");
-//        list.removeIf(string -> !RegexUtils.isEmail(string));
-//        list.forEach(System.out::println);
+    @Test
+    void testListToInsql() {
+        List<String> list = new ArrayList<>();
+        list.add("192.168.1.1");
+        list.add("192.168.1.21");
+        System.out.println(ListUtils.listToInSql(list));
+//        Assertions.assertEquals();
     }
 }

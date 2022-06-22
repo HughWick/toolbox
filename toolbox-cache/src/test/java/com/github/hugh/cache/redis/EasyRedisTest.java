@@ -157,6 +157,7 @@ public class EasyRedisTest {
         System.out.println("222--->>" + Arrays.toString(instance.get(byteKey)));
         System.out.println("33--->>" + Arrays.toString(instance.get(1, byteKey)));
         System.out.println("444--->>" + (instance.mget(0, key, "set_test_02")));
+        System.out.println("444--->>" + (instance.mget(key, "set_test_02")));
         System.out.println("555===>>" + instance.getAllKeys("*"));
     }
 

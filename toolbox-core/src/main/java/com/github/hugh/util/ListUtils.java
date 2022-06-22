@@ -146,4 +146,20 @@ public class ListUtils {
         }
         return StringUtils.trimLastPlace(stringBuilder);
     }
+
+    /**
+     * list转 in sql 语句字符串
+     *
+     * @param list 源集合
+     * @param <T>  类型
+     * @return String
+     * @since 2.3.4
+     */
+    public static <T> String listToInSql(List<T> list) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (T object : list) {
+            stringBuilder.append("'").append(object).append("'").append(",");
+        }
+        return StringUtils.trimLastPlace(stringBuilder);
+    }
 }
