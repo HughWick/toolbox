@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * @author hugh
  * @version 1.0.0
@@ -24,7 +26,10 @@ public class Md5Test {
 
     @Test
     void testFile() {
-        File file = new File("D:\\public\\newFile.bin");
-        Assertions.assertEquals(Md5Utils.encryptFile(file), "4a61626dce2f490c1462acd8afa5e052");
+        String path = "D:\\public\\newFile.bin";
+        File file = new File(path);
+        assertEquals(Md5Utils.encryptFile(file), "4a61626dce2f490c1462acd8afa5e052");
+        assertEquals(Md5Utils.encryptFile(path), "4a61626dce2f490c1462acd8afa5e052");
+
     }
 }

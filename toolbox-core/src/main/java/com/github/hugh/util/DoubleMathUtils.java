@@ -145,4 +145,53 @@ public class DoubleMathUtils {
         }
         return numberStr;
     }
+
+    /**
+     * 除法完成后向上取整
+     * <p>
+     * 24.1 -> 25
+     * </p>
+     *
+     * @param v1 被除数
+     * @param v2 除数
+     * @return double
+     * @since 2.3.5
+     */
+    public static double divCeil(double v1, double v2) {
+        double div = div(v1, v2);
+        return Math.ceil(div);
+    }
+
+
+    /**
+     * 除法完成后向下取整
+     * <p>
+     * 24.1 -> 24
+     * </p>
+     *
+     * @param v1 被除数
+     * @param v2 除数
+     * @return double
+     * @since 2.3.5
+     */
+    public static double divFloor(double v1, double v2) {
+        double div = div(v1, v2);
+        return Math.floor(div);
+    }
+
+    /**
+     * 除法完成后，四舍五入取整
+     * <p>
+     * 24.1 -> 24
+     * 24.8 -> 25
+     * </p>
+     * @param v1 被除数
+     * @param v2 除数
+     * @return double
+     * @since 2.3.5
+     */
+    public static double divRound(double v1, double v2) {
+        double div = div(v1, v2);
+        return Math.round(div);
+    }
 }

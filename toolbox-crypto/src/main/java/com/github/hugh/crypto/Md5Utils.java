@@ -70,7 +70,7 @@ public class Md5Utils {
      * 获取文件的md5值
      *
      * @param file 文件
-     * @return String 小写的字符串
+     * @return String 小写的md5字符串
      * @since 2.3.4
      */
     public static String encryptFile(File file) {
@@ -92,5 +92,16 @@ public class Md5Utils {
         } catch (NoSuchAlgorithmException | IOException e) {
             throw new ToolboxException(e);
         }
+    }
+
+    /**
+     * 获取文件的md5值
+     *
+     * @param filePath 文件路径
+     * @return String 小写的md5字符串
+     * @since 2.3.5
+     */
+    public static String encryptFile(String filePath) {
+        return encryptFile(new File(filePath));
     }
 }
