@@ -50,7 +50,7 @@ public class DoubleMathUtils {
      *
      * @param v1 被加数
      * @param v2 加数
-     * @return 两个参数的和
+     * @return double 两个参数的和
      */
     public static double add(double v1, double v2) {
         var bigDecimal1 = new BigDecimal(Double.toString(v1));
@@ -63,7 +63,7 @@ public class DoubleMathUtils {
      *
      * @param v1 被减数
      * @param v2 减数
-     * @return 两个参数的差
+     * @return double 两个参数的差
      */
     public static double sub(double v1, double v2) {
         BigDecimal b1 = new BigDecimal(Double.toString(v1));
@@ -76,7 +76,7 @@ public class DoubleMathUtils {
      *
      * @param v1 被乘数
      * @param v2 乘数
-     * @return 两个参数的积
+     * @return double 两个参数的积
      */
     public static double mul(double v1, double v2) {
         BigDecimal b1 = new BigDecimal(Double.toString(v1));
@@ -89,7 +89,7 @@ public class DoubleMathUtils {
      *
      * @param v1 被除数
      * @param v2 除数
-     * @return 两个参数的商
+     * @return double 两个参数的商
      */
     public static double div(double v1, double v2) {
         return div(v1, v2, DEF_DIV_SCALE);
@@ -101,7 +101,7 @@ public class DoubleMathUtils {
      * @param v1    被除数
      * @param v2    除数
      * @param scale 表示表示需要精确到小数点以后几位。
-     * @return 两个参数的商
+     * @return double 两个参数的商
      */
     public static double div(double v1, double v2, int scale) {
         if (scale < 0) {
@@ -185,6 +185,7 @@ public class DoubleMathUtils {
      * 24.1 -> 24
      * 24.8 -> 25
      * </p>
+     *
      * @param v1 被除数
      * @param v2 除数
      * @return double
