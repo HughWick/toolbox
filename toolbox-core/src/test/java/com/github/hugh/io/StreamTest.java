@@ -14,7 +14,7 @@ import java.io.InputStream;
  * @date 2020/10/26 15:11
  */
 public class StreamTest {
-    private static final String DB_PATH =   "/ip2region/ip2region.db";
+//    private static final String DB_PATH =   "/ip2region/ip2region.db";
     private static final String del_path = "D:\\battery-report.html";
 
     @Test
@@ -33,8 +33,8 @@ public class StreamTest {
         System.out.println(read.length);
         byte[] bytes = Files.toByteArray(file);
         System.out.println(bytes.length);
-        byte[] bytes1 = StreamUtils.resourceToByteArray(DB_PATH);
-        System.out.println("---->>" + bytes1.length);
+//        byte[] bytes1 = StreamUtils.resourceToByteArray(DB_PATH);
+//        System.out.println("---->>" + bytes1.length);
     }
 
 }
