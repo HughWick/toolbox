@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.util.StopWatch;
 
 /**
+ * IP 解析测试工具
  * @author AS
  * @date 2021/2/23 14:23
  */
@@ -23,6 +24,9 @@ public class Ip2regeinTest {
         stopWatch.stop();
         stopWatch.start("3");
         System.out.println(Ip2regionUtils.parse("120.132.126.126"));
+        stopWatch.stop();
+        stopWatch.start("4");
+        System.out.println(Ip2regionUtils.parse("175.178.82.15"));
         stopWatch.stop();
         System.out.println(stopWatch.prettyPrint());
     }

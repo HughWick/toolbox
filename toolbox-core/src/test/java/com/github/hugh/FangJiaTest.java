@@ -146,9 +146,9 @@ public class FangJiaTest {
     @Test
     void testCalc() {
         // 房子总金额
-        var amount = 95 * 10000;
+        var amount = 83 * 10000;
         var mianJi = 124;// 房屋面积
-        var flag = true; // 个税计算标识
+//        var flag = true; // 个税计算标识
         var shouFu = DoubleMathUtils.mul(amount, 0.3); // 首付
         var geShui = 0.0;
         var qiShui = 0.0;
@@ -156,7 +156,7 @@ public class FangJiaTest {
 //            geShui = DoubleMathUtils.mul(amount, 0.02); // 个税
 //            qiShui = DoubleMathUtils.mul(amount, 0.015); // 契税
 //        }
-        var zhongJie = DoubleMathUtils.mul(amount, 0.02); // 中介费
+        var zhongJie = DoubleMathUtils.mul(amount, 0.01); // 中介费
         var daiKuai = (amount - shouFu) * 0.03;//  贷款手续费
         var other = 580;// 工本费+公证费+抵押工本费
         System.out.println("--首付->>" + toChinese(shouFu + ""));

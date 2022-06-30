@@ -3,7 +3,9 @@ package com.github.hugh.util.ip;
 import com.github.hugh.bean.dto.Ip2regionDTO;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.io.StreamUtils;
+import com.google.common.base.Suppliers;
 import org.lionsoul.ip2region.xdb.Searcher;
+import java.util.function.Supplier;
 
 /**
  * 基于 ip2region IP查询国家省市工具
@@ -22,6 +24,26 @@ public class Ip2regionUtils {
      */
     private static final String XDB_PATH = "/ip2region/ip2region.xdb";
 //    private static final String XDB_PATH = "C:\\Users\\Hugh\\Desktop\\ip2region.xdb";
+//    private static final String XDB_PATH = "D:\\Program Files\\Desktop\\ip2region.xdb";
+
+    /**
+     * 缓存数据
+     */
+    private static Supplier<byte[]> defaultXdbDataSupplier = null;
+
+    /**
+     * 使用本地缓存XDB数据资源
+     *
+     * @return byte[]
+     * @since 2.3.5
+     */
+    public static synchronized byte[] getData() {
+        if (defaultXdbDataSupplier == null) {
+            Supplier<byte[]> easyRedisSupplier = () -> StreamUtils.resourceToByteArray(XDB_PATH);
+            defaultXdbDataSupplier = Suppliers.memoize(easyRedisSupplier::get);
+        }
+        return defaultXdbDataSupplier.get();
+    }
 
     /**
      * 根据IP地址解析省市区信息
@@ -32,10 +54,9 @@ public class Ip2regionUtils {
     private static String getCityInfo(String ip) {
         try {
             // 1、从 dbPath 加载整个 xdb 到内存。
-            // 该方法只解决了读取jar包文件方法（支持linux），但是性能上大概在50ms上下，与demo中的方法速度上差距很大
-            byte[] cBuff  = StreamUtils.resourceToByteArray(XDB_PATH);
+            byte[] cBuff = getData();
             // 2、使用上述的 cBuff 创建一个完全基于内存的查询对象。
-            Searcher searcher = Searcher.newWithBuffer(cBuff );
+            Searcher searcher = Searcher.newWithBuffer(cBuff);
             // 3、查询
             return searcher.searchByStr(ip);
         } catch (Exception e) {
