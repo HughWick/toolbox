@@ -7,7 +7,6 @@ import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.ListUtils;
 import com.github.hugh.util.ServletUtils;
 import com.google.common.base.CaseFormat;
-import org.checkerframework.checker.units.qual.K;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -239,16 +238,18 @@ public class MybatisPlusQueryUtils {
 
     /**
      * 解析请求头中所有键值对，并放入mybatis 查询对象中
-     * <p>根据deleteFlag标识区分是否，加入删除标识 {@link QueryCode#DELETE_FLAG} 标识为0的条件</p>
      *
-     * @param request    请求头
-     * @param deleteFlag 是否增加删除标识的键值对
+     * @param request 请求头
+     * @param key     键
+     * @param value   值
+     * @param <K>     KEY类型
+     * @param <V>     VALUE 类型
      * @return QueryWrapper
      * @since 2.1.2
      */
-    private static <T, K, V> QueryWrapper<T> create(HttpServletRequest request, boolean deleteFlag, K key, V value) {
+    private static <T, K, V> QueryWrapper<T> create(HttpServletRequest request, K key, V value) {
         Map<K, V> params = ServletUtils.getParams(request);
-        if (deleteFlag) {
+        if (EmptyUtils.isNotEmpty(key) && EmptyUtils.isNotEmpty(value)) {
             return createDef(params, key, value);
         } else {
             return create(params);
@@ -264,7 +265,7 @@ public class MybatisPlusQueryUtils {
      * @since 2.1.2
      */
     public static <T> QueryWrapper<T> create(HttpServletRequest request) {
-        return create(request, false, null, null);
+        return create(request, null, null);
     }
 
     /**
@@ -312,6 +313,6 @@ public class MybatisPlusQueryUtils {
      * @since 2.1.2
      */
     public static <T, K, V> QueryWrapper<T> createDef(HttpServletRequest request, K key, V value) {
-        return create(request, true, key, value);
+        return create(request, key, value);
     }
 }
