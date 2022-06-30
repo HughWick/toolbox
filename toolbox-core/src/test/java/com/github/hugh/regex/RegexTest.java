@@ -1,7 +1,6 @@
 package com.github.hugh.regex;
 
 import com.github.hugh.util.regex.RegexUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -88,5 +87,6 @@ class RegexTest {
         assertFalse(RegexUtils.isNumeric(str));
         assertTrue(RegexUtils.isNumeric(str2));
         assertFalse(RegexUtils.isNumeric(str3));
+        assertTrue(RegexUtils.isNotNumeric(str));
     }
 }

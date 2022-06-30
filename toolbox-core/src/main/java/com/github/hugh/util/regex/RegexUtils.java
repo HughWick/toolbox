@@ -235,10 +235,21 @@ public class RegexUtils {
     }
 
     /**
-     * 判断字符串全是数字
+     * 字符串全都是数字
+     * <ul>
+     * <li>
+     *     2453.11 -> false
+     * </li>
+     * <li>
+     *     2453a -> false
+     * </li>
+     * <li>
+     *     2453 -> true
+     * </li>
+     * </ul>
      *
      * @param str 字符串
-     * @return boolean
+     * @return boolean 字符串全是数字返回{@code true}
      * @since 2.1.9
      */
     public static boolean isNumeric(String str) {
@@ -248,6 +259,17 @@ public class RegexUtils {
         Pattern pattern = Pattern.compile("-?[0-9]+(\\\\.[0-9]+)?");
         Matcher isNum = pattern.matcher(str);
         return isNum.matches();
+    }
+
+    /**
+     * 字符串不全都是数字
+     *
+     * @param str 字符串
+     * @return boolean 字符串不为纯数字返回{@code true}
+     * @since 2.3.5
+     */
+    public static boolean isNotNumeric(String str) {
+        return !isNumeric(str);
     }
 
     /**
