@@ -149,7 +149,7 @@ public class DoubleMathUtils {
     /**
      * 除法完成后向上取整
      * <p>
-     * 24.1 -> 25
+     * 24.1 {@code ->} 25
      * </p>
      *
      * @param v1 被除数
@@ -166,7 +166,7 @@ public class DoubleMathUtils {
     /**
      * 除法完成后向下取整
      * <p>
-     * 24.1 -> 24
+     * 24.1 {@code ->} 24
      * </p>
      *
      * @param v1 被除数
@@ -182,8 +182,8 @@ public class DoubleMathUtils {
     /**
      * 除法完成后，四舍五入取整
      * <p>
-     * 24.1 -> 24
-     * 24.8 -> 25
+     * 24.1 {@code ->} 24
+     * 24.8 {@code ->} 25
      * </p>
      *
      * @param v1 被除数
