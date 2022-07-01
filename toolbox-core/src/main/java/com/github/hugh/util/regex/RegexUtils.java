@@ -238,13 +238,13 @@ public class RegexUtils {
      * 字符串全都是数字
      * <ul>
      * <li>
-     *     2453.11 -> false
+     *     2453.11 {@code ->} false
      * </li>
      * <li>
-     *     2453a -> false
+     *     2453a {@code ->} false
      * </li>
      * <li>
-     *     2453 -> true
+     *     2453 {@code ->} true
      * </li>
      * </ul>
      *
