@@ -117,8 +117,7 @@ public class StreamUtils {
             while ((len = inputStream.read(buffer)) != -1) {
                 boa.write(buffer, 0, len);
             }
-            byte[] result = boa.toByteArray();
-            return new String(result, charset);
+            return boa.toString(charset);
         } catch (Exception e) {
             throw new ToolboxException(e);
         }
