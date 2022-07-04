@@ -17,8 +17,7 @@
         <google-guava.version>31.1-jre</google-guava.version>
         <kryo.version>4.0.2</kryo.version>
         <slf4j-simple.version>1.7.36</slf4j-simple.version>
-<!--        <ip2region.version>1.7.2</ip2region.version>-->
-        <ip2region.version>2.6.2</ip2region.version>
+        <ip2region.version>2.6.3</ip2region.version>
     </properties>
 
     <dependencies>
