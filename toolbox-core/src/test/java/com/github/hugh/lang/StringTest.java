@@ -3,8 +3,7 @@ package com.github.hugh.lang;
 import com.github.hugh.util.StringUtils;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 //import static org.junit.jupiter.api.
 
@@ -49,8 +48,8 @@ public class StringTest {
     }
 
     @Test
-    void test04() {
-        System.out.println("--1-->>" + StringUtils.replaceAnyBlank(" entity is error !"));
+    void testReplaceAnyBlank() {
+        assertEquals("entityiserror!", StringUtils.replaceAnyBlank(" entity is error !"));
         System.out.println("--2-->>" + StringUtils.replaceAnyBlank("entity is error !", "_"));
     }
 
@@ -80,7 +79,6 @@ public class StringTest {
         String string = null;
 //        assertNotNull(string,"字符串不能为空");
         assertEquals(StringUtils.trim(str), str.trim());
-        System.out.println("--------------->>");
     }
 
     @Test
@@ -91,5 +89,13 @@ public class StringTest {
         System.out.println("-1-->" + StringUtils.trimLastPlace(str));
         System.out.println("---2>" + StringUtils.trimLastPlace(stringBuilder));
         System.out.println("-333-->" + StringUtils.trimLastPlace(stringBuilder1));
+    }
+
+    @Test
+    void testStartWith() {
+        String str = "<ss>";
+        String str2 = "Ass>";
+        assertTrue(StringUtils.startWithIgnoreCase(str, "<"));
+        assertFalse(StringUtils.startWith(str2, "a" ,false));
     }
 }
