@@ -130,6 +130,36 @@ public class TimeUtils extends DateCode {
     }
 
     /**
+     * 获取时
+     *
+     * @return the hour-of-day, from 0 to 23
+     * @since 2.3.6
+     */
+    public static int getHour(){
+        return LocalDateTime.now().getHour();
+    }
+
+    /**
+     * 获取分
+     *
+     * @return the minute-of-hour, from 0 to 59
+     * @since 2.3.6
+     */
+    public static int getMinute(){
+        return LocalDateTime.now().getMinute();
+    }
+
+    /**
+     * 获取秒
+     *
+     * @return the second-of-minute, from 0 to 59
+     * @since 2.3.6
+     */
+    public static int getSecond(){
+        return LocalDateTime.now().getSecond();
+    }
+
+    /**
      * 获取当前日期字符串
      * <ul>
      * <li>格式：yyyy-MM-dd HH:mm:ss</li>

@@ -3,6 +3,8 @@ package com.github.hugh.time;
 import com.github.hugh.util.TimeUtils;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * @author AS
  * @date 2020/8/31 15:22
@@ -36,14 +38,21 @@ public class TimeTest {
     }
 
     @Test
-    void test04() {
-        String timeStart = "2019-12-11 00:00:00";
-        String timeEnd = "2020-12-20 23:59:59";
-        long l = TimeUtils.differMilli(timeStart, timeEnd);
-        System.out.println(l);
-        System.out.println("---1>>" + TimeUtils.getMonth());
-        System.out.println("---2>>" + TimeUtils.getDay());
-        System.out.println("--3->>" + TimeUtils.isThisYear(12));
+    void testGetYearMonthDay() {
+        assertEquals(2022 , TimeUtils.getYear());
+        assertEquals(7 , TimeUtils.getMonth());
+        assertEquals(4 , TimeUtils.getDay());
+        assertEquals(20 , TimeUtils.getHour());
+        assertEquals(10 , TimeUtils.getMinute());
+        System.out.println(TimeUtils.getSecond());
+//        String timeStart = "2019-12-11 00:00:00";
+//        String timeEnd = "2020-12-20 23:59:59";
+//        long l = TimeUtils.differMilli(timeStart, timeEnd);
+//        System.out.println(l);
+//        System.out.println("---1>>" + TimeUtils.getMonth());
+//        System.out.println("---2>>" + TimeUtils.getDay());
+//        System.out.println("--3->>" + TimeUtils.isThisYear(12));
+
     }
 
     @Test
