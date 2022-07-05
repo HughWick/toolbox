@@ -29,7 +29,7 @@ JDK 11+
 | fastjson  | 阿里高性能json |
 | slf4j-simple  | 日志工具包 |
 | ip2region  | IP地址库 |
-
+| UserAgentUtils  | UserAgent解析工具 |
 ## maven 引入
 
 ```xml
