@@ -5,7 +5,6 @@ import com.github.hugh.exception.ToolboxException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -120,7 +119,7 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 将字符串yyyyMMddhhmmss 转换成yyyy-MM-dd HH:mm:ss字符串格式 如果传入的字符串为null,则返回空值
+     * 将字符串yyyyMMddhhmmss 转换成yyyy-MM-dd HH:mm:ss字符串格式，如果传入的字符串为null,则返回空值
      *
      * @param strDate 字符串yyyyMMddhhmmss
      * @return String 日期格式字符串
@@ -129,7 +128,7 @@ public class DateUtils extends DateCode {
         if (strDate == null) {
             return "";
         }
-        var reg = "(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})(\\d{2})";
+        String reg = "(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})(\\d{2})";
         return strDate.replaceAll(reg, "$1-$2-$3 $4:$5:$6");
     }
 
@@ -236,7 +235,7 @@ public class DateUtils extends DateCode {
      * @return Date 前一天的起始时间
      */
     public static Date getDayBeforeStartTime() {
-        var date = new Date();
+        Date date = new Date();
         String dateStr = format(date, YEAR_MONTH_DAY);
         return getDayBeforeStartTime(dateStr);
     }
@@ -249,7 +248,7 @@ public class DateUtils extends DateCode {
      */
     public static Date getDayBeforeStartTime(String dateStr) {
         var calendar = Calendar.getInstance();
-        var date = parseDate(dateStr, YEAR_MONTH_DAY);
+        Date date = parseDate(dateStr, YEAR_MONTH_DAY);
         if (date == null) {
             return null;
         }
@@ -268,7 +267,7 @@ public class DateUtils extends DateCode {
      * @return Date 前一天的结束时间
      */
     public static Date getDayBeforeEndTime() {
-        var date = new Date();
+        Date date = new Date();
         String dateStr = format(date, YEAR_MONTH_DAY);
         return getDayBeforeEndTime(dateStr);
     }
@@ -464,10 +463,22 @@ public class DateUtils extends DateCode {
      * @return Date
      */
     public static Date getOneMonthAgo() {
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.MONTH, -1);
-        return c.getTime();
+        return getMonthAgo(null, 1);
+    }
+
+    /**
+     * 获取指定几个月之前的日期
+     *
+     * @param date  日期对象
+     * @param month 月份，只需转正数即可，默认是当前月份减去当前传参的值
+     * @return Date
+     * @since 2.3.6
+     */
+    public static Date getMonthAgo(Date date, int month) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(Objects.requireNonNullElseGet(date, Date::new));
+        calendar.add(Calendar.MONTH, -month);
+        return calendar.getTime();
     }
 
     /**
@@ -544,16 +555,6 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 获取年份
-     *
-     * @return the year, from MIN_YEAR to MAX_YEAR
-     * @since 1.5.0
-     */
-    public static int getYear() {
-        return LocalDateTime.now().getYear();
-    }
-
-    /**
      * 获取日期中的月份
      *
      * @param date 日期对象
@@ -566,16 +567,6 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 获取月数
-     *
-     * @return the month-of-year, from 1 to 12
-     * @since 1.5.0
-     */
-    public static int getMonth() {
-        return LocalDateTime.now().getMonthValue();
-    }
-
-    /**
      * 获取日期中的日
      *
      * @param date 日期对象
@@ -585,16 +576,6 @@ public class DateUtils extends DateCode {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar.get(Calendar.DATE);
-    }
-
-    /**
-     * 获取日
-     *
-     * @return the day-of-month, from 1 to 31
-     * @since 1.5.0
-     */
-    public static int getDay() {
-        return LocalDateTime.now().getDayOfMonth();
     }
 
     /**
@@ -814,7 +795,7 @@ public class DateUtils extends DateCode {
      * @return Boolean {@code true}今天
      */
     public static boolean isToday(String time, String formatStr) {
-        var date = parseDate(time, formatStr);
+        Date date = parseDate(time, formatStr);
         if (date == null) {
             return false;
         }

@@ -23,6 +23,8 @@ public class DateTest {
         System.out.println("===>>" + DateUtils.toStringTime(str));
 //        System.out.println("--5->" + DateUtils.getDate(DateUtils.toStringTime(str)));
         System.out.println("--6->" + DateUtils.getDateSign());
+        String s = DateUtils.toStringDate("20200604130021");
+        System.out.println(s);
         System.out.println("--根据当前时间的一天前的起始时间->" + DateUtils.getDayBeforeStartTime());
     }
 
@@ -39,12 +41,12 @@ public class DateTest {
         assertEquals("a", "a");
     }
 
+    // 测试日期是否是今天
     @Test
-    void test03() {
+    void testIsToday() {
         Date date1 = new Date();
-        System.out.println("--1->>" + date1);
-        System.out.println("--2->>" + DateUtils.isToday(date1));
-        System.out.println("--2->>" + DateUtils.isToday(DateUtils.ofPattern(date1)));
+        assertTrue(DateUtils.isToday(date1));
+        assertTrue(DateUtils.isToday(DateUtils.ofPattern(date1)));
         System.out.println("-3-->>" + DateUtils.dateStrToDate(date1.toString()));
     }
 
@@ -59,13 +61,11 @@ public class DateTest {
     void test05() {
         Date begin = DateUtils.parseTimestamp(1617943680000L);
         Date end = DateUtils.parseTimestamp(1617948600000L);
-        System.out.println("--1->>" + DateUtils.minutesDifference(begin, end));
-        System.out.println("--2->>" + DateUtils.secondsDifference(begin, end));
+        assertEquals(82, DateUtils.minutesDifference(begin, end));
+        assertEquals(4920, DateUtils.secondsDifference(begin, end));
         System.out.println("3--->>" + DateUtils.format(DateUtils.getMin(begin, 5), DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
-
         Date date = DateUtils.parseDate("2022-01-22 00:00:00");
-        boolean b = DateUtils.checkTimeOut(date, 2);
-        System.out.println("---4-->>>" + b);
+        assertTrue(DateUtils.checkTimeOut(date, 2));
         System.out.println("---5-->>>" + DateUtils.checkTimeOut(DateUtils.parseDate("2022-01-22 10:00:00"), 2));
     }
 
@@ -93,5 +93,20 @@ public class DateTest {
         boolean dateFormat = DateUtils.isDateFormat(timeStart, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
         assertTrue(dateFormat);
         assertFalse(DateUtils.isDateFormat(timeStart + "a", DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
+    }
+
+    // 测试获取指定日期
+    @Test
+    void testGetDate() {
+        Date todayStartTime = DateUtils.getTodayStartTime();
+        System.out.println(DateUtils.ofPattern(todayStartTime));
+        Date todayEndTime = DateUtils.getTodayEndTime();
+        System.out.println(DateUtils.ofPattern(todayEndTime));
+        Date oneMonthAgo = DateUtils.getOneMonthAgo();
+        assertEquals("2022-06-05", DateUtils.format(oneMonthAgo));
+        Date weekAgo = DateUtils.getWeekAgo();
+        System.out.println(DateUtils.ofPattern(weekAgo));
+        Date hourAgo = DateUtils.getHourAgo();
+        System.out.println(DateUtils.ofPattern(hourAgo));
     }
 }
