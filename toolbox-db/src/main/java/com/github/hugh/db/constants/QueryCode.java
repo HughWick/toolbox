@@ -42,4 +42,15 @@ public class QueryCode {
      * 创建人
      */
     public static final String CREATE_BY = "CREATE_BY";
+
+    /**
+     * 状态
+     */
+    public static final String STATUS = "STATUS";
+
+    /**
+     * 标识
+     */
+    public static final String FLAG = "FLAG";
+
 }

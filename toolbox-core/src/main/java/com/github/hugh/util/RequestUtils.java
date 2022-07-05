@@ -1,5 +1,9 @@
 package com.github.hugh.util;
 
+import eu.bitwalker.useragentutils.Browser;
+import eu.bitwalker.useragentutils.OperatingSystem;
+import eu.bitwalker.useragentutils.UserAgent;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -77,5 +81,33 @@ public class RequestUtils {
      */
     public static boolean isPc(HttpServletRequest request) {
         return "pc".equals(getSystemType(request));
+    }
+
+    /**
+     * 获取浏览器名称
+     *
+     * @param request 请求信息头
+     * @return String 浏览器名称+版本号
+     * @since 2.3.6
+     */
+    public static String getBrowserName(HttpServletRequest request) {
+        String userAgent = request.getHeader("User-Agent");
+        UserAgent ua = UserAgent.parseUserAgentString(userAgent);
+        Browser browser = ua.getBrowser();
+        return browser.getName() + "/" + browser.getVersion(userAgent);
+    }
+
+    /**
+     * 获取操作系统
+     *
+     * @param request 请求信息头
+     * @return String 操作系统名称
+     * @since 2.3.6
+     */
+    public static String getOsName(HttpServletRequest request) {
+        String userAgent = request.getHeader("User-Agent");
+        UserAgent ua = UserAgent.parseUserAgentString(userAgent);
+        OperatingSystem os = ua.getOperatingSystem();
+        return os.getName();
     }
 }
