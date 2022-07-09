@@ -7,7 +7,6 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -171,5 +170,21 @@ public class ListTest {
         list.add("192.168.1.21");
         System.out.println(ListUtils.listToInSql(list));
 //        Assertions.assertEquals();
+    }
+
+    @Test
+    void testListObjectToString() {
+        Student student = new Student();
+        student.setName("张三");
+        Student student2 = new Student();
+        student2.setName("李四");
+        Student student3 = new Student();
+        student3.setName("王五");
+        List<Student> list = new ArrayList<>();
+        list.add(student);
+        list.add(student2);
+        list.add(student3);
+        System.out.println(ListUtils.listObjectToString(list, "name", ","));
+        System.out.println(ListUtils.listObjectToString(list, "name"));
     }
 }

@@ -5,6 +5,8 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,6 +26,11 @@ public class ListUtils {
      * 替换字符串中的[]、"、 "、符号表达式
      */
     private static final CharMatcher LIST_CHAR_MATCHER = CharMatcher.anyOf("[]\" \"");
+
+    /**
+     * list默认分隔符 {@code ,}
+     */
+    private static final String LIST_SEPARATOR = ",";
 
     /**
      * 判断集合是否为null或者集合内元素空
@@ -125,7 +132,7 @@ public class ListUtils {
      * @since 2.1.11
      */
     public static <T> String listToString(List<T> list) {
-        return listToString(list, ",");
+        return listToString(list, LIST_SEPARATOR);
     }
 
     /**
@@ -158,8 +165,44 @@ public class ListUtils {
     public static <T> String listToInSql(List<T> list) {
         StringBuilder stringBuilder = new StringBuilder();
         for (T object : list) {
-            stringBuilder.append("'").append(object).append("'").append(",");
+            stringBuilder.append("'").append(object).append("'").append(LIST_SEPARATOR);
         }
         return StringUtils.trimLastPlace(stringBuilder);
+    }
+
+    /**
+     * list对象转换对应的字符串
+     *
+     * @param list 对象集合
+     * @param name 对象get方法名称
+     * @param <T>  实体类型
+     * @return String
+     * @since 2.3.7
+     */
+    public static <T> String listObjectToString(List<T> list, String name) {
+        return listObjectToString(list, name, LIST_SEPARATOR);
+    }
+
+    /**
+     * list对象转换对应的字符串
+     *
+     * @param list      对象集合
+     * @param name      对象get方法名称
+     * @param separator 分隔符
+     * @param <T>       实体类型
+     * @return String
+     * @since 2.3.7
+     */
+    public static <T> String listObjectToString(List<T> list, String name, String separator) {
+        try {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (T dto : list) {
+                Method m = dto.getClass().getMethod(("get" + org.springframework.util.StringUtils.capitalize(name)));
+                stringBuilder.append(m.invoke(dto)).append(separator);
+            }
+            return StringUtils.trimLastPlace(stringBuilder);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            throw new ToolboxException(e);
+        }
     }
 }
