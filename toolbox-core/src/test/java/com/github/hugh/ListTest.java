@@ -186,5 +186,13 @@ public class ListTest {
         list.add(student3);
         System.out.println(ListUtils.listObjectToString(list, "name", ","));
         System.out.println(ListUtils.listObjectToString(list, "name"));
+        List<Map> listMap = new ArrayList<>();
+        var item = new HashMap<>();
+        item.put("name", "狗蛋");
+        listMap.add(item);
+        var item2 = new HashMap<>();
+        item2.put("name", "钢弹");
+        listMap.add(item2);
+        System.out.println(ListUtils.listObjectToString(listMap, "name"));
     }
 }

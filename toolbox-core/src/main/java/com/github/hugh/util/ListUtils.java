@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * List工具类
@@ -197,8 +198,14 @@ public class ListUtils {
         try {
             StringBuilder stringBuilder = new StringBuilder();
             for (T dto : list) {
-                Method m = dto.getClass().getMethod(("get" + org.springframework.util.StringUtils.capitalize(name)));
-                stringBuilder.append(m.invoke(dto)).append(separator);
+                Object value;
+                if (dto instanceof Map) {
+                    value = ((Map<?, ?>) dto).get(name);
+                } else {
+                    Method m = dto.getClass().getMethod(("get" + org.springframework.util.StringUtils.capitalize(name)));
+                    value = m.invoke(dto);
+                }
+                stringBuilder.append(value).append(separator);
             }
             return StringUtils.trimLastPlace(stringBuilder);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
