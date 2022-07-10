@@ -180,11 +180,14 @@ public class ListTest {
         student2.setName("李四");
         Student student3 = new Student();
         student3.setName("王五");
+        Student student4 = new Student();
+        student4.setName(" ");
         List<Student> list = new ArrayList<>();
         list.add(student);
         list.add(student2);
         list.add(student3);
-        System.out.println(ListUtils.listObjectToString(list, "name", ","));
+        list.add(student4);
+        System.out.println(ListUtils.listObjectToString(list, "name", "_"));
         System.out.println(ListUtils.listObjectToString(list, "name"));
         List<Map> listMap = new ArrayList<>();
         var item = new HashMap<>();

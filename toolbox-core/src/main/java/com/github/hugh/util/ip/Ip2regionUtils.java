@@ -58,7 +58,7 @@ public class Ip2regionUtils {
             // 2、使用上述的 cBuff 创建一个完全基于内存的查询对象。
             Searcher searcher = Searcher.newWithBuffer(cBuff);
             // 3、查询
-            return searcher.searchByStr(ip);
+            return searcher.search(ip);
         } catch (Exception e) {
             throw new ToolboxException("failed to create content cached searcher:", e);
         }
