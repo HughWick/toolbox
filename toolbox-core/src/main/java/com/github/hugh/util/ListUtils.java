@@ -205,6 +205,9 @@ public class ListUtils {
                     Method m = dto.getClass().getMethod(("get" + org.springframework.util.StringUtils.capitalize(name)));
                     value = m.invoke(dto);
                 }
+                if (EmptyUtils.isEmpty(value)) {
+                    continue;
+                }
                 stringBuilder.append(value).append(separator);
             }
             return StringUtils.trimLastPlace(stringBuilder);
