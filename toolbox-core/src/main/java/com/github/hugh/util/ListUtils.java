@@ -69,7 +69,7 @@ public class ListUtils {
      */
     public static <T> List<T> guavaPartitionList(List<T> originList, int page, int size) {
         if (isEmpty(originList)) {
-            throw new ToolboxException("数据不能为空!");
+            throw new NullPointerException();
         }
         List<List<T>> pagedList = Lists.partition(originList, size);//根据条数切割成多个list
         return pagedList.get(page);//根据下标(分页)对应的数据

@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+
 /**
  * @author AS
  * @date 2020/9/14 9:36
@@ -140,6 +142,7 @@ public class ListTest {
         System.out.println("===>>" + strings2);
         List<String> strings3 = ListUtils.guavaPartitionList(arrayList2, 1, 1);
         System.out.println("=--2---->" + strings3);
+        assertThrowsExactly(NullPointerException.class, () -> ListUtils.guavaPartitionList(null, 1, 1));
     }
 
     @Test

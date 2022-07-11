@@ -326,11 +326,11 @@ public class StringUtils {
      */
     public static String trim(String source, String beTrim) {
         if (source == null) {
-            return "";
+            return null;
         }
         source = source.strip().trim();
         if (source.isEmpty()) {
-            return "";
+            return source;
         }
         String beginChar = source.substring(0, 1);
         if (beginChar.equalsIgnoreCase(beTrim)) {
@@ -480,7 +480,7 @@ public class StringUtils {
      */
     public static String trimLastPlace(String source) {
         if (EmptyUtils.isEmpty(source)) {
-            return "";
+            return source;
         }
         return source.substring(0, source.length() - 1);
     }
