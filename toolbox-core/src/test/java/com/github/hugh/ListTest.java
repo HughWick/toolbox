@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 /**
@@ -152,9 +153,9 @@ public class ListTest {
             originList.add(i + "");
         }
         String s = ListUtils.listToString(originList);
-        System.out.println("===>>" + s);
+        assertEquals(s,"0,1,2,3,4,5,6,7,8,9");
         String s2 = ListUtils.listToString(originList, ";");
-        System.out.println("---2--->" + s2);
+        assertEquals(s2,"0;1;2;3;4;5;6;7;8;9");
     }
 
     @Test
@@ -167,7 +168,7 @@ public class ListTest {
     }
 
     @Test
-    void testListToInsql() {
+    void testListToInSql() {
         List<String> list = new ArrayList<>();
         list.add("192.168.1.1");
         list.add("192.168.1.21");

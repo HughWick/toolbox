@@ -148,11 +148,7 @@ public class ListUtils {
      * @since 2.1.10
      */
     public static <T> String listToString(List<T> list, String separator) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (T object : list) {
-            stringBuilder.append(object).append(separator);
-        }
-        return StringUtils.trimLastPlace(stringBuilder);
+        return listObjectToString(list, null, separator);
     }
 
     /**
@@ -197,13 +193,17 @@ public class ListUtils {
     public static <T> String listObjectToString(List<T> list, String name, String separator) {
         try {
             StringBuilder stringBuilder = new StringBuilder();
-            for (T dto : list) {
+            for (T obj : list) {
                 Object value;
-                if (dto instanceof Map) {
-                    value = ((Map<?, ?>) dto).get(name);
+                if (EmptyUtils.isEmpty(name)) {
+                    value = obj;
                 } else {
-                    Method m = dto.getClass().getMethod(("get" + org.springframework.util.StringUtils.capitalize(name)));
-                    value = m.invoke(dto);
+                    if (obj instanceof Map) {
+                        value = ((Map<?, ?>) obj).get(name);
+                    } else {
+                        Method m = obj.getClass().getMethod(("get" + org.springframework.util.StringUtils.capitalize(name)));
+                        value = m.invoke(obj);
+                    }
                 }
                 if (EmptyUtils.isEmpty(value)) {
                     continue;
