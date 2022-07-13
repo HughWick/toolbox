@@ -13,13 +13,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
 import lombok.Data;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * gson JsonObjects测试类
@@ -215,7 +213,22 @@ public class JsonObjectsTest {
         assertFalse(new JsonObjects(str).isEmptyValue("age"));
         assertTrue(new JsonObjects(str).isNotEmptyValue("amount"));
         assertFalse(new JsonObjects(str).isNotEmptyValue("createBy"));
+    }
 
+    @Test
+    void testArray() {
+        String str = "{\n" +
+                "\t\"action\":\t\"R\",\n" +
+                "\t\"00100001\":\t[\"00010000\"],\n" +
+                "\t\"00100002\":\t[\"01010000\", \"02030000\"],\n" +
+                "\t\"00100003\":\t[\"01010009\"],\n" +
+                "\t\"00100004\":\t[\"0\"]\n" +
+                "}";
+        JsonObjects jsonObjects = new JsonObjects(str);
+        System.out.println(jsonObjects);
+        for (Map.Entry<String, JsonElement> entries : jsonObjects.entrySet()) {
+            System.out.println(entries.getKey() + "=--------" + JsonObjectUtils.getAsString(entries.getValue()));
+        }
     }
 }
 

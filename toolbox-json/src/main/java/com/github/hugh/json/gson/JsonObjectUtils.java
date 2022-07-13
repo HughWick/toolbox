@@ -69,13 +69,22 @@ public class JsonObjectUtils {
      * <p>
      * 由于gson 的{@link JsonObject#get(String)}方法返回字符串时前后带有双引号，所以需要再调用{@link JsonElement#getAsString()}
      * </p>
+     * <p>
+     * 如果元素为{@link JsonArray} 那么直接返回字符串
+     * </p>
      *
      * @param jsonElement json元素对象
      * @return String
      * @since 2.3.0
      */
     public static String getAsString(JsonElement jsonElement) {
-        return isJsonNull(jsonElement) ? null : jsonElement.getAsString();
+        if (isJsonNull(jsonElement)) {
+            return null;
+        }
+        if (jsonElement.isJsonArray()) {
+            return jsonElement.toString();
+        }
+        return jsonElement.getAsString();
     }
 
     /**
