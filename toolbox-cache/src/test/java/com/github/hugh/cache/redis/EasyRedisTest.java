@@ -44,8 +44,8 @@ public class EasyRedisTest {
         jedisPoolConfig.setTestOnBorrow(true);
         // 在空闲时检查有效性, 默认false
         jedisPoolConfig.setTestWhileIdle(true);
-        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "43.128.14.188", 9991, 10000, "password123@");
-//        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "192.168.1.81", 7779, 10000, "Th@8225586");
+//        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "43.128.14.188", 9991, 10000, "password123@");
+        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "192.168.1.81", 7779, 10000, "Th@8225586");
 //        log.info("初始化redis pool。end...");
         System.out.println("初始化redis pool。end...");
         return jedisPool;
@@ -129,7 +129,7 @@ public class EasyRedisTest {
     @Test
     void setTest() {
         EasyRedis instance = supplier.get();
-        int dbIndex = 2;
+        int dbIndex = 14;
         String key = "set_test_01";
         String value = "sdjfhkj";
         String set = instance.set(key, value);
