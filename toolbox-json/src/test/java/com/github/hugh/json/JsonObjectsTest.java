@@ -217,12 +217,14 @@ public class JsonObjectsTest {
 
     @Test
     void testArray() {
+        String str3 = "{\"age\":2,\"amount\":15.14,\"birthday\":null}";
         String str = "{\n" +
                 "\t\"action\":\t\"R\",\n" +
                 "\t\"00100001\":\t[\"00010000\"],\n" +
                 "\t\"00100002\":\t[\"01010000\", \"02030000\"],\n" +
                 "\t\"00100003\":\t[\"01010009\"],\n" +
-                "\t\"00100004\":\t[\"0\"]\n" +
+                "\t\"00100004\":\t[\"0\"],\n" +
+                "\t\"00100005\":\t{\"age\":2,\"amount\":15.14,\"birthday\":null}\n"+
                 "}";
         JsonObjects jsonObjects = new JsonObjects(str);
         System.out.println(jsonObjects);

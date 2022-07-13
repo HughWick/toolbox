@@ -81,7 +81,7 @@ public class JsonObjectUtils {
         if (isJsonNull(jsonElement)) {
             return null;
         }
-        if (jsonElement.isJsonArray()) {
+        if (jsonElement.isJsonArray() || jsonElement.isJsonObject()) {
             return jsonElement.toString();
         }
         return jsonElement.getAsString();
