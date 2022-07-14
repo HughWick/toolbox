@@ -173,6 +173,20 @@ public class ListTest {
         list.add("192.168.1.1");
         list.add("192.168.1.21");
         assertEquals("'192.168.1.1','192.168.1.21'", ListUtils.listToInSql(list));
+        Student student = new Student();
+        student.setName("张三");
+        Student student2 = new Student();
+        student2.setName("李四");
+        Student student3 = new Student();
+        student3.setName("王五");
+        Student student4 = new Student();
+        student4.setName(" ");
+        List<Student> list2 = new ArrayList<>();
+        list2.add(student);
+        list2.add(student2);
+        list2.add(student3);
+        list2.add(student4);
+        assertEquals("'张三','李四','王五'", ListUtils.listToInSql(list2 , "name"));
     }
 
     @Test

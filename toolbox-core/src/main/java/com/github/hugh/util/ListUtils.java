@@ -164,6 +164,19 @@ public class ListUtils {
     }
 
     /**
+     * list转 in sql 语句字符串
+     *
+     * @param list 源集合
+     * @param name 对象get方法名称
+     * @param <T>  类型
+     * @return String
+     * @since 2.3.9
+     */
+    public static <T> String listToInSql(List<T> list, String name) {
+        return listObjectToString(list, name, null, true);
+    }
+
+    /**
      * list对象转换对应的字符串
      *
      * @param list 对象集合
