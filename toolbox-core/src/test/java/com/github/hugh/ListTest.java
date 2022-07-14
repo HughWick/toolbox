@@ -153,9 +153,9 @@ public class ListTest {
             originList.add(i + "");
         }
         String s = ListUtils.listToString(originList);
-        assertEquals(s,"0,1,2,3,4,5,6,7,8,9");
+        assertEquals("0,1,2,3,4,5,6,7,8,9", s);
         String s2 = ListUtils.listToString(originList, ";");
-        assertEquals(s2,"0;1;2;3;4;5;6;7;8;9");
+        assertEquals("0;1;2;3;4;5;6;7;8;9", s2);
     }
 
     @Test
@@ -172,8 +172,7 @@ public class ListTest {
         List<String> list = new ArrayList<>();
         list.add("192.168.1.1");
         list.add("192.168.1.21");
-        System.out.println(ListUtils.listToInSql(list));
-//        Assertions.assertEquals();
+        assertEquals("'192.168.1.1','192.168.1.21'", ListUtils.listToInSql(list));
     }
 
     @Test
@@ -191,7 +190,7 @@ public class ListTest {
         list.add(student2);
         list.add(student3);
         list.add(student4);
-        System.out.println(ListUtils.listObjectToString(list, "name", "_"));
+        assertEquals("张三_李四_王五", ListUtils.listObjectToString(list, "name", "_", false));
         System.out.println(ListUtils.listObjectToString(list, "name"));
         List<Map> listMap = new ArrayList<>();
         var item = new HashMap<>();

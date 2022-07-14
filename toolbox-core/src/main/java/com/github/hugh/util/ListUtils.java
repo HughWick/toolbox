@@ -148,7 +148,7 @@ public class ListUtils {
      * @since 2.1.10
      */
     public static <T> String listToString(List<T> list, String separator) {
-        return listObjectToString(list, null, separator);
+        return listObjectToString(list, null, separator, false);
     }
 
     /**
@@ -160,11 +160,7 @@ public class ListUtils {
      * @since 2.3.4
      */
     public static <T> String listToInSql(List<T> list) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (T object : list) {
-            stringBuilder.append("'").append(object).append("'").append(LIST_SEPARATOR);
-        }
-        return StringUtils.trimLastPlace(stringBuilder);
+        return listObjectToString(list, null, null, true);
     }
 
     /**
@@ -177,7 +173,7 @@ public class ListUtils {
      * @since 2.3.7
      */
     public static <T> String listObjectToString(List<T> list, String name) {
-        return listObjectToString(list, name, LIST_SEPARATOR);
+        return listObjectToString(list, name, LIST_SEPARATOR, false);
     }
 
     /**
@@ -187,10 +183,11 @@ public class ListUtils {
      * @param name      对象get方法名称
      * @param separator 分隔符
      * @param <T>       实体类型
+     * @param inSql     是否拼接为in sql语句
      * @return String
      * @since 2.3.7
      */
-    public static <T> String listObjectToString(List<T> list, String name, String separator) {
+    public static <T> String listObjectToString(List<T> list, String name, String separator, boolean inSql) {
         try {
             StringBuilder stringBuilder = new StringBuilder();
             for (T obj : list) {
@@ -208,7 +205,11 @@ public class ListUtils {
                 if (EmptyUtils.isEmpty(value)) {
                     continue;
                 }
-                stringBuilder.append(value).append(separator);
+                if (inSql) {
+                    stringBuilder.append("'").append(value).append("'").append(LIST_SEPARATOR);
+                } else {
+                    stringBuilder.append(value).append(separator);
+                }
             }
             return StringUtils.trimLastPlace(stringBuilder);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
