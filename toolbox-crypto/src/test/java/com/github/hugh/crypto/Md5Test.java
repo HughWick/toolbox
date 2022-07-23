@@ -1,6 +1,5 @@
 package com.github.hugh.crypto;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -15,13 +14,18 @@ public class Md5Test {
 
     @Test
     void testStringMd5() {
-        System.out.println("--1->" + Md5Utils.lowerCase("1234"));
-        System.out.println("-2-->" + Md5Utils.lowerCase("88888888"));
+        String password1 = "1234";
+        // 1234
+        String str4 = "81DC9BDB52D04DC20036DBD8313ED055";
+        assertEquals(str4.toLowerCase(), Md5Utils.lowerCase(password1));
+        assertEquals(str4, Md5Utils.upperCase(password1));
+        // 八个8
+        String str2 = "8ddcff3a80f4189ca1c9d4d902c3c909";
+        assertEquals(str2, Md5Utils.lowerCase("88888888"));
         System.out.println("-3-->" + Md5Utils.lowerCase("8566889"));
         //f854b68c6f8b2195704f76e05aaa65a1
         System.out.println("-4-->" + Md5Utils.lowerCase("huahua"));
-        System.out.println("-5-->" + Md5Utils.upperCase("1234"));
-        System.out.println("-5-->" + Md5Utils.upperCase("1234").length());
+        assertEquals(Md5Utils.upperCase("1234").length(), 32);
     }
 
     @Test

@@ -7,7 +7,6 @@ import com.github.hugh.util.base.BaseConvertUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -56,7 +55,7 @@ public class Md5Utils {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance(encryptType);
             byte[] output = messageDigest.digest(string.getBytes());
-            String result = BaseConvertUtils.bytesToHexString(output);
+            String result = BaseConvertUtils.hexToString(output);
             if (lowerCase) {
                 return result.toLowerCase();
             }

@@ -1,12 +1,9 @@
 package com.github.hugh.base;
 
-import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.base.BaseConvertUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
 import java.util.Arrays;
-
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -17,22 +14,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class BaseConvertTest {
 
-    // 十进制转换
+    // 十进制转 十六进制字符串
     @Test
-    void decToTexTest() {
+    void decToHexTest() {
         String str1 = "256";
-        System.out.println("=1==>>>>" + BaseConvertUtils.decToHex(84213840));
         assertEquals("100", BaseConvertUtils.decToHex(str1));
         String str2 = "255";
-        // 十进制转十六
         String hexStr = BaseConvertUtils.decToHex(str2);
-//        // 十进制字符串转十六进制数组
+        assertEquals("FF", hexStr.toUpperCase());
+    }
+
+    // 十进制转十六进制数组
+    @Test
+    void decToHexBytesTest() {
+        String str2 = "255";
+        // 十进制字符串转十六进制数组
         byte[] hexToBytes = BaseConvertUtils.decToHexBytes(str2);
-        System.out.println(Arrays.toString(hexToBytes));
         // 十六进制数组转 十六进制字符串
-        String s = BaseConvertUtils.bytesToHexString(hexToBytes);
-        assertEquals(hexStr.toUpperCase(), s);
-//        assertEquals(hexStr.toUpperCase() , BaseConvertUtils.decToHexBytes(str2));
+        String s = BaseConvertUtils.hexToString(hexToBytes);
+        assertEquals("FF", s);
+        String str = "6162";
+        assertEquals(BaseConvertUtils.hexToAscii(str), "ab");
     }
 
     // 十进制转二进制
@@ -53,16 +55,6 @@ public class BaseConvertTest {
         assertEquals(s, "4");
     }
 
-    // 16进制转字符串
-    @Test
-    void testHexToString() {
-        String str = "61:62";
-        assertEquals(BaseConvertUtils.hexToString(str, ":"), "ab");
-        Assertions.assertThrowsExactly(ToolboxException.class, () -> {
-            BaseConvertUtils.hexToString(str, null);
-        });
-    }
-
     // 十六进制转二进制
     @Test
     void testHexToBinary() {
@@ -79,12 +71,12 @@ public class BaseConvertTest {
 
     @Test
     void testTex() {
+        String asciiStr = "xiaozhi10201";
         String str = "043F";
         String str2 = "4A3F7F40";
         String str3 = "7869616f7a68693130323031";
         byte[] bytes = BaseConvertUtils.hexToBytes(str);
         System.out.println("--0->>>" + Arrays.toString(bytes));
-        System.out.println("十六进制数组转字符串-》" + BaseConvertUtils.bytesToHexString(bytes));
         byte bytes2 = BaseConvertUtils.hexToByte(str2);
         System.out.println(String.valueOf(bytes2));
         String s = BaseConvertUtils.hexToAscii(str2);
@@ -95,23 +87,31 @@ public class BaseConvertTest {
         System.out.println("==3=>>" + s2);
         String s3 = BaseConvertUtils.asciiToHex(s, " ");
         System.out.println("==3=>>" + s3);
-        System.out.println("=4==>>" + BaseConvertUtils.hexToAscii(str3));
+        assertEquals(asciiStr, BaseConvertUtils.hexToAscii(str3));
     }
 
     @Test
     void testTex02() {
+        // 十六进制的 zhou597881
         String tex = "7a686f75353937383831";
-        System.out.println(BaseConvertUtils.hexToAscii(tex));
-        String zhou597881 = BaseConvertUtils.asciiToHex("zhou597881");
-        System.out.println("----->>" + zhou597881);
-        System.out.println("----->>" + BaseConvertUtils.hexToAscii(zhou597881.replace(" ", "")));
-        String s = BaseConvertUtils.asciiToHex("4", " ");
-        System.out.println("===1====>" + s);
+        String name = "zhou597881";
+//        System.out.println(BaseConvertUtils.hexToAscii(tex));
+        assertEquals(BaseConvertUtils.hexToAscii(tex), name);
+
+        String zhouHex = BaseConvertUtils.asciiToHex(name);
+        assertEquals(zhouHex, tex.toUpperCase());
+
+        String s = BaseConvertUtils.asciiToHex("4");
+        assertEquals(s , "34");
+
         String str1 = "7e 00 18 20 20 10 26 02 88 87 00 10 00 0b 7a 68 6f 75 35 39 37 38 38 31 c6 7e";
         String[] strings = str1.split(" ");
         byte[] bytes = BaseConvertUtils.hexArrToBytes(strings);
-        System.out.println(new String(bytes));
-        byte[] bytes2 = BaseConvertUtils.hexArrToBytes(str1, " ");
-        System.out.println(new String(bytes2));
+        String replace = str1.replace(" ", "");
+        String s1 = BaseConvertUtils.hexToAscii(replace);
+        assertEquals(new String(bytes), s1);
+
+        byte[] hexToBytes = BaseConvertUtils.hexToBytes(replace);
+        assertArrayEquals(bytes, hexToBytes);
     }
 }

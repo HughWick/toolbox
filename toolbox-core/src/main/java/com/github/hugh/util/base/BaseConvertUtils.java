@@ -32,43 +32,6 @@ public class BaseConvertUtils {
     private static final byte[] HEX_STRING_BYTE = HEX_STRING.getBytes();
 
     /**
-     * 将字节数组转换成十六进制，并以字符串的形式返回
-     * <p>
-     * 128位是指二进制位。二进制太长，所以一般都改写成16进制，
-     * 每一位16进制数可以代替4位二进制数，所以128位二进制数写成16进制就变成了128/4=32位。
-     * </p>
-     * <p>默认返回结果都为大写</p>
-     *
-     * @param bytes 十六进制的字节数组
-     * @return String 十六进制的字符串
-     */
-    public static String bytesToHexString(byte[] bytes) {
-        StringBuilder sb = new StringBuilder();
-        for (byte b : bytes) {
-            sb.append(byteToHex(b));
-        }
-        return sb.toString();
-    }
-
-    /**
-     * 将一个字节转换成十六进制，并以字符串的形式返回
-     *
-     * @param b 比特
-     * @return String
-     */
-    public static String byteToHex(byte b) {
-        int n = b;
-        if (n < 0) {
-            n = n + 256;
-        }
-        int d1 = n / 16;
-        int d2 = n % 16;
-        final String charOne = String.valueOf(HEX_ARRAY[d1]);
-        final String charTwo = String.valueOf(HEX_ARRAY[d2]);
-        return charOne + charTwo;
-    }
-
-    /**
      * 十进制字符串 转 十六进制数组
      *
      * @param decimal 十进制字符串
@@ -179,13 +142,51 @@ public class BaseConvertUtils {
     }
 
     /**
-     * 16进制转换为字符串
+     * 十六进制的字节数组转换成十六进制字符串
+     * <p>
+     * 128位是指二进制位。二进制太长，所以一般都改写成16进制，
+     * 每一位16进制数可以代替4位二进制数，所以128位二进制数写成16进制就变成了128/4=32位。
+     * </p>
+     * <p>默认返回结果都为大写</p>
+     *
+     * @param bytes 十六进制字节数组
+     * @return String 十六进制字符串
+     */
+    public static String hexToString(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bytes) {
+            sb.append(hexToString(b));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 将一个字节转换成十六进制，并以字符串的形式返回
+     *
+     * @param byt 比特
+     * @return String
+     */
+    public static String hexToString(byte byt) {
+        int n = byt;
+        if (n < 0) {
+            n = n + 256;
+        }
+        int d1 = n / 16;
+        int d2 = n % 16;
+        final String charOne = String.valueOf(HEX_ARRAY[d1]);
+        final String charTwo = String.valueOf(HEX_ARRAY[d2]);
+        return charOne + charTwo;
+    }
+
+    /**
+     * 16进制的字符串转换为ascii
      *
      * @param hexStr   十六进制字符串
      * @param interval 切割的标识符
      * @return String
      * @since 1.4.9
      */
+    @Deprecated
     public static String hexToString(String hexStr, String interval) {
         if (interval == null) {
             throw new ToolboxException(" interval is null ");
@@ -293,7 +294,7 @@ public class BaseConvertUtils {
      * 十六进制字符串转byte
      *
      * @param hexString 待转换的Hex字符串
-     * @return byte
+     * @return byte 十进制
      * @since 1.7.0
      */
     public static byte hexToByte(String hexString) {
@@ -305,10 +306,23 @@ public class BaseConvertUtils {
      * <p>默认十六进制字符串为大写、所以内部降字符串转换成大写</p>
      *
      * @param hexStr Byte字符串(Byte之间无分隔符
-     * @return String
+     * @return String ascii字符串
      * @since 1.7.0
      */
     public static String hexToAscii(String hexStr) {
+        return hexToAscii(hexStr, CharsetCode.GB_2312);
+    }
+
+    /**
+     * 16进制直接转换成为ascii字符串(无需Unicode解码)
+     * <p>默认十六进制字符串为大写、所以内部降字符串转换成大写</p>
+     *
+     * @param hexStr  Byte字符串(Byte之间无分隔符
+     * @param charset 编码格式
+     * @return String ascii字符串
+     * @since 1.7.0
+     */
+    public static String hexToAscii(String hexStr, String charset) {
         char[] hexChar = hexStr.toUpperCase().toCharArray();//toCharArray() 方法将字符串转换为字符数组。
         int length = (hexStr.length() / 2);//1个byte数值 -> 两个16进制字符
         byte[] bytes = new byte[length];
@@ -322,7 +336,7 @@ public class BaseConvertUtils {
             bytes[i] = (byte) (n & 0xff);
         }
         try {
-            return new String(bytes, CharsetCode.GB_2312);
+            return new String(bytes, charset);
         } catch (UnsupportedEncodingException e) {
             throw new ToolboxException(e);
         }
@@ -341,42 +355,62 @@ public class BaseConvertUtils {
 
     /**
      * ascii字符串转换成为16进制(无需Unicode编码)
+     *
+     * @param str   待转换的ASCII字符串
+     * @param split 分隔符
+     * @return String 十六进制字符串
+     * @since 2.3.9
+     */
+    public static String asciiToHex(String str, String split) {
+        return asciiToHex(str, split, CharsetCode.GB_2312);
+    }
+
+    /**
+     * ascii字符串转换成为16进制(无需Unicode编码)
      * <p>splits 不为null 时则使用分隔符进行分割</p>
      *
-     * @param str   ascii 码字符串
-     * @param split 分隔符
+     * @param str     ascii 码字符串
+     * @param split   分隔符
+     * @param charset 转换格式
      * @return String 十六进制字符串（每个Byte之间分隔符）
      * @since 1.7.1
      */
-    public static String asciiToHex(String str, String split) {
-        StringBuilder sb = new StringBuilder();
-        byte[] bytes;//String的getBytes()方法是得到一个操作系统默认的编码格式的字节数组
+    public static String asciiToHex(String str, String split, String charset) {
+        StringBuilder stringBuilder = new StringBuilder();
+        byte[] bytes;
         try {
-            bytes = str.getBytes(CharsetCode.GB_2312);
+            //String的getBytes()方法是得到一个操作系统默认的编码格式的字节数组
+            bytes = str.getBytes(charset);
         } catch (UnsupportedEncodingException e) {
             throw new ToolboxException(e);
         }
         int bit;
         for (byte b : bytes) {
             bit = (b & 0x0f0) >> 4; // 高4位, 与操作 1111 0000
-            sb.append(HEX_ARRAY[bit]);
+            stringBuilder.append(HEX_ARRAY[bit]);
             bit = b & 0x0f;  // 低四位, 与操作 0000 1111
-            sb.append(HEX_ARRAY[bit]);
+            stringBuilder.append(HEX_ARRAY[bit]);
             if (split != null) {
-                sb.append(split);//拼接每个Byte之间分隔符
+                stringBuilder.append(split);//拼接每个Byte之间分隔符
             }
         }
-        sb.deleteCharAt(sb.length() - 1);
-        return sb.toString();
+        if (split != null) {
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        }
+        return stringBuilder.toString();
     }
 
     /**
      * 十六进制数组转byte数组
+     * <p>
+     * 2022-7-23 就不该用这个方法，直接调用{@link  #hexToBytes}
+     * </p>
      *
      * @param strings 十六进制字符串数组
-     * @return byte
+     * @return byte 十进制数组
      * @since 1.7.6
      */
+    @Deprecated
     public static byte[] hexArrToBytes(String[] strings) {
         byte[] bytes = new byte[strings.length];
         for (int i = 0; i < strings.length; i++) {
@@ -388,11 +422,19 @@ public class BaseConvertUtils {
     /**
      * 十六进制字符串转byte数组
      *
+     * <p>
+     * 2022-7-23 就不该用这个方法，直接调用{@link  #hexToAscii}
+     * </p>
+     * <p>
+     * 如果有存在空格，则线{@link String#replace(char, char)}掉所有空格，再调用{@link  #hexToBytes}
+     * </p>
+     *
      * @param string 十六进制字符串
      * @param split  字符串中分隔符
      * @return byte
      * @since 1.7.6
      */
+    @Deprecated
     public static byte[] hexArrToBytes(String string, String split) {
         return hexArrToBytes(string.split(split));
     }
