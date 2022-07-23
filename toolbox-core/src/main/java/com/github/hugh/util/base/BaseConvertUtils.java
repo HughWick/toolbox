@@ -22,18 +22,25 @@ public class BaseConvertUtils {
     private static final String HEX_STRING = "0123456789ABCDEF";
 
     /**
-     * hex 数组
+     * hex char数组
      */
     private static final char[] HEX_ARRAY = HEX_STRING.toCharArray();
 
     /**
+     * 十六进制 byte数组
+     */
+    private static final byte[] HEX_STRING_BYTE = HEX_STRING.getBytes();
+
+    /**
      * 将字节数组转换成十六进制，并以字符串的形式返回
+     * <p>
      * 128位是指二进制位。二进制太长，所以一般都改写成16进制，
      * 每一位16进制数可以代替4位二进制数，所以128位二进制数写成16进制就变成了128/4=32位。
-     * <p>默认为大写</p>
+     * </p>
+     * <p>默认返回结果都为大写</p>
      *
-     * @param bytes 字节数组
-     * @return String 字符串
+     * @param bytes 十六进制的字节数组
+     * @return String 十六进制的字符串
      */
     public static String bytesToHexString(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
@@ -62,6 +69,18 @@ public class BaseConvertUtils {
     }
 
     /**
+     * 十进制字符串 转 十六进制数组
+     *
+     * @param decimal 十进制字符串
+     * @return byte 十六进制数组
+     * @since 2.3.9
+     */
+    public static byte[] decToHexBytes(String decimal) {
+        String hexStr = decToHex(Integer.parseInt(decimal));
+        return hexToBytes(hexStr);
+    }
+
+    /**
      * 十进制转16进制
      *
      * @param decimal 十进制
@@ -80,6 +99,27 @@ public class BaseConvertUtils {
      */
     public static String decToHex(String decimal) {
         return decToHex(Integer.parseInt(decimal));
+    }
+
+    /**
+     * 10进制字节数组转换为16进制字节数组
+     * <p>
+     * byte用二进制表示占用8位，16进制的每个字符需要用4位二进制位来表示，则可以把每个byte
+     * 转换成两个相应的16进制字符，即把byte的高4位和低4位分别转换成相应的16进制字符，再取对应16进制字符的字节
+     *
+     * @param decBytes 10进制字节数组
+     * @return byte 16进制字节数组
+     */
+    public static byte[] decToHexBytes(byte[] decBytes) {
+        int length = decBytes.length;
+        byte[] b2 = new byte[length << 1];
+        int pos;
+        for (int i = 0; i < length; i++) {
+            pos = 2 * i;
+            b2[pos] = HEX_STRING_BYTE[(decBytes[i] & 0xf0) >> 4];
+            b2[pos + 1] = HEX_STRING_BYTE[decBytes[i] & 0x0f];
+        }
+        return b2;
     }
 
     /**
@@ -219,11 +259,14 @@ public class BaseConvertUtils {
     }
 
     /**
-     * 16进制数转byte[]
+     * 16进制 转 十六进制的 byte[]
      * <p>如果Hex超过0xFF，显然转换后结果不是一个byte，而是一个byte数组</p>
+     * <p>
+     * 数组中的指为十六进制数，且如果首位是0，如：01、值为：1
+     * </p>
      *
      * @param hexString 16进制字符串
-     * @return byte[]
+     * @return byte  十六进制数组
      * @since 1.7.0
      */
     public static byte[] hexToBytes(String hexString) {
@@ -352,5 +395,28 @@ public class BaseConvertUtils {
      */
     public static byte[] hexArrToBytes(String string, String split) {
         return hexArrToBytes(string.split(split));
+    }
+
+    /**
+     * 16进制字节数组转换为10进制字节数组
+     * <p>
+     * 两个16进制字节对应一个10进制字节，则将第一个16进制字节对应成16进制字符表中的位置(0~15)并向左移动4位，
+     * 再与第二个16进制字节对应成16进制字符表中的位置(0~15)进行或运算，则得到对应的10进制字节
+     *
+     * @param hexBytes 16进制字节数组
+     * @return byte 10进制字节数组
+     */
+    public static byte[] hexToDec(byte[] hexBytes) {
+        if ((hexBytes.length % 2) != 0) {
+            throw new IllegalArgumentException("byte array length is not even!");
+        }
+        int length = hexBytes.length >> 1;
+        byte[] b2 = new byte[length];
+        int pos;
+        for (int i = 0; i < length; i++) {
+            pos = i << 1;
+            b2[i] = (byte) (HEX_STRING.indexOf(hexBytes[pos]) << 4 | HEX_STRING.indexOf(hexBytes[pos + 1]));
+        }
+        return b2;
     }
 }

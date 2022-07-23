@@ -1,27 +1,56 @@
 package com.github.hugh.base;
 
-import com.github.hugh.constant.enums.ControlEnum;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.base.BaseConvertUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
+ * 进制转换测试类
+ *
  * @author AS
  * @date 2020/9/14 14:58
  */
 public class BaseConvertTest {
 
+    // 十进制转换
     @Test
-    void test01() {
+    void decToTexTest() {
+        String str1 = "256";
         System.out.println("=1==>>>>" + BaseConvertUtils.decToHex(84213840));
-        System.out.println("=1==>>>>" + BaseConvertUtils.decToHex("140"));
-        String binary = BaseConvertUtils.decToBinary(84213840);
-        System.out.println("==2=>>>>" + binary);
-        System.out.println("--4-===>>" + BaseConvertUtils.binaryToDec(binary));
-        System.out.println("--4-===>>" + BaseConvertUtils.binaryToDec(binary));
+        assertEquals("100", BaseConvertUtils.decToHex(str1));
+        String str2 = "255";
+        // 十进制转十六
+        String hexStr = BaseConvertUtils.decToHex(str2);
+//        // 十进制字符串转十六进制数组
+        byte[] hexToBytes = BaseConvertUtils.decToHexBytes(str2);
+        System.out.println(Arrays.toString(hexToBytes));
+        // 十六进制数组转 十六进制字符串
+        String s = BaseConvertUtils.bytesToHexString(hexToBytes);
+        assertEquals(hexStr.toUpperCase(), s);
+//        assertEquals(hexStr.toUpperCase() , BaseConvertUtils.decToHexBytes(str2));
+    }
+
+    // 十进制转二进制
+    @Test
+    void testDecToBinary() {
+        assertEquals(BaseConvertUtils.decToBinary(10, 12), "000000001010");
+        assertEquals(BaseConvertUtils.decToBinary(10), "1010");
+        String s = BaseConvertUtils.decToBinary("4");
+        assertEquals(s, "100");
+        String s1 = BaseConvertUtils.decToBinary("4", 4);
+        System.out.println(s1);
+    }
+
+    // 二进制转十进制
+    @Test
+    void testBinaryToDec() {
+        String s = BaseConvertUtils.binaryToDec("100");
+        assertEquals(s, "4");
     }
 
     // 16进制转字符串
@@ -42,13 +71,6 @@ public class BaseConvertTest {
         assertEquals(BaseConvertUtils.hexToBinary(str), "10000111111");
     }
 
-    // 十进制转二进制
-    @Test
-    void testDecToBinary() {
-        assertEquals(BaseConvertUtils.decToBinary(10, 12), "000000001010");
-        assertEquals(BaseConvertUtils.decToBinary(10), "1010");
-    }
-
     // 十六进制转10进制字符串
     @Test
     void testHexToDecString() {
@@ -61,7 +83,8 @@ public class BaseConvertTest {
         String str2 = "4A3F7F40";
         String str3 = "7869616f7a68693130323031";
         byte[] bytes = BaseConvertUtils.hexToBytes(str);
-        System.out.println("--0->>>" + new String(bytes));
+        System.out.println("--0->>>" + Arrays.toString(bytes));
+        System.out.println("十六进制数组转字符串-》" + BaseConvertUtils.bytesToHexString(bytes));
         byte bytes2 = BaseConvertUtils.hexToByte(str2);
         System.out.println(String.valueOf(bytes2));
         String s = BaseConvertUtils.hexToAscii(str2);
@@ -72,7 +95,6 @@ public class BaseConvertTest {
         System.out.println("==3=>>" + s2);
         String s3 = BaseConvertUtils.asciiToHex(s, " ");
         System.out.println("==3=>>" + s3);
-        System.out.println(BaseConvertUtils.bytesToHexString(bytes));
         System.out.println("=4==>>" + BaseConvertUtils.hexToAscii(str3));
     }
 
@@ -92,5 +114,4 @@ public class BaseConvertTest {
         byte[] bytes2 = BaseConvertUtils.hexArrToBytes(str1, " ");
         System.out.println(new String(bytes2));
     }
-
 }

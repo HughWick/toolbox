@@ -1,6 +1,6 @@
-package com.github.hugh.crypto;
+package com.github.hugh.crypto.dec;
 
-import org.junit.jupiter.api.Assertions;
+import com.github.hugh.crypto.DesEncDecUtils;
 import org.junit.jupiter.api.Test;
 
 import javax.crypto.BadPaddingException;
@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class DesEncDecTest {
 
+    // 先获取加密实体进行操作
     @Test
     void test01() {
         DesEncDecUtils desEnc = DesEncDecUtils.getInstance("cmmop_app");
@@ -40,7 +41,8 @@ public class DesEncDecTest {
     void urlEncryptTest() {
         DesEncDecUtils desEnc = DesEncDecUtils.getInstance("box_security");
         try {
-            String t1 = desEnc.encrypt("http://qr.hnlot.com.cn/box/openDoor?boxCode=19FE0E30CF");
+            String str1 = "http://qr.hnlot.com.cn/box/openDoor?boxCode=19FE0E30CF";
+            String t1 = desEnc.encrypt(str1);
             System.out.println("---加密后>>" + t1);
             String encodeURL1 = URLEncoder.encode(t1, StandardCharsets.UTF_8);
             System.out.println("-encodeURL-->>" + encodeURL1);
