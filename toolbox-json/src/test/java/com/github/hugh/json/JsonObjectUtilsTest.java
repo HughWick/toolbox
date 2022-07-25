@@ -1,14 +1,11 @@
 package com.github.hugh.json;
 
-import com.github.hugh.bean.dto.Ip2regionDTO;
 import com.github.hugh.json.gson.JsonObjectUtils;
-import com.github.hugh.json.gson.JsonObjects;
 import com.github.hugh.json.model.Student;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -177,14 +174,13 @@ class JsonObjectUtilsTest {
         assertTrue(JsonObjectUtils.isJsonObject(str));
         assertTrue(JsonObjectUtils.isNotJsonObject(str2));
         assertFalse(JsonObjectUtils.isJsonObject(str2));
-        var array = "[1,2,3,4,5]";
-        var array2 = "1,2,3,4,5";
-        assertTrue(JsonObjectUtils.isJsonArray(array));
-        assertFalse(JsonObjectUtils.isJsonArray(array2));
-        assertTrue(JsonObjectUtils.isNotJsonArray(array2));
-        assertTrue(JsonObjectUtils.isJsonValid(array));
-        assertTrue(JsonObjectUtils.isNotJsonValid(str2));
-
-        assertFalse(JsonObjectUtils.isNotJsonArray(array));
+//        var array = "[1,2,3,4,5]";
+//        var array2 = "1,2,3,4,5";
+//        assertTrue(JsonObjectUtils.isJsonArray(array));
+//        assertFalse(JsonObjectUtils.isJsonArray(array2));
+//        assertTrue(JsonObjectUtils.isNotJsonArray(array2));
+//        assertTrue(JsonObjectUtils.isJsonValid(array));
+//        assertTrue(JsonObjectUtils.isNotJsonValid(str2));
+//        assertFalse(JsonObjectUtils.isNotJsonArray(array));
     }
 }
