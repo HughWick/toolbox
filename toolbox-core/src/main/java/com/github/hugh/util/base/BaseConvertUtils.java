@@ -2,6 +2,7 @@ package com.github.hugh.util.base;
 
 import com.github.hugh.constant.CharsetCode;
 import com.github.hugh.exception.ToolboxException;
+import com.github.hugh.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 
@@ -32,6 +33,53 @@ public class BaseConvertUtils {
     private static final byte[] HEX_STRING_BYTE = HEX_STRING.getBytes();
 
     /**
+     * 十进制字节数组转换成十六进制字符
+     * <p>
+     * 128位是指二进制位。二进制太长，所以一般都改写成16进制，
+     * 每一位16进制数可以代替4位二进制数，所以128位二进制数写成16进制就变成了128/4=32位。
+     * </p>
+     * <p>默认返回结果都为大写</p>
+     *
+     * @param decBytes 十进制数组
+     * @return String 十六进制的字符
+     * @since 2.3.9
+     */
+    public static String hexBytesToString(byte[] decBytes) {
+        return hexBytesToString(decBytes, null);
+    }
+
+    /**
+     * 十进制字节数组转换成十六进制字符
+     * <p>
+     * 128位是指二进制位。二进制太长，所以一般都改写成16进制，
+     * 每一位16进制数可以代替4位二进制数，所以128位二进制数写成16进制就变成了128/4=32位。
+     * </p>
+     * <p>默认返回结果都为大写</p>
+     *
+     * @param decBytes 十进制数组
+     * @param interval 分隔符
+     * @return String 十六进制的字符
+     * @since 2.3.9
+     */
+    public static String hexBytesToString(byte[] decBytes, String interval) {
+        boolean flag = false;
+        if (interval != null) {
+            flag = true;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (byte b : decBytes) {
+            stringBuilder.append(hexToString(b));
+            if (flag) {
+                stringBuilder.append(interval);
+            }
+        }
+        if (flag) {
+            return StringUtils.trimLastPlace(stringBuilder);
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
      * 十进制字符串 转 十六进制数组
      *
      * @param decimal 十进制字符串
@@ -39,7 +87,18 @@ public class BaseConvertUtils {
      * @since 2.3.9
      */
     public static byte[] decToHexBytes(String decimal) {
-        String hexStr = decToHex(Integer.parseInt(decimal));
+        return decToHexBytes(Integer.parseInt(decimal));
+    }
+
+    /**
+     * 十进制数字 转 十六进制数组
+     *
+     * @param decimal 十进制数字
+     * @return byte 十六进制数组
+     * @since 2.3.9
+     */
+    public static byte[] decToHexBytes(int decimal) {
+        String hexStr = decToHex(decimal);
         return hexToBytes(hexStr);
     }
 
@@ -142,29 +201,33 @@ public class BaseConvertUtils {
     }
 
     /**
-     * 十六进制的字节数组转换成十六进制字符串
+     * 十进制字节数组转换成十六进制字符
      * <p>
      * 128位是指二进制位。二进制太长，所以一般都改写成16进制，
      * 每一位16进制数可以代替4位二进制数，所以128位二进制数写成16进制就变成了128/4=32位。
      * </p>
      * <p>默认返回结果都为大写</p>
+     * <p>
+     * 由于命名补规范，请使用{@link #hexBytesToString(byte[], String)}
+     * </p>
      *
-     * @param bytes 十六进制字节数组
+     * @param decBytes 十进制字节数组
      * @return String 十六进制字符串
      */
-    public static String hexToString(byte[] bytes) {
-        StringBuilder sb = new StringBuilder();
-        for (byte b : bytes) {
-            sb.append(hexToString(b));
+    @Deprecated
+    public static String hexToString(byte[] decBytes) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (byte b : decBytes) {
+            stringBuilder.append(hexToString(b));
         }
-        return sb.toString();
+        return stringBuilder.toString();
     }
 
     /**
-     * 将一个字节转换成十六进制，并以字符串的形式返回
+     * 将一个十六进制字节转换成十六进制，并以字符串的形式返回
      *
-     * @param byt 比特
-     * @return String
+     * @param byt 十六进制字节
+     * @return String 十六进制字符
      */
     public static String hexToString(byte byt) {
         int n = byt;
@@ -260,7 +323,7 @@ public class BaseConvertUtils {
     }
 
     /**
-     * 16进制 转 十六进制的 byte[]
+     * 16进制字符串转十六进制的 byte[]
      * <p>如果Hex超过0xFF，显然转换后结果不是一个byte，而是一个byte数组</p>
      * <p>
      * 数组中的指为十六进制数，且如果首位是0，如：01、值为：1
@@ -273,13 +336,11 @@ public class BaseConvertUtils {
     public static byte[] hexToBytes(String hexString) {
         int hexLen = hexString.length();
         byte[] result;
-        if (hexLen % 2 == 1) {
-            //奇数
+        if ((hexLen % 2) == 1) {//奇数
             hexLen++;
             result = new byte[(hexLen / 2)];
             hexString = "0" + hexString;
-        } else {
-            //偶数
+        } else {// 偶数
             result = new byte[(hexLen / 2)];
         }
         int j = 0;
@@ -302,8 +363,37 @@ public class BaseConvertUtils {
     }
 
     /**
+     * 十六进制数组转ascii字符串
+     * <p>
+     * 默认编码{@link CharsetCode#GB_2312}
+     * </p>
+     *
+     * @param hexBytes 十六进制数组
+     * @return String ascii 的字符串
+     * @since 2.3.9
+     */
+    public static String hexToAscii(byte[] hexBytes) {
+        return hexToAscii(hexBytes, CharsetCode.GB_2312);
+    }
+
+    /**
+     * 十六进制数组转ascii字符串
+     *
+     * @param hexBytes 十六进制数组
+     * @param charset  编码名称
+     * @return String ascii 的字符串
+     * @since 2.3.9
+     */
+    public static String hexToAscii(byte[] hexBytes, String charset) {
+        return hexToAscii(hexToString(hexBytes), charset);
+    }
+
+    /**
      * 16进制直接转换成为ascii字符串(无需Unicode解码)
      * <p>默认十六进制字符串为大写、所以内部降字符串转换成大写</p>
+     * <p>
+     * 默认编码{@link CharsetCode#GB_2312}
+     * </p>
      *
      * @param hexStr Byte字符串(Byte之间无分隔符
      * @return String ascii字符串
@@ -460,5 +550,17 @@ public class BaseConvertUtils {
             b2[i] = (byte) (HEX_STRING.indexOf(hexBytes[pos]) << 4 | HEX_STRING.indexOf(hexBytes[pos + 1]));
         }
         return b2;
+    }
+
+    /**
+     * 十六进制数组转int
+     *
+     * @param hexBytes 十六进制byte数组
+     * @return int
+     * @since 2.3.9
+     */
+    public static int hexToDecReInt(byte[] hexBytes) {
+        String s = hexBytesToString(hexBytes);
+        return hexToDec(s);
     }
 }

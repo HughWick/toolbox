@@ -1,10 +1,10 @@
 package com.github.hugh.crypto;
 
 import com.github.hugh.crypto.exception.CryptoException;
-import org.junit.jupiter.api.Assertions;
+import com.github.hugh.util.base.BaseConvertUtils;
 import org.junit.jupiter.api.Test;
 
-import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -64,6 +64,9 @@ public class Crc16Test {
     @Test
     void testCrc16ModbusVer() {
         String str = "14 01 01 01";
+        String str2 = "54 30 01 00 04 31 32 33 34";
+        String modbusChecksum = Crc16Utils.getModbusChecksum(str2);
+        System.out.println(modbusChecksum);
         assertTrue(Crc16Utils.verifyModbus(str, "4494"));
         assertTrue(Crc16Utils.verifyModbus(str, "44 94"));
         assertTrue(Crc16Utils.verifyModbus(str, "44 94 "));
@@ -72,26 +75,11 @@ public class Crc16Test {
         assertThrowsExactly(CryptoException.class, () -> Crc16Utils.verifyModbus(str, null), "data is 2empty");
     }
 
-    /**
-     * 16进制字符串转byte数组
-     *
-     * @param hexString
-     * @return
-     */
-    private static byte[] hexStrToBinaryStr(String hexString) {
-//        if (StringUtil.isEmpty(hexString)) {
-//            return null;
-//        }
-        hexString = hexString.replaceAll(" ", "");
-        int len = hexString.length();
-        int index = 0;
-        byte[] bytes = new byte[len / 2];
-        while (index < len) {
-            String sub = hexString.substring(index, index + 2);
-            bytes[index / 2] = (byte) Integer.parseInt(sub, 16);
-            index += 2;
-        }
-        return bytes;
+    @Test
+    void test16() {
+        int length = 100;
+        byte[] bytes = BaseConvertUtils.decToHexBytes(length);
+        System.out.println(Arrays.toString(bytes));
     }
 
 }

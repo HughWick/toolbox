@@ -2,7 +2,9 @@ package com.github.hugh.base;
 
 import com.github.hugh.util.base.BaseConvertUtils;
 import org.junit.jupiter.api.Test;
+
 import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -30,11 +32,19 @@ public class BaseConvertTest {
         String str2 = "255";
         // 十进制字符串转十六进制数组
         byte[] hexToBytes = BaseConvertUtils.decToHexBytes(str2);
+        System.out.println("---1----><" + Arrays.toString(hexToBytes));
         // 十六进制数组转 十六进制字符串
-        String s = BaseConvertUtils.hexToString(hexToBytes);
+        String s = BaseConvertUtils.hexBytesToString(hexToBytes);
         assertEquals("FF", s);
         String str = "6162";
         assertEquals(BaseConvertUtils.hexToAscii(str), "ab");
+        // 十进制的数组
+        byte[] dec = {84, 48, 1, 0, 4, 49, 50, 51, 52};
+        // 十六进制的字符串
+        String result = "543001000431323334";
+        assertEquals(result, BaseConvertUtils.hexBytesToString(dec));
+        String result2 = "54 30 01 00 04 31 32 33 34";
+        assertEquals(result2, BaseConvertUtils.hexBytesToString(dec, " "));
     }
 
     // 十进制转二进制
@@ -102,7 +112,7 @@ public class BaseConvertTest {
         assertEquals(zhouHex, tex.toUpperCase());
 
         String s = BaseConvertUtils.asciiToHex("4");
-        assertEquals(s , "34");
+        assertEquals(s, "34");
 
         String str1 = "7e 00 18 20 20 10 26 02 88 87 00 10 00 0b 7a 68 6f 75 35 39 37 38 38 31 c6 7e";
         String[] strings = str1.split(" ");
@@ -114,4 +124,31 @@ public class BaseConvertTest {
         byte[] hexToBytes = BaseConvertUtils.hexToBytes(replace);
         assertArrayEquals(bytes, hexToBytes);
     }
+
+    @Test
+    void testIntToByte() {
+        String str1 = "FC";
+        int a = 252;
+        byte[] bytes1 = BaseConvertUtils.decToHexBytes(a);
+        String s = BaseConvertUtils.decToHex(a);
+        assertEquals(str1, BaseConvertUtils.hexBytesToString(bytes1));
+        assertEquals(str1, s.toUpperCase());
+        String str = "252";
+        // 字符串获取getBytes为十进制数组
+        System.out.println(Arrays.toString(str.getBytes()));
+        System.out.println("--->>" + BaseConvertUtils.hexBytesToString(str.getBytes()));
+    }
+
+    @Test
+    void testHexToDecReInt() {
+        int a = 256;
+        byte[] bytes1 = BaseConvertUtils.decToHexBytes(a);
+        assertEquals(BaseConvertUtils.hexToDecReInt(bytes1), a);
+        byte[] totalHexBytes = BaseConvertUtils.decToHexBytes(a);
+        System.out.println(Arrays.toString(totalHexBytes));
+
+        System.out.println(BaseConvertUtils.hexBytesToString(totalHexBytes));
+    }
+
+
 }
