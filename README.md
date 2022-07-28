@@ -26,7 +26,7 @@ JDK 11+
 | kryo  | 快速高效的Java序列化框架 |
 | guava  | 谷歌套件 |
 | gson  | Google Gson |
-| fastjson  | 阿里高性能json |
+| [fastjson](https://github.com/alibaba/fastjson2)  | 阿里高性能json |
 | slf4j-simple  | 日志工具包 |
 | ip2region  | IP地址库 |
 | UserAgentUtils  | UserAgent解析工具 |
