@@ -21,14 +21,14 @@ JDK 11+
 | spring-beans  | spring 实体类工具 |
 | jedis  | redis clients |
 | caffeine  | 高性能本地缓存 |
-| okhttp3  | 高性能http |
+| [okhttp3](https://github.com/square/okhttp)  | 高性能http |
 | javax.servlet-api  | Servlet API |
 | kryo  | 快速高效的Java序列化框架 |
-| guava  | 谷歌套件 |
-| gson  | Google Gson |
+| [guava](https://github.com/google/guava)  | 谷歌套件 |
+| [gson] (https://github.com/google/gson) | Google Gson |
 | [fastjson](https://github.com/alibaba/fastjson2)  | 阿里高性能json |
 | slf4j-simple  | 日志工具包 |
-| ip2region  | IP地址库 |
+| [ip2region] (https://github.com/lionsoul2014/ip2region) | IP地址库 |
 | UserAgentUtils  | UserAgent解析工具 |
 ## maven 引入
 
