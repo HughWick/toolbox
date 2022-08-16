@@ -533,6 +533,9 @@ public class JsonObjectUtils {
      * @since 2.3.3
      */
     public static boolean isJsonObject(String str) {
+        if (EmptyUtils.isEmpty(str)) {
+            return false;
+        }
         try {
             parse(str);
         } catch (Exception e) {
@@ -560,6 +563,9 @@ public class JsonObjectUtils {
      * @since 2.3.3
      */
     public static boolean isJsonArray(String str) {
+        if (EmptyUtils.isEmpty(str)) {
+            return false;
+        }
         try {
             parseArray(str);
         } catch (Exception exception) {

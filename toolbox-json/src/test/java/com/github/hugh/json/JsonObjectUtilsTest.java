@@ -179,8 +179,9 @@ class JsonObjectUtilsTest {
 //        assertTrue(JsonObjectUtils.isJsonArray(array));
 //        assertFalse(JsonObjectUtils.isJsonArray(array2));
 //        assertTrue(JsonObjectUtils.isNotJsonArray(array2));
-//        assertTrue(JsonObjectUtils.isJsonValid(array));
-//        assertTrue(JsonObjectUtils.isNotJsonValid(str2));
+        assertTrue(JsonObjectUtils.isJsonValid(str));
+        assertFalse(JsonObjectUtils.isJsonValid(""));
+        assertTrue(JsonObjectUtils.isNotJsonValid(""));
 //        assertFalse(JsonObjectUtils.isNotJsonArray(array));
     }
 }
