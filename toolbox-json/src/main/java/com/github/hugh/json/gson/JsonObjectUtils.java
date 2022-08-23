@@ -379,6 +379,24 @@ public class JsonObjectUtils {
     }
 
     /**
+     * 实体转Json
+     * <p>调用{@link #toJson(Object, String)} 将实体转换为json字符串,日期对象转换时,默认转换为:时间戳格式</p>
+     *
+     * @param entity 实体类型
+     * @param <T>    实体类型
+     * @return String json字符串
+     * @since 2.3.10
+     */
+    public static <T> String toJsonTimestamp(T entity) {
+        GsonBuilder gsonBuilder=new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, (JsonSerializer<Date>) (date, typeOfSrc, context) -> {
+            // convert date to long
+            return new JsonPrimitive(date.getTime());
+        });
+        return gsonBuilder.create().toJson(entity);
+    }
+
+    /**
      * 实体转Json,并且指定日期格式
      *
      * @param entity     实体类型
