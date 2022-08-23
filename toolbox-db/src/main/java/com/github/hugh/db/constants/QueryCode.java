@@ -53,4 +53,9 @@ public class QueryCode {
      */
     public static final String FLAG = "FLAG";
 
+    /**
+     * 名称
+     */
+    public static final String NAME = "NAME";
+
 }
