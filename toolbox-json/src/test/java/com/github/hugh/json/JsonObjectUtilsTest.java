@@ -1,6 +1,7 @@
 package com.github.hugh.json;
 
 import com.github.hugh.json.gson.JsonObjectUtils;
+import com.github.hugh.json.model.Command;
 import com.github.hugh.json.model.Student;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -189,19 +190,26 @@ class JsonObjectUtilsTest {
     void testMultipleJsonStr() {
         String str = "{\n" +
                 "\t\"action\":\t\"R\",\n" +
-                "\t\"0f000001\":\t\"1.6.0-DEBUG\",\n" +
-                "\t\"0f000002\":\t\"1234567890\",\n" +
-                "\t\"0f000003\":\t\"35353032193936345446537F\"\n" +
+                "\t\"a0f000001\":\t\"1.6.0-DEBUG\",\n" +
+                "\t\"a0f000002\":\t\"1234567890\",\n" +
+                "\t\"a0f000003\":\t\"35353032193936345446537F\",\n" +
+                "\t\"a0f000004\":\t\"1659478096000\"\n" +
                 "}\n" +
                 "\n" +
+                "ABCSD" +
                 "\n" +
                 "{\n" +
                 "\t\"action\":\t\"R2\",\n" +
-                "\t\"0f000001\":\t\"1.2.0-DEBUG\",\n" +
-                "\t\"0f000002\":\t\"2-1234567890\",\n" +
-                "\t\"0f000003\":\t\"2-35353032193936345446537F\"\n" +
+                "\t\"a0f000001\":\t\"1.2.0-DEBUG\",\n" +
+                "\t\"a0f000002\":\t\"2-1234567890\",\n" +
+                "\t\"a0f000003\":\t\"2-35353032193936345446537F\",\n" +
+                "\t\"a0f000004\":\t\"1659478096000\"\n" +
                 "}";
-        System.out.println("-list-->>" + JsonObjectUtils.parseMultipleJson(str));
+        List<Command> commands = JsonObjectUtils.parseMultipleJson(str, Command.class);
+        commands.forEach(System.out::println);
+        System.out.println("-list-->>" +JsonObjectUtils.parseMultipleJson(str));
+        System.out.println("-list-->>" + JsonObjectUtils.parseMultipleJson(str , null));
         assertEquals(JsonObjectUtils.countJson(str), 2);
+        assertEquals(JsonObjectUtils.parseMultipleJson(str, null).toString(), JsonObjectUtils.parseMultipleJson(str).toString());
     }
 }

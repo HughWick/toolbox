@@ -645,7 +645,7 @@ public class JsonObjectUtils {
      * @since 2.3.10
      */
     public static int countJson(String str) {
-        return parseMultipleJson(str).size();
+        return parseMultipleJson(str, null).size();
     }
 
     /**
@@ -655,11 +655,23 @@ public class JsonObjectUtils {
      * @return List
      * @since 2.3.10
      */
-    public static List<JsonObjects> parseMultipleJson(String str) {
+    public static <T> List<T> parseMultipleJson(String str) {
+        return parseMultipleJson(str, null);
+    }
+
+    /**
+     * 解析字符串中的json，并将其放入list集合中
+     *
+     * @param str   字符串
+     * @param clazz 实体类
+     * @return List
+     * @since 2.3.10
+     */
+    public static <T> List<T> parseMultipleJson(String str, Class<T> clazz) {
         if (EmptyUtils.isEmpty(str)) {
             throw new ToolboxJsonException("string is null");
         }
-        List<JsonObjects> item = new ArrayList<>();
+        List<T> item = new ArrayList<>();
         // json左括号出现的次数
         int countHead = 0;
         int headIndex = 0;
@@ -673,16 +685,26 @@ public class JsonObjectUtils {
                 headIndex = i;
                 countHead++;
             }
+            // 缓存json右括号出现位置与次数
             if (charAt == JSON_TAIL.charAt(0)) {
                 countTail++;
                 tailIndex = i;
             }
             // 两个数相等，则为一组
             if ((countHead > 0 && countTail > 0) && (countHead == countTail)) {
+                // 头与尾计数置零
                 countHead = 0;
                 countTail = 0;
                 String substring = str.substring(headIndex, tailIndex + 1);
-                item.add(new JsonObjects(substring));
+                if (clazz == null) {
+                    item.add((T) new JsonObjects(substring).toJson());
+                } else {
+                    try {
+                        item.add(fromJson(substring, clazz));
+                    } catch (Exception exception) {
+                        item.add(fromJsonTimeStamp(substring, clazz));
+                    }
+                }
             }
         }
         return item;
