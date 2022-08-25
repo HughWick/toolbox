@@ -3,6 +3,7 @@ package com.github.hugh;
 import com.github.hugh.model.Student;
 import com.github.hugh.util.EntityUtils;
 import com.github.hugh.util.MapUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.StopWatch;
 
@@ -168,6 +169,14 @@ public class MapTest {
         System.out.println("--->>" + o);
         Student student1 = MapUtils.convertEntity(new Student(), map);
         System.out.println("--===>>"+ student1);
+    }
+
+    @Test
+    void testCookieValueToMap(){
+        String string = "X-Cmmop-User-Token=739a8543-6ef1-42e9-b6d9-4234918d1d00; X-Cmmop-App-User-Token=88501fd998f1438fa64652deff345e22; Admin-Token=88501fd998f1438fa64652deff345e22; sidebarStatus=1";
+        String mapStr = "{Admin-Token=88501fd998f1438fa64652deff345e22, X-Cmmop-App-User-Token=88501fd998f1438fa64652deff345e22, X-Cmmop-User-Token=739a8543-6ef1-42e9-b6d9-4234918d1d00, sidebarStatus=1}";
+        Assertions.assertEquals(mapStr,MapUtils.cookieToMap(string).toString());
+
     }
 
 }

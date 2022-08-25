@@ -505,4 +505,30 @@ public class MapUtils {
         map.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEachOrdered(e -> result.put(e.getKey(), e.getValue()));
         return result;
     }
+
+    /**
+     * cookie 中的value值转换成map
+     *
+     * @param value cookie中的value
+     * @return Map
+     * @since 2.3.10
+     */
+    public static Map<String, String> cookieToMap(String value) {
+        if (EmptyUtils.isEmpty(value)) {
+            return new HashMap<>();
+        }
+        value = value.replace(" ", "");
+        Map<String, String> map = new HashMap<>();
+        if (value.contains(";")) {
+            String[] values = value.split(";");
+            for (String val : values) {
+                String[] vals = val.split("=");
+                map.put(vals[0], vals[1]);
+            }
+        } else {
+            String[] values = value.split("=");
+            map.put(values[0], values[1]);
+        }
+        return map;
+    }
 }
