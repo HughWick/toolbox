@@ -30,6 +30,15 @@ public class JsonObjectUtils {
     protected static final String YEAR_MONTH_DAY_HOUR_MIN_SEC = "yyyy-MM-dd HH:mm:ss";
 
     /**
+     * json 头
+     */
+    public static final String JSON_HEAD = "{";
+    /**
+     * json 尾
+     */
+    public static final String JSON_TAIL = "}";
+
+    /**
      * 单例模式
      */
     private static Supplier<Gson> gsonSupplier;
@@ -388,7 +397,7 @@ public class JsonObjectUtils {
      * @since 2.3.10
      */
     public static <T> String toJsonTimestamp(T entity) {
-        GsonBuilder gsonBuilder=new GsonBuilder();
+        GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Date.class, (JsonSerializer<Date>) (date, typeOfSrc, context) -> {
             // convert date to long
             return new JsonPrimitive(date.getTime());
@@ -626,5 +635,56 @@ public class JsonObjectUtils {
      */
     public static boolean isNotEmptyValue(JsonObject jsonObject, String key) {
         return !isEmptyValue(jsonObject, key);
+    }
+
+    /**
+     * 统计字符串中json包出现的次数
+     *
+     * @param str 字符串
+     * @return int
+     * @since 2.3.10
+     */
+    public static int countJson(String str) {
+        return parseMultipleJson(str).size();
+    }
+
+    /**
+     * 解析字符串中的json，并将其放入list集合中
+     *
+     * @param str 字符串
+     * @return List
+     * @since 2.3.10
+     */
+    public static List<JsonObjects> parseMultipleJson(String str) {
+        if (EmptyUtils.isEmpty(str)) {
+            throw new ToolboxJsonException("string is null");
+        }
+        List<JsonObjects> item = new ArrayList<>();
+        // json左括号出现的次数
+        int countHead = 0;
+        int headIndex = 0;
+        // json 右括号出现的次数
+        int countTail = 0;
+        int tailIndex = 0;
+        for (int i = 0; i < str.length(); i++) {
+            char charAt = str.charAt(i);
+            // 计算第一个左括号出现的下标与次数
+            if (charAt == JSON_HEAD.charAt(0)) {
+                headIndex = i;
+                countHead++;
+            }
+            if (charAt == JSON_TAIL.charAt(0)) {
+                countTail++;
+                tailIndex = i;
+            }
+            // 两个数相等，则为一组
+            if ((countHead > 0 && countTail > 0) && (countHead == countTail)) {
+                countHead = 0;
+                countTail = 0;
+                String substring = str.substring(headIndex, tailIndex + 1);
+                item.add(new JsonObjects(substring));
+            }
+        }
+        return item;
     }
 }

@@ -10,8 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * User: AS
@@ -183,5 +182,26 @@ class JsonObjectUtilsTest {
         assertFalse(JsonObjectUtils.isJsonValid(""));
         assertTrue(JsonObjectUtils.isNotJsonValid(""));
 //        assertFalse(JsonObjectUtils.isNotJsonArray(array));
+    }
+
+    // 测试多个json解析，与统计出现次数
+    @Test
+    void testMultipleJsonStr() {
+        String str = "{\n" +
+                "\t\"action\":\t\"R\",\n" +
+                "\t\"0f000001\":\t\"1.6.0-DEBUG\",\n" +
+                "\t\"0f000002\":\t\"1234567890\",\n" +
+                "\t\"0f000003\":\t\"35353032193936345446537F\"\n" +
+                "}\n" +
+                "\n" +
+                "\n" +
+                "{\n" +
+                "\t\"action\":\t\"R2\",\n" +
+                "\t\"0f000001\":\t\"1.2.0-DEBUG\",\n" +
+                "\t\"0f000002\":\t\"2-1234567890\",\n" +
+                "\t\"0f000003\":\t\"2-35353032193936345446537F\"\n" +
+                "}";
+        System.out.println("-list-->>" + JsonObjectUtils.parseMultipleJson(str));
+        assertEquals(JsonObjectUtils.countJson(str), 2);
     }
 }
