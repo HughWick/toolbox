@@ -33,6 +33,7 @@ class JsonObjectUtilsTest {
         item.addProperty("country", "国家");// 国家
     }
 
+    // json转对象时，日期格式测试
     @Test
     void testFormJsonDate() {
         String tmee = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06 12:11:20\"}";
@@ -192,7 +193,14 @@ class JsonObjectUtilsTest {
                 "\t\"action\":\t\"R\",\n" +
                 "\t\"a0f000001\":\t\"1.6.0-DEBUG\",\n" +
                 "\t\"a0f000002\":\t\"1234567890\",\n" +
+                "\t\"create\":\t\"2020-08-06 09:46:11\",\n" +
                 "\t\"a0f000003\":\t\"35353032193936345446537F\",\n" +
+                "\t\"a01000005\":\t{\n" +
+                "\t\t\"id\":\t\"3759545339380F0028933930\"\n" +
+                "\t},\n" +
+                "\t\"testObject\":\t{\n" +
+                "\t\t\"id\":\t\"3759545339380F0028933930\"\n" +
+                "\t},\n" +
                 "\t\"a0f000004\":\t\"1659478096000\"\n" +
                 "}\n" +
                 "\n" +
@@ -207,9 +215,10 @@ class JsonObjectUtilsTest {
                 "}";
         List<Command> commands = JsonObjectUtils.parseMultipleJson(str, Command.class);
         commands.forEach(System.out::println);
-        System.out.println("-list-->>" +JsonObjectUtils.parseMultipleJson(str));
-        System.out.println("-list-->>" + JsonObjectUtils.parseMultipleJson(str , null));
+        System.out.println("-list-->>" + JsonObjectUtils.parseMultipleJson(str));
+        System.out.println("-list-null->>" + JsonObjectUtils.parseMultipleJson(str, null));
         assertEquals(JsonObjectUtils.countJson(str), 2);
         assertEquals(JsonObjectUtils.parseMultipleJson(str, null).toString(), JsonObjectUtils.parseMultipleJson(str).toString());
+
     }
 }

@@ -661,6 +661,9 @@ public class JsonObjectUtils {
 
     /**
      * 解析字符串中的json，并将其放入list集合中
+     * <p>
+     * 由于gson无法解析同一个json字符串中两种日期格式（即存在时间戳，又有标准的年月日时分秒格式），会报错，这里使用{@link JSON#parseObject(String, Class)}进行对象转换
+     * </p>
      *
      * @param str   字符串
      * @param clazz 实体类
@@ -682,8 +685,10 @@ public class JsonObjectUtils {
             char charAt = str.charAt(i);
             // 计算第一个左括号出现的下标与次数
             if (charAt == JSON_HEAD.charAt(0)) {
-                headIndex = i;
                 countHead++;
+                if (countHead == 1) {// json左括号起始位
+                    headIndex = i;
+                }
             }
             // 缓存json右括号出现位置与次数
             if (charAt == JSON_TAIL.charAt(0)) {
@@ -697,13 +702,9 @@ public class JsonObjectUtils {
                 countTail = 0;
                 String substring = str.substring(headIndex, tailIndex + 1);
                 if (clazz == null) {
-                    item.add((T) new JsonObjects(substring).toJson());
+                    item.add((T) new JsonObjects(substring));
                 } else {
-                    try {
-                        item.add(fromJson(substring, clazz));
-                    } catch (Exception exception) {
-                        item.add(fromJsonTimeStamp(substring, clazz));
-                    }
+                    item.add(JSON.parseObject(substring, clazz));
                 }
             }
         }
