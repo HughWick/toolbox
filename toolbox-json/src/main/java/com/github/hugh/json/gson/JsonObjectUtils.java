@@ -681,17 +681,19 @@ public class JsonObjectUtils {
         // json 右括号出现的次数
         int countTail = 0;
         int tailIndex = 0;
+        char charAtJsonHead = JSON_HEAD.charAt(0);
+        char charAtJsonTail = JSON_TAIL.charAt(0);
         for (int i = 0; i < str.length(); i++) {
             char charAt = str.charAt(i);
             // 计算第一个左括号出现的下标与次数
-            if (charAt == JSON_HEAD.charAt(0)) {
+            if (charAt == charAtJsonHead) {
                 countHead++;
                 if (countHead == 1) {// json左括号起始位
                     headIndex = i;
                 }
             }
             // 缓存json右括号出现位置与次数
-            if (charAt == JSON_TAIL.charAt(0)) {
+            if (charAt == charAtJsonTail) {
                 countTail++;
                 tailIndex = i;
             }
