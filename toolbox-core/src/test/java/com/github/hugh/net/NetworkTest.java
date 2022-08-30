@@ -58,4 +58,12 @@ public class NetworkTest {
         assertFalse(connect2);
 //        System.out.println("-->>" + connect);
     }
+
+    @Test
+    void testPort() {
+        boolean localsPortUsing = NetworkUtils.isLocalsPortUsing(8080);
+//        System.out.println(localsPortUsing);
+//        assertTrue(localsPortUsing);
+        assertFalse(localsPortUsing);
+    }
 }

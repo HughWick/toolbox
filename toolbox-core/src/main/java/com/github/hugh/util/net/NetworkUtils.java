@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 /**
  * 网络工具类
@@ -73,7 +74,7 @@ public class NetworkUtils {
      */
     public static Socket connect(InetSocketAddress address, int connectionTimeout) throws IOException {
         final Socket socket = new Socket();
-        try (socket){
+        try (socket) {
             if (connectionTimeout <= 0) {
                 socket.connect(address);
             } else {
@@ -99,5 +100,43 @@ public class NetworkUtils {
         } catch (IOException ignored) {
         }
         return false;
+    }
+
+    /**
+     * 查看本机某端口是否被占用
+     *
+     * @param port 端口号
+     * @return boolean 如果被占用则返回true，否则返回false
+     * @since 2.0.11
+     */
+    public static boolean isLocalsPortUsing(int port) {
+        boolean flag = true;
+        try {
+            flag = isPortUsing("127.0.0.1", port);
+        } catch (Exception e) {
+        }
+        return flag;
+    }
+
+    /**
+     * 根据IP和端口号，查询其是否被占用
+     *
+     * @param host IP
+     * @param port 端口号
+     * @return boolean 如果被占用，返回true；否则返回false
+     * @throws UnknownHostException IP地址不通或错误，则会抛出此异常
+     * @since 2.0.11
+     */
+    public static boolean isPortUsing(String host, int port) throws UnknownHostException {
+        boolean flag = false;
+        InetAddress theAddress = InetAddress.getByName(host);
+        try {
+            new Socket(theAddress, port);
+            flag = true;
+        } catch (IOException e) {
+            //如果所测试端口号没有被占用，那么会抛出异常，这里利用这个机制来判断
+            //所以，这里在捕获异常后，什么也不用做
+        }
+        return flag;
     }
 }
