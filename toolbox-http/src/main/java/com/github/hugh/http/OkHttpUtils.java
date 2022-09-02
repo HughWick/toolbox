@@ -489,24 +489,44 @@ public class OkHttpUtils {
      * @since 1.5.8
      */
     public static <K, V> String upload(String url, Map<K, V> params, String fileName, Map<K, V> fileMap) throws IOException {
+        MediaType mediaType = MediaType.parse(MULTIPART_FORM_DATA);
+        return upload(url, params, fileName, fileMap, mediaType);
+    }
+
+    /**
+     * 上传文件方法
+     *
+     * @param url       URL
+     * @param params    额外参数
+     * @param fileName  文件的name(对应后台接收form-data的名称)
+     * @param fileMap   文件map、key-文件名称、value-文件路径
+     * @param mediaType 每个文件的Content-type
+     * @param <K>       key
+     * @param <V>       value
+     * @return String
+     * @throws IOException IO错误
+     * @since 2.3.11
+     */
+    public static <K, V> String upload(String url, Map<K, V> params, String fileName, Map<K, V> fileMap, MediaType mediaType) throws IOException {
         MultipartBody.Builder requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM);
         if (MapUtils.isNotEmpty(params)) {
             for (Map.Entry<K, V> entry : params.entrySet()) {
-                String name = String.valueOf(entry.getKey());
-                String value = String.valueOf(entry.getValue());
-                requestBody.addFormDataPart(name, value);
+                requestBody.addFormDataPart(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
             }
         }
         if (MapUtils.isNotEmpty(fileMap)) {
             for (Map.Entry<K, V> entry : fileMap.entrySet()) {
                 String name = String.valueOf(entry.getKey());
                 String path = String.valueOf(entry.getValue());
-                RequestBody fileBody = RequestBody.create(MediaType.parse(MULTIPART_FORM_DATA), new File(path));
+                RequestBody fileBody = RequestBody.create(mediaType, new File(path));
                 requestBody.addFormDataPart(fileName, name, fileBody);
             }
         }
-        Request request = new Request.Builder().url(url).post(requestBody.build()).build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody.build())
+                .build();
         return send(request);
     }
 }

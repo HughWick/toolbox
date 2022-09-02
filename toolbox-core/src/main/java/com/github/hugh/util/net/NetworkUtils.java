@@ -130,8 +130,7 @@ public class NetworkUtils {
     public static boolean isPortUsing(String host, int port) throws UnknownHostException {
         boolean flag = false;
         InetAddress theAddress = InetAddress.getByName(host);
-        try {
-            new Socket(theAddress, port);
+        try (Socket ignored = new Socket(theAddress, port)) {
             flag = true;
         } catch (IOException e) {
             //如果所测试端口号没有被占用，那么会抛出异常，这里利用这个机制来判断
