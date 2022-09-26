@@ -89,10 +89,17 @@ public class DateTest {
 
     @Test
     void testIsDateFormat() {
-        String timeStart = "2022-05-11 00:00:00";
-        boolean dateFormat = DateUtils.isDateFormat(timeStart, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
-        assertTrue(dateFormat);
-        assertFalse(DateUtils.isDateFormat(timeStart + "a", DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
+        String timeStart1 = "2022-05-11 00:00:00";
+        String timeStart2 = "2022-05-11";
+        String timeStart3 = "2022-11";
+//        String timeStart4 = "2022-05-11 00:00:00";
+//        String timeStart5 = "2022-05-11 00:00:00";
+        assertTrue(DateUtils.isDateFormat(timeStart1, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
+        assertFalse(DateUtils.isDateFormat(timeStart1 + "a", DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
+        assertTrue(DateUtils.isDateFormat(timeStart2, DateCode.YEAR_MONTH_DAY));
+        assertFalse(DateUtils.isDateFormat(timeStart2 + "b", DateCode.YEAR_MONTH_DAY));
+        assertTrue(DateUtils.isDateFormat(timeStart3, DateCode.YEAR_MONTH));
+        assertFalse(DateUtils.isDateFormat(timeStart3 + "b", DateCode.YEAR_MONTH));
     }
 
     // 测试获取指定日期

@@ -852,10 +852,10 @@ public class DateUtils extends DateCode {
      */
     public static boolean lessThanStartDate(Date start, Date end) {
         if (start == null) {
-            throw new ToolboxException(" start date is null ! ");
+            throw new ToolboxException(" start date is null ");
         }
         if (end == null) {
-            throw new ToolboxException(" end date is null ! ");
+            throw new ToolboxException(" end date is null ");
         }
         return end.getTime() < start.getTime();
     }
@@ -908,7 +908,7 @@ public class DateUtils extends DateCode {
             } else if (YEAR_MONTH_DAY.equals(pattern)) {//年-月-日
                 regex = "\\d{4}-\\d{2}-\\d{2}";
             } else {// 默认校验yyyy-MM-dd HH:mm:ss
-                regex = "\\d{4}-\\d{2}-\\d{2}\\s{1}\\d{2}:\\d{2}:\\d{2}";
+                regex = "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}";
             }
             Pattern patternObj = Pattern.compile(regex);// 编译正则表达式
             Matcher matcher = patternObj.matcher(timeStr);// 忽略大小写的写法
@@ -1056,10 +1056,10 @@ public class DateUtils extends DateCode {
      */
     public static long minutesDifference(Date begin, Date end) {
         if (begin == null) {
-            throw new ToolboxException(" start date is null ! ");
+            throw new ToolboxException(" start date is null ");
         }
         if (end == null) {
-            throw new ToolboxException(" end date is null ! ");
+            throw new ToolboxException(" end date is null ");
         }
         long between = (end.getTime() - begin.getTime()) / 1000;
         return between / 60;
