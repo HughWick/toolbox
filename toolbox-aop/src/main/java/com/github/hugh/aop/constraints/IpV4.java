@@ -45,7 +45,17 @@ public @interface IpV4 {
      */
     boolean nullable() default false;
 
+    /**
+     * 约束注解在验证时所属的组别
+     *
+     * @return Class
+     */
     Class<?>[] groups() default {};
 
+    /**
+     * 负载
+     *
+     * @return Class
+     */
     Class<? extends Payload>[] payload() default {};
 }
