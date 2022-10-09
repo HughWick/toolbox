@@ -32,6 +32,7 @@ public class JsonObjects extends JsonObjectUtils {
     /**
      * 带参构造
      * <p>支持字符于泛型</p>
+     * <p>2.3.11后支持{@link Map}泛型</p>
      *
      * @param object 参数
      * @param <T>    参数类型
@@ -39,6 +40,8 @@ public class JsonObjects extends JsonObjectUtils {
     public <T> JsonObjects(T object) {
         if (object instanceof String) {
             this.jsonObject = parse(object);
+        } else if (object instanceof Map) {
+            this.jsonObject = parse(object.toString());
         } else {
             this.jsonObject = parse(toJson(object));
         }

@@ -217,7 +217,7 @@ public class JsonObjectsTest {
 
     @Test
     void testArray() {
-        String str3 = "{\"age\":2,\"amount\":15.14,\"birthday\":null}";
+//        String str3 = "{\"age\":2,\"amount\":15.14,\"birthday\":null}";
         String str = "{\n" +
                 "\t\"action\":\t\"R\",\n" +
                 "\t\"00100001\":\t[\"00010000\"],\n" +
