@@ -77,8 +77,17 @@ class JsonObjectUtilsTest {
 //        Student student = JsonObjectUtils.fromJson(strDate2, Student.class);
 //        System.out.println("=--7->>" + student.getCreate());
 //        System.out.println("-8-->>" + JsonObjectUtils.toJson(student));
+
+    }
+
+    @Test
+    void testToMap(){
+        String str = "{\"age\":2,\"amount\":10.14,\"money\":12.3456,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\",\"id\":null,\"opType\":1}";
+        JsonObject json2 = JsonObjectUtils.parse(str);
+        Student student = JsonObjectUtils.fromJson(str, Student.class);
         Map<Object, Object> objectObjectMap = JsonObjectUtils.toMap(json2);
-        System.out.println("-9-->>" + objectObjectMap);
+        System.out.println("1-->>" + objectObjectMap);
+        System.out.println("2-->>" + JsonObjectUtils.toMap(student));
     }
 
     @Test

@@ -327,6 +327,22 @@ public class JsonObjectUtils {
      *
      * <p>使用的自定义的{@link MapTypeAdapter}解析器,重写了数值转换校验</p>
      *
+     * @param object 对象
+     * @param <E>    对象泛型
+     * @param <K>    键泛型
+     * @param <V>    value泛型
+     * @return Map
+     * @since 2.3.11
+     */
+    public static <K, V, E> Map<K, V> toMap(E object) {
+        return toMap(parse(object));
+    }
+
+    /**
+     * jsonObject 转换为{@link HashMap}
+     *
+     * <p>使用的自定义的{@link MapTypeAdapter}解析器,重写了数值转换校验</p>
+     *
      * @param jsonObject json
      * @param <K>        键泛型
      * @param <V>        value泛型
