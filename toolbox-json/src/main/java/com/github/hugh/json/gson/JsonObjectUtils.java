@@ -396,6 +396,51 @@ public class JsonObjectUtils {
     }
 
     /**
+     * 对象转换为{@link HashMap}后，根据value进行升序排序
+     *
+     * @param object 对象
+     * @param <E>    对象泛型
+     * @param <K>    键泛型
+     * @param <V>    value泛型
+     * @since 2.3.11
+     */
+    public static <K, V, E> Map<K, V> toMapSortByValueAsc(E object) {
+        return toMapSortByValue(object, true);
+    }
+
+    /**
+     * 对象转换为{@link HashMap}后，根据value进行降序排序
+     *
+     * @param object 对象
+     * @param <E>    对象泛型
+     * @param <K>    键泛型
+     * @param <V>    value泛型
+     * @since 2.3.11
+     */
+    public static <K, V, E> Map<K, V> toMapSortByValueDesc(E object) {
+        return toMapSortByValue(object, false);
+    }
+
+    /**
+     * 对象转换为{@link HashMap}后，根据value进行排序
+     *
+     * @param object 对象
+     * @param flag   true-升序、false-降序
+     * @param <E>    对象泛型
+     * @param <K>    键泛型
+     * @param <V>    value泛型
+     * @since 2.3.11
+     */
+    private static <K, V, E> Map<K, V> toMapSortByValue(E object, boolean flag) {
+        Map objectObjectMap = toMap(object);
+        if (flag) {
+            return MapUtils.sortByValueAsc(objectObjectMap);
+        } else {
+            return MapUtils.sortByValueDesc(objectObjectMap);
+        }
+    }
+
+    /**
      * 统一任意json对象或字符串转实体类方法
      *
      * @param json     json
