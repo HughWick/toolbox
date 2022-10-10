@@ -81,13 +81,18 @@ class JsonObjectUtilsTest {
     }
 
     @Test
-    void testToMap(){
+    void testToMap() {
         String str = "{\"age\":2,\"amount\":10.14,\"money\":12.3456,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\",\"id\":null,\"opType\":1}";
         JsonObject json2 = JsonObjectUtils.parse(str);
         Student student = JsonObjectUtils.fromJson(str, Student.class);
         Map<Object, Object> objectObjectMap = JsonObjectUtils.toMap(json2);
         System.out.println("1-->>" + objectObjectMap);
-        System.out.println("2-->>" + JsonObjectUtils.toMap(student));
+        assertEquals("{id=1, age=2, name=张三, amount=10.14, create=2019-04-06 00:00:00, system=0}", JsonObjectUtils.toMap(student).toString());
+        // 升序验证
+        assertEquals("{age=2, amount=10.14, create=2019-04-06 00:00:00, id=1, name=张三, system=0}", JsonObjectUtils.toMapSortByKeyAsc(student).toString());
+        // 降序
+        Map<String, Object> objectObjectMap1 = JsonObjectUtils.toMapSortByKeyDesc(student);
+        assertEquals("{system=0, name=张三, id=1, create=2019-04-06 00:00:00, amount=10.14, age=2}", objectObjectMap1.toString());
     }
 
     @Test

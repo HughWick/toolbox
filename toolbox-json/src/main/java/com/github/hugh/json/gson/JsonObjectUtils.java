@@ -5,6 +5,7 @@ import com.github.hugh.json.exception.ToolboxJsonException;
 import com.github.hugh.json.gson.adapter.MapTypeAdapter;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.EmptyUtils;
+import com.github.hugh.util.MapUtils;
 import com.github.hugh.util.regex.RegexUtils;
 import com.google.common.base.Suppliers;
 import com.google.gson.*;
@@ -323,7 +324,7 @@ public class JsonObjectUtils {
     }
 
     /**
-     * jsonObject 转换为{@link HashMap}
+     * 对象转换为{@link HashMap}
      *
      * <p>使用的自定义的{@link MapTypeAdapter}解析器,重写了数值转换校验</p>
      *
@@ -332,30 +333,66 @@ public class JsonObjectUtils {
      * @param <K>    键泛型
      * @param <V>    value泛型
      * @return Map
-     * @since 2.3.11
-     */
-    public static <K, V, E> Map<K, V> toMap(E object) {
-        return toMap(parse(object));
-    }
-
-    /**
-     * jsonObject 转换为{@link HashMap}
-     *
-     * <p>使用的自定义的{@link MapTypeAdapter}解析器,重写了数值转换校验</p>
-     *
-     * @param jsonObject json
-     * @param <K>        键泛型
-     * @param <V>        value泛型
-     * @return Map
      * @since 1.4.0
      */
-    public static <K, V> Map<K, V> toMap(JsonObject jsonObject) {
+    public static <K, V, E> Map<K, V> toMap(E object) {
+        JsonObject jsonObject;
+        if (object instanceof JsonObject) {
+            jsonObject = (JsonObject) object;
+        } else {
+            jsonObject = parse(object);
+        }
         String strJson = toJson(jsonObject);
         Type type = new TypeToken<Map<K, V>>() {
         }.getType();
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(type, new MapTypeAdapter()).create();
         return gson.fromJson(strJson, type);
+    }
+
+    /**
+     * 对象转换为{@link HashMap}后，根据key进行升序排序
+     *
+     * @param object 对象
+     * @param <E>    对象泛型
+     * @param <K>    键泛型
+     * @param <V>    value泛型
+     * @since 2.3.11
+     */
+    public static <K, V, E> Map<K, V> toMapSortByKeyAsc(E object) {
+        return toMapSortByKey(object, true);
+    }
+
+    /**
+     * 对象转换为{@link HashMap}后，根据key进行降序排序
+     *
+     * @param object 对象
+     * @param <E>    对象泛型
+     * @param <K>    键泛型
+     * @param <V>    value泛型
+     * @since 2.3.11
+     */
+    public static <K, V, E> Map<K, V> toMapSortByKeyDesc(E object) {
+        return toMapSortByKey(object, false);
+    }
+
+    /**
+     * 对象转换为{@link HashMap}后，根据key进行排序
+     *
+     * @param object 对象
+     * @param flag   true-升序、false-降序
+     * @param <E>    对象泛型
+     * @param <K>    键泛型
+     * @param <V>    value泛型
+     * @since 2.3.11
+     */
+    private static <K, V, E> Map<K, V> toMapSortByKey(E object, boolean flag) {
+        Map objectObjectMap = toMap(object);
+        if (flag) {
+            return MapUtils.sortByKeyAsc(objectObjectMap);
+        } else {
+            return MapUtils.sortByKeyDesc(objectObjectMap);
+        }
     }
 
     /**
