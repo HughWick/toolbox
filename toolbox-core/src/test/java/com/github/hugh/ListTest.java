@@ -146,6 +146,7 @@ public class ListTest {
         assertThrowsExactly(NullPointerException.class, () -> ListUtils.guavaPartitionList(null, 1, 1));
     }
 
+    // list 转字符串测试
     @Test
     void testListToString() {
         List<String> originList = new ArrayList<>();
@@ -186,7 +187,7 @@ public class ListTest {
         list2.add(student2);
         list2.add(student3);
         list2.add(student4);
-        assertEquals("'张三','李四','王五'", ListUtils.listToInSql(list2 , "name"));
+        assertEquals("'张三','李四','王五'", ListUtils.listToInSql(list2, "name"));
     }
 
     @Test
@@ -204,7 +205,7 @@ public class ListTest {
         list.add(student2);
         list.add(student3);
         list.add(student4);
-        assertEquals("张三_李四_王五", ListUtils.listObjectToString(list, "name", "_", false));
+        assertEquals("张三_李四_王五", ListUtils.listObjectToString(list, "name", "_"));
         System.out.println(ListUtils.listObjectToString(list, "name"));
         List<Map> listMap = new ArrayList<>();
         var item = new HashMap<>();

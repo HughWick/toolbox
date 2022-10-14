@@ -186,8 +186,23 @@ public class ListUtils {
      * @since 2.3.7
      */
     public static <T> String listObjectToString(List<T> list, String name) {
-        return listObjectToString(list, name, LIST_SEPARATOR, false);
+        return listObjectToString(list, name, LIST_SEPARATOR);
     }
+
+    /**
+     * list对象转换对应的字符串
+     *
+     * @param list      对象集合
+     * @param name      对象get方法名称
+     * @param separator 分隔符
+     * @param <T>       实体类型
+     * @return String
+     * @since 2.3.12
+     */
+    public static <T> String listObjectToString(List<T> list, String name, String separator) {
+        return listObjectToString(list, name, separator, false);
+    }
+
 
     /**
      * list对象转换对应的字符串
@@ -200,7 +215,7 @@ public class ListUtils {
      * @return String
      * @since 2.3.7
      */
-    public static <T> String listObjectToString(List<T> list, String name, String separator, boolean inSql) {
+    private static <T> String listObjectToString(List<T> list, String name, String separator, boolean inSql) {
         try {
             StringBuilder stringBuilder = new StringBuilder();
             for (T obj : list) {

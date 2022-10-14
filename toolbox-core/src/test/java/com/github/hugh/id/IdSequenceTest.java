@@ -16,6 +16,7 @@ public class IdSequenceTest {
     public void test() {
         String unique = IdSequence.snowflake();
         System.out.println("-->" + unique);
+        System.out.println("-->" + unique.length());
     }
 
     @Test
