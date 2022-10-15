@@ -50,11 +50,25 @@ public class JsonObjectsTest {
         System.out.println("--7-->>>" + json2.getLong("age"));
         System.out.println("--8-->>>" + json2.getLongValue("age"));
         System.out.println("--9-->>>" + json2.containsKey("amount"));
-        System.out.println("--10-->>>" + json2.toMap());
         System.out.println("----NED----");
 //        String str2 = "{\"serialNo\":null,\"createBy\":null,\"createDate\":null,\"updateBy\":null,\"updateDate\":null,\"deleteBy\":null,\"deleteDate\":null,\"deleteFlag\":0," +
 //                "\"id\":81,\"ip\":null,\"zclxmc2\":\"网络交换传输\",\"cjmc\":null,\"sxxsj\":null,\"zxzts\":null,\"ywzjbdsl\":0,\"tdmc\":null,\"szs\":null,\"laniotzt\":null,\"ywzjjcsj\":null,\"gdzt\":null,\"tbzt\":0,\"txmm\":null,\"htmc\":null,\"kkmc\":null,\"fxmc\":null,\"bdzcjh\":null,\"dzjcmc\":null,\"ywzjmc\":null,\"ppmc\":\"海康\",\"zclxmc\":\"防火墙\",\"zclxmc1\":null,\"ywzjzt\":null,\"ssq_NO\":\"43010407\",\"sfmc\":\"\",\"csmc\":\"\",\"qxmc\":\"\",\"xzjdmc\":\"\",\"sbxlh\":\"123123123\",\"iccid\":null,\"zzzp\":null,\"rkdjr_ID\":null,\"bdzt\":0,\"ywzjbd_ID\":0,\"zcmc\":\"测试资产\",\"kkbd_ID\":null,\"dzjcbd_ID\":null,\"zclx\":26,\"cds\":null,\"xh\":\"0021\",\"sf\":\"430000\",\"cs\":\"430100\",\"qx\":\"430104\",\"cj\":\"1\",\"pp_ID\":1,\"sydw\":1,\"xqbm\":\"43010407\",\"xzjd\":\"43010407\",\"gldk\":\"\",\"rksj\":1591175764000,\"zxzt\":0,\"gbbm\":\"\",\"fx_ID\":0,\"zczt\":\"1\",\"xxdz\":\"\"" +
 //                ",\"jd\":\"\",\"wd\":\"\",\"dlzh\":\"\",\"dlmm\":\"\",\"ccrq\":null,\"bxq\":1,\"sbbm\":\"\",\"imei\":null,\"ht_ID\":0,\"cjdw\":0,\"ywdw\":0,\"azrq\":null}";
+    }
+
+    @Test
+    void testToMap() {
+        String str2 = "{\"age\":2,\"amount\":15.14,\"birthday\":\"today\",\"create\":\"2022-10-15\",\"id\":12345,\"name\":\"张三\",\"create\":\"2019-04-06\",\"method\":\"wow\"}";
+        JsonObjects json2 = new JsonObjects(str2);
+//        System.out.println("--10-->>>" + json2.toMap());
+        assertEquals("{age=2, amount=15.14, birthday=today, create=2019-04-06, id=12345, name=张三, method=wow}", json2.toMap().toString());
+        String str3 = "{\"birthday\":\"today\",\"create\":\"2022-10-15\",\"amount\":15.14,\"id\":12345,\"name\":\"张三\",\"create\":\"2019-04-06\",\"method\":\"wow\",\"age\":2,\"yoh\":\"叶王\",\"valve\":\"冰娃\"}";
+        String ascStr = "{age=2, amount=15.14, birthday=today, create=2019-04-06, id=12345, method=wow, name=张三, valve=冰娃, yoh=叶王}";
+        assertEquals(ascStr, new JsonObjects(str3).toMapSortByKeyAsc().toString());
+        String descStr ="{yoh=叶王, valve=冰娃, name=张三, method=wow, id=12345, create=2019-04-06, birthday=today, amount=15.14, age=2}";
+//        System.out.println("--10-->>>" + new JsonObjects(str3).toMapSortByKeyDesc());
+        assertEquals(descStr, new JsonObjects(str3).toMapSortByKeyDesc().toString());
+
     }
 
     @Test
@@ -224,7 +238,7 @@ public class JsonObjectsTest {
                 "\t\"00100002\":\t[\"01010000\", \"02030000\"],\n" +
                 "\t\"00100003\":\t[\"01010009\"],\n" +
                 "\t\"00100004\":\t[\"0\"],\n" +
-                "\t\"00100005\":\t{\"age\":2,\"amount\":15.14,\"birthday\":null}\n"+
+                "\t\"00100005\":\t{\"age\":2,\"amount\":15.14,\"birthday\":null}\n" +
                 "}";
         JsonObjects jsonObjects = new JsonObjects(str);
         System.out.println(jsonObjects);

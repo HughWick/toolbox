@@ -384,6 +384,30 @@ public class JsonObjects extends JsonObjectUtils {
     }
 
     /**
+     * 将json对象转化为map，根据key进行升序排序
+     *
+     * @param <K> KEY
+     * @param <V> VALUE
+     * @return Map
+     * @since 2.3.12
+     */
+    public <K, V> Map<K, V> toMapSortByKeyAsc() {
+        return toMapSortByKeyAsc(this.jsonObject);
+    }
+
+    /**
+     * 将json对象转化为map，根据key进行降序排序
+     *
+     * @param <K> KEY
+     * @param <V> VALUE
+     * @return Map
+     * @since 2.3.12
+     */
+    public <K, V> Map<K, V> toMapSortByKeyDesc() {
+        return toMapSortByKeyDesc(this.jsonObject);
+    }
+
+    /**
      * 判断key是否存在
      *
      * @param propertyName key名称
