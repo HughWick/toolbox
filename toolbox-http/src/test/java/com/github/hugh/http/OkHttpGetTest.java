@@ -1,6 +1,5 @@
 package com.github.hugh.http;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.hugh.json.gson.JsonObjects;
 import org.junit.jupiter.api.Test;
 
@@ -64,6 +63,17 @@ public class OkHttpGetTest {
 //        params.put("Cookie:","SESSION=efd29682-fbb7-49c1-96e3-4ecb5dd0e311");
         String s = OkHttpUtils.get(url, null, params);
         System.out.println(s);
+    }
+
+
+    @Test
+    void testGetIn() throws IOException {
+//        https://dev.hnlot.com.cn/v2/business/problem/getList?problemType_in=6,7,30,31&status=0
+        String url = "";
+        Map<String, Object> map = new HashMap<>();
+        map.put("a", 1);
+        map.put("b", "1,2");
+        OkHttpUtils.getReJsonObjects("https://dev.hnlot.com.cn/v2/business/problem/getList" , map);
     }
 
 }
