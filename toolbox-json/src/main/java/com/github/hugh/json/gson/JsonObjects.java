@@ -40,8 +40,8 @@ public class JsonObjects extends JsonObjectUtils {
     public <T> JsonObjects(T object) {
         if (object instanceof String) {
             this.jsonObject = parse(object);
-        } else if (object instanceof Map) {
-            this.jsonObject = parse(object.toString());
+//        } else if (object instanceof Map) {
+//            this.jsonObject = parse(object);
         } else {
             this.jsonObject = parse(toJson(object));
         }

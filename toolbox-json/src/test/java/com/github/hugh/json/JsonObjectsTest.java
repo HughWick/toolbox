@@ -26,6 +26,14 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class JsonObjectsTest {
 
+
+    @Test
+    void testNewJsonObjects() {
+        String str = "{woman={name=dc, age=1}, name=账上的, sex_in=a,b,d}";
+        JsonObjects jsonObjects = new JsonObjects(str);
+
+    }
+
     @Test
     void testGet() {
         String str = "{\"age\":1,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1888,\"name\":\"张三\",\"create\":\"2019-04-06 12:32:11\"}";
@@ -65,7 +73,7 @@ public class JsonObjectsTest {
         String str3 = "{\"birthday\":\"today\",\"create\":\"2022-10-15\",\"amount\":15.14,\"id\":12345,\"name\":\"张三\",\"create\":\"2019-04-06\",\"method\":\"wow\",\"age\":2,\"yoh\":\"叶王\",\"valve\":\"冰娃\"}";
         String ascStr = "{age=2, amount=15.14, birthday=today, create=2019-04-06, id=12345, method=wow, name=张三, valve=冰娃, yoh=叶王}";
         assertEquals(ascStr, new JsonObjects(str3).toMapSortByKeyAsc().toString());
-        String descStr ="{yoh=叶王, valve=冰娃, name=张三, method=wow, id=12345, create=2019-04-06, birthday=today, amount=15.14, age=2}";
+        String descStr = "{yoh=叶王, valve=冰娃, name=张三, method=wow, id=12345, create=2019-04-06, birthday=today, amount=15.14, age=2}";
 //        System.out.println("--10-->>>" + new JsonObjects(str3).toMapSortByKeyDesc());
         assertEquals(descStr, new JsonObjects(str3).toMapSortByKeyDesc().toString());
 

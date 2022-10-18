@@ -1,12 +1,9 @@
 package com.github.hugh.http;
 
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-//import net.sf.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -53,10 +50,4 @@ public class OkHttpTest {
 //                .build();
 //        return client;
 //    }
-
-    @Test
-    void testlogs() {
-        var username = "${java:vm}";
-        log.error("username: {}", username);
-    }
 }
