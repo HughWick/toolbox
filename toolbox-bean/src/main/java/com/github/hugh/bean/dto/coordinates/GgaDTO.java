@@ -1,4 +1,4 @@
-package com.github.hugh.bean.dto;
+package com.github.hugh.bean.dto.coordinates;
 
 import lombok.Data;
 

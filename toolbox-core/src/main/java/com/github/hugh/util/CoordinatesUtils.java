@@ -1,9 +1,9 @@
 package com.github.hugh.util;
 
 
-import com.github.hugh.bean.dto.GgaDTO;
-import com.github.hugh.bean.dto.GpsDTO;
-import com.github.hugh.bean.dto.RmcDTO;
+import com.github.hugh.bean.dto.coordinates.GgaDTO;
+import com.github.hugh.bean.dto.coordinates.GpsDTO;
+import com.github.hugh.bean.dto.coordinates.RmcDTO;
 import com.github.hugh.exception.ToolboxException;
 
 import java.math.BigDecimal;

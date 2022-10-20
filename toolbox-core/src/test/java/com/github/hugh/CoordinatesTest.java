@@ -1,8 +1,8 @@
 package com.github.hugh;
 
-import com.github.hugh.bean.dto.GgaDTO;
-import com.github.hugh.bean.dto.GpsDTO;
-import com.github.hugh.bean.dto.RmcDTO;
+import com.github.hugh.bean.dto.coordinates.GgaDTO;
+import com.github.hugh.bean.dto.coordinates.GpsDTO;
+import com.github.hugh.bean.dto.coordinates.RmcDTO;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.CoordinatesUtils;
 import org.junit.jupiter.api.Assertions;
