@@ -610,7 +610,8 @@ public class JsonObjectUtils {
         } else if (json instanceof String) {
             return gson.fromJson((String) json, classOfT);
         }
-        return gson.fromJson(toJson(json), classOfT);
+        String jsonStr = toJson(json);
+        return gson.fromJson(jsonStr, classOfT);
     }
 
     /**

@@ -74,7 +74,8 @@ public class OkHttpGetTest {
         Map<String, Object> map = new HashMap<>();
         map.put("a", 1);
         map.put("b", "1,2");
-        OkHttpUtils.getReJsonObjects("https://dev.hnlot.com.cn/v2/business/problem/getList", map);
+        JsonObjects reJsonObjects = OkHttpUtils.getReJsonObjects("https://dev.hnlot.com.cn/v2/business/problem/getList", map);
+        System.out.println(reJsonObjects);
     }
 
     @Test
@@ -83,15 +84,18 @@ public class OkHttpGetTest {
         Map<String, Object> map2 = new HashMap<>();
         map.put("name", "账上的");
         map.put("sex_in", "a,b,d");
+        map.put("birthday", System.currentTimeMillis());
+        map.put("create", "2022-01-10 22:33:10");
+        map.put("testList", "1,2,3");
         map2.put("age", 1);
         map2.put("name", "dc");
         map.put("woman", map2);
         System.out.println(map);
         System.out.println(JsonObjectUtils.toJson(map));
         String s = OkHttpUtils.get("http://localhost:7900/user/json", map);
+        System.out.println(s);
         String s2 = OkHttpUtils.get("http://localhost:7900/user/object", map);
 //        String s = OkHttpUtils.get("http://localhost:7900/user/json?name=as&woman={\"age\":\"1\"}" );
-        System.out.println(s);
     }
 
 }

@@ -8,13 +8,17 @@ import com.github.hugh.json.gson.JsonObjectUtils;
 import com.github.hugh.json.gson.JsonObjects;
 import com.github.hugh.json.model.GsonTest;
 import com.github.hugh.json.model.Student;
+import com.github.hugh.util.ServletUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,12 +30,82 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class JsonObjectsTest {
 
-
     @Test
     void testNewJsonObjects() {
         String str = "{woman={name=dc, age=1}, name=账上的, sex_in=a,b,d}";
-        JsonObjects jsonObjects = new JsonObjects(str);
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map2 = new HashMap<>();
+        map.put("name", "账上的");
+        map.put("sex_in", "a,b,d");
+        map.put("birthday", System.currentTimeMillis());
+        map.put("create", "2022-01-10 22:33:10");
+        map.put("testList", "1,2,3");
+        map2.put("age", 1);
+        map2.put("name", "dc");
+        map.put("woman", map2);
+        System.out.println("--1-map>>" + map.toString());
+        JsonObjects jsonObjects = new JsonObjects(map);
+        System.out.println(jsonObjects);
+//        Assertions.assertO(new JsonObjects() , jsonObjects);
+//        Map<String, String> reconstructedUtilMap = Arrays.stream(str2.split(","))
+//                .map(s -> s.split("="))
+//                .collect(Collectors.toMap(s -> s[0], s -> s[1]));
+        //        String str2 = "{birthday=1666145184398, testList=1,2,3, woman={name=dc, age=1}, name=账上的, create=2022-01-10 22:33:10, sex_in=a,b,d}";
+//        JsonObjects jsonObjects2 = new JsonObjects(str2);
+//        Gson gson = new Gson();
+//        Map<String, Object> map3 = new HashMap<>();
+//        map3 = gson.fromJson(str, map.getClass());
+//        System.out.println("==2==>>" + JSON.parseObject(str2, HashMap.class).toString());
+    }
 
+    @Test
+    void testStrToMap() {
+        String str = "{timestamp=1493114544899, bo/dy={\"name\":\"\u6d4b\u8bd5\u5546\u6237\",\"shop_id\":\"123456\"}, cmd=order.list, source=65504, ticket=C34A0D20-45EC-9C26-CAB8-3DA309213671, encrypt=des.v1, secret=123131243245454534, fields=a|b, version=3.0}";
+//        String str = "{birthday=1666145184398, testList=1,2,3, woman={name=dc, age=1}, name=账上的, create=2022-01-10 22:33:10, sex_in=a,b,d}";
+
+//        String httpStr = "{\"birthday\":\"1666149005473\",\"testList\":\"1,2,3\",\"woman\":\"{\"name\":\"dc\",\"age\":1}\",\"name\":\"账上的\",\"create\":\"2022-01-10 22:33:10\",\"sex_in\":\"a,b,d\"}";
+        String httpStr = "{birthday=1666149380771, testList=1,2,3, woman={\"name\":\"dc\",\"age\":1}, name=账上的, create=2022-01-10 22:33:10, sex_in=a,b,d}";
+        cutSemiString(httpStr);
+    }
+
+    @Test
+    void testHttpRequest() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("userId", "9001");
+        request.addParameter("name", "狗蛋");
+        request.addParameter("page", "1");
+        request.addParameter("size", "20");
+        Map<String, Object> contentMap = new HashMap<>();
+        contentMap.put("hostSerialNumber", "202010260288");
+//        contentMap.put("array", "1,2,3");
+        request.addParameter("content", contentMap.toString());
+        Map<Object, Object> params = ServletUtils.getParams(request);
+        TestRequestObject testRequestObject = JSON.parseObject(JSON.toJSONString(params), TestRequestObject.class);
+//        TestRequestObject testRequestObject = JsonObjectUtils.toEntity(request, TestRequestObject.class);
+        System.out.println("====>>" + testRequestObject);
+    }
+
+    /**
+     * use properties to restore the map
+     *
+     * @param str Input string
+     * @return Map
+     */
+    static public Map<String, String> cutSemiString(String str) {
+        //        https://stackoverflow.com/questions/3957094/convert-hashmap-tostring-back-to-hashmap-in-java
+        Properties props = new Properties();
+        try {
+            props.load(new StringReader(str.substring(1, str.length() - 1).replace(", ", "\n")));
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+
+        Map<String, String> map2 = new HashMap<>();
+        for (Map.Entry<Object, Object> e : props.entrySet()) {
+            map2.put((String) e.getKey(), (String) e.getValue());
+            System.out.println("key:" + e.getKey() + "  value:" + e.getValue());
+        }
+        return map2;
     }
 
     @Test
@@ -269,5 +343,19 @@ class ContractsDO {
     public String installationAddress;//安装地点
     private Date createDate;//安装地点
 //    private Date Up
+
+}
+
+// request 请求转换对象测试类
+@Data
+class TestRequestObject {
+    public long birthday;
+    public String name;//
+    public String userId;//
+    public Sub content;
+    @Data
+    static class Sub{
+        private String hostSerialNumber;
+    }
 
 }

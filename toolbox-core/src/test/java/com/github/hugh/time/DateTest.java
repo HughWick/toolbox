@@ -4,6 +4,7 @@ import com.github.hugh.constant.DateCode;
 import com.github.hugh.util.DateUtils;
 import org.junit.jupiter.api.Test;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -115,5 +116,22 @@ public class DateTest {
         System.out.println(DateUtils.ofPattern(weekAgo));
         Date hourAgo = DateUtils.getHourAgo();
         System.out.println(DateUtils.ofPattern(hourAgo));
+    }
+
+//    private static SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyy HHmmss");
+//
+//    static {
+//        // set the timezone for analysis of dates on UTC
+//        dateFormat.setCalendar(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+//    }
+
+    // 测试UTC 转北京时间
+    @Test
+    void testUtcDate() throws ParseException {
+        String rmc = "$GNRMC,063234.00,A,2813.3615,N,11256.4649,E,0.329,,201022,,,A,V*18";
+        String date1 = "201022";// UTC 日期，ddmmyy(日月年)格式
+        String date2 = "064231.00"; //  UTC 时间，hhmmss(时分秒)格式
+        String timeStr = DateUtils.utcToCst(date1 + " " + date2, "ddMMyy HHmmss");
+        assertEquals("2022-10-20 14:42:31", timeStr);
     }
 }

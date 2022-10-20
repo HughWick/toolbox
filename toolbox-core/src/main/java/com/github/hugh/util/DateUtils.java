@@ -5,10 +5,7 @@ import com.github.hugh.exception.ToolboxException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1092,5 +1089,59 @@ public class DateUtils extends DateCode {
         long a = end.getTime();
         long b = begin.getTime();
         return (int) ((a - b) / 1000);
+    }
+
+    /**
+     * UTC时间格式转北京时间
+     * 北京时间为东八时区,领先UTC时间8小时
+     *
+     * @param utcStr   UTC 日期字符串
+     * @param format   需要格式化的日期格式
+     * @param reFormat 返回的日期格式
+     * @return String
+     * @since 2.3.12
+     */
+    public static String utcToCst(String utcStr, String format) {
+        // set the timezone for analysis of dates on UTC
+        return utcToCst(utcStr, format, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
+    }
+
+    /**
+     * UTC时间格式转北京时间
+     * 北京时间为东八时区,领先UTC时间8小时
+     *
+     * @param utcStr   UTC 日期字符串
+     * @param format   需要格式化的日期格式
+     * @param reFormat 返回的日期格式
+     * @return String
+     * @since 2.3.12
+     */
+    public static String utcToCst(String utcStr, String format, String reFormat) {
+        // set the timezone for analysis of dates on UTC
+        return utcToDate(utcStr, format, "UTC", reFormat);
+    }
+
+    /**
+     * UTC时间格式转北京时间
+     * 北京时间为东八时区,领先UTC时间8小时
+     *
+     * @param utcStr   UTC 日期字符串
+     * @param format   需要格式化的日期格式
+     * @param timeZone 时区
+     * @param reFormat 返回的日期格式
+     * @return String
+     * @since 2.3.12
+     */
+    public static String utcToDate(String utcStr, String format, String timeZone, String reFormat) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        TimeZone utc = TimeZone.getTimeZone(timeZone);
+        Calendar instance = Calendar.getInstance(utc);
+        dateFormat.setCalendar(instance);
+        try {
+            Date parse = dateFormat.parse(utcStr);
+            return format(parse, reFormat);
+        } catch (ParseException e) {
+            throw new ToolboxException(e);
+        }
     }
 }

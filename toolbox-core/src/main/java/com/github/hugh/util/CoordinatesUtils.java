@@ -3,6 +3,9 @@ package com.github.hugh.util;
 
 import com.github.hugh.bean.dto.GgaDTO;
 import com.github.hugh.bean.dto.GpsDTO;
+import com.github.hugh.bean.dto.RmcDTO;
+import com.github.hugh.exception.ToolboxException;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
@@ -37,16 +40,43 @@ public class CoordinatesUtils {
      * @param longitude 经度
      * @param latitude  纬度
      * @return {@link GpsDTO}
+     * @since 2.3.12
+     */
+    public static GpsDTO gcj02ToBd09(final String longitude, final String latitude) {
+        return gcj02ToBd09(Double.parseDouble(longitude), Double.parseDouble(latitude));
+    }
+
+    /**
+     * 高德转百度
+     * <p>火星坐标系 (GCJ-02) 与百度坐标系 (BD-09) 坐标的转换算法</p>
+     * <p>注：只保留小数点后八位</p>
+     *
+     * @param longitude 经度
+     * @param latitude  纬度
+     * @return {@link GpsDTO}
      * @since 1.6.3
      */
     public static GpsDTO gcj02ToBd09(final double longitude, final double latitude) {
         double z = Math.sqrt(longitude * longitude + latitude * latitude) + 0.00002 * Math.sin(latitude * CALC_PI);
         double theta = Math.atan2(latitude, longitude) + 0.000003 * Math.cos(longitude * CALC_PI);
         // 计算后的bd09 经度
-        double bdlon = (z * Math.cos(theta) + 0.0065);
-        // 金酸后的bd09 纬度
-        double bdlat = z * Math.sin(theta) + 0.006;
-        return new GpsDTO(Double.parseDouble(decimalFormat.format(bdlat)), Double.parseDouble(decimalFormat.format(bdlon)));
+        double bdLongitude = (z * Math.cos(theta) + 0.0065);
+        // 计算后的bd09 纬度
+        double bdLatitude = z * Math.sin(theta) + 0.006;
+        return new GpsDTO(Double.parseDouble(decimalFormat.format(bdLatitude)), Double.parseDouble(decimalFormat.format(bdLongitude)));
+    }
+
+    /**
+     * 百度转高德
+     * <p>百度坐标(bd09ll) 转 火星坐标(gcj02ll)</p>
+     *
+     * @param longitude 经度
+     * @param latitude  纬度
+     * @return GpsDTO
+     * @since 2.3.12
+     */
+    public static GpsDTO bd09ToGcj02(String longitude, String latitude) {
+        return bd09ToGcj02(Double.parseDouble(longitude), Double.parseDouble(latitude));
     }
 
     /**
@@ -67,7 +97,7 @@ public class CoordinatesUtils {
         String gcjLon = decimalFormat.format(z * Math.cos(theta));
         // 计算后的gcj02ll 纬度
         String gcjLat = decimalFormat.format(z * Math.sin(theta));
-        return new GpsDTO(Double.parseDouble(gcjLon), Double.parseDouble(gcjLat));
+        return new GpsDTO(Double.parseDouble(gcjLat), Double.parseDouble(gcjLon));
     }
 
     /**
@@ -79,6 +109,7 @@ public class CoordinatesUtils {
      * <p>
      * 北纬：2937.1526-{@code >}29.37.1526-29+37.1526÷60=29.61921°
      * </p>
+     *
      * @param degreeMinutes 度分格式:经纬度
      * @return String 经纬度
      * @since 1.7.4
@@ -157,5 +188,36 @@ public class CoordinatesUtils {
         }
         ggaDTO.setCalibrationValue(arr[arr.length - 1]);
         return ggaDTO;
+    }
+
+    /**
+     * 解析 GPRMC 信息成实体
+     *
+     * @param rmcStr rmc字符串
+     * @return RmcDTO
+     */
+    public static RmcDTO parseRmc(String rmcStr) {
+        if (EmptyUtils.isEmpty(rmcStr)) {
+            throw new ToolboxException("string is null");
+        }
+        String[] arr = rmcStr.split(","); // 用,分割
+        RmcDTO rmcDTO = new RmcDTO();
+        rmcDTO.setName(arr[0]);
+        rmcDTO.setTime(arr[1]);
+        rmcDTO.setStatus(arr[2]);
+        rmcDTO.setLatitude(arr[3]);
+        rmcDTO.setLatitudeBearing(arr[4]);
+        rmcDTO.setLongitude(arr[5]);
+        rmcDTO.setLongitudeBearing(arr[6]);
+        rmcDTO.setSpeed(arr[7]);
+        rmcDTO.setAzimuth(arr[8]);
+        rmcDTO.setDate(arr[9]);
+        rmcDTO.setMagneticDeclination(arr[10]);
+        rmcDTO.setDirectionOfMagneticDeclination(arr[11]);
+        rmcDTO.setMode(arr[11]);
+        rmcDTO.setCalibrationValue(arr[12]);
+        String dateStr = DateUtils.utcToCst(rmcDTO.getDate() + " " + rmcDTO.getTime(), "ddMMyy HHmmss");
+        rmcDTO.setReadingDate(dateStr);
+        return rmcDTO;
     }
 }

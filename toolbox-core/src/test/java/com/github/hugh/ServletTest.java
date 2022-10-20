@@ -21,7 +21,7 @@ public class ServletTest {
         request.addParameter("page", "1");
         request.addParameter("size", "20");
         Map<String, Object> contentMap = new HashMap<>();
-        contentMap.put("hostSerialNumber" , "202010260288");
+        contentMap.put("hostSerialNumber", "202010260288");
         request.addParameter("content", contentMap.toString());
         Map<String, Object> params = ServletUtils.getParams(request);
 //        assertEquals(params.toString(), "{userId=9001, page=1, size=20}");
