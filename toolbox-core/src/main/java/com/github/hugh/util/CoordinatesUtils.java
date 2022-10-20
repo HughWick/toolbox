@@ -195,6 +195,7 @@ public class CoordinatesUtils {
      *
      * @param rmcStr rmc字符串
      * @return RmcDTO
+     * @since 2.3.12
      */
     public static RmcDTO parseRmc(String rmcStr) {
         if (EmptyUtils.isEmpty(rmcStr)) {
