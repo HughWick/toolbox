@@ -1097,7 +1097,6 @@ public class DateUtils extends DateCode {
      *
      * @param utcStr   UTC 日期字符串
      * @param format   需要格式化的日期格式
-     * @param reFormat 返回的日期格式
      * @return String
      * @since 2.3.12
      */
