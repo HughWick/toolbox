@@ -4,6 +4,10 @@ import com.github.hugh.constant.DateCode;
 import com.github.hugh.util.DateUtils;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -142,5 +146,17 @@ public class DateTest {
         Date end3 = DateUtils.parseDate("2022-11-19 10:00:12");
         boolean b2 = DateUtils.greaterThanStartDate(start3, end3);
         assertTrue(b2);
+    }
+
+    // gga utc时间+8小时
+    @Test
+    void testGga(){
+        String strDate = "";
+        LocalTime localTime = LocalTime.parse(strDate, DateTimeFormatter.ofPattern("HHmmss"))
+                .atDate(LocalDate.now())
+                .atZone(ZoneOffset.ofHours(0))
+                .withZoneSameInstant(ZoneOffset.ofHours(8))
+                .toLocalTime();
+        System.out.println(localTime.toString());
     }
 }
