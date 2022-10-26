@@ -239,6 +239,9 @@ public class ListUtils {
                     stringBuilder.append(value).append(separator);
                 }
             }
+            if (EmptyUtils.isEmpty(separator)) {
+                return stringBuilder.toString();
+            }
             return StringUtils.trimLastPlace(stringBuilder);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new ToolboxException(e);

@@ -8,7 +8,10 @@ import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class EmptyTest {
+/**
+ * 测试内容是否未空工具类
+ */
+class EmptyTest {
 
     @Test
     void isEmpty() {
@@ -17,19 +20,18 @@ public class EmptyTest {
         assertTrue(EmptyUtils.isEmpty("  "));
         assertTrue(EmptyUtils.isEmpty("null"));
         assertTrue(EmptyUtils.isEmpty(new ArrayList<>()));
-        System.out.println("-8-->" + EmptyUtils.isEmpty(arr));
+        assertTrue(EmptyUtils.isEmpty(arr));
         assertTrue(EmptyUtils.isEmpty(new HashMap<>()));
         assertFalse(EmptyUtils.isEmpty(12));
         assertFalse(EmptyUtils.isEmpty("[]"));
-//        System.out.println("-9-->" + EmptyUtils.isEmpty(list));
     }
 
+    // 不为空
     @Test
     void isNotEmpty() {
-        System.out.println("---1>" + EmptyUtils.isNotEmpty("b"));
-        System.out.println("2-->" + EmptyUtils.isNotEmpty(""));
-        System.out.println("--3->" + EmptyUtils.isNotEmpty("[]"));
-//        System.out.println("--2->" + EmptyUtils.isNotEmpty("[]"));
+        assertTrue(EmptyUtils.isNotEmpty("b"));
+        assertTrue(EmptyUtils.isNotEmpty("[]"));
+        assertFalse(EmptyUtils.isNotEmpty(""));
     }
 
     @Test

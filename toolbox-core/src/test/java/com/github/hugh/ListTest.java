@@ -3,7 +3,6 @@ package com.github.hugh;
 import com.github.hugh.model.Student;
 import com.github.hugh.util.ListUtils;
 import com.github.hugh.util.regex.RegexUtils;
-import com.google.common.base.Splitter;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
@@ -16,35 +15,45 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 /**
+ * list 工具测试集合
+ *
  * @author AS
  * @date 2020/9/14 9:36
  */
-public class ListTest {
+class ListTest {
 
-
+    // 测试字符串转list集合
     @Test
-    void test02() {
+    void testGuavaStringToList() {
+//        String[] array = {"1", "2", "3", "4", "5", "6", "7"};
+//        ListUtils.guavaStringToList(strings).forEach(System.out::println);
         String single = "1db";
-        String[] array = {"1", "2", "3", "4", "5", "6", "7"};
+//        System.out.println("--1->>" + ListUtils.guavaStringToList(single));
+        assertEquals(Lists.newArrayList(single), ListUtils.guavaStringToList(single));
         String strings = "[\"Saab\", \"Volvo\", \"BMW\" ,\"   \"]";
+        assertEquals("[Saab, Volvo, BMW]", ListUtils.guavaStringToList(strings).toString());
+//        System.out.println("-2-->>" + ListUtils.guavaStringToList(strings));
         String str = "{\"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\"}";
+        assertEquals(Lists.newArrayList("{\"1", "2", "3", "4", "5", "6", "7\"}"), ListUtils.guavaStringToList(str));
+//        ListUtils.guavaStringToList(str).forEach(System.out::println);
         String str2 = "1,2 , 3, 4 ,5,6,";
+//        System.out.println("-------3333333333----------");
+//        ListUtils.guavaStringToList(str2).forEach(System.out::println);
+        assertEquals(Lists.newArrayList("1", "2", "3", "4", "5", "6"), ListUtils.guavaStringToList(str2));
         String str3 = "[1,2,3,4,5,]";
+        assertEquals(Lists.newArrayList("1", "2", "3", "4", "5"), ListUtils.guavaStringToList(str3));
+//        System.out.println("----444444444444----------");
+//        ListUtils.guavaStringToList(str3).forEach(System.out::println);
         String str4 = "[1,2,3,4,5,6, \"7\"]";
+        assertEquals(Lists.newArrayList("1", "2", "3", "4", "5", "6", "7"), ListUtils.guavaStringToList(str4));
+//        System.out.println("======5555555555555555========");
+//        ListUtils.guavaStringToList(str4).forEach(System.out::println);
         String str5 = "[[a,b,c],1,2,3,4,5,6, \"7\",89]";
-        ListUtils.guavaStringToList(strings).forEach(System.out::println);
-        System.out.println("--1->>" + ListUtils.guavaStringToList(single));
-        System.out.println("-2-->>" + ListUtils.guavaStringToList(strings));
-        ListUtils.guavaStringToList(str).forEach(System.out::println);
-        System.out.println("-------3333333333----------");
-        ListUtils.guavaStringToList(str2).forEach(System.out::println);
-        System.out.println("----444444444444----------");
-        ListUtils.guavaStringToList(str3).forEach(System.out::println);
-        System.out.println("======5555555555555555========");
-        ListUtils.guavaStringToList(str4).forEach(System.out::println);
-        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&");
-        ListUtils.guavaStringToList(str5).forEach(System.out::println);
-        System.out.println("-````````````````````````");
+        assertEquals(Lists.newArrayList("a", "b", "c", "1", "2", "3", "4", "5", "6", "7", "89"), ListUtils.guavaStringToList(str5));
+//        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&");
+//        ListUtils.guavaStringToList(str5).;
+        String str6 = "[\"Saab\", \"Volvo\", \"BMW\",[sub]]";
+        assertEquals(Lists.newArrayList("Saab", "Volvo", "BMW", "sub"), ListUtils.guavaStringToList(str6));
 //        System.out.println("--3->>" + ListUtils.guavaStringToList(str2).size());
     }
 
@@ -117,32 +126,37 @@ public class ListTest {
                 .forEach(e -> System.out.println("Id:" + e.getId() + ", Name: " + e.getName() + ", Age:" + e.getAge()));
     }
 
-    @Test
-    void test05() {
-        String strings = "[\"Saab\", \"Volvo\", \"BMW\",[sub]]";
-        String s1 = strings.substring(1);
-        System.out.println("---1>>>" + s1);
-        String s2 = s1.substring(0, s1.length() - 1);
-        System.out.println("---2>>" + s2);
-        List strings1 = Splitter.on(",").trimResults().splitToList(s2);
-        System.out.println("--3-->>" + strings1);
-//        JsonArray jsonElements = JsonObjectUtils.parseArray(strings1.get(3));
-//        System.out.println("--4-->>" + jsonElements.size());
-//        System.out.println("--4-->>" + jsonElements.get(0).getAsString());
-    }
+//    @Test
+//    void test05() {
+//        String strings = "[\"Saab\", \"Volvo\", \"BMW\",[sub]]";
+//        String s1 = strings.substring(1);
+//        System.out.println("---1>>>" + s1);
+//        String s2 = s1.substring(0, s1.length() - 1);
+//        System.out.println("---2>>" + s2);
+//        List strings1 = Splitter.on(",").trimResults().splitToList(s2);
+//        System.out.println("--3-->>" + strings1);
+////        JsonArray jsonElements = JsonObjectUtils.parseArray(strings1.get(3));
+////        System.out.println("--4-->>" + jsonElements.size());
+////        System.out.println("--4-->>" + jsonElements.get(0).getAsString());
+//    }
 
+    // 测试guava List 分页查询
     @Test
-    void test06() {
+    void testGuavaPartitionList() {
+        String str1 = "DEVICE:NETWORK:192.168.1.81";
         Set<String> allKeys = new HashSet<>();
-        allKeys.add("DEVICE:NETWORK:192.168.1.81");
+        allKeys.add(str1);
 //        ArrayList<String> strings = Lists.newArrayList("DEVICE:NETWORK:192.168.1.81");
         List<String> strings1 = ListUtils.guavaPartitionList(new ArrayList<>(allKeys), 0, 20);
-        System.out.println(strings1);
-        ArrayList<String> arrayList2 = Lists.newArrayList("DEVICE:NETWORK:192.168.1.81", "DEVICE:NETWORK:192.168.1.82");
+        assertEquals(Collections.singletonList(str1), strings1);
+//        System.out.println(strings1);
+        ArrayList<String> arrayList2 = Lists.newArrayList(str1, "DEVICE:NETWORK:192.168.1.82");
         List<String> strings2 = ListUtils.guavaPartitionList(arrayList2, 0, 20);
-        System.out.println("===>>" + strings2);
+//        System.out.println("===>>" + strings2);
+        assertEquals(Arrays.asList(str1, "DEVICE:NETWORK:192.168.1.82"), strings2);
         List<String> strings3 = ListUtils.guavaPartitionList(arrayList2, 1, 1);
-        System.out.println("=--2---->" + strings3);
+//        System.out.println("=--2---->" + strings3);
+        assertEquals(Collections.singletonList("DEVICE:NETWORK:192.168.1.82"), strings3);
         assertThrowsExactly(NullPointerException.class, () -> ListUtils.guavaPartitionList(null, 1, 1));
     }
 
@@ -157,15 +171,18 @@ public class ListTest {
         assertEquals("0,1,2,3,4,5,6,7,8,9", s);
         String s2 = ListUtils.listToString(originList, ";");
         assertEquals("0;1;2;3;4;5;6;7;8;9", s2);
+        assertEquals("0123456789", ListUtils.listToString(originList, ""));
     }
 
+    // 测试list移除
     @Test
     void testListRemoveIf() {
         List<String> strings = ListUtils.guavaStringToList("136438455@qq.com");
         strings.add("123");
         System.out.println("===>" + strings.toString());
         strings.removeIf(RegexUtils::isNotEmail);
-        strings.forEach(System.out::println);
+        assertEquals(Lists.newArrayList("136438455@qq.com"), strings);
+//        strings.forEach(System.out::println);
     }
 
     @Test

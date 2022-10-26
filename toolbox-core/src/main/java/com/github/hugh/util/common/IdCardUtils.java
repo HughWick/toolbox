@@ -85,15 +85,15 @@ public class IdCardUtils {
         }
         int length = idCard.length();
         if (before < 0) {
-            throw new ToolboxException("number before error !");
+            throw new ToolboxException("number before error");
         }
         if (rear < 0) {
-            throw new ToolboxException("number rear error !");
+            throw new ToolboxException("number rear error");
         }
         // 字符串长度小于前后要脱敏保留的数之和
         int total = before + rear;
         if (length <= total) {
-            throw new ToolboxException("id card number length error !");
+            throw new ToolboxException("id card number length error");
         }
         return idCard.replaceAll("(?<=\\w{" + before + "})\\w(?=\\w{" + rear + "})", "*");
     }

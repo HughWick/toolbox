@@ -10,7 +10,7 @@ import org.springframework.util.StopWatch;
  * @author AS
  * @date 2021/2/23 14:23
  */
-public class Ip2regeinTest {
+class Ip2regeinTest {
 
     @Test
     void parseIp2Test(){
