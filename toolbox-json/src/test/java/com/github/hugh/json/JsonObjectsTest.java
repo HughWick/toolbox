@@ -8,14 +8,12 @@ import com.github.hugh.json.gson.JsonObjectUtils;
 import com.github.hugh.json.gson.JsonObjects;
 import com.github.hugh.json.model.GsonTest;
 import com.github.hugh.json.model.Student;
-import com.github.hugh.util.ServletUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -70,19 +68,19 @@ public class JsonObjectsTest {
 
     @Test
     void testHttpRequest() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addParameter("userId", "9001");
-        request.addParameter("name", "狗蛋");
-        request.addParameter("page", "1");
-        request.addParameter("size", "20");
-        Map<String, Object> contentMap = new HashMap<>();
-        contentMap.put("hostSerialNumber", "202010260288");
+//        MockHttpServletRequest request = new MockHttpServletRequest();
+//        request.addParameter("userId", "9001");
+//        request.addParameter("name", "狗蛋");
+//        request.addParameter("page", "1");
+//        request.addParameter("size", "20");
+//        Map<String, Object> contentMap = new HashMap<>();
+//        contentMap.put("hostSerialNumber", "202010260288");
 //        contentMap.put("array", "1,2,3");
-        request.addParameter("content", contentMap.toString());
-        Map<Object, Object> params = ServletUtils.getParams(request);
-        TestRequestObject testRequestObject = JSON.parseObject(JSON.toJSONString(params), TestRequestObject.class);
+//        request.addParameter("content", contentMap.toString());
+//        Map<Object, Object> params = ServletUtils.getParams(request);
+//        TestRequestObject testRequestObject = JSON.parseObject(JSON.toJSONString(params), TestRequestObject.class);
 //        TestRequestObject testRequestObject = JsonObjectUtils.toEntity(request, TestRequestObject.class);
-        System.out.println("====>>" + testRequestObject);
+//        System.out.println("====>>" + testRequestObject);
     }
 
     /**
@@ -108,12 +106,11 @@ public class JsonObjectsTest {
         return map2;
     }
 
+    // 测试jsonObject get方法
     @Test
     void testGet() {
         String str = "{\"age\":1,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1888,\"name\":\"张三\",\"create\":\"2019-04-06 12:32:11\"}";
-        String str2 = "{\"age\":2,\"amount\":15.14,\"birthday\":null,\"create\":null,\"id\":null,\"name\":\"张三\",\"create\":\"2019-04-06\"}";
         JsonObjects json = new JsonObjects(str);
-        JsonObjects json2 = new JsonObjects(str2);
         System.out.println(json);
         System.out.println(json.toJson());
         System.out.println(json.formJson(Student.class));
@@ -122,17 +119,27 @@ public class JsonObjectsTest {
 //        System.out.println("-->"+json.getDateStr("create", "yyyy-MM-dd"));
         assertEquals(json.getDateStr("create", "yyyy-MM-dd"), "2019-04-06");
 //        assertEquals(json.getDate("create") , Date.class);
-        System.out.println("--->" + json.getDate("create"));
+//        System.out.println("--->" + json.getDate("create"));
 //        assertEquals(json.getDateStr("create") , "2019-04-06 12:32:11");
-        System.out.println("---2->>>" + json.getInt("id"));
-        System.out.println("---3->>>" + json.getDoubleValue("amount"));
-        System.out.println("--4-->>>" + json2.getString("age"));
-        System.out.println("--5-->>>" + json2.getInteger("id"));
-        System.out.println("--6-->>>" + json2.getDouble("amount"));
-        System.out.println("--7-->>>" + json2.getLong("age"));
-        System.out.println("--8-->>>" + json2.getLongValue("age"));
-        System.out.println("--9-->>>" + json2.containsKey("amount"));
-        System.out.println("----NED----");
+        assertEquals(json.getInt("id"), 1888);
+        assertEquals(json.getDoubleValue("amount"), 10.14);
+        String str2 = "{\"age\":2,\"amount\":15.14,\"birthday\":null,\"create\":null,\"id\":null,\"name\":\"张三\",\"create\":\"2019-04-06\"}";
+        JsonObjects json2 = new JsonObjects(str2);
+        assertEquals(json2.getString("age"), "2");
+        assertNull(json2.getInteger("id"));
+        assertEquals(json2.getDouble("amount"), 15.14);
+        assertEquals(json2.getLong("age"), 2);
+        assertEquals(json2.getLongValue("age"), 2);
+        assertTrue(json2.containsKey("amount"));
+//        System.out.println("---2->>>" + json.getInt("id"));
+//        System.out.println("---3->>>" + json.getDoubleValue("amount"));
+//        System.out.println("--4-->>>" + json2.getString("age"));
+//        System.out.println("--5-->>>" + json2.getInteger("id"));
+//        System.out.println("--6-->>>" + json2.getDouble("amount"));
+//        System.out.println("--7-->>>" + json2.getLong("age"));
+//        System.out.println("--8-->>>" + json2.getLongValue("age"));
+//        System.out.println("--9-->>>" + json2.containsKey("amount"));
+//        System.out.println("----NED----");
 //        String str2 = "{\"serialNo\":null,\"createBy\":null,\"createDate\":null,\"updateBy\":null,\"updateDate\":null,\"deleteBy\":null,\"deleteDate\":null,\"deleteFlag\":0," +
 //                "\"id\":81,\"ip\":null,\"zclxmc2\":\"网络交换传输\",\"cjmc\":null,\"sxxsj\":null,\"zxzts\":null,\"ywzjbdsl\":0,\"tdmc\":null,\"szs\":null,\"laniotzt\":null,\"ywzjjcsj\":null,\"gdzt\":null,\"tbzt\":0,\"txmm\":null,\"htmc\":null,\"kkmc\":null,\"fxmc\":null,\"bdzcjh\":null,\"dzjcmc\":null,\"ywzjmc\":null,\"ppmc\":\"海康\",\"zclxmc\":\"防火墙\",\"zclxmc1\":null,\"ywzjzt\":null,\"ssq_NO\":\"43010407\",\"sfmc\":\"\",\"csmc\":\"\",\"qxmc\":\"\",\"xzjdmc\":\"\",\"sbxlh\":\"123123123\",\"iccid\":null,\"zzzp\":null,\"rkdjr_ID\":null,\"bdzt\":0,\"ywzjbd_ID\":0,\"zcmc\":\"测试资产\",\"kkbd_ID\":null,\"dzjcbd_ID\":null,\"zclx\":26,\"cds\":null,\"xh\":\"0021\",\"sf\":\"430000\",\"cs\":\"430100\",\"qx\":\"430104\",\"cj\":\"1\",\"pp_ID\":1,\"sydw\":1,\"xqbm\":\"43010407\",\"xzjd\":\"43010407\",\"gldk\":\"\",\"rksj\":1591175764000,\"zxzt\":0,\"gbbm\":\"\",\"fx_ID\":0,\"zczt\":\"1\",\"xxdz\":\"\"" +
 //                ",\"jd\":\"\",\"wd\":\"\",\"dlzh\":\"\",\"dlmm\":\"\",\"ccrq\":null,\"bxq\":1,\"sbbm\":\"\",\"imei\":null,\"ht_ID\":0,\"cjdw\":0,\"ywdw\":0,\"azrq\":null}";
@@ -153,12 +160,15 @@ public class JsonObjectsTest {
 
     }
 
+    // 测试json 为空
     @Test
     void testIsNull() {
         String str = "{}";
         JsonObjects json = new JsonObjects(str);
-        System.out.println("--1-->>" + json.isNull());
-        System.out.println("--2-->>" + json.isNotNull());
+        assertTrue(json.isNull());
+        assertTrue(json.isNotNull());
+//        System.out.println("--1-->>" + json.isNull());
+//        System.out.println("--2-->>" + json.isNotNull());
 //        String str2 = null;
 //        JsonObjects json2 = new JsonObjects(str2);
 //        System.out.println("--3-->>" + json2.isNotNull());
@@ -232,8 +242,9 @@ public class JsonObjectsTest {
 //        System.out.println("==gson自定义转换实体解析提=>?>>" +o);
     }
 
+    // 测试添加属性
     @Test
-    public void testAddProperty() {
+    void testAddProperty() {
         JsonObjects jsonObjects = new JsonObjects();
         jsonObjects.addProperty("string", "111");
         jsonObjects.addProperty("int", 22);
@@ -292,14 +303,28 @@ public class JsonObjectsTest {
         }
     }
 
+    // 测试解析日期对象
     @Test
     void testDate() {
-        String str = "{\"age\":1,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1888,\"name\":\"张三\",\"create\":\"16250247130001\"}";
-        System.out.println(new JsonObjects(str).toJson());
-        String str2 = "{\"age\":2,\"amount\":15.14,\"birthday\":null,\"create\":null,\"id\":null,\"name\":\"张三\",\"create\":\"2022-03-21 18:02:11\"}";
-        System.out.println(new JsonObjects(str2).toJson());
-        String str3 = "{\"age\":2,\"amount\":15.14,\"birthday\":null,\"create\":null,\"id\":null,\"name\":\"张三\",\"create\":2022-03-21}";
-        System.out.println(new JsonObjects(str3).toJson());
+        String str = "{\"create\":\"16250247130001\"}";
+        JsonObjects jsonObjects1 = new JsonObjects();
+        jsonObjects1.addProperty("create", "16250247130001");
+        assertEquals(jsonObjects1.toJson(), new JsonObjects(str).toJson());
+//        System.out.println(new JsonObjects(str).toJson());
+        String str2 = "{\"age\":2,\"amount\":15.14,\"birthday\":null,\"name\":\"张三\",\"create\":\"2022-03-21 18:02:11\"}";
+        JsonObjects jsonObjects2 = new JsonObjects();
+        jsonObjects2.addProperty("age", 2);
+        jsonObjects2.addProperty("amount", 15.14);
+        jsonObjects2.addProperty("name", "张三");
+        jsonObjects2.addProperty("create", "2022-03-21 18:02:11");
+        assertEquals(jsonObjects2.toJson(), new JsonObjects(str2).toJson());
+        String str3 = "{\"age\":2,\"amount\":15.14,\"name\":\"张三\",\"create\":2022-03-21}";
+        JsonObjects jsonObjects3 = new JsonObjects();
+        jsonObjects3.addProperty("age", 2);
+        jsonObjects3.addProperty("amount", 15.14);
+        jsonObjects3.addProperty("name", "张三");
+        jsonObjects3.addProperty("create", "2022-03-21");
+        assertEquals(jsonObjects3.toJson(), new JsonObjects(str3).toJson());
     }
 
     @Test
@@ -353,8 +378,9 @@ class TestRequestObject {
     public String name;//
     public String userId;//
     public Sub content;
+
     @Data
-    static class Sub{
+    static class Sub {
         private String hostSerialNumber;
     }
 
