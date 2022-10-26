@@ -1,9 +1,11 @@
 package com.github.hugh.time;
 
+import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.TimeUtils;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalTime;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -57,9 +59,11 @@ public class TimeTest {
 
     }
 
+    // 测试获取昨日时间
     @Test
     void test05() {
-        System.out.println("=2=昨日开始日期==>>" + TimeUtils.getYesterdayStartTime());
+        Date date = DateUtils.getDayBeforeStartTime();
+        assertEquals(DateUtils.ofPattern(date), TimeUtils.getYesterdayStartTime());
         System.out.println("=4=昨日结束日期==>>" + TimeUtils.getYesterdayEndTime());
     }
 
