@@ -239,7 +239,8 @@ public class ListUtils {
                     stringBuilder.append(value).append(separator);
                 }
             }
-            if (EmptyUtils.isEmpty(separator)) {
+            // 切割符号为空，并且不为inSql语句
+            if (EmptyUtils.isEmpty(separator) && !inSql) {
                 return stringBuilder.toString();
             }
             return StringUtils.trimLastPlace(stringBuilder);
