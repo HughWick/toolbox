@@ -59,7 +59,7 @@ class ListTest {
 
     //无实体、针对字段排序排序
     @Test
-    public void test03() {
+    void testListObjectSort() {
         // 姓名，性别，年龄，薪资，级别，籍贯
         List<List<Object>> lists = Lists.newArrayList();
         lists.add(Arrays.asList("张三", "男", 22, 10000, "T2", "贵州遵义"));
@@ -111,19 +111,22 @@ class ListTest {
 
     // List实体排序
     @Test
-    public void test04() {
-        List<Student> list = new ArrayList<>();
-        list.add(new Student(1, "Mahesh", 12));
-        list.add(new Student(2, "Suresh", 15));
-        list.add(new Student(3, "Nilesh", 10));
-        list.add(new Student(4, "ZhangSan", 18));
-        System.out.println("---Sorting using Comparator by Age---");
+    void testListEntitySort() {
+        Student student1 = new Student(1, "Mahesh", 12);
+        Student student2 = new Student(2, "Suresh", 15);
+        Student student3 = new Student(3, "Nilesh", 10);
+        Student student4 = new Student(4, "ZhangSan", 18);
+        List<Student> list = Lists.newArrayList(student1, student2, student3, student4);
+//        System.out.println("---Sorting using Comparator by Age---");
+        List<Student> resultList = Lists.newArrayList(student3, student1, student2, student4);
         List<Student> collect = list.stream().sorted(Comparator.comparing(Student::getAge)).collect(Collectors.toList());
-        collect.forEach(e -> System.out.println("Id:" + e.getId() + ", Name: " + e.getName() + ", Age:" + e.getAge()));
-
-        System.out.println("---Sorting using Comparator by Age in reverse order---");
-        list.stream().sorted(Comparator.comparing(Student::getAge).reversed())
-                .forEach(e -> System.out.println("Id:" + e.getId() + ", Name: " + e.getName() + ", Age:" + e.getAge()));
+        assertEquals(collect, resultList);
+//        collect.forEach(e -> System.out.println("Id:" + e.getId() + ", Name: " + e.getName() + ", Age:" + e.getAge()));
+        List<Student> result2List = Lists.newArrayList(student4, student2, student1, student3);
+//        System.out.println("---Sorting using Comparator by Age in reverse order---");
+//        list.stream().sorted(Comparator.comparing(Student::getAge).reversed()).forEach(e -> System.out.println("Id:" + e.getId() + ", Name: " + e.getName() + ", Age:" + e.getAge()));
+        List<Student> reverseOrderList = list.stream().sorted(Comparator.comparing(Student::getAge).reversed()).collect(Collectors.toList());
+        assertEquals(reverseOrderList, result2List);
     }
 
 //    @Test
@@ -179,7 +182,6 @@ class ListTest {
     void testListRemoveIf() {
         List<String> strings = ListUtils.guavaStringToList("136438455@qq.com");
         strings.add("123");
-        System.out.println("===>" + strings.toString());
         strings.removeIf(RegexUtils::isNotEmail);
         assertEquals(Lists.newArrayList("136438455@qq.com"), strings);
 //        strings.forEach(System.out::println);
@@ -207,6 +209,7 @@ class ListTest {
         assertEquals("'张三','李四','王五'", ListUtils.listToInSql(list2, "name"));
     }
 
+    // list 转字符串
     @Test
     void testListObjectToString() {
         Student student = new Student();
@@ -217,13 +220,10 @@ class ListTest {
         student3.setName("王五");
         Student student4 = new Student();
         student4.setName(" ");
-        List<Student> list = new ArrayList<>();
-        list.add(student);
-        list.add(student2);
-        list.add(student3);
-        list.add(student4);
+        List<Student> list = Lists.newArrayList(student, student2, student3, student4);
         assertEquals("张三_李四_王五", ListUtils.listObjectToString(list, "name", "_"));
-        System.out.println(ListUtils.listObjectToString(list, "name"));
+        assertEquals("张三,李四,王五", ListUtils.listObjectToString(list, "name"));
+//        System.out.println();
         List<Map> listMap = new ArrayList<>();
         var item = new HashMap<>();
         item.put("name", "狗蛋");
@@ -231,6 +231,7 @@ class ListTest {
         var item2 = new HashMap<>();
         item2.put("name", "钢弹");
         listMap.add(item2);
-        System.out.println(ListUtils.listObjectToString(listMap, "name"));
+//        System.out.println(ListUtils.listObjectToString(listMap, "name"));
+        assertEquals("狗蛋,钢弹", ListUtils.listObjectToString(listMap, "name"));
     }
 }
