@@ -135,7 +135,7 @@ public class TimeUtils extends DateCode {
      * @return the hour-of-day, from 0 to 23
      * @since 2.3.6
      */
-    public static int getHour(){
+    public static int getHour() {
         return LocalDateTime.now().getHour();
     }
 
@@ -145,7 +145,7 @@ public class TimeUtils extends DateCode {
      * @return the minute-of-hour, from 0 to 59
      * @since 2.3.6
      */
-    public static int getMinute(){
+    public static int getMinute() {
         return LocalDateTime.now().getMinute();
     }
 
@@ -155,7 +155,7 @@ public class TimeUtils extends DateCode {
      * @return the second-of-minute, from 0 to 59
      * @since 2.3.6
      */
-    public static int getSecond(){
+    public static int getSecond() {
         return LocalDateTime.now().getSecond();
     }
 
@@ -427,5 +427,21 @@ public class TimeUtils extends DateCode {
                 .map(LocalDate::toString)
                 // 把流收集为List
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 格式化时分秒得字符串，并且转换成cst北京时间
+     *
+     * @param strTime 时间字符串
+     * @param format  格式
+     * @return LocalTime
+     * @since 2.3.13
+     */
+    public static LocalTime toCstTime(String strTime, String format) {
+        return LocalTime.parse(strTime, DateTimeFormatter.ofPattern(format))
+                .atDate(LocalDate.now())
+                .atZone(ZoneOffset.ofHours(0))
+                .withZoneSameInstant(ZoneOffset.ofHours(8))
+                .toLocalTime();
     }
 }

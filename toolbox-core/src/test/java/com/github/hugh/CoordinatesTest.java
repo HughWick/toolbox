@@ -59,8 +59,21 @@ class CoordinatesTest {
         System.out.println(ggaDTO);
         assertTrue(ggaDTO != null);
         assertEquals("063012.000", ggaDTO.getDate());
+        assertEquals("N", ggaDTO.getLatitudeBearing());
+        assertEquals("E", ggaDTO.getLongitudeBearing());
+        assertEquals("2", ggaDTO.getGpsStatus());
+        assertEquals("0.63", ggaDTO.getHdopHorizontalAccuracyFactor());
+        assertEquals("400.9", ggaDTO.getAltitude());
+        assertEquals("M", ggaDTO.getWaterSurfaceAltitude());
+        assertEquals("-27.1", ggaDTO.getDifferentialTime());
+        assertEquals("M", ggaDTO.getDifferentialStationId());
+        assertEquals("*5A", ggaDTO.getCalibrationValue());
+
         assertEquals("2832.9110", ggaDTO.getLatitude());
         assertEquals("10922.5671", ggaDTO.getLongitude());
+        assertEquals("21", ggaDTO.getNumberOfSatellites());
+        assertEquals("14:30:12", ggaDTO.getReadingDate());
+
 //        String str2 = "$GNGGA,033652.000,2517.4725,N,11040.8766,E,1,3,37.16,-323.4,M,-19.8,M,,*7B";
 //        GgaDTO ggaDTO2 = CoordinatesUtils.parseGga(str2);
 //        System.out.println(ggaDTO2);

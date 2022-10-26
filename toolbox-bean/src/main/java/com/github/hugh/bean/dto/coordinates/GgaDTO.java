@@ -23,4 +23,5 @@ public class GgaDTO {
     private String differentialTime;// 差分时间（从最近一次接收到差分信号开始的秒数，如果不是差分定位将为空）
     private String differentialStationId;// 差分站ID号0000 - 1023（前导位数不足则补0，如果不是差分定位将为空）
     private String calibrationValue;//校验值
+    private String readingDate;// cst（北京）时间
 }

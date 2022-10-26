@@ -136,58 +136,74 @@ public class CoordinatesUtils {
      */
     public static GgaDTO parseGga(String gga) {
         if (EmptyUtils.isEmpty(gga)) {
-            return null;
+            throw new ToolboxException("string is null");
         }
         GgaDTO ggaDTO = new GgaDTO();
         String[] arr = gga.split(","); // 用,分割
-        for (int i = 0; i < arr.length; i++) {
-            String str = arr[i];
-            switch (i) {
-                case 0:
-                    ggaDTO.setName(str);
-                    break;
-                case 1:
-                    ggaDTO.setDate(str);
-                    break;
-                case 2:
-                    ggaDTO.setLatitude(str);
-                    break;
-                case 3:
-                    ggaDTO.setLatitudeBearing(str);
-                    break;
-                case 4:
-                    ggaDTO.setLongitude(str);
-                    break;
-                case 5:
-                    ggaDTO.setLongitudeBearing(str);
-                    break;
-                case 6:
-                    ggaDTO.setGpsStatus(str);
-                    break;
-                case 7:
-                    ggaDTO.setNumberOfSatellites(str);
-                    break;
-                case 8:
-                    ggaDTO.setHdopHorizontalAccuracyFactor(str);
-                    break;
-                case 9:
-                    ggaDTO.setAltitude(str);
-                    break;
-                case 10:
-                    ggaDTO.setWaterSurfaceAltitude(str);
-                    break;
-                case 11:
-                    ggaDTO.setDifferentialTime(str);
-                    break;
-                case 12:
-                    ggaDTO.setDifferentialStationId(str);
-                    break;
-                default:
-                    break;
-            }
-        }
-        ggaDTO.setCalibrationValue(arr[arr.length - 1]);
+        ggaDTO.setName(arr[0]);
+        ggaDTO.setDate(arr[1]);
+        ggaDTO.setLatitude(arr[2]);
+        ggaDTO.setLatitudeBearing(arr[3]);
+        ggaDTO.setLongitude(arr[4]);
+        ggaDTO.setLongitudeBearing(arr[5]);
+        ggaDTO.setGpsStatus(arr[6]);
+        ggaDTO.setNumberOfSatellites(arr[7]);
+        ggaDTO.setHdopHorizontalAccuracyFactor(arr[8]);
+        ggaDTO.setAltitude(arr[9]);
+        ggaDTO.setWaterSurfaceAltitude(arr[10]);
+        ggaDTO.setDifferentialTime(arr[11]);
+        ggaDTO.setDifferentialStationId(arr[12]);
+        ggaDTO.setCalibrationValue(arr[14]);
+        ggaDTO.setReadingDate(TimeUtils.toCstTime(ggaDTO.getDate(), "HHmmss.SSS").toString());
         return ggaDTO;
+//        for (int i = 0; i < arr.length; i++) {
+//            String str = arr[i];
+//            switch (i) {
+//                case 0:
+//                    ggaDTO.setName(str);
+//                    break;
+//                case 1:
+//                    ggaDTO.setDate(str);
+//                    break;
+//                case 2:
+//                    ggaDTO.setLatitude(str);
+//                    break;
+//                case 3:
+//                    ggaDTO.setLatitudeBearing(str);
+//                    break;
+//                case 4:
+//                    ggaDTO.setLongitude(str);
+//                    break;
+//                case 5:
+//                    ggaDTO.setLongitudeBearing(str);
+//                    break;
+//                case 6:
+//                    ggaDTO.setGpsStatus(str);
+//                    break;
+//                case 7:
+//                    ggaDTO.setNumberOfSatellites(str);
+//                    break;
+//                case 8:
+//                    ggaDTO.setHdopHorizontalAccuracyFactor(str);
+//                    break;
+//                case 9:
+//                    ggaDTO.setAltitude(str);
+//                    break;
+//                case 10:
+//                    ggaDTO.setWaterSurfaceAltitude(str);
+//                    break;
+//                case 11:
+//                    ggaDTO.setDifferentialTime(str);
+//                    break;
+//                case 12:
+//                    ggaDTO.setDifferentialStationId(str);
+//                    break;
+//                default:
+//                    break;
+//            }
+//        }
+//        ggaDTO.setCalibrationValue(arr[arr.length - 1]);
+//        return ggaDTO;
     }
 
     /**

@@ -20,7 +20,7 @@ public class DateTest {
     @Test
     void test01() {
         String str = "2020-06-04 13:00:21";
-        System.out.println("--1->" + DateUtils.isDateFormat(str));
+        assertTrue(DateUtils.isDateFormat(str));
         System.out.println("-2-->" + DateUtils.parseDate(str));
         System.out.println("--3->" + DateUtils.getDate("yyyy-MM-dd"));
         System.out.println("--4->" + DateUtils.getDate(1));
@@ -148,15 +148,4 @@ public class DateTest {
         assertTrue(b2);
     }
 
-    // gga utc时间+8小时
-    @Test
-    void testGga(){
-        String strDate = "";
-        LocalTime localTime = LocalTime.parse(strDate, DateTimeFormatter.ofPattern("HHmmss"))
-                .atDate(LocalDate.now())
-                .atZone(ZoneOffset.ofHours(0))
-                .withZoneSameInstant(ZoneOffset.ofHours(8))
-                .toLocalTime();
-        System.out.println(localTime.toString());
-    }
 }

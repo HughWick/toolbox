@@ -3,6 +3,8 @@ package com.github.hugh.time;
 import com.github.hugh.util.TimeUtils;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalTime;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -39,11 +41,11 @@ public class TimeTest {
 
     @Test
     void testGetYearMonthDay() {
-        assertEquals(2022 , TimeUtils.getYear());
-        assertEquals(7 , TimeUtils.getMonth());
-        assertEquals(4 , TimeUtils.getDay());
-        assertEquals(20 , TimeUtils.getHour());
-        assertEquals(10 , TimeUtils.getMinute());
+        assertEquals(2022, TimeUtils.getYear());
+        assertEquals(7, TimeUtils.getMonth());
+        assertEquals(4, TimeUtils.getDay());
+        assertEquals(20, TimeUtils.getHour());
+        assertEquals(10, TimeUtils.getMinute());
         System.out.println(TimeUtils.getSecond());
 //        String timeStart = "2019-12-11 00:00:00";
 //        String timeEnd = "2020-12-20 23:59:59";
@@ -62,7 +64,7 @@ public class TimeTest {
     }
 
     @Test
-    void testTime(){
+    void testTime() {
         System.out.println("--1---当前日期---->>" + TimeUtils.getTime());
         System.out.println("--2---当前日期---->>" + TimeUtils.now());
         System.out.println("--月的第1天--->>" + TimeUtils.firstDayOfMonth());
@@ -70,5 +72,14 @@ public class TimeTest {
         System.out.println("---上个月的第1天------>>" + TimeUtils.earlyLastMonth());
         System.out.println("---上个月的最后1天------>>" + TimeUtils.endOfLastMonth());
         System.out.println("--在当前系统时间之后-->>" + TimeUtils.exceedSystem("2020-04-17 13:59:59"));
+    }
+
+    // gga utc时间+8小时
+    @Test
+    void testCst() {
+        String strDate = "020938.000";
+        String format = "HHmmss.SSS";
+        LocalTime localTime = TimeUtils.toCstTime(strDate, format);
+        assertEquals("10:09:38", localTime.toString());
     }
 }
