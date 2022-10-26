@@ -44,12 +44,13 @@ public class DoubleMathTest {
         assertEquals(0.33333, div2);
     }
 
+    // 测试获取字符串
     @Test
     void testGetString() {
-        String string = DoubleMathUtils.getString(1.00011);
-        System.out.println(string);
+        double d1 = 1.000011;
+        assertEquals("1", DoubleMathUtils.getString(d1));
+        assertEquals("2.01", DoubleMathUtils.getString(2.01145684));
     }
-
 
     @Test
     void testDivRound() {
@@ -63,13 +64,15 @@ public class DoubleMathTest {
         assertEquals(1, v1);
     }
 
-
+    // 测试次方
     @Test
-    void test02() {
+    void testPow() {
         var i1 = -1;
         int i2 = -2;
         double pow = Math.pow(10, -i1);
-        System.out.println("10的负一次方等于：" + pow);
+        //10的负一次方等于
+        assertEquals(10.0, pow);
+//        System.out.println("10的负一次方等于：" + pow);
         System.out.println("10的负二次方等于：" + Math.pow(10, -i2));
         System.out.println("10的负三次方等于：" + Math.pow(10, -(-3)));
         System.out.println("-1等于：" + (-1));
