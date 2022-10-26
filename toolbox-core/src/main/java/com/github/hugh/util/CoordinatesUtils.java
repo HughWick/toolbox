@@ -112,6 +112,24 @@ public class CoordinatesUtils {
      *
      * @param degreeMinutes 度分格式:经纬度
      * @return String 经纬度
+     * @since 2.3.13
+     */
+    public static String formatDegreeMinutes(String degreeMinutes) {
+        return formatDegreeMinutes(Double.parseDouble(degreeMinutes));
+    }
+
+    /**
+     * 度分格式的gga经纬度换算成wgs84的经纬度
+     * <p>
+     * 算法示例：
+     * <p>
+     * 东经：10629.6601-{@code >}106.29.6601-{@code >}106+29.6601÷60=106.494335°
+     * <p>
+     * 北纬：2937.1526-{@code >}29.37.1526-29+37.1526÷60=29.61921°
+     * </p>
+     *
+     * @param degreeMinutes 度分格式:经纬度
+     * @return String 经纬度
      * @since 1.7.4
      */
     public static String formatDegreeMinutes(double degreeMinutes) {

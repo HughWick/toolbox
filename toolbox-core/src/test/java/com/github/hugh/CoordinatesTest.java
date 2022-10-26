@@ -51,9 +51,10 @@ class CoordinatesTest {
     void testGga() {
         String lons = "2832.9191";
         String lats = "10922.5659";
-        String lon = CoordinatesUtils.formatDegreeMinutes(Double.parseDouble(lons));
-        String lat = CoordinatesUtils.formatDegreeMinutes(Double.parseDouble(lats));
-        System.out.println(lon + "-----------" + lat);
+//        String lat = ;
+//        System.out.println(lon + "-----------" + lat);
+        assertEquals("109.37609833", CoordinatesUtils.formatDegreeMinutes(Double.parseDouble(lats)));
+        assertEquals("28.54865167", CoordinatesUtils.formatDegreeMinutes(lons));
         String str = "$GNGGA,063012.000,2832.9110,N,10922.5671,E,2,21,0.63,400.9,M,-27.1,M,,*5A";
         GgaDTO ggaDTO = CoordinatesUtils.parseGga(str);
         System.out.println(ggaDTO);
@@ -68,7 +69,6 @@ class CoordinatesTest {
         assertEquals("-27.1", ggaDTO.getDifferentialTime());
         assertEquals("M", ggaDTO.getDifferentialStationId());
         assertEquals("*5A", ggaDTO.getCalibrationValue());
-
         assertEquals("2832.9110", ggaDTO.getLatitude());
         assertEquals("10922.5671", ggaDTO.getLongitude());
         assertEquals("21", ggaDTO.getNumberOfSatellites());
