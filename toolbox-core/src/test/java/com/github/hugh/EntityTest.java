@@ -11,11 +11,16 @@ import org.springframework.util.StopWatch;
 
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
+ * 测试实体工具类
+ *
  * @author AS
  * @date 2020/9/18 10:01
  */
-public class EntityTest {
+class EntityTest {
 
     @Test
     void testCopy() {
@@ -32,14 +37,22 @@ public class EntityTest {
             Student student = MapUtils.toEntityNotEmpty(Student.class, map);
             Student student2 = new Student();
             EntityUtils.copy(student, student2);
-            System.out.println("--1->>" + EntityUtils.copy(student, Student1::new));
-            System.out.println("--2-忽略>>" + EntityUtils.copy(student, Student1::new, "name", "accountName"));
-            System.out.println("--3>>" + EntityUtils.copy(student, Student1::new, (s, t) -> {
+            assertEquals(student, student2);
+            assertEquals(student.getAge(), student2.getAge());
+            Student1 copy = EntityUtils.copy(student, Student1::new, "name", "accountName");
+            assertNull(copy.getName());
+            Student1 student3 = EntityUtils.copy(student, Student1::new, (s, t) -> {
                 t.setAccount("银行账号");
-            }));
-            System.out.println("--4>>" + EntityUtils.copy(student, Student1::new, (s, t) -> {
-            }, "password"));
-            System.out.println(student + "<----->" + student2);
+            });
+            assertEquals(student3.getAccount(), "银行账号");
+//            System.out.println("--1->>" + EntityUtils.copy(student, Student1::new));
+//            System.out.println("--2-忽略>>" + EntityUtils.copy(student, Student1::new, "name", "accountName"));
+//            System.out.println("--3>>" + EntityUtils.copy(student, Student1::new, (s, t) -> {
+//                t.setAccount("银行账号");
+//            }));
+//            System.out.println("--4>>" + EntityUtils.copy(student, Student1::new, (s, t) -> {
+//            }, "password"));
+//            System.out.println(student + "<----->" + student2);
 //            System.out.println("-1-->>" + JSONObject.fromObject(student));
 //            System.out.println("-2-->>" + JSONObject.fromObject(student2));
         } catch (Exception e) {
@@ -95,6 +108,7 @@ public class EntityTest {
         }
     }
 
+    // 克隆实体类
     @Test
     void cloneTest() {
         Map<String, Object> map = new HashMap<>();
@@ -106,12 +120,16 @@ public class EntityTest {
         map.put("create", "2019-04-06 12:11:20");
         try {
             Student student = MapUtils.toEntityNotEmpty(Student.class, map);
+            assertEquals(1, student.getId());
             Student o1 = EntityUtils.deepClone(student);
-            System.out.println(student + "====" + o1);
+            assertEquals(student, o1);
+            assertNull(student.getName());
+//            System.out.println(student + "====" + o1);
 //            System.out.println(JSONObject.fromObject(student));
 //            System.out.println(JSONObject.fromObject(o1));
             o1.setName("张三");
-            System.out.println(o1);
+//            System.out.println(o1);
+            assertEquals("张三" , o1.getName());
             Student student2 = EntityUtils.deepClone(o1);
             System.out.println(student2);
         } catch (Exception e) {
@@ -119,11 +137,11 @@ public class EntityTest {
         }
     }
 
-    @Test
-    void cloneTest02() {
-        Student student2 = new Student();
-        Student o1 = EntityUtils.deepClone(student2);
-    }
+//    @Test
+//    void cloneTest02() {
+//        Student student2 = new Student();
+//        Student o1 = EntityUtils.deepClone(student2);
+//    }
 
     @Test
     void testListCopy() throws Exception {
