@@ -77,6 +77,9 @@ public class BaseConvertTest {
     @Test
     void testHexToDecString() {
         assertEquals(BaseConvertUtils.hexToDecString("8C"), "140");
+        String acHex = "80000000";
+//        System.out.println("---->" + Integer.parseInt(acHex, 16));
+        System.out.println("===>>" + BaseConvertUtils.hexToDecString(acHex));
     }
 
     @Test
@@ -139,16 +142,15 @@ public class BaseConvertTest {
         System.out.println("--->>" + BaseConvertUtils.hexBytesToString(str.getBytes()));
     }
 
+    // 16 进制转10进制数组结果
     @Test
     void testHexToDecReInt() {
         int a = 256;
         byte[] bytes1 = BaseConvertUtils.decToHexBytes(a);
         assertEquals(BaseConvertUtils.hexToDecReInt(bytes1), a);
         byte[] totalHexBytes = BaseConvertUtils.decToHexBytes(a);
-        System.out.println(Arrays.toString(totalHexBytes));
-
-        System.out.println(BaseConvertUtils.hexBytesToString(totalHexBytes));
+        assertEquals(Arrays.toString(new byte[]{1, 0}), Arrays.toString(totalHexBytes));
+//        System.out.println(Arrays.toString(totalHexBytes));
+        assertEquals("0100", BaseConvertUtils.hexBytesToString(totalHexBytes));
     }
-
-
 }

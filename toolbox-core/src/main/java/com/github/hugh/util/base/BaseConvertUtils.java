@@ -307,8 +307,8 @@ public class BaseConvertUtils {
      * @return int 十进制
      * @since 1.7.0
      */
-    public static int hexToDec(String hex) {
-        return Integer.parseInt(hex, 16);
+    public static long hexToDec(String hex) {
+        return Long.parseLong(hex, 16);
     }
 
     /**
@@ -561,6 +561,6 @@ public class BaseConvertUtils {
      */
     public static int hexToDecReInt(byte[] hexBytes) {
         String s = hexBytesToString(hexBytes);
-        return hexToDec(s);
+        return (int) hexToDec(s);
     }
 }
