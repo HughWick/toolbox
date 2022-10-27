@@ -32,7 +32,8 @@ public class BaseConvertTest {
         String str2 = "255";
         // 十进制字符串转十六进制数组
         byte[] hexToBytes = BaseConvertUtils.decToHexBytes(str2);
-        System.out.println("---1----><" + Arrays.toString(hexToBytes));
+        assertEquals(Arrays.toString(new byte[]{-1}), Arrays.toString(hexToBytes));
+//        System.out.println("---1----><" + Arrays.toString(hexToBytes));
         // 十六进制数组转 十六进制字符串
         String s = BaseConvertUtils.hexBytesToString(hexToBytes);
         assertEquals("FF", s);
@@ -55,7 +56,7 @@ public class BaseConvertTest {
         String s = BaseConvertUtils.decToBinary("4");
         assertEquals(s, "100");
         String s1 = BaseConvertUtils.decToBinary("4", 4);
-        System.out.println(s1);
+        assertEquals(s1, "0100");
     }
 
     // 二进制转十进制
