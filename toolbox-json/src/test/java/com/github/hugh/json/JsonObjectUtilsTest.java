@@ -338,9 +338,10 @@ class JsonObjectUtilsTest {
                 "\t\"a0f000004\":\t\"1659478096000\"\n" +
                 "}";
         List<Command> commands = JsonObjectUtils.parseMultipleJson(str, Command.class);
-        commands.forEach(System.out::println);
-        System.out.println("-list-->>" + JsonObjectUtils.parseMultipleJson(str));
-        System.out.println("-list-null->>" + JsonObjectUtils.parseMultipleJson(str, null));
+//        commands.forEach(System.out::println);
+        assertEquals(JsonObjectUtils.parseMultipleJson(str).size(), 2);
+//        System.out.println("-list-->>" + JsonObjectUtils.parseMultipleJson(str));
+//        System.out.println("-list-null->>" + JsonObjectUtils.parseMultipleJson(str, null));
         assertEquals(JsonObjectUtils.countJson(str), 2);
         assertEquals(JsonObjectUtils.parseMultipleJson(str, null).toString(), JsonObjectUtils.parseMultipleJson(str).toString());
 
