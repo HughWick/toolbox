@@ -3,6 +3,9 @@ package com.github.hugh.json;
 import com.github.hugh.json.gson.JsonObjectUtils;
 import com.github.hugh.json.model.Command;
 import com.github.hugh.json.model.Student;
+import com.github.hugh.util.DateUtils;
+import com.github.hugh.util.EmptyUtils;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -14,6 +17,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
+ * gson 工具类测试
  * User: AS
  * Date: 2021/12/29 9:44
  */
@@ -25,53 +29,95 @@ class JsonObjectUtilsTest {
     void testFormJson() {
         String strDate2 = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\"}";
         Student student = JsonObjectUtils.fromJson(strDate2, Student.class);
-//        JsonObject parse = JsonObjectUtils.parse(student);
-//        System.out.println("=--1->>" + parse);
-        System.out.println("=--2->>" + JsonObjectUtils.fromJson(student, Student.class));
-        System.out.println("-2-->>" + JsonObjectUtils.toJson(student));
+        Student student1 = new Student();
+        student1.setId(1);
+        student1.setAge(2);
+        student1.setName("张三");
+        student1.setAmount(10.14);
+        student1.setSystem(0);
+        assertEquals(student1.toString(), JsonObjectUtils.fromJson(student, Student.class).toString());
+        String jsonStr = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"system\":0}";
+        assertEquals(jsonStr, JsonObjectUtils.toJson(student));
+    }
+
+    @Test
+    void testAddProperty() {
+        String str1 = "{\"country\":\"国家\"}";
         JsonObject item = new JsonObject();
         item.addProperty("country", "国家");// 国家
+        assertEquals(str1, item.toString());
     }
 
     // json转对象时，日期格式测试
     @Test
     void testFormJsonDate() {
-        String tmee = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06 12:11:20\"}";
-        Student student2 = JsonObjectUtils.fromJson(tmee, Student.class, YEAR_MONTH_DAY_HOUR_MIN_SEC);
-        System.out.println("=--1>>" + student2.getCreate());
+        String dateStr = "2019-04-06 12:11:20";
+        String jsonStr = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"" + dateStr + "\"}";
+        Student student2 = JsonObjectUtils.fromJson(jsonStr, Student.class, YEAR_MONTH_DAY_HOUR_MIN_SEC);
+        assertEquals("Sat Apr 06 12:11:20 CST 2019", student2.getCreate().toString());
+        assertEquals(dateStr, DateUtils.ofPattern(student2.getCreate()));
     }
 
+    // 测试时间戳
     @Test
     void testTimeStamp() {
-        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"system\":1625024713000,\"id\":1,\"name\":\"张三\",\"create\":\"1625024713000\"}";
-        Student student1 = JsonObjectUtils.fromJsonTimeStamp(str, Student.class);
-        System.out.println(student1.toString());
-        System.out.println("--1->>" + JsonObjectUtils.toJson(student1));
+        String timeStampStr1 = "1625024713000";
+        String timeStampStr2 = "1625044713000";
+        Date date = DateUtils.parseTimestamp(Long.parseLong(timeStampStr2));
+        Student student1 = new Student();
+        student1.setId(1);
+        student1.setAge(2);
+        student1.setName("张三");
+        student1.setAmount(10.14);
+        student1.setSystem(Long.parseLong(timeStampStr1));
+        student1.setCreate(date);
+        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"system\":" + timeStampStr1 + ",\"id\":1,\"name\":\"张三\",\"create\":\"" + timeStampStr2 + "\"}";
+        Student student2 = JsonObjectUtils.fromJsonTimeStamp(str, Student.class);
+        assertEquals(student1.toString(), student2.toString());
+        assertEquals(JsonObjectUtils.toJson(student2), JsonObjectUtils.toJson(student1));
+        // 再转换回去 验证
         JsonObject parse = JsonObjectUtils.parse(str);
-        System.out.println("---2->>" + JsonObjectUtils.fromJsonTimeStamp(parse, Student.class));
+        assertEquals(student1.toString(), JsonObjectUtils.fromJsonTimeStamp(parse, Student.class).toString());
     }
 
     @Test
     void test() {
+        String ip1 = "8.8.8.8";
+        String ip2 = "8.8.4.4";
+        String ip3 = "156.154.70.1";
+        String ip4 = "156.154.71.1";
         String str = "{\"age\":2,\"amount\":10.14,\"money\":12.3456,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\",\"id\":null,\"opType\":1}";
-        String arryStr = "{ " +
+        String arrayStr = "{" +
                 "\"client\":\"127.0.0.1\"," +
                 "\"servers\":[" +
-                "    \"8.8.8.8\"," +
-                "    \"8.8.4.4\"," +
-                "    \"156.154.70.1\"," +
-                "    \"156.154.71.1\" " +
-                "    ]}";
-        JsonObject parse = JsonObjectUtils.parse(arryStr);
+                "\"" + ip1 + "\"," +
+                "\"" + ip2 + "\"," +
+                "\"" + ip3 + "\"," +
+                "\"" + ip4 + "\"" +
+                "]}";
+        ArrayList<String> arrayList = Lists.newArrayList(ip1, ip2, ip3, ip4);
+        JsonObject parse = JsonObjectUtils.parse(arrayStr);
+        assertEquals(arrayStr, parse.toString());
+//        System.out.println("-1-->>" + parse);
         JsonObject json2 = JsonObjectUtils.parse(str);
-        System.out.println("-1-->>" + parse);
         Map map = JsonObjectUtils.toMap(parse);
-        System.out.println("-2-->>" + map.get("servers"));
+        assertEquals(arrayList.toString(), map.get("servers").toString());
+//        System.out.println("-2-->>" + map.get("servers"));
+        JsonArray jsonArray = new JsonArray();
+        jsonArray.add(ip1);
+        jsonArray.add(ip2);
+        jsonArray.add(ip3);
+        jsonArray.add(ip4);
         JsonArray servers = JsonObjectUtils.getJsonArray(parse, "servers");
-        System.out.println("=--3->>" + servers);
-        System.out.println("=--4->>" + JsonObjectUtils.toArrayList(servers));
-        System.out.println("=--5->>" + JsonObjectUtils.fromJson(servers, LinkedList.class));
-        System.out.println("=--6->>" + JsonObjectUtils.getBigDecimal(json2, "money"));
+        assertNotNull(servers);
+        assertEquals(jsonArray.toString(), servers.toString());
+//        System.out.println("=--3->>" + servers);
+        assertEquals(JsonObjectUtils.toArrayList(servers).toString(), arrayList.toString());
+        assertEquals(JsonObjectUtils.fromJson(servers, LinkedList.class).toString(), arrayList.toString());
+        assertEquals("12.3456", JsonObjectUtils.getBigDecimal(json2, "money").toString());
+//        System.out.println("=--4->>" +);
+//        System.out.println("=--5->>" + JsonObjectUtils.fromJson(servers, LinkedList.class));
+//        System.out.println("=--6->>" + JsonObjectUtils.getBigDecimal(json2, "money"));
 //        String s = new Date().toString();
 //        String strDate2 = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\"}";
 //        Student student = JsonObjectUtils.fromJson(strDate2, Student.class);
@@ -103,32 +149,46 @@ class JsonObjectUtilsTest {
         assertEquals("{role=阿三, accountName=张三, account=s, name=b, age=2, id=1555, amount=10.14, system=0}", objectObjectMap3.toString());
     }
 
+    // 测试获取json中的日期对象
     @Test
     void testGetDate() {
-        Date date = new Date();
-        System.out.println("===>>" + date);
+//        Date date = new Date();
+//        System.out.println("===>>" + date);
         String str = "{\"age\":2,\"amount\":10.14,\"birthday\":\"Wed Dec 21 09:58:33 CST 2021\",\"create2\":\"2021-12-29 09:44:12\",\"id\":1,\"name\":\"张三\",\"create\":\"1625024713000\",\"createDate\":\"null\"}";
         JsonObject parse = JsonObjectUtils.parse(str);
-        System.out.println(parse);
-        System.out.println("==1==-->>" + JsonObjectUtils.getDateStr(parse, "create"));
-        System.out.println("==2==-->>" + JsonObjectUtils.getDateStr(parse, "create2"));
-        System.out.println("==3==-->>" + JsonObjectUtils.getDateStr(parse, "birthday"));
-        System.out.println("==4==-->>" + JsonObjectUtils.getDateStr(parse, "createDate"));
-        System.out.println("===========================================================");
-        System.out.println("==1==-date->>" + JsonObjectUtils.getDate(parse, "create"));
+        assertEquals(str, parse.toString());
+//        System.out.println(parse);
+        assertEquals("2021-06-30 11:45:13", JsonObjectUtils.getDateStr(parse, "create"));
+        assertEquals("2021-12-29 09:44:12", JsonObjectUtils.getDateStr(parse, "create2"));
+        assertEquals("2021-12-21 09:58:33", JsonObjectUtils.getDateStr(parse, "birthday"));
+        assertNull(JsonObjectUtils.getDateStr(parse, "createDate"));
+        assertInstanceOf(Date.class, JsonObjectUtils.getDate(parse, "create"));
     }
 
+
+    // 测试json转list集合
     @Test
     void testArray() {
-        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\",\"id\":null}";
-        JsonObject parse = JsonObjectUtils.parse(str);
-        System.out.println("--1->>" + parse);
+//        JsonObjects jsonObjects = new JsonObjects();
+//        jsonObjects.addProperty("age", 2);
+//        jsonObjects.addProperty("amount", 10.14);
+//        jsonObjects.addProperty("birthday", "null");
+//        jsonObjects.addProperty("create", "2019-04-06");
+//        jsonObjects.addProperty("id", "null");
+//        jsonObjects.addProperty("name", "张三");
+//        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\",\"id\":\"null\"}";
+//        JsonObject parse = JsonObjectUtils.parse(str);
+//        assertEquals(jsonObjects.toJson(), parse.toString());
+//        System.out.println("--1->>" + parse);
         String arr = "[1,2,3,4,5]";
-        JsonArray jsonArray = JsonObjectUtils.parseArray(arr);
-//        jsonArray.forEach(System.out::println);
-        System.out.println("-2-->>" + jsonArray);
-        String arr2 = null;
-        System.out.println("-3-->>" + JsonObjectUtils.parseArray(arr2));
+        JsonArray jsonArray1 = new JsonArray();
+        jsonArray1.add(1);
+        jsonArray1.add(2);
+        jsonArray1.add(3);
+        jsonArray1.add(4);
+        jsonArray1.add(5);
+        assertEquals(jsonArray1.toString(), JsonObjectUtils.parseArray(arr).toString());
+        assertNull(JsonObjectUtils.parseArray(null));
 
         String str2 = "[{\"serialNo\":\"1339497989051277312\",\"createBy\":1,\"createDate\":1608196182000,\"updateBy\":\"xxxx\",\"updateDate\":1615444156000,\"name\":\"张三\"}]";
         JsonArray jsonElements = JsonObjectUtils.parseArray(str2);
@@ -165,29 +225,54 @@ class JsonObjectUtilsTest {
 
     @Test
     void testSingle() throws InterruptedException {
+        StringBuffer hashCode = new StringBuffer();
         new Thread(() -> {
-            System.out.println("---4---");
+//            System.out.println("---4---");
             Gson gson = JsonObjectUtils.getInstance();
             System.out.println("---4->>" + System.identityHashCode(gson));
+            int code = System.identityHashCode(gson);
+            if (EmptyUtils.isEmpty(hashCode.toString())) {
+                hashCode.append(code);
+            } else {
+                assertEquals(String.valueOf(code) , hashCode.toString());
+            }
         }).start();
         new Thread(() -> {
-            System.out.println("---5---");
+//            System.out.println("---5---");
             Gson gson = JsonObjectUtils.getInstance();
             System.out.println("---5->>" + System.identityHashCode(gson));
+            int code = System.identityHashCode(gson);
+            if (EmptyUtils.isEmpty(hashCode.toString())) {
+                hashCode.append(code);
+            } else {
+                assertEquals(String.valueOf(code) , hashCode.toString());
+            }
         }).start();
         new Thread(() -> {
-            System.out.println("---6---");
+//            System.out.println("---6---");
             Gson gson = JsonObjectUtils.getInstance();
             System.out.println("---6->>" + System.identityHashCode(gson));
+            int code = System.identityHashCode(gson);
+            if (EmptyUtils.isEmpty(hashCode.toString())) {
+                hashCode.append(code);
+            } else {
+                assertEquals(String.valueOf(code) , hashCode.toString());
+            }
         }).start();
         new Thread(() -> {
             System.out.println("---7---");
-            Gson gson = JsonObjectUtils.getInstance();
+            Gson gson = new Gson();
+            int code = System.identityHashCode(gson);
+            if (EmptyUtils.isEmpty(hashCode.toString())) {
+                hashCode.append(code);
+            } else {
+                assertNotEquals(String.valueOf(code) , hashCode.toString());
+            }
             System.out.println("---7->>" + System.identityHashCode(gson));
         }).start();
 
         Thread.sleep(2000);
-        System.out.println("==END==");
+//        System.out.println("==END==");
     }
 
     @Test

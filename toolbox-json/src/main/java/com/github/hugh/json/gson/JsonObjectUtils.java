@@ -324,6 +324,35 @@ public class JsonObjectUtils {
     }
 
     /**
+     * json数组转 list实体对象
+     *
+     * @param str json规则的集合字符串
+     * @param <T> 泛型
+     * @return List
+     * @since 2.3.14
+     */
+    public static <T> List<T> toArrayList(String str) {
+        return toArrayList(str, null);
+    }
+
+    /**
+     * json数组转 list实体对象
+     *
+     * @param str   json规则的集合字符串
+     * @param clazz 对象
+     * @param <T>   泛型
+     * @return List
+     * @since 2.3.14
+     */
+    public static <T> List<T> toArrayList(String str, Class<T> clazz) {
+        JsonArray jsonArray = parseArray(str);
+        if (jsonArray == null) {
+            throw new ToolboxJsonException("array is null");
+        }
+        return toArrayList(jsonArray, clazz);
+    }
+
+    /**
      * 对象转换为{@link HashMap}
      *
      * <p>使用的自定义的{@link MapTypeAdapter}解析器,重写了数值转换校验</p>
