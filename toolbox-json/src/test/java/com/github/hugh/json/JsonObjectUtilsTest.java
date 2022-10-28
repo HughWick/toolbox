@@ -1,6 +1,7 @@
 package com.github.hugh.json;
 
 import com.github.hugh.json.gson.JsonObjectUtils;
+import com.github.hugh.json.gson.JsonObjects;
 import com.github.hugh.json.model.Command;
 import com.github.hugh.json.model.Student;
 import com.github.hugh.util.DateUtils;
@@ -8,7 +9,6 @@ import com.github.hugh.util.EmptyUtils;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.Test;
 
@@ -129,11 +129,19 @@ class JsonObjectUtilsTest {
     // 测试json转map
     @Test
     void testToMap() {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("age", 2);
+        map.put("amount", 10.14);
+        map.put("money", 12.3456);
+        map.put("create", "2019-04-06");
+        map.put("name", "张三");
+        map.put("opType", 1);
         String str = "{\"age\":2,\"amount\":10.14,\"money\":12.3456,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\",\"id\":null,\"opType\":1}";
         JsonObject json2 = JsonObjectUtils.parse(str);
         Student student = JsonObjectUtils.fromJson(str, Student.class);
         Map<Object, Object> objectObjectMap = JsonObjectUtils.toMap(json2);
-        System.out.println("1-->>" + objectObjectMap);
+        assertEquals(map.toString(), objectObjectMap.toString());
+//        System.out.println("1-->>" + objectObjectMap);
         assertEquals("{id=1, age=2, name=张三, amount=10.14, create=2019-04-06 00:00:00, system=0}", JsonObjectUtils.toMap(student).toString());
         // 升序验证
         assertEquals("{age=2, amount=10.14, create=2019-04-06 00:00:00, id=1, name=张三, system=0}", JsonObjectUtils.toMapSortByKeyAsc(student).toString());
@@ -192,10 +200,17 @@ class JsonObjectUtilsTest {
 
         String str2 = "[{\"serialNo\":\"1339497989051277312\",\"createBy\":1,\"createDate\":1608196182000,\"updateBy\":\"xxxx\",\"updateDate\":1615444156000,\"name\":\"张三\"}]";
         JsonArray jsonElements = JsonObjectUtils.parseArray(str2);
-        List<JsonObject> objects = JsonObjectUtils.toArrayList(jsonElements);
-        System.out.println("-=4==>>>" + objects);
+//        System.out.println("-=4==>>>" + objects);
         List<Student> students = JsonObjectUtils.toArrayList(jsonElements, Student.class);
-        students.forEach(System.out::println);
+//        System.out.println("-1->"+students);
+//        List<JsonObject> objects = JsonObjectUtils.toArrayList(jsonElements);
+//        System.out.println("-1->"+objects);
+        List<Object> objects1 = JsonObjectUtils.toArrayList(str2);
+        assertEquals(students.size(), objects1.size());
+        objects1.forEach(e -> {
+            assertInstanceOf(JsonObjects.class, new JsonObjects(e));
+            assertEquals(new JsonObjects(e).getString("name"), "张三");
+        });
     }
 
     @Test
@@ -207,21 +222,22 @@ class JsonObjectUtilsTest {
         System.out.println("---->>" + JsonObjectUtils.toJson(parse));
     }
 
-    @Test
-    void testForEach() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("a", 1);
-        Map<String, Object> map2 = new HashMap<>();
-        map2.put("b_2", "1223_sad");
-        map.put("b", map2);
-        JsonObject parse = JsonObjectUtils.parse(map);
-        assert parse != null;
-        for (Map.Entry<String, JsonElement> entrySet : parse.entrySet()) {
-            System.out.println("key>" + entrySet.getKey());
-            System.out.println("222value>" + entrySet.getValue());
-            System.out.println("--------------------------");
-        }
-    }
+//    @Test
+//    void testForEach() {
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("a", 1);
+//        Map<String, Object> map2 = new HashMap<>();
+//        map2.put("b_2", "1223_sad");
+//        map.put("b", map2);
+//        JsonObject parse = JsonObjectUtils.parse(map);
+//        assert parse != null;
+//        assertEquals();
+//        for (Map.Entry<String, JsonElement> entrySet : parse.entrySet()) {
+//            System.out.println("key>" + entrySet.getKey());
+//            System.out.println("222value>" + entrySet.getValue());
+//            System.out.println("--------------------------");
+//        }
+//    }
 
     @Test
     void testSingle() throws InterruptedException {
@@ -234,7 +250,7 @@ class JsonObjectUtilsTest {
             if (EmptyUtils.isEmpty(hashCode.toString())) {
                 hashCode.append(code);
             } else {
-                assertEquals(String.valueOf(code) , hashCode.toString());
+                assertEquals(String.valueOf(code), hashCode.toString());
             }
         }).start();
         new Thread(() -> {
@@ -245,7 +261,7 @@ class JsonObjectUtilsTest {
             if (EmptyUtils.isEmpty(hashCode.toString())) {
                 hashCode.append(code);
             } else {
-                assertEquals(String.valueOf(code) , hashCode.toString());
+                assertEquals(String.valueOf(code), hashCode.toString());
             }
         }).start();
         new Thread(() -> {
@@ -256,17 +272,18 @@ class JsonObjectUtilsTest {
             if (EmptyUtils.isEmpty(hashCode.toString())) {
                 hashCode.append(code);
             } else {
-                assertEquals(String.valueOf(code) , hashCode.toString());
+                assertEquals(String.valueOf(code), hashCode.toString());
             }
         }).start();
         new Thread(() -> {
             System.out.println("---7---");
-            Gson gson = new Gson();
+            Gson gson = JsonObjectUtils.getInstance();
+//            Gson gson = new Gson();
             int code = System.identityHashCode(gson);
             if (EmptyUtils.isEmpty(hashCode.toString())) {
                 hashCode.append(code);
             } else {
-                assertNotEquals(String.valueOf(code) , hashCode.toString());
+                assertNotEquals(String.valueOf(code), hashCode.toString());
             }
             System.out.println("---7->>" + System.identityHashCode(gson));
         }).start();

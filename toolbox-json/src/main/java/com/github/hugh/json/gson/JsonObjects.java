@@ -1,6 +1,5 @@
 package com.github.hugh.json.gson;
 
-import com.alibaba.fastjson.JSON;
 import com.github.hugh.json.exception.ToolboxJsonException;
 import com.github.hugh.json.gson.adapter.MapTypeAdapter;
 import com.github.hugh.util.EmptyUtils;
@@ -9,7 +8,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 由于使用{@link JsonObjectUtils}的方法获取值时需要每次将转{@link JsonObject}作为参数传入，所以该类在new 对象时将需要转换的参数传入，然后转换成{@link JsonObject}
@@ -314,12 +316,7 @@ public class JsonObjects extends JsonObjectUtils {
         if (clazz == null) {
             return toArrayList(jsonArray);
         }
-        List<E> resultList = new ArrayList<>();
-        for (JsonElement jsonElement : jsonArray) {
-            E e = JSON.parseObject(jsonElement.toString(), clazz);
-            resultList.add(e);
-        }
-        return resultList;
+        return toArrayList(jsonArray, clazz);
     }
 
     /**

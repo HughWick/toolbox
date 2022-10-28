@@ -2,12 +2,13 @@ package com.github.hugh.json;
 
 import com.alibaba.fastjson.JSON;
 import com.github.hugh.bean.dto.ResultDTO;
-import com.github.hugh.constant.DateCode;
 import com.github.hugh.json.exception.ToolboxJsonException;
 import com.github.hugh.json.gson.JsonObjectUtils;
 import com.github.hugh.json.gson.JsonObjects;
 import com.github.hugh.json.model.GsonTest;
 import com.github.hugh.json.model.Student;
+import com.github.hugh.util.DateUtils;
+import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -264,16 +265,49 @@ public class JsonObjectsTest {
     @Test
     void testToList() {
         String str = "{\"list\":[{\"code\":\"THXX-HTDJ-20220322-01\",\"createBy\":\"童娟\",\"createDate\":1647910685000,\"dateOfSigning\":\"2022-03-22\",\"deleteBy\":\"\",\"deleteFlag\":0,\"id\":37,\"installationAddress\":\"\",\"name\":\"研发出库（广西大化）合同\",\"partyA\":\"\",\"partyB\":\"\",\"projectName\":\"研发出库（广西大化）合同\",\"serialNo\":\"1506072686843924480\",\"updateBy\":\"\",\"useSide\":\"2022-03-21 18:02:11\"}," +
-                "{\"code\":\"THXX-HTDJ-202203021\",\"createBy\":\"肖正\",\"createDate\":1646277296000,\"dateOfSigning\":\"\",\"deleteBy\":\"\",\"deleteFlag\":0,\"id\":36,\"installationAddress\":\"\",\"name\":\"广西大化产品增补合同\",\"partyA\":\"\",\"partyB\":\"\",\"projectName\":\"广西大化产品增补\",\"serialNo\":\"1499221758891266048\",\"updateBy\":\"\",\"useSide\":\"\"}]}";
+                "{\"code\":\"THXX-HTDJ-202203022\",\"createBy\":\"肖正\",\"createDate\":1646277296000,\"dateOfSigning\":\"\",\"deleteBy\":\"\",\"deleteFlag\":0,\"id\":36,\"installationAddress\":\"\",\"name\":\"广西大化产品增补合同\",\"partyA\":\"\",\"partyB\":\"\",\"projectName\":\"广西大化产品增补\",\"serialNo\":\"1499221758891266048\",\"updateBy\":\"\",\"useSide\":null}]}";
+        ContractsDO contractsDO1 = new ContractsDO();
+        contractsDO1.setCode("THXX-HTDJ-20220322-01");
+        contractsDO1.setName("研发出库（广西大化）合同");
+        contractsDO1.setProjectName("研发出库（广西大化）合同");
+        contractsDO1.setPartyA("");
+        contractsDO1.setPartyB("");
+        contractsDO1.setUseSide(DateUtils.parse("2022-03-21 18:02:11"));
+        contractsDO1.setDateOfSigning("2022-03-22");
+        contractsDO1.setInstallationAddress("");
+        contractsDO1.setCreateDate(DateUtils.parseTimestamp(1647910685000L));
+        ContractsDO contractsDO2 = new ContractsDO();
+        contractsDO2.setCode("THXX-HTDJ-202203022");
+        contractsDO2.setName("广西大化产品增补合同");
+        contractsDO2.setProjectName("广西大化产品增补");
+        contractsDO2.setPartyA("");
+        contractsDO2.setPartyB("");
+        contractsDO2.setUseSide(null);
+        contractsDO2.setDateOfSigning("");
+        contractsDO2.setInstallationAddress("");
+        contractsDO2.setCreateDate(DateUtils.parseTimestamp(1646277296000L));
+        ArrayList<ContractsDO> contractsDOS = Lists.newArrayList(contractsDO1, contractsDO2);
+//        Lists.newArrayList(contractsDO1, contractsDO2);
         List<ContractsDO> list = new JsonObjects(str).toList("list", ContractsDO.class);
-        list.forEach(e -> {
-            String s1 = JsonObjectUtils.toJson(e);
-            System.out.println(new JsonObjects(s1).formJson(ContractsDO.class));
-            System.out.println(new JsonObjects(s1).formJson(ContractsDO.class, DateCode.YEAR_MONTH_DAY));
+        assertEquals(contractsDOS.size(), list.size());
+//        System.out.println("--1->>"+Lists.newArrayList(contractsDO1, contractsDO2).toString());
+//        System.out.println("2--->>"+list.toString());
+        assertEquals(contractsDOS.toString(), list.toString());
+//        assertArrayEquals(Lists.newArrayList(contractsDO1, contractsDO2), list);
+//        list.forEach(e -> {
+//            String s1 = JsonObjectUtils.toJson(e);
+//            System.out.println(new JsonObjects(s1).formJson(ContractsDO.class));
+//            System.out.println(new JsonObjects(s1).formJson(ContractsDO.class, DateCode.YEAR_MONTH_DAY));
 //            System.out.println( new JsonObjects(s1).formJson(ContractsDO.class));
-        });
+//        });
         List<LinkedTreeMap> jsonArray2 = new JsonObjects(str).toList("list");
-        jsonArray2.forEach(System.out::println);
+        assertEquals(contractsDOS.size(), jsonArray2.size());
+//        for (int i = 0; i < jsonArray2.size(); i++) {
+//            assertEquals(JsonObjectUtils.toJson(jsonArray2.get(i)), JsonObjectUtils.toJson(contractsDOS.get(i)));
+//        }
+//        jsonArray2.forEach(e -> {
+//            assertEquals(JsonObjectUtils.toJson(e) , );
+//        });
 //        List<ContractsDO> list1 = new JsonObjects(resultDTO.getData()).toList("list", ContractsDO.class);
 //        list1.forEach(System.out::println);
 //        System.out.println("---2>>" + jsonArray2);
@@ -373,6 +407,7 @@ public class JsonObjectsTest {
 }
 
 @Data
+//@Builder
 class ContractsDO {
 
     public String code;// 合同编号
