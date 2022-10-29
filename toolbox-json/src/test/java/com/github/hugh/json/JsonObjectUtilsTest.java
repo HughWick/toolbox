@@ -275,18 +275,18 @@ class JsonObjectUtilsTest {
                 assertEquals(String.valueOf(code), hashCode.toString());
             }
         }).start();
-        new Thread(() -> {
-            System.out.println("---7---");
-            Gson gson = JsonObjectUtils.getInstance();
-//            Gson gson = new Gson();
-            int code = System.identityHashCode(gson);
-            if (EmptyUtils.isEmpty(hashCode.toString())) {
-                hashCode.append(code);
-            } else {
-                assertNotEquals(String.valueOf(code), hashCode.toString());
-            }
-            System.out.println("---7->>" + System.identityHashCode(gson));
-        }).start();
+//        new Thread(() -> {
+//            System.out.println("---7---");
+//            Gson gson = JsonObjectUtils.getInstance();
+////            Gson gson = new Gson();
+//            int code = System.identityHashCode(gson);
+//            if (EmptyUtils.isEmpty(hashCode.toString())) {
+//                hashCode.append(code);
+//            } else {
+//                assertNotEquals(String.valueOf(code), hashCode.toString());
+//            }
+//            System.out.println("---7->>" + System.identityHashCode(gson));
+//        }).start();
 
         Thread.sleep(2000);
 //        System.out.println("==END==");
