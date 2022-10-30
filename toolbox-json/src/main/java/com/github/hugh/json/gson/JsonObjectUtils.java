@@ -2,6 +2,7 @@ package com.github.hugh.json.gson;
 
 import com.alibaba.fastjson.JSON;
 import com.github.hugh.json.exception.ToolboxJsonException;
+import com.github.hugh.json.gson.adapter.CustomDateTypeAdapter;
 import com.github.hugh.json.gson.adapter.MapTypeAdapter;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.EmptyUtils;
@@ -498,6 +499,7 @@ public class JsonObjectUtils {
         if (EmptyUtils.isNotEmpty(dateFormat)) {
             gsonBuilder.setDateFormat(dateFormat);
         }
+        gsonBuilder.registerTypeAdapter(Date.class, new CustomDateTypeAdapter());
         return fromJson(gsonBuilder, json, classOfT);
     }
 
@@ -558,11 +560,13 @@ public class JsonObjectUtils {
      * @return T 实体
      * @since 2.2.5
      */
+    @Deprecated
     public static <E, T> T fromJsonTimeStamp(E value, Class<T> classOfT) {
         GsonBuilder builder = new GsonBuilder();
         //注册一个日期解析器、将时间戳转换为Date 类型
-        builder.registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (jsonElement, typeOfT, context) ->
-                new Date(jsonElement.getAsJsonPrimitive().getAsLong()));
+//        builder.registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (jsonElement, typeOfT, context) ->
+//                new Date(jsonElement.getAsJsonPrimitive().getAsLong()));
+        builder.registerTypeAdapter(Date.class, new CustomDateTypeAdapter());
         return fromJson(builder, value, classOfT);
     }
 

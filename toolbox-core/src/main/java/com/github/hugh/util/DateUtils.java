@@ -179,8 +179,7 @@ public class DateUtils extends DateCode {
         try {
             return simpleDateFormat.parse(dateStr);
         } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
+            throw new ToolboxException(e);
         }
     }
 

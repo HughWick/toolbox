@@ -4,11 +4,10 @@ import com.github.hugh.constant.DateCode;
 import com.github.hugh.util.DateUtils;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,6 +15,18 @@ import static org.junit.jupiter.api.Assertions.*;
  * 日期测试类
  */
 public class DateTest {
+
+    @Test
+    void testParse() throws ParseException {
+        String strDateObj = "Mon Mar 21 18:02:11 CST 2022";
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+        Date d = sdf.parse(strDateObj);
+
+        Date parse = DateUtils.parseDate(strDateObj, "EEE MMM dd HH:mm:ss zzz yyyy");
+//        assertInstanceOf(Date.class, parse);
+        System.out.println(d.getTime());
+//        assertEquals(parse.getTime() , );
+    }
 
     @Test
     void test01() {

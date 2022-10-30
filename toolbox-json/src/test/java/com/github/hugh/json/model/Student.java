@@ -24,7 +24,7 @@ public class Student {
     private int age;
     private String name;
     private double amount;
-    //    private Date birthday;
+    private Date birthday;
     private Date create;
     //    private List list;
     private String sex;

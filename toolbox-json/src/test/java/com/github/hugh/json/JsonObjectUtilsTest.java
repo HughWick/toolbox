@@ -61,6 +61,7 @@ class JsonObjectUtilsTest {
     // 测试时间戳
     @Test
     void testTimeStamp() {
+        String dateStr = "2019-04-06 12:11:20";
         String timeStampStr1 = "1625024713000";
         String timeStampStr2 = "1625044713000";
         Date date = DateUtils.parseTimestamp(Long.parseLong(timeStampStr2));
@@ -71,7 +72,8 @@ class JsonObjectUtilsTest {
         student1.setAmount(10.14);
         student1.setSystem(Long.parseLong(timeStampStr1));
         student1.setCreate(date);
-        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"system\":" + timeStampStr1 + ",\"id\":1,\"name\":\"张三\",\"create\":\"" + timeStampStr2 + "\"}";
+        student1.setBirthday(DateUtils.parse(dateStr));
+        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":\"" + dateStr + "\",\"system\":" + timeStampStr1 + ",\"id\":1,\"name\":\"张三\",\"create\":\"" + timeStampStr2 + "\"}";
         Student student2 = JsonObjectUtils.fromJsonTimeStamp(str, Student.class);
         assertEquals(student1.toString(), student2.toString());
         assertEquals(JsonObjectUtils.toJson(student2), JsonObjectUtils.toJson(student1));
