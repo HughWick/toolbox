@@ -175,7 +175,12 @@ public class DateUtils extends DateCode {
         if (EmptyUtils.isEmpty(dateStr)) {
             return null;
         }
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        SimpleDateFormat simpleDateFormat;
+        if (CST_FORM.equals(format)) {
+            simpleDateFormat = new SimpleDateFormat(format, Locale.US);
+        } else {
+            simpleDateFormat = new SimpleDateFormat(format);
+        }
         try {
             return simpleDateFormat.parse(dateStr);
         } catch (ParseException e) {
@@ -898,24 +903,44 @@ public class DateUtils extends DateCode {
             return false;
         }
         try {
-            String regex;
-            if (YEAR_MONTH.equals(pattern)) {//年-月
-                regex = "\\d{4}-\\d{2}";
-            } else if (YEAR_MONTH_DAY.equals(pattern)) {//年-月-日
-                regex = "\\d{4}-\\d{2}-\\d{2}";
-            } else {// 默认校验yyyy-MM-dd HH:mm:ss
-                regex = "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}";
-            }
-            Pattern patternObj = Pattern.compile(regex);// 编译正则表达式
+            Pattern patternObj = Pattern.compile(dateRegex(pattern));// 编译正则表达式
             Matcher matcher = patternObj.matcher(timeStr);// 忽略大小写的写法
             if (matcher.matches()) {// 先验证格式
                 Date date = parseDate(timeStr, pattern);//转换格式
+                if (date == null) {
+                    return false;
+                }
+                if (CST_FORM.equals(pattern)) { // 字符串形式时验证
+                    return timeStr.equals(date.toString());
+                }
                 return timeStr.equals(format(date, pattern));// 验证时间
             }
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * 根据日期格式化的格式选择对应的正则匹配规则
+     *
+     * @param pattern 日期格式化字符串
+     * @return String 正则表达式
+     */
+    private static String dateRegex(String pattern) {
+        String regex;
+        if (YEAR_MONTH.equals(pattern)) {//年-月
+            regex = "\\d{4}-\\d{2}";
+        } else if (YEAR_MONTH_DAY.equals(pattern)) {//年-月-日
+            regex = "\\d{4}-\\d{2}-\\d{2}";
+        } else if (YEAR_MONTH_DAY_HOUR_MIN_SEC.equals(pattern)) {// yyyy-MM-dd HH:mm:ss
+            regex = "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}";
+        } else if (CST_FORM.equals(pattern)) {
+            regex = "\\D{3}\\s\\D{3}\\s\\d{2}\\s\\d{2}:\\d{2}:\\d{2}\\s\\D{3}\\s\\d{4}";
+        } else {
+            throw new ToolboxException("Unknown pattern : " + pattern);
+        }
+        return regex;
     }
 
     /**
@@ -1094,8 +1119,8 @@ public class DateUtils extends DateCode {
      * UTC时间格式转北京时间
      * 北京时间为东八时区,领先UTC时间8小时
      *
-     * @param utcStr   UTC 日期字符串
-     * @param format   需要格式化的日期格式
+     * @param utcStr UTC 日期字符串
+     * @param format 需要格式化的日期格式
      * @return String
      * @since 2.3.12
      */

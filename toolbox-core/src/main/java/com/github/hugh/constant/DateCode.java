@@ -43,4 +43,9 @@ public class DateCode {
      * 时分秒
      */
     public static final String HOUR_MIN_SEC_FORMAT_SIMPLE = "HHmmss";
+
+    /**
+     * 日期对象转字符串后的cst时间格式
+     */
+    public static final String CST_FORM = "EEE MMM dd HH:mm:ss zzz yyyy";
 }

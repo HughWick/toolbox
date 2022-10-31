@@ -14,11 +14,12 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * 日期测试类
  */
-public class DateTest {
+class DateTest {
 
     @Test
     void testParse() throws ParseException {
         String strDateObj = "Mon Mar 21 18:02:11 CST 2022";
+        System.out.println(strDateObj.length());
         SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
         Date d = sdf.parse(strDateObj);
 
@@ -94,6 +95,7 @@ public class DateTest {
         assertTrue(acrossYear2);
     }
 
+    //校验日期对象是否在某个范围天之内
     @Test
     void testIsValidDate() {
         String timeStart = "2022-05-11 00:00:00";
@@ -102,12 +104,13 @@ public class DateTest {
         assertFalse(DateUtils.isValidDate(DateUtils.parse(timeStart), 3));
     }
 
+    // 验证字符串是否为日期格式
     @Test
     void testIsDateFormat() {
         String timeStart1 = "2022-05-11 00:00:00";
         String timeStart2 = "2022-05-11";
         String timeStart3 = "2022-11";
-//        String timeStart4 = "2022-05-11 00:00:00";
+        String timeStart4 = "Thu Aug 27 18:05:49 CST 2015";
 //        String timeStart5 = "2022-05-11 00:00:00";
         assertTrue(DateUtils.isDateFormat(timeStart1, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
         assertFalse(DateUtils.isDateFormat(timeStart1 + "a", DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
@@ -115,6 +118,10 @@ public class DateTest {
         assertFalse(DateUtils.isDateFormat(timeStart2 + "b", DateCode.YEAR_MONTH_DAY));
         assertTrue(DateUtils.isDateFormat(timeStart3, DateCode.YEAR_MONTH));
         assertFalse(DateUtils.isDateFormat(timeStart3 + "b", DateCode.YEAR_MONTH));
+        assertTrue(DateUtils.isDateFormat(timeStart4, DateCode.CST_FORM));
+        assertFalse(DateUtils.isDateFormat("Thu Aug 27 18:05:49 _ST 2015", DateCode.CST_FORM));
+        assertFalse(DateUtils.isDateFormat("Thu Aug 27 18:05:49 _ST A015", DateCode.CST_FORM));
+
     }
 
     // 测试获取指定日期
