@@ -29,17 +29,22 @@ class JsonObjectUtilsTest {
 
     @Test
     void testFormJson() {
-        String strDate2 = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\"}";
-        Student student = JsonObjectUtils.fromJson(strDate2, Student.class);
+        String create = "1625024713000";
         Student student1 = new Student();
         student1.setId(1);
         student1.setAge(2);
         student1.setName("张三");
         student1.setAmount(10.14);
-        student1.setSystem(0);
-        assertEquals(student1.toString(), JsonObjectUtils.fromJson(student, Student.class).toString());
-        String jsonStr = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"system\":0}";
+        student1.setBirthday(null);
+//        student1.setSystem(0);
+        student1.setCreate(DateUtils.parseTimestamp(create));
+        String strJson1 = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"birthday\":null,\"create\":\"" + create + "\"}";
+        Student student = JsonObjectUtils.fromJson(strJson1, Student.class);
+        assertEquals(student1.toString(), student.toString());
+        String jsonStr = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"create\":\"2021-06-30 11:45:13\",\"system\":0}";
         assertEquals(jsonStr, JsonObjectUtils.toJson(student));
+        String jsonStr2 = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"create\":" + create + ",\"system\":0}";
+        assertEquals(jsonStr2, JsonObjectUtils.toJsonTimestamp(student));
     }
 
     @Test
@@ -317,6 +322,7 @@ class JsonObjectUtilsTest {
 //        System.out.println("==END==");
     }
 
+    // 测试字符串是否为json
     @Test
     void testIsJson() {
         var str = "{\"age\":1,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1888,\"name\":\"张三\",\"create\":\"16250247130001\"}";
@@ -324,14 +330,15 @@ class JsonObjectUtilsTest {
         assertTrue(JsonObjectUtils.isJsonObject(str));
         assertTrue(JsonObjectUtils.isNotJsonObject(str2));
         assertFalse(JsonObjectUtils.isJsonObject(str2));
-//        var array = "[1,2,3,4,5]";
-//        var array2 = "1,2,3,4,5";
-//        assertTrue(JsonObjectUtils.isJsonArray(array));
-//        assertFalse(JsonObjectUtils.isJsonArray(array2));
-//        assertTrue(JsonObjectUtils.isNotJsonArray(array2));
         assertTrue(JsonObjectUtils.isJsonValid(str));
         assertFalse(JsonObjectUtils.isJsonValid(""));
         assertTrue(JsonObjectUtils.isNotJsonValid(""));
+
+        var array = "[1,2,3,4,5]";
+        var array2 = "1,2,3,4,5";
+        assertTrue(JsonObjectUtils.isJsonArray(array));
+        assertFalse(JsonObjectUtils.isJsonArray(array2));
+        assertTrue(JsonObjectUtils.isNotJsonArray(array2));
 //        assertFalse(JsonObjectUtils.isNotJsonArray(array));
     }
 
