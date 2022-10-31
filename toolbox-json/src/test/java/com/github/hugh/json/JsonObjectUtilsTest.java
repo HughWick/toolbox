@@ -27,8 +27,6 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class JsonObjectUtilsTest {
 
-    static final String YEAR_MONTH_DAY_HOUR_MIN_SEC = "yyyy-MM-dd HH:mm:ss";
-
     @Test
     void testFormJson() {
         String strDate2 = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\"}";
@@ -79,6 +77,9 @@ class JsonObjectUtilsTest {
         // 再转换回去 验证
         JsonObject parse = JsonObjectUtils.parse(str);
         assertEquals(gsonDateDto1.toString(), JsonObjectUtils.fromJson(parse, GsonDateDto.class).toString());
+//        var jsonStrSimple = "{age:2,amount:10.14,birthday:" + dateStr + ",systemDate:" + timeStampStr1 + ",id:1,name:张三,createDate:" + cstDateStr + "}";
+//        GsonDateDto gsonDateDto3 = JsonObjectUtils.fromJson(jsonStrSimple, GsonDateDto.class);
+
     }
 
     //测试性能

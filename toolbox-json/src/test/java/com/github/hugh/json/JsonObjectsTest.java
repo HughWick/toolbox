@@ -12,6 +12,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.LinkedTreeMap;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
@@ -313,28 +314,38 @@ public class JsonObjectsTest {
 //        System.out.println("---2>>" + jsonArray2);
     }
 
+    // 转换无双引号的字符串
     @Test
-    void testFromJsonObject() {
-//        var str1 = "{code:006,message:测试,age:18,created:2022-03-21 18:02:11,amount:199.88,switchs:true}";
+    void testFromSimpleJsonStr() {
+        var str1 = "{code:006,message:测试,age:18,created:2022-03-21\t18:02:11,amount:199.88,switchs:true}";
+        assertThrowsExactly(JsonSyntaxException.class, () -> {
+            new JsonObjects(str1).toJson();
+        });
+        String jsonString = "{\"code\":\"006\",\"message\":\"测试\",\"age\":18,\"amount\":199.88,\"switchs\":true,\"created\":\"2021-06-30 11:45:13\"}";
 //        System.out.println(new JsonObjects(str1).toJson());
+        // 能转换成实体，但不是能转换成json
         var str = "{code:006,message:测试,age:18,created:1625024713000,amount:199.88,switchs:true}";
-        JsonObjects jsonObjects = new JsonObjects(str);
-        System.out.println("-1-->>" + jsonObjects.toJson());
-        System.out.println("-2-->>" + jsonObjects.fromJsonTimeStamp(GsonTest.class));
-        var str2 = "{\"code\":\"006\",\"message\":\"测试\",\"age\":\"18\",\"created\":\"2022-03-21 18:02:11\",\"amount\":\"199.88\",\"switchs\":\"true\"}";
-        System.out.println("=3===>>" + new JsonObjects(str2).formJson(GsonTest.class));
-        System.out.println("=4===>>" + new JsonObjects(str2).formJson(GsonTest.class));
+//        System.out.println(JsonObjectUtils.toJson(str));
+        GsonTest gsonTest = new JsonObjects(str).formJson(GsonTest.class);
+        assertEquals(jsonString, new JsonObjects(gsonTest).toJson());
+//        System.out.println("-1-->>" + jsonObjects.toJson());
+//        System.out.println("-2-->>" + jsonObjects.formJson(GsonTest.class));
+//        var str2 = "{\"code\":\"006\",\"message\":\"测试\",\"age\":\"18\",\"created\":\"2022-03-21 18:02:11\",\"amount\":\"199.88\",\"switchs\":\"true\"}";
+//        System.out.println("=3===>>" + new JsonObjects(str2).formJson(GsonTest.class));
+//        System.out.println("=4===>>" + new JsonObjects(str2).formJson(GsonTest.class));
     }
 
     @Test
     void testEntrySet() {
-        var str2 = "{code:006,message:测试,age:18,created:16250247130001,amount:199.88,switchs:true}";
-        System.out.println(new JsonObjects(str2).toJson());
+//        var str2 = "{code:006,message:测试,age:18,created:16250247130001,amount:199.88,switchs:true}";
+//        System.out.println(new JsonObjects(str2).toJson());
         var str3 = "{\"code\":\"006\",\"message\":\"测试\",\"age\":\"18\",\"created\":\"2022-03-21 18:02:11\",\"amount\":\"199.88\",\"switchs\":\"true\"}";
         JsonObjects jsonObjects = new JsonObjects(str3);
-        for (Map.Entry<String, JsonElement> entrySet : jsonObjects.entrySet()) {
-            System.out.println("===>>" + entrySet.getKey());
-        }
+        Set<Map.Entry<String, JsonElement>> entries = JsonObjectUtils.parse(str3).entrySet();
+        assertEquals(jsonObjects.entrySet(), entries);
+//        for (Map.Entry<String, JsonElement> entrySet : jsonObjects.entrySet()) {
+//            System.out.println("===>>" + entrySet.getKey());
+//        }
     }
 
     // 测试解析日期对象
