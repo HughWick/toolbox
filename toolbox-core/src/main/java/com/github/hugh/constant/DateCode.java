@@ -38,4 +38,9 @@ public class DateCode {
      * [年月日时分秒]去掉格式符号后的完整日期格式
      */
     public static final String YEAR_MONTH_DAY_HOUR_MIN_SEC_SIMPLE = "yyyyMMddHHmmss";
+
+    /**
+     * 时分秒
+     */
+    public static final String HOUR_MIN_SEC_FORMAT_SIMPLE = "HHmmss";
 }

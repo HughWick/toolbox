@@ -4,6 +4,7 @@ package com.github.hugh.util;
 import com.github.hugh.bean.dto.coordinates.GgaDTO;
 import com.github.hugh.bean.dto.coordinates.GpsDTO;
 import com.github.hugh.bean.dto.coordinates.RmcDTO;
+import com.github.hugh.constant.DateCode;
 import com.github.hugh.exception.ToolboxException;
 
 import java.math.BigDecimal;
@@ -172,56 +173,31 @@ public class CoordinatesUtils {
         ggaDTO.setDifferentialTime(arr[11]);
         ggaDTO.setDifferentialStationId(arr[12]);
         ggaDTO.setCalibrationValue(arr[14]);
-        ggaDTO.setReadingDate(TimeUtils.toCstTime(ggaDTO.getDate(), "HHmmss.SSS").toString());
+        ggaDTO.setReadingDate(TimeUtils.toCstTime(ggaDTO.getDate(), chooseTimeFormat(ggaDTO.getDate())).toString());
         return ggaDTO;
-//        for (int i = 0; i < arr.length; i++) {
-//            String str = arr[i];
-//            switch (i) {
-//                case 0:
-//                    ggaDTO.setName(str);
-//                    break;
-//                case 1:
-//                    ggaDTO.setDate(str);
-//                    break;
-//                case 2:
-//                    ggaDTO.setLatitude(str);
-//                    break;
-//                case 3:
-//                    ggaDTO.setLatitudeBearing(str);
-//                    break;
-//                case 4:
-//                    ggaDTO.setLongitude(str);
-//                    break;
-//                case 5:
-//                    ggaDTO.setLongitudeBearing(str);
-//                    break;
-//                case 6:
-//                    ggaDTO.setGpsStatus(str);
-//                    break;
-//                case 7:
-//                    ggaDTO.setNumberOfSatellites(str);
-//                    break;
-//                case 8:
-//                    ggaDTO.setHdopHorizontalAccuracyFactor(str);
-//                    break;
-//                case 9:
-//                    ggaDTO.setAltitude(str);
-//                    break;
-//                case 10:
-//                    ggaDTO.setWaterSurfaceAltitude(str);
-//                    break;
-//                case 11:
-//                    ggaDTO.setDifferentialTime(str);
-//                    break;
-//                case 12:
-//                    ggaDTO.setDifferentialStationId(str);
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
-//        ggaDTO.setCalibrationValue(arr[arr.length - 1]);
-//        return ggaDTO;
+    }
+
+    /**
+     * 根据字符串小数点后几位选择对应的时分秒，格式化格式
+     *
+     * @param timeString 时分秒格式字符串
+     * @return String 时分秒毫秒格式
+     */
+    private static String chooseTimeFormat(String timeString) {
+        int indexOf = timeString.indexOf(".");
+        if (indexOf < 0) {
+            return DateCode.HOUR_MIN_SEC_FORMAT_SIMPLE;
+        }
+        int i = timeString.length() - (indexOf + 1);
+        String format;
+        if (i == 2) {
+            format = DateCode.HOUR_MIN_SEC_FORMAT_SIMPLE + ".SS";
+        } else if (i == 1) {
+            format = DateCode.HOUR_MIN_SEC_FORMAT_SIMPLE + ".S";
+        } else {
+            format = DateCode.HOUR_MIN_SEC_FORMAT_SIMPLE + ".SSS";
+        }
+        return format;
     }
 
     /**

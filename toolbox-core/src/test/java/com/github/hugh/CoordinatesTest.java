@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * 定位测试了
@@ -51,14 +51,11 @@ class CoordinatesTest {
     void testGga() {
         String lons = "2832.9191";
         String lats = "10922.5659";
-//        String lat = ;
-//        System.out.println(lon + "-----------" + lat);
         assertEquals("109.37609833", CoordinatesUtils.formatDegreeMinutes(Double.parseDouble(lats)));
         assertEquals("28.54865167", CoordinatesUtils.formatDegreeMinutes(lons));
         String str = "$GNGGA,063012.000,2832.9110,N,10922.5671,E,2,21,0.63,400.9,M,-27.1,M,,*5A";
         GgaDTO ggaDTO = CoordinatesUtils.parseGga(str);
-        System.out.println(ggaDTO);
-        assertTrue(ggaDTO != null);
+        assertNotNull(ggaDTO);
         assertEquals("063012.000", ggaDTO.getDate());
         assertEquals("N", ggaDTO.getLatitudeBearing());
         assertEquals("E", ggaDTO.getLongitudeBearing());
@@ -73,13 +70,15 @@ class CoordinatesTest {
         assertEquals("10922.5671", ggaDTO.getLongitude());
         assertEquals("21", ggaDTO.getNumberOfSatellites());
         assertEquals("14:30:12", ggaDTO.getReadingDate());
-
-//        String str2 = "$GNGGA,033652.000,2517.4725,N,11040.8766,E,1,3,37.16,-323.4,M,-19.8,M,,*7B";
-//        GgaDTO ggaDTO2 = CoordinatesUtils.parseGga(str2);
-//        System.out.println(ggaDTO2);
-//        String lon2 = CoordinatesUtils.formatDegreeMinutes(Double.parseDouble(ggaDTO2.getLongitude()));
-//        String lat2 = CoordinatesUtils.formatDegreeMinutes(Double.parseDouble(ggaDTO2.getLatitude()));
-//        System.out.println(lon2 + "-----------" + lat2);
+        String str2 = "GNGGA,024258.00,2813.3850,N,11256.4860,E,1,11,0.85,61.5,M,,M,,*67";
+        GgaDTO ggaDTO2 = CoordinatesUtils.parseGga(str2);
+        assertEquals("10:42:58", ggaDTO2.getReadingDate());
+        String str3 = "GNGGA,021258.0,2813.3850,N,11256.4860,E,1,11,0.85,61.5,M,,M,,*67";
+        GgaDTO ggaDTO3 = CoordinatesUtils.parseGga(str3);
+        assertEquals("10:12:58", ggaDTO3.getReadingDate());
+        String str4 = "$GNGGA,033652,2517.4725,N,11040.8766,E,1,3,37.16,-323.4,M,-19.8,M,,*7B";
+        GgaDTO ggaDTO4 = CoordinatesUtils.parseGga(str4);
+        assertEquals("11:36:52", ggaDTO4.getReadingDate());
     }
 
     @Test
