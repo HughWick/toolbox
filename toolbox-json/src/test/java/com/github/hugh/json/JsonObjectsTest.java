@@ -194,22 +194,25 @@ public class JsonObjectsTest {
         JsonObjects json2 = new JsonObjects(two);
 //        JsonObjects data = json2.jsonObjects("data");
         JsonObjects data2 = json2.getThis("data");
-        System.out.println("---<>>>" + data2);
+        assertNull(data2.getDate("updateDate"));
+        assertEquals(1, data2.getLong("id"));
+//        System.out.println("---<>>>" + data2);
 //        System.out.println("---1>>" + data.getString("id"));
-        System.out.println("--2->>" + json2.getJsonObject("data"));
-        System.out.println("--3->>" + new JsonObjects(json2.getJsonObject("data")));
+//        System.out.println("--2->>" + json2.getJsonObject("data"));
+//        System.out.println("--3->>" + new JsonObjects(json2.getJsonObject("data")));
     }
 
     @Test
-    public void test04() {
+    void test04() {
         String str = "{\"code\":\"0000\",\"int2\":1,\"data\":{\"hostSerialNumber\":\"202010260288\",\"networkType\":\"iot\",\"readIdList\":[\"000f0009\",\"000f0002\",\"000f0001\"]," +
                 "\"resultList\":[{\"action\":\"W\",\"commandId\":\"000f0001\",\"commandKey\":\"GPRS_TIMED_SEND_DATA_TIME\",\"commandName\":\"GPRS-定时发送数据时间\",\"remake\":\"0|W||0006\",\"type\":0,\"unit\":\"S\",\"value\":\"0006\",\"longValue\":\"12387643876872367867326476\",\"doubleValue\":\"123.321\"}," +
                 "{\"action\":\"W\",\"commandId\":\"000f0002\",\"commandKey\":\"GPRS_HEART_BEAT_TIME\",\"commandName\":\"GPRS-网络心跳包时间\",\"remake\":\"0|W||0006\",\"type\":0,\"unit\":\"S\",\"value\":\"0006\"}," +
                 "{\"action\":\"W\",\"commandId\":\"000f0009\",\"commandKey\":\"GPRS_TIMED_READING_OF_POSITIONING_INFORMATION\",\"commandName\":\"GPRS-定时读取定位信息的时间\",\"remake\":\"0|W||0006\",\"type\":2,\"unit\":\"S\",\"value\":\"0006\"}]},\"message\":\"异步信息回调成功\"}";
-        ResultDTO resultDTO1 = JSON.parseObject(str, ResultDTO.class);
-        System.out.println("-fastjson->>" + resultDTO1);
-//        ResultDTO resultDTO = JsonObjectUtils.fromJson(str, ResultDTO.class);
+//        ResultDTO resultDTO1 = JSON.parseObject(str, ResultDTO.class);
+//        System.out.println("-fastjson->>" + resultDTO1);
+        ResultDTO resultDTO = JsonObjectUtils.fromJson(str, ResultDTO.class);
 //        System.out.println("--gson直转实体->" + resultDTO);
+//        assertEquals(resultDTO1.toString() , resultDTO.toString());
 //        JsonObjects jsonObjects = new JsonObjects(JsonObjectUtils.toJson(resultDTO.getData()));
 //        System.out.println(jsonObjects.toJson());
 //        JsonArray resultList = jsonObjects.getJsonArray("resultList");
@@ -229,13 +232,14 @@ public class JsonObjectsTest {
     // 测试添加属性
     @Test
     void testAddProperty() {
+        String jsonStr = "{\"string\":\"111\",\"int\":22,\"double\":12.34,\"long\":12345678998123124,\"boolean\":true}";
         JsonObjects jsonObjects = new JsonObjects();
         jsonObjects.addProperty("string", "111");
         jsonObjects.addProperty("int", 22);
         jsonObjects.addProperty("double", 12.34);
         jsonObjects.addProperty("long", 12345678998123124L);
         jsonObjects.addProperty("boolean", true);
-        System.out.println("--toJson->" + jsonObjects.toJson());
+        assertEquals(jsonStr, jsonObjects.toJson());
         assertFalse(jsonObjects.isEquals("a", "s"));
         assertTrue(jsonObjects.isEquals("string", "111"));
         assertTrue(jsonObjects.isNotEquals("string", "11122"));
