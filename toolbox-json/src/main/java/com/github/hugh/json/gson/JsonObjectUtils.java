@@ -471,34 +471,19 @@ public class JsonObjectUtils {
     }
 
     /**
-     * 统一任意json对象或字符串转实体类方法
-     *
-     * @param json     json
-     * @param classOfT 实体类
-     * @param <E>      入参json类型
-     * @param <T>      实体类型
-     * @return T 实体类
-     * @since 2.2.3
-     */
-    public static <E, T> T fromJson(E json, Class<T> classOfT) {
-        return fromJson(json, classOfT, null);
-    }
-
-    /**
      * 将Json字符串转换为指定实体
      *
-     * @param json       json字符串
-     * @param classOfT   实体class
-     * @param dateFormat 日期格式
-     * @param <E>        入参json类型
-     * @param <T>        实体类型
+     * @param json     json字符串
+     * @param classOfT 实体class
+     * @param <E>      入参json类型
+     * @param <T>      实体类型
      * @return 1.4.10
      */
-    public static <E, T> T fromJson(E json, Class<T> classOfT, String dateFormat) {
+    public static <E, T> T fromJson(E json, Class<T> classOfT) {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        if (EmptyUtils.isNotEmpty(dateFormat)) {
-            gsonBuilder.setDateFormat(dateFormat);
-        }
+//        if (EmptyUtils.isNotEmpty(dateFormat)) {
+//            gsonBuilder.setDateFormat(dateFormat);
+//        }
         gsonBuilder.registerTypeAdapter(Date.class, new CustomDateTypeAdapter());
         return fromJson(gsonBuilder, json, classOfT);
     }

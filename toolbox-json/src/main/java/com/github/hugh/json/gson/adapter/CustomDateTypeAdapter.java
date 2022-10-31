@@ -34,13 +34,15 @@ public class CustomDateTypeAdapter extends TypeAdapter<Date> {
             case NUMBER:
                 return new Date(in.nextLong());
             case STRING:
-                String s = in.nextString();
-                if (RegexUtils.isNumeric(s)) {
-                    return new Date(Long.parseLong(s));
-                } else if (DateUtils.isDateFormat(s)) {
-                    return DateUtils.parse(s);
-                } else if (DateUtils.isDateFormat(s, DateCode.YEAR_MONTH_DAY)) {
-                    return DateUtils.parse(s, DateCode.YEAR_MONTH_DAY);
+                String nextString = in.nextString();
+                if (RegexUtils.isNumeric(nextString)) {
+                    return new Date(Long.parseLong(nextString));
+                } else if (DateUtils.verifyDateStr(nextString,DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC)) {
+                    return DateUtils.parse(nextString);
+                } else if (DateUtils.verifyDateStr(nextString, DateCode.YEAR_MONTH_DAY)) {
+                    return DateUtils.parse(nextString, DateCode.YEAR_MONTH_DAY);
+                } else if (DateUtils.verifyDateStr(nextString, DateCode.CST_FORM)) {
+                    return DateUtils.parse(nextString, DateCode.CST_FORM);
                 }
                 return null;
             case NULL:
@@ -49,11 +51,5 @@ public class CustomDateTypeAdapter extends TypeAdapter<Date> {
             default:
                 throw new IllegalStateException("JsonToken：" + peek);
         }
-//        if (in != null) {
-//            System.out.println("---1-read>" + in.nextLong());
-//            return new Date(in.nextLong());
-//        } else {
-//            return null;
-//        }
     }
 }

@@ -160,6 +160,7 @@ public class DateUtils extends DateCode {
      * @param dateStr 日期格式的字符串
      * @return Date 日期类型对象
      */
+    @Deprecated
     public static Date parseDate(String dateStr) {
         return parseDate(dateStr, YEAR_MONTH_DAY);
     }
@@ -212,6 +213,17 @@ public class DateUtils extends DateCode {
             return null;
         }
         return new SimpleDateFormat(format).format(timestamp);
+    }
+
+    /**
+     * 将时间戳转日期对象
+     *
+     * @param timestamp 时间戳
+     * @return Date
+     * @since 2.3.14
+     */
+    public static Date parseTimestamp(String timestamp) {
+        return parseTimestamp(Long.parseLong(timestamp));
     }
 
     /**
@@ -891,34 +903,47 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 校验字符串是不是日期的格式
+     * 校验字符串是不是日期的格式，并验证日期转字符串后是否完全一致
      * <p>支持格式：yy-MM、yy-MM-dd、yyyy-MM-dd HH:mm:ss</p>
      *
-     * @param timeStr 日期字符串
+     * @param dateStr 日期字符串
      * @param pattern 日期格式
      * @return boolean {@code true} 字符串格式正确
      */
-    public static boolean isDateFormat(String timeStr, String pattern) {
-        if (EmptyUtils.isEmpty(timeStr)) {
-            return false;
-        }
+    public static boolean isDateFormat(String dateStr, String pattern) {
         try {
-            Pattern patternObj = Pattern.compile(dateRegex(pattern));// 编译正则表达式
-            Matcher matcher = patternObj.matcher(timeStr);// 忽略大小写的写法
-            if (matcher.matches()) {// 先验证格式
-                Date date = parseDate(timeStr, pattern);//转换格式
+            if (verifyDateStr(dateStr, pattern)) {// 先验证格式
+                Date date = parseDate(dateStr, pattern);//转换格式
                 if (date == null) {
                     return false;
                 }
                 if (CST_FORM.equals(pattern)) { // 字符串形式时验证
-                    return timeStr.equals(date.toString());
+                    return dateStr.equals(date.toString());
                 }
-                return timeStr.equals(format(date, pattern));// 验证时间
+                return dateStr.equals(format(date, pattern));// 验证时间
+            } else {
+                return false;
             }
-        } catch (Exception e) {
-//            e.printStackTrace();
+        } catch (Exception exception) {
+            return false;
         }
-        return false;
+    }
+
+    /**
+     * 验证字符串是否为正确的日期格式
+     *
+     * @param dateStr 日期字符串
+     * @param pattern 格式
+     * @return boolean 是日期格式返回{@code true}
+     * @since 2.3.14
+     */
+    public static boolean verifyDateStr(String dateStr, String pattern) {
+        if (EmptyUtils.isEmpty(dateStr) || EmptyUtils.isEmpty(pattern)) {
+            return false;
+        }
+        Pattern patternObj = Pattern.compile(dateRegex(pattern));// 编译正则表达式
+        Matcher matcher = patternObj.matcher(dateStr);// 忽略大小写的写法
+        return matcher.matches();
     }
 
     /**
@@ -926,6 +951,7 @@ public class DateUtils extends DateCode {
      *
      * @param pattern 日期格式化字符串
      * @return String 正则表达式
+     * @since 2.3.14
      */
     private static String dateRegex(String pattern) {
         String regex;

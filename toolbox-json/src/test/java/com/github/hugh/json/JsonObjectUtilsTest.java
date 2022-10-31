@@ -1,8 +1,11 @@
 package com.github.hugh.json;
 
+import com.alibaba.fastjson.JSON;
+import com.github.hugh.constant.DateCode;
 import com.github.hugh.json.gson.JsonObjectUtils;
 import com.github.hugh.json.gson.JsonObjects;
 import com.github.hugh.json.model.Command;
+import com.github.hugh.json.model.GsonDateDto;
 import com.github.hugh.json.model.Student;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.EmptyUtils;
@@ -11,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.Test;
+import org.springframework.util.StopWatch;
 
 import java.util.*;
 
@@ -53,34 +57,53 @@ class JsonObjectUtilsTest {
     void testFormJsonDate() {
         String dateStr = "2019-04-06 12:11:20";
         String jsonStr = "{\"age\":2,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"" + dateStr + "\"}";
-        Student student2 = JsonObjectUtils.fromJson(jsonStr, Student.class, YEAR_MONTH_DAY_HOUR_MIN_SEC);
+        Student student2 = JsonObjectUtils.fromJson(jsonStr, Student.class);
         assertEquals("Sat Apr 06 12:11:20 CST 2019", student2.getCreate().toString());
         assertEquals(dateStr, DateUtils.ofPattern(student2.getCreate()));
+        // 测试时间戳
+        String timeStampStr1 = "1625024713000";
+        String cstDateStr = "Tue Sep 08 23:58:09 CST 2020";
+        Date date = DateUtils.parseDate(cstDateStr, DateCode.CST_FORM);
+        GsonDateDto gsonDateDto1 = new GsonDateDto();
+        gsonDateDto1.setId(1);
+        gsonDateDto1.setAge(2);
+        gsonDateDto1.setName("张三");
+        gsonDateDto1.setAmount(10.14);
+        gsonDateDto1.setSystemDate(Long.parseLong(timeStampStr1));
+        gsonDateDto1.setCreateDate(date);
+        gsonDateDto1.setBirthday(DateUtils.parse(dateStr));
+        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":\"" + dateStr + "\",\"systemDate\":" + timeStampStr1 + ",\"id\":1,\"name\":\"张三\",\"createDate\":\"" + cstDateStr + "\"}";
+        GsonDateDto gsonDateDto2 = JsonObjectUtils.fromJson(str, GsonDateDto.class);
+        assertEquals(gsonDateDto1.toString(), gsonDateDto2.toString());
+        assertEquals(JsonObjectUtils.toJson(gsonDateDto2), JsonObjectUtils.toJson(gsonDateDto1));
+        // 再转换回去 验证
+        JsonObject parse = JsonObjectUtils.parse(str);
+        assertEquals(gsonDateDto1.toString(), JsonObjectUtils.fromJson(parse, GsonDateDto.class).toString());
     }
 
-    // 测试时间戳
+    //测试性能
     @Test
-    void testTimeStamp() {
+    void testFromJsonTime() {
         String dateStr = "2019-04-06 12:11:20";
         String timeStampStr1 = "1625024713000";
         String timeStampStr2 = "1625044713000";
-        Date date = DateUtils.parseTimestamp(Long.parseLong(timeStampStr2));
-        Student student1 = new Student();
-        student1.setId(1);
-        student1.setAge(2);
-        student1.setName("张三");
-        student1.setAmount(10.14);
-        student1.setSystem(Long.parseLong(timeStampStr1));
-        student1.setCreate(date);
-        student1.setBirthday(DateUtils.parse(dateStr));
-        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":\"" + dateStr + "\",\"system\":" + timeStampStr1 + ",\"id\":1,\"name\":\"张三\",\"create\":\"" + timeStampStr2 + "\"}";
-        Student student2 = JsonObjectUtils.fromJsonTimeStamp(str, Student.class);
-        assertEquals(student1.toString(), student2.toString());
-        assertEquals(JsonObjectUtils.toJson(student2), JsonObjectUtils.toJson(student1));
-        // 再转换回去 验证
-        JsonObject parse = JsonObjectUtils.parse(str);
-        assertEquals(student1.toString(), JsonObjectUtils.fromJsonTimeStamp(parse, Student.class).toString());
+        String str = "{\"age\":2,\"amount\":10.14,\"birthday\":\"" + dateStr + "\",\"systemDate\":" + timeStampStr1 + ",\"id\":1,\"name\":\"张三\",\"createDate\":\"" + timeStampStr2 + "\"}";
+//        List<GsonDateDto> list = new ArrayList<>();
+        int count = 100000;
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start("开始gson转换");
+        for (int i = 0; i < count; i++) {
+            JsonObjectUtils.fromJson(str, GsonDateDto.class);
+        }
+        stopWatch.stop();
+        stopWatch.start("开始fastjson转换");
+        for (int i = 0; i < count; i++) {
+            JSON.parseObject(str, GsonDateDto.class);
+        }
+        stopWatch.stop();
+        System.out.println(stopWatch.prettyPrint());
     }
+
 
     @Test
     void test() {
@@ -174,7 +197,6 @@ class JsonObjectUtilsTest {
         assertNull(JsonObjectUtils.getDateStr(parse, "createDate"));
         assertInstanceOf(Date.class, JsonObjectUtils.getDate(parse, "create"));
     }
-
 
     // 测试json转list集合
     @Test
@@ -277,18 +299,18 @@ class JsonObjectUtilsTest {
                 assertEquals(String.valueOf(code), hashCode.toString());
             }
         }).start();
-//        new Thread(() -> {
-//            System.out.println("---7---");
-//            Gson gson = JsonObjectUtils.getInstance();
-////            Gson gson = new Gson();
-//            int code = System.identityHashCode(gson);
-//            if (EmptyUtils.isEmpty(hashCode.toString())) {
-//                hashCode.append(code);
-//            } else {
-//                assertNotEquals(String.valueOf(code), hashCode.toString());
-//            }
-//            System.out.println("---7->>" + System.identityHashCode(gson));
-//        }).start();
+        new Thread(() -> {
+            System.out.println("---7---");
+            Gson gson = JsonObjectUtils.getInstance();
+//            Gson gson = new Gson();
+            int code = System.identityHashCode(gson);
+            if (EmptyUtils.isEmpty(hashCode.toString())) {
+                hashCode.append(code);
+            } else {
+                assertNotEquals(String.valueOf(code), hashCode.toString());
+            }
+            System.out.println("---7->>" + System.identityHashCode(gson));
+        }).start();
 
         Thread.sleep(2000);
 //        System.out.println("==END==");
