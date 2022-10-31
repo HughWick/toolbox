@@ -176,19 +176,25 @@ public class JsonObjectsTest {
 //        System.out.println("--3-->>" + json2.isNotNull());
     }
 
+    // 多层
     @Test
-    public void test03() {
+    void testMultilayer() {
+        String ip1 = "8.8.8.8";
+        String ip2 = "8.8.4.4";
+        String ip3 = "156.154.70.1";
+        String ip4 = "156.154.71.1";
         String arryStr = "{ " +
                 "\"client\":\"127.0.0.1\"," +
                 "\"servers\":[" +
-                "    \"8.8.8.8\"," +
-                "    \"8.8.4.4\"," +
-                "    \"156.154.70.1\"," +
-                "    \"156.154.71.1\" " +
+                "    \"" + ip1 + "\"," +
+                "    \"" + ip2 + "\"," +
+                "    \"" + ip3 + "\"," +
+                "    \"" + ip4 + "\" " +
                 "    ]}";
         JsonObjects json = new JsonObjects(arryStr);
         JsonArray servers = json.getJsonArray("servers");
-        System.out.println("--->>" + servers);
+//        ArrayList<String> arrayList = Lists.newArrayList(ip1, ip2, ip3, ip4);
+        assertEquals("[\"8.8.8.8\", \"8.8.4.4\", \"156.154.70.1\", \"156.154.71.1\"]", servers.asList().toString());
 
         String two = "{\n" +
                 "    \"code\": \"0000\",\n" +
@@ -209,7 +215,6 @@ public class JsonObjectsTest {
                 "    }\n" +
                 "  }";
         JsonObjects json2 = new JsonObjects(two);
-
 //        JsonObjects data = json2.jsonObjects("data");
         JsonObjects data2 = json2.getThis("data");
         System.out.println("---<>>>" + data2);
