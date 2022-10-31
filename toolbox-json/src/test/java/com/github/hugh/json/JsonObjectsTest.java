@@ -116,18 +116,18 @@ public class JsonObjectsTest {
         System.out.println(json);
         System.out.println(json.toJson());
         System.out.println(json.formJson(Student.class));
-        assertEquals(json.getString("age"), "1");
-        assertEquals(json.getDateStr("create"), "2019-04-06 12:32:11");
-        assertEquals(json.getDateStr("create", "yyyy-MM-dd"), "2019-04-06");
-        assertEquals(json.getInt("id"), 1888);
-        assertEquals(json.getDoubleValue("amount"), 10.14);
+        assertEquals("1", json.getString("age"));
+        assertEquals("2019-04-06 12:32:11", json.getDateStr("create"));
+        assertEquals("2019-04-06", json.getDateStr("create", "yyyy-MM-dd"));
+        assertEquals(1888, json.getInt("id"));
+        assertEquals(10.14, json.getDoubleValue("amount"));
         String str2 = "{\"age\":2,\"amount\":15.14,\"birthday\":null,\"create\":null,\"id\":null,\"name\":\"张三\",\"create\":\"2019-04-06\"}";
         JsonObjects json2 = new JsonObjects(str2);
-        assertEquals(json2.getString("age"), "2");
+        assertEquals("2", json2.getString("age"));
         assertNull(json2.getInteger("id"));
-        assertEquals(json2.getDouble("amount"), 15.14);
-        assertEquals(json2.getLong("age"), 2);
-        assertEquals(json2.getLongValue("age"), 2);
+        assertEquals(15.14, json2.getDouble("amount"));
+        assertEquals(2, json2.getLong("age"));
+        assertEquals(2, json2.getLongValue("age"));
         assertTrue(json2.containsKey("amount"));
     }
 

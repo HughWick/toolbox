@@ -249,7 +249,8 @@ class JsonObjectUtilsTest {
         map.put("a", 1);
         JsonObject parse = JsonObjectUtils.parse(map);
         assert parse != null;
-        System.out.println("---->>" + JsonObjectUtils.toJson(parse));
+        assertEquals("{\"a\":1}", JsonObjectUtils.toJson(parse));
+//        System.out.println("---->>" + JsonObjectUtils.toJson(parse));
     }
 
 //    @Test

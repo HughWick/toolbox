@@ -1,6 +1,7 @@
 package com.github.hugh.json.gson;
 
 import com.alibaba.fastjson.JSON;
+import com.github.hugh.constant.DateCode;
 import com.github.hugh.json.exception.ToolboxJsonException;
 import com.github.hugh.json.gson.adapter.CustomDateTypeAdapter;
 import com.github.hugh.json.gson.adapter.MapTypeAdapter;
@@ -601,7 +602,7 @@ public class JsonObjectUtils {
             return null;
         }
         Date date;
-        if (DateUtils.isDateFormat(string)) {
+        if (DateUtils.verifyDateStr(string, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC)) {
             date = DateUtils.parse(string);
         } else if (RegexUtils.isNumeric(string)) {
             date = DateUtils.parseTimestamp(Long.parseLong(string));
