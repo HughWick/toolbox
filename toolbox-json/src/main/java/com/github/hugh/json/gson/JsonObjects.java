@@ -434,4 +434,14 @@ public class JsonObjects extends JsonObjectUtils {
     public boolean isNotEmptyValue(String key) {
         return isNotEmptyValue(this.jsonObject, key);
     }
+
+    /**
+     * 获取json长度
+     *
+     * @return int
+     * @since 2.4.1
+     */
+    public int size() {
+        return this.jsonObject.size();
+    }
 }
