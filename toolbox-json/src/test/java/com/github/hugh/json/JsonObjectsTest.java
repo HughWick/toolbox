@@ -9,6 +9,7 @@ import com.github.hugh.json.model.ContractsDO;
 import com.github.hugh.json.model.GsonTest;
 import com.github.hugh.json.model.Student;
 import com.github.hugh.util.DateUtils;
+import com.github.hugh.util.ServletUtils;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -17,6 +18,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.LinkedTreeMap;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -72,18 +74,21 @@ public class JsonObjectsTest {
 
     @Test
     void testHttpRequest() {
-//        MockHttpServletRequest request = new MockHttpServletRequest();
-//        request.addParameter("userId", "9001");
-//        request.addParameter("name", "狗蛋");
-//        request.addParameter("page", "1");
-//        request.addParameter("size", "20");
-//        Map<String, Object> contentMap = new HashMap<>();
-//        contentMap.put("hostSerialNumber", "202010260288");
-//        contentMap.put("array", "1,2,3");
-//        request.addParameter("content", contentMap.toString());
-//        Map<Object, Object> params = ServletUtils.getParams(request);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("userId", "9001");
+        request.addParameter("name", "狗蛋");
+        request.addParameter("page", "1");
+        request.addParameter("size", "20");
+        Map<String, Object> contentMap = new HashMap<>();
+        contentMap.put("hostSerialNumber", "202010260288");
+        contentMap.put("array", "1,2,3");
+//        request.addParameter("content", String.valueOf(contentMap));
+        request.addParameters(contentMap);
+        Map<Object, Object> params = ServletUtils.getParams(request);
+//        System.out.println("--1->>"+params);
+//        System.out.println("-2-->>"+JsonObjectUtils.toJson(params));
 //        TestRequestObject testRequestObject = JSON.parseObject(JSON.toJSONString(params), TestRequestObject.class);
-//        TestRequestObject testRequestObject = JsonObjectUtils.toEntity(request, TestRequestObject.class);
+//        TestRequestObject testRequestObject2 = JsonObjectUtils.fromJson(request, TestRequestObject.class);
 //        System.out.println("====>>" + testRequestObject);
     }
 
@@ -210,25 +215,12 @@ public class JsonObjectsTest {
                 "\"resultList\":[{\"action\":\"W\",\"commandId\":\"000f0001\",\"commandKey\":\"GPRS_TIMED_SEND_DATA_TIME\",\"commandName\":\"GPRS-定时发送数据时间\",\"remake\":\"0|W||0006\",\"type\":0,\"unit\":\"S\",\"value\":\"0006\",\"longValue\":\"12387643876872367867326476\",\"doubleValue\":\"123.321\"}," +
                 "{\"action\":\"W\",\"commandId\":\"000f0002\",\"commandKey\":\"GPRS_HEART_BEAT_TIME\",\"commandName\":\"GPRS-网络心跳包时间\",\"remake\":\"0|W||0006\",\"type\":0,\"unit\":\"S\",\"value\":\"0006\"}," +
                 "{\"action\":\"W\",\"commandId\":\"000f0009\",\"commandKey\":\"GPRS_TIMED_READING_OF_POSITIONING_INFORMATION\",\"commandName\":\"GPRS-定时读取定位信息的时间\",\"remake\":\"0|W||0006\",\"type\":2,\"unit\":\"S\",\"value\":\"0006\"}]},\"message\":\"异步信息回调成功\"}";
-//        ResultDTO resultDTO1 = JSON.parseObject(str, ResultDTO.class);
-//        System.out.println("-fastjson->>" + resultDTO1);
         ResultDTO resultDTO = JsonObjectUtils.fromJson(str, ResultDTO.class);
-//        System.out.println("--gson直转实体->" + resultDTO);
-//        assertEquals(resultDTO1.toString() , resultDTO.toString());
-//        JsonObjects jsonObjects = new JsonObjects(JsonObjectUtils.toJson(resultDTO.getData()));
-//        System.out.println(jsonObjects.toJson());
-//        JsonArray resultList = jsonObjects.getJsonArray("resultList");
-//        for (JsonElement jsonElement : resultList) {
-//            testCommand testCommand = JsonObjectUtils.fromJson(new JsonObjects(jsonElement).toJson(), testCommand.class);
-//            System.out.println(testCommand);
-//        }
-//        GsonBuilder gsonBuilder = new GsonBuilder();
-//        gsonBuilder.registerTypeAdapter(new TypeToken<ResultDTO>() {
-//        }.getType(), new MapDeserializerDoubleAsIntFix());
-//        Gson gson = gsonBuilder.create();
-//        ResultDTO o = gson.fromJson(str, new TypeToken<ResultDTO>() {
-//        }.getType());
-//        System.out.println("==gson自定义转换实体解析提=>?>>" +o);
+        assertEquals("0000", resultDTO.getCode());
+        JsonObjects jsonObjects = new JsonObjects(JsonObjectUtils.toJson(resultDTO.getData()));
+        assertEquals(4, jsonObjects.size());
+        JsonArray resultList = jsonObjects.getJsonArray("resultList");
+        assertEquals(3,resultList.size());
     }
 
     // 测试添加属性
