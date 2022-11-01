@@ -156,6 +156,17 @@ public class BaseConvertUtils {
 
     /**
      * 十进制转二进制
+     *
+     * @param decimal 十进制
+     * @return String 二进制
+     * @since 2.4.1
+     */
+    public static String decToBinary(long decimal) {
+        return Long.toBinaryString(decimal);
+    }
+
+    /**
+     * 十进制转二进制
      * <p>默认左边不进行补位</p>
      *
      * @param str 字符串
@@ -163,7 +174,7 @@ public class BaseConvertUtils {
      * @since 1.7.0
      */
     public static String decToBinary(String str) {
-        return decToBinary(Integer.parseInt(str), 0);
+        return decToBinary(Long.parseLong(str));
     }
 
     /**
@@ -186,7 +197,20 @@ public class BaseConvertUtils {
      * @return String 补0后的二进制
      */
     public static String decToBinary(int num, int digits) {
-        String str = Integer.toBinaryString(num);
+        String str = Long.toBinaryString(num);
+        return complement(str, digits);
+    }
+
+    /**
+     * 十进制转二进制
+     *
+     * @param num    需要转换的十进制数
+     * @param digits 保留二进制的位数（左边补零时才生效）
+     * @return String 补0后的二进制
+     * @since 2.4.1
+     */
+    public static String decToBinary(long num, int digits) {
+        String str = Long.toBinaryString(num);
         return complement(str, digits);
     }
 

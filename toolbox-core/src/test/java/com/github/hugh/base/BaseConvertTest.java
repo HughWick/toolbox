@@ -51,27 +51,32 @@ public class BaseConvertTest {
     // 十进制转二进制
     @Test
     void testDecToBinary() {
-        assertEquals(BaseConvertUtils.decToBinary(10, 12), "000000001010");
-        assertEquals(BaseConvertUtils.decToBinary(10), "1010");
+        String str = "043F";
+        long l = BaseConvertUtils.hexToDec(str);
+        assertEquals(1087L , l);
+        assertEquals("10000111111" ,BaseConvertUtils.decToBinary(l));
+        assertEquals("0000010000111111" ,BaseConvertUtils.decToBinary(l,16));
+        assertEquals("000000001010", BaseConvertUtils.decToBinary(10, 12));
+        assertEquals("1010", BaseConvertUtils.decToBinary(10));
         String s = BaseConvertUtils.decToBinary("4");
-        assertEquals(s, "100");
+        assertEquals("100", s);
         String s1 = BaseConvertUtils.decToBinary("4", 4);
-        assertEquals(s1, "0100");
+        assertEquals("0100", s1);
     }
 
     // 二进制转十进制
     @Test
     void testBinaryToDec() {
         String s = BaseConvertUtils.binaryToDec("100");
-        assertEquals(s, "4");
+        assertEquals("4", s);
     }
 
     // 十六进制转二进制
     @Test
     void testHexToBinary() {
         String str = "043F";
-        assertEquals(BaseConvertUtils.hexToBinary(str, 15), "000010000111111");
-        assertEquals(BaseConvertUtils.hexToBinary(str), "10000111111");
+        assertEquals("000010000111111", BaseConvertUtils.hexToBinary(str, 15));
+        assertEquals("10000111111", BaseConvertUtils.hexToBinary(str));
     }
 
     // 十六进制转10进制字符串
