@@ -148,7 +148,7 @@ public class Crc16Utils {
      */
     public static String generate(int length) {
         if (length < 0) {
-            throw new CryptoException("length error !");
+            throw new CryptoException("length error ");
         }
         String random = AppkeyUtils.generate().substring(0, length);
         String code = random + getVerCode(random);//根据八位数随机码、计算一个crc16的校验码
@@ -227,7 +227,7 @@ public class Crc16Utils {
     public static String getModbusChecksum(String data, boolean sequence) {
         data = data.replace(" ", "");
         int len = data.length();
-        if (!((len % 2) == 0)) {
+        if (((len % 2) != 0)) {
             return "0000";
         }
         int num = len / 2;
@@ -263,22 +263,22 @@ public class Crc16Utils {
      */
     public static String getModbusChecksum(byte[] bytes, boolean sequence) {
         //CRC寄存器全为1
-        int CRC = 0x0000ffff;
+        int crcHex = 0x0000ffff;
         //多项式校验值
         int polynomial = 0x0000a001;
         for (byte aByte : bytes) {
-            CRC ^= (aByte & 0x000000ff);
+            crcHex ^= (aByte & 0x000000ff);
             for (int j = 0; j < 8; j++) {
-                if ((CRC & 0x00000001) != 0) {
-                    CRC >>= 1;
-                    CRC ^= polynomial;
+                if ((crcHex & 0x00000001) != 0) {
+                    crcHex >>= 1;
+                    crcHex ^= polynomial;
                 } else {
-                    CRC >>= 1;
+                    crcHex >>= 1;
                 }
             }
         }
         //结果转换为16进制
-        String result = Integer.toHexString(CRC).toUpperCase();
+        String result = Integer.toHexString(crcHex).toUpperCase();
         if (result.length() != 4) {
             StringBuilder stringBuilder = new StringBuilder("0000");
             result = stringBuilder.replace(4 - result.length(), 4, result).toString();
