@@ -9,12 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * 进制转换测试类
+ * 二、十、十六进制转换测试类
  *
  * @author AS
  * @date 2020/9/14 14:58
  */
-public class BaseConvertTest {
+class BaseConvertTest {
 
     // 十进制转 十六进制字符串
     @Test
@@ -38,7 +38,7 @@ public class BaseConvertTest {
         String s = BaseConvertUtils.hexBytesToString(hexToBytes);
         assertEquals("FF", s);
         String str = "6162";
-        assertEquals(BaseConvertUtils.hexToAscii(str), "ab");
+        assertEquals("ab", BaseConvertUtils.hexToAscii(str));
         // 十进制的数组
         byte[] dec = {84, 48, 1, 0, 4, 49, 50, 51, 52};
         // 十六进制的字符串
@@ -53,9 +53,9 @@ public class BaseConvertTest {
     void testDecToBinary() {
         String str = "043F";
         long l = BaseConvertUtils.hexToDec(str);
-        assertEquals(1087L , l);
-        assertEquals("10000111111" ,BaseConvertUtils.decToBinary(l));
-        assertEquals("0000010000111111" ,BaseConvertUtils.decToBinary(l,16));
+        assertEquals(1087L, l);
+        assertEquals("10000111111", BaseConvertUtils.decToBinary(l));
+        assertEquals("0000010000111111", BaseConvertUtils.decToBinary(l, 16));
         assertEquals("000000001010", BaseConvertUtils.decToBinary(10, 12));
         assertEquals("1010", BaseConvertUtils.decToBinary(10));
         String s = BaseConvertUtils.decToBinary("4");
@@ -82,10 +82,9 @@ public class BaseConvertTest {
     // 十六进制转10进制字符串
     @Test
     void testHexToDecString() {
-        assertEquals(BaseConvertUtils.hexToDecString("8C"), "140");
+        assertEquals("140", BaseConvertUtils.hexToDecString("8C"));
         String acHex = "80000000";
-//        System.out.println("---->" + Integer.parseInt(acHex, 16));
-        System.out.println("===>>" + BaseConvertUtils.hexToDecString(acHex));
+        assertEquals("2147483648", BaseConvertUtils.hexToDecString(acHex));
     }
 
     @Test
@@ -95,17 +94,16 @@ public class BaseConvertTest {
         String str2 = "4A3F7F40";
         String str3 = "7869616f7a68693130323031";
         byte[] bytes = BaseConvertUtils.hexToBytes(str);
-        System.out.println("--0->>>" + Arrays.toString(bytes));
+        assertArrayEquals(new byte[]{4, 63}, bytes);
         byte bytes2 = BaseConvertUtils.hexToByte(str2);
-        System.out.println(String.valueOf(bytes2));
+        assertEquals("64", String.valueOf(bytes2));
         String s = BaseConvertUtils.hexToAscii(str2);
-        System.out.println("---1->>>" + s);
         String s1 = BaseConvertUtils.asciiToHex(s);
-        System.out.println("==2=>>" + s1);
+        assertEquals(str2, s1);
         String s2 = BaseConvertUtils.asciiToHex(s, "_");
-        System.out.println("==3=>>" + s2);
+        assertEquals("4A_3F_7F_40", s2);
         String s3 = BaseConvertUtils.asciiToHex(s, " ");
-        System.out.println("==3=>>" + s3);
+        assertEquals("4A 3F 7F 40", s3);
         assertEquals(asciiStr, BaseConvertUtils.hexToAscii(str3));
     }
 
@@ -121,7 +119,7 @@ public class BaseConvertTest {
         assertEquals(zhouHex, tex.toUpperCase());
 
         String s = BaseConvertUtils.asciiToHex("4");
-        assertEquals(s, "34");
+        assertEquals("34", s);
 
         String str1 = "7e 00 18 20 20 10 26 02 88 87 00 10 00 0b 7a 68 6f 75 35 39 37 38 38 31 c6 7e";
         String[] strings = str1.split(" ");
@@ -134,6 +132,7 @@ public class BaseConvertTest {
         assertArrayEquals(bytes, hexToBytes);
     }
 
+    // 测试int转byte数组
     @Test
     void testIntToByte() {
         String str1 = "FC";
@@ -144,8 +143,8 @@ public class BaseConvertTest {
         assertEquals(str1, s.toUpperCase());
         String str = "252";
         // 字符串获取getBytes为十进制数组
-        System.out.println(Arrays.toString(str.getBytes()));
-        System.out.println("--->>" + BaseConvertUtils.hexBytesToString(str.getBytes()));
+        assertArrayEquals(new byte[]{50, 53, 50}, str.getBytes());
+        assertEquals("323532", BaseConvertUtils.hexBytesToString(str.getBytes()));
     }
 
     // 16 进制转10进制数组结果
@@ -158,5 +157,9 @@ public class BaseConvertTest {
         assertEquals(Arrays.toString(new byte[]{1, 0}), Arrays.toString(totalHexBytes));
 //        System.out.println(Arrays.toString(totalHexBytes));
         assertEquals("0100", BaseConvertUtils.hexBytesToString(totalHexBytes));
+
+        int length = 100;
+        byte[] bytes = BaseConvertUtils.decToHexBytes(length);
+        assertArrayEquals(new byte[]{100}, bytes);
     }
 }

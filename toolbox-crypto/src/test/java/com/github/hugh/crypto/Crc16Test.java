@@ -16,11 +16,18 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class Crc16Test {
 
+    // 测试验证
     @Test
-    void test01() {
-        String m = Crc16Utils.generate();
-        System.out.println("==1=>" + m);
-        assertTrue(Crc16Utils.checkCode(m));
+    void testDefCrc16() {
+        String code1 = Crc16Utils.generate();
+//        System.out.println("==1=>" + m);
+        assertEquals(10, code1.length());
+        assertTrue(Crc16Utils.checkCode(code1));
+        String code2 = Crc16Utils.generate(12);
+        assertEquals(14, code2.length());
+        assertTrue(Crc16Utils.checkCode(code2));
+//        String code3 = "48F432E3F9";
+//        System.out.println("--->>" + Crc16Utils.getVerCode(code3));
 //        System.out.println("==2=>" + get("48F432E3F9"));
 //        System.out.println(getVerCode("E5FF01140813"));
 //        System.out.println(getVerCode("F33299A548"));
@@ -29,27 +36,22 @@ class Crc16Test {
         // System.out.println(AppUtil.generateAppKey().toUpperCase());
     }
 
-    @Test
-    void test02() {
-        String m = Crc16Utils.generate(12);
-        System.out.println("==1=>" + m);
-        System.out.println("==2=>" + m.length());
-        System.out.println("==3=>" + Crc16Utils.checkCode(m));
-    }
-
+    // 磐石致维8位编码
     @Test
     void boxCode() {
-        String m = Crc16Utils.generate(8);
-        System.out.println("==1=>" + m);
-        System.out.println("==2=>" + m.length());
-        System.out.println("==3=>" + Crc16Utils.checkCode(m));
+        String code1 = Crc16Utils.generate(8);
+        assertEquals(10, code1.length());
+        assertTrue(Crc16Utils.checkCode(code1));
+//        System.out.println("==1=>" + m);
+//        System.out.println("==2=>" + m.length());
+//        System.out.println("==3=>" + Crc16Utils.checkCode(m));
     }
 
     @Test
     void testCrc16Modbus() {
 //        System.out.println(Crc16Utils.getCRC("01 03 20 7F FF 7F FF 7F FF 7F FF 7F FF 7F FF 7F FF 7F FF 7F FF 7F FF 7F FF 7F FF 7F FF 7F FF 7F FF 7F FF"));
-        assertEquals(Crc16Utils.getModbusChecksum("14 01 01 01"), "4494");
-        assertEquals(Crc16Utils.getModbusChecksum("14 01 01 01", true), "9444");
+        assertEquals("4494", Crc16Utils.getModbusChecksum("14 01 01 01"));
+        assertEquals("9444", Crc16Utils.getModbusChecksum("14 01 01 01", true));
         String str = "01 03 00 00 00 08".replace(" ", "");
         int num = str.length() / 2;
         byte[] para = new byte[num];
@@ -57,8 +59,8 @@ class Crc16Test {
             int value = Integer.valueOf(str.substring(i * 2, 2 * (i + 1)), 16);
             para[i] = (byte) value;
         }
-        assertEquals(Crc16Utils.getModbusChecksum(para), "0C44");
-        assertEquals(Crc16Utils.getModbusChecksum(para, true), "440C");
+        assertEquals("0C44", Crc16Utils.getModbusChecksum(para));
+        assertEquals("440C", Crc16Utils.getModbusChecksum(para, true));
 //        System.out.println(Crc16Utils.getModbusChecksum("01 03 10 00 8F 02 4E 00 91 02 44 00 92 02 5A 00 8B 02 47"));
     }
 
@@ -75,12 +77,4 @@ class Crc16Test {
         assertThrowsExactly(CryptoException.class, () -> Crc16Utils.verifyModbus(null, "4494"), "data is empty");
         assertThrowsExactly(CryptoException.class, () -> Crc16Utils.verifyModbus(str, null), "data is 2empty");
     }
-
-    @Test
-    void test16() {
-        int length = 100;
-        byte[] bytes = BaseConvertUtils.decToHexBytes(length);
-        System.out.println(Arrays.toString(bytes));
-    }
-
 }
