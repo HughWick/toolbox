@@ -5,6 +5,7 @@ import com.github.hugh.bean.dto.ResultDTO;
 import com.github.hugh.json.exception.ToolboxJsonException;
 import com.github.hugh.json.gson.JsonObjectUtils;
 import com.github.hugh.json.gson.JsonObjects;
+import com.github.hugh.json.model.ContractsDO;
 import com.github.hugh.json.model.GsonTest;
 import com.github.hugh.json.model.Student;
 import com.github.hugh.util.DateUtils;
@@ -403,23 +404,6 @@ public class JsonObjectsTest {
             System.out.println(entries.getKey() + "=--------" + JsonObjectUtils.getAsString(entries.getValue()));
         }
     }
-}
-
-@Data
-//@Builder
-class ContractsDO {
-
-    public String code;// 合同编号
-    public String name;// 项目名称
-    public String projectName;// 项目名称
-    public String partyA;//甲方名称
-    public String partyB;//乙方名称
-    public Date useSide;// 使用方
-    public String dateOfSigning;// 签订日期
-    public String installationAddress;//安装地点
-    private Date createDate;//安装地点
-//    private Date Up
-
 }
 
 // request 请求转换对象测试类
