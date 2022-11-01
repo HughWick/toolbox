@@ -87,6 +87,7 @@ class BaseConvertTest {
         assertEquals("2147483648", BaseConvertUtils.hexToDecString(acHex));
     }
 
+    // 测试十六进制转换
     @Test
     void testTex() {
         String asciiStr = "xiaozhi10201";
@@ -94,6 +95,7 @@ class BaseConvertTest {
         String str2 = "4A3F7F40";
         String str3 = "7869616f7a68693130323031";
         byte[] bytes = BaseConvertUtils.hexToBytes(str);
+        // 十进制的数组
         assertArrayEquals(new byte[]{4, 63}, bytes);
         byte bytes2 = BaseConvertUtils.hexToByte(str2);
         assertEquals("64", String.valueOf(bytes2));
@@ -105,6 +107,10 @@ class BaseConvertTest {
         String s3 = BaseConvertUtils.asciiToHex(s, " ");
         assertEquals("4A 3F 7F 40", s3);
         assertEquals(asciiStr, BaseConvertUtils.hexToAscii(str3));
+        // 十进制的数组
+        byte[] bytes1 = new byte[]{65, 81};
+        String s4 = BaseConvertUtils.hexToAscii(bytes1);
+        assertEquals("AQ" , s4);
     }
 
     @Test
