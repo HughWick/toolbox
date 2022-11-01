@@ -44,9 +44,10 @@ public class JsonObjectsTest {
         map2.put("age", 1);
         map2.put("name", "dc");
         map.put("woman", map2);
-        System.out.println("--1-map>>" + map.toString());
+//        System.out.println("--1-map>>" + map.toString());
         JsonObjects jsonObjects = new JsonObjects(map);
-        System.out.println(jsonObjects);
+        assertEquals(JsonObjectUtils.toJson(map), jsonObjects.toJson());
+//        System.out.println(jsonObjects);
 //        Assertions.assertO(new JsonObjects() , jsonObjects);
 //        Map<String, String> reconstructedUtilMap = Arrays.stream(str2.split(","))
 //                .map(s -> s.split("="))
