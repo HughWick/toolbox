@@ -233,6 +233,9 @@ public class OkHttpUtils {
         if (params instanceof String) {
             return post(url, String.valueOf(params), JSON_TYPE);
         }
+        if (params == null) {
+            return post(url, "", JSON_TYPE);
+        }
         return post(url, new JsonObjects(params).toJson(), JSON_TYPE);
     }
 

@@ -12,22 +12,22 @@ import java.util.UUID;
  * @author AS
  * @date 2020/8/31 16:41
  */
-@Slf4j
-public class OkHttpTest {
+//@Slf4j
+//public class OkHttpTest {
 
-    @Test
-    public void test03() throws IOException {
-        String url = "http://localhost:7900/testHeader";
+//    @Test
+//    public void test03() throws IOException {
+//        String url = "http://localhost:7900/testHeader";
 //        JSONObject json = new JSONObject();
-        Map<String, String> headerContent = new HashMap<>();
-        headerContent.put("test_token", UUID.randomUUID().toString());
-        headerContent.put("test_token_02", UUID.randomUUID().toString());
-        headerContent.put("int_test", "123");
+//        Map<String, String> headerContent = new HashMap<>();
+//        headerContent.put("test_token", UUID.randomUUID().toString());
+//        headerContent.put("test_token_02", UUID.randomUUID().toString());
+//        headerContent.put("int_test", "123");
 //        System.out.println("--->" + OkHttpUtils.postForm(url, json, headerContent));
-    }
+//    }
 
-    @Test
-    public void test05() throws Exception {
+//    @Test
+//    public void test05() throws Exception {
 //        JSONObject json = new JSONObject();
 //        val receiveUser = new ArrayList<>();
 //        receiveUser.add("234260245@qq.com");
@@ -40,7 +40,7 @@ public class OkHttpTest {
 //        System.out.println("---->" + json.toString());
 //        String s = OkHttpUtils.postJson("http://localhost:7010/email/email/sendTemplates", json);
 //        System.out.println("--->>" + s);
-    }
+//    }
 
 //    public static OkHttpClient buildClient(int connectTimeout, int readTimeout) {
 //        OkHttpClient client = Instance.getInstance().singleton(OkHttpClient.class);
@@ -50,4 +50,4 @@ public class OkHttpTest {
 //                .build();
 //        return client;
 //    }
-}
+//}

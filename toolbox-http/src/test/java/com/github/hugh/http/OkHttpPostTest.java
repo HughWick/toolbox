@@ -3,11 +3,14 @@ package com.github.hugh.http;
 import com.github.hugh.json.gson.JsonObjects;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * okhttp 工具 post请求方式测试类
@@ -18,18 +21,24 @@ public class OkHttpPostTest {
     @Test
     void postFormReJsonObjectsTest() throws IOException {
         String ymUrl = "https://sudo.191ec.com/silver-web-shop/manual/readInfo2";
-        Map<String, Object> params = new HashMap<>();
-        params.put("size", 1);
         var map = new HashMap<>();
         map.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-        System.out.println("===3>>" + OkHttpUtils.postFormReJsonObjects(ymUrl));
-        System.out.println("===4>>" + OkHttpUtils.postFormReJsonObjects(ymUrl, map));
+        JsonObjects jsonObjects1 = OkHttpUtils.postFormReJsonObjects(ymUrl);
+        assertEquals("-5", jsonObjects1.getString("status"));
+        JsonObjects jsonObjects2 = OkHttpUtils.postFormReJsonObjects(ymUrl, map);
+        assertEquals("1", jsonObjects2.getString("status"));
+    }
+
+    @Test
+    void testPostJson() throws IOException {
+        String httpTop = "https://api.wl1688.net/iotc/getway ";
+        JsonObjects jsonObjects1 = OkHttpUtils.postJsonReJsonObjects(httpTop);
+        assertEquals(400, jsonObjects1.getInt("status"));
         var data = new HashMap<>();
         data.put("appid", 2020114837);
         data.put("appsecret", "1f091a6d2ad111ebbd3400163e0b8359");
-        String httpTop = "https://api.wl1688.net/iotc/getway ";
-        System.out.println("===5>>" + OkHttpUtils.postJsonReJsonObjects(httpTop));
-        System.out.println("===6>>" + OkHttpUtils.postJsonReJsonObjects(httpTop, data));
+        JsonObjects jsonObjects2 = OkHttpUtils.postJsonReJsonObjects(httpTop, data);
+        assertEquals(10001, jsonObjects2.getInt("code"));
     }
 
     @Test

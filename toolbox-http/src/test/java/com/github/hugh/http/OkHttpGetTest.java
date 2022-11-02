@@ -2,11 +2,14 @@ package com.github.hugh.http;
 
 import com.github.hugh.json.gson.JsonObjectUtils;
 import com.github.hugh.json.gson.JsonObjects;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Okhttp get请求测试
@@ -15,17 +18,20 @@ public class OkHttpGetTest {
 
     @Test
     void getTest() throws IOException {
-        String str = "https://sudo.191ec.com/silver-web-shop/manual/readInfo2";
-        var map = new HashMap<>();
-        map.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+        String url = "https://sudo.191ec.com/silver-web-shop/manual/readInfo2";
         JsonObjects json = new JsonObjects();
         json.addProperty("recipientAddr", "湖南省湘西土家族苗族自治州花垣县花垣镇花垣县公安局农业园警务执勤室");
-        System.out.println("get-1->>" + OkHttpUtils.get("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json.toJson()));
-        System.out.println("get-2->>" + OkHttpUtils.get("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", map));
-//        System.out.println("get===8>>" + OkHttpUtils.getReJsonObjects(str, json));
+        String s1 = OkHttpUtils.get(url, json.toJson());
+        var map = new HashMap<>();
+        map.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
+        String s2 = OkHttpUtils.get(url, map);
+        assertEquals("1", new JsonObjects(s1).getString("status"));
+        assertEquals("1", new JsonObjects(s2).getString("status"));
+
         Map<String, Object> params = new HashMap<>();
         params.put("size", 1);
         String str2 = "http://factory.hnlot.com.cn/v2/contracts/find";
+
         System.out.println("===1>>" + OkHttpUtils.getReJsonObjects(str2));
         System.out.println("===2>>" + OkHttpUtils.getReJsonObjects(str2, params));
     }
