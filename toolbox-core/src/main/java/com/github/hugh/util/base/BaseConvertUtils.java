@@ -336,6 +336,30 @@ public class BaseConvertUtils {
     }
 
     /**
+     * 十六进制转二进制
+     *
+     * @param hex 十六进制
+     * @return String
+     * @since 2.4.1
+     */
+    public static String hexToBinaryStr(String hex) {
+        return hexToBinaryStr(hex, 0);
+    }
+
+    /**
+     * 十六进制转二进制
+     *
+     * @param hex    十六进制
+     * @param digits 保留二进制的位数（左边补零时才生效）
+     * @return String
+     * @since 2.4.1
+     */
+    public static String hexToBinaryStr(String hex, int digits) {
+        long l = hexToDec(hex);
+        return decToBinary(l, digits);
+    }
+
+    /**
      * 十六进制 转 十进制字符串
      *
      * @param hex 十六进字符串

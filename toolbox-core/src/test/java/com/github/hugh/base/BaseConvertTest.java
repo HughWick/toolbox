@@ -55,6 +55,8 @@ class BaseConvertTest {
         long l = BaseConvertUtils.hexToDec(str);
         assertEquals(1087L, l);
         assertEquals("10000111111", BaseConvertUtils.decToBinary(l));
+        assertEquals("10000111111", BaseConvertUtils.hexToBinaryStr(str));
+        assertEquals("0000010000111111", BaseConvertUtils.hexToBinaryStr(str,16));
         assertEquals("0000010000111111", BaseConvertUtils.decToBinary(l, 16));
         assertEquals("000000001010", BaseConvertUtils.decToBinary(10, 12));
         assertEquals("1010", BaseConvertUtils.decToBinary(10));
@@ -110,7 +112,7 @@ class BaseConvertTest {
         // 十进制的数组
         byte[] bytes1 = new byte[]{65, 81};
         String s4 = BaseConvertUtils.hexToAscii(bytes1);
-        assertEquals("AQ" , s4);
+        assertEquals("AQ", s4);
     }
 
     @Test
