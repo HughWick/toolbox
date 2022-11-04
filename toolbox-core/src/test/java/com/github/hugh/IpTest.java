@@ -68,25 +68,24 @@ class IpTest {
     // 测试IP是否归属统一个网段内
     @Test
     void testIsSameNetworkSegment() {
-//        String ip1 = "168.1.1.11";
-//        String ip2 = "168.1.2.254";
         String ip1 = "43.115.39.203";
         String ip2 = "43.115.36.1";
         String mask1 = "255.255.252.0";
-        String mask2 = "255.255.255.0";
         assertFalse(IpUtils.isSameNetworkSegment("555.168.0.1", ip2, mask1));
         assertFalse(IpUtils.isSameNetworkSegment(ip1, "43.113.36.1", mask1));
         assertTrue(IpUtils.isSameNetworkSegment(ip1, ip2, mask1));
-        assertTrue(IpUtils.isSameNetworkSegment("43.115.36.113", "43.115.36.1", mask1));
-        assertTrue(IpUtils.isSameNetworkSegment("43.115.37.113", "43.115.36.1", mask1));
-        assertTrue(IpUtils.isSameNetworkSegment("43.115.38.113", "43.115.36.1", mask1));
-        assertTrue(IpUtils.isSameNetworkSegment("43.115.39.113", "43.115.36.1", mask1));
-        assertTrue(IpUtils.isSameNetworkSegment("43.115.33.1", "43.115.33.155", mask2));
+        assertTrue(IpUtils.isSameNetworkSegment("43.115.36.113", ip2, mask1));
+        assertTrue(IpUtils.isSameNetworkSegment("43.115.37.113", ip2, mask1));
+        assertTrue(IpUtils.isSameNetworkSegment("43.115.38.113", ip2, mask1));
+        assertTrue(IpUtils.isSameNetworkSegment("43.115.39.113", ip2, mask1));
         assertTrue(IpUtils.isSameNetworkSegment("43.115.88.2", "43.115.88.1", mask1));
         assertTrue(IpUtils.isNotSameNetworkSegment("43.115.87.2", "43.115.88.1", mask1));
         assertTrue(IpUtils.isSameNetworkSegment("43.115.88.252", "43.115.88.1", mask1));
-        assertTrue(IpUtils.isSameNetworkSegment("192.168.1.213", "192.168.2.2", mask2));
+        assertFalse(IpUtils.isSameNetworkSegment("115.91.255.132", "43.115.88.1", mask1));
 
-        System.out.println("12---=" + (IpUtils.isSameNetworkSegment("115.91.255.132", "43.115.88.1", mask1)));
+        String mask2 = "255.255.255.0";
+        assertTrue(IpUtils.isSameNetworkSegment("43.115.33.1", "43.115.33.155", mask2));
+        assertFalse(IpUtils.isSameNetworkSegment("192.168.1.213", "192.168.2.2", mask2));
+        assertFalse(IpUtils.isSameNetworkSegment("115.91.255.132", "43.115.88.1", mask1));
     }
 }

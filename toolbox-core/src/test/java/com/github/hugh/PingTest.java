@@ -51,12 +51,12 @@ public class PingTest {
 
     @Test
     void test04() {
-        for (int i = 0; i < 65535; i++) {
-            String s = ScannerPortisAlive(i);
-            if (s.equals("OPEN")) {
-                System.out.println(i + "--->>");
-            }
-        }
+//        for (int i = 0; i < 65535; i++) {
+//            String s = ScannerPortisAlive(i);
+//            if (s.equals("OPEN")) {
+//                System.out.println(i + "--->>");
+//            }
+//        }
     }
 
     static public String ScannerPortisAlive(int port) {

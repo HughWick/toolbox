@@ -5,10 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
+ * Request 请求测试类
  * User: AS
  * Date: 2022/7/5 11:20
  */
-public class ReuqestUtilsTest {
+class RequestUtilsTest {
 
     //获取请求头中浏览器版本号
     @Test
