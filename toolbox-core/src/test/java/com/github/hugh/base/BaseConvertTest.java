@@ -55,8 +55,6 @@ class BaseConvertTest {
         long l = BaseConvertUtils.hexToDec(str);
         assertEquals(1087L, l);
         assertEquals("10000111111", BaseConvertUtils.decToBinary(l));
-        assertEquals("10000111111", BaseConvertUtils.hexToBinaryStr(str));
-        assertEquals("0000010000111111", BaseConvertUtils.hexToBinaryStr(str,16));
         assertEquals("0000010000111111", BaseConvertUtils.decToBinary(l, 16));
         assertEquals("000000001010", BaseConvertUtils.decToBinary(10, 12));
         assertEquals("1010", BaseConvertUtils.decToBinary(10));
@@ -64,6 +62,9 @@ class BaseConvertTest {
         assertEquals("100", s);
         String s1 = BaseConvertUtils.decToBinary("4", 4);
         assertEquals("0100", s1);
+        String hexStr1 = "31";
+        assertEquals("110001", BaseConvertUtils.hexToBinaryStr(hexStr1));
+        assertEquals("0000000000110001", BaseConvertUtils.hexToBinaryStr(hexStr1,16));
     }
 
     // 二进制转十进制

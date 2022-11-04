@@ -11,14 +11,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
  * @author AS
  * @date 2020/8/31 9:18
  */
-public class MapTest {
+class MapTest {
 
     @Test
-    public void test01() {
+    void test01() {
         Map<String, Object> map = new HashMap<>();
         map.put("id", 1);
         map.put("age", 2);
@@ -36,46 +38,52 @@ public class MapTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("--1->>" + MapUtils.isEmpty(map));
         map.clear();
-        System.out.println("--2->>" + MapUtils.isEmpty(map));
-        System.out.println("--2->>" + MapUtils.isNotEmpty(map));
-        System.out.println("-0--isSuccess-=>" + MapUtils.isSuccess(map, "code", null));
-        System.out.println("-1--isSuccess-=>" + MapUtils.isSuccess(null, "code", null));
+        assertTrue(MapUtils.isEmpty(map));
+        assertFalse(MapUtils.isNotEmpty(map));
+        assertFalse(MapUtils.isSuccess(map, "code", null));
+        assertFalse(MapUtils.isSuccess(null, "code", null));
         map.put("code", "0000");
-        System.out.println("2-isSuccess---=>" + MapUtils.isSuccess(map, "code", "0000"));
-        System.out.println("-isFailure---=>" + MapUtils.isFailure(map, "code", "00100"));
+        assertTrue(MapUtils.isSuccess(map, "code", "0000"));
+        assertTrue(MapUtils.isFailure(map, "code", "00100"));
     }
 
+    // 测试map获取值
     @Test
-    public void testGetValue() {
+    void testGetValue() {
+        String strCreateDate = "2019-04-06 12:11:20";
         Map<String, Object> map = new HashMap<>();
         map.put("id", 1);
         map.put("age", 2);
         map.put("name", "null");
         map.put("amount", 10.14);
         map.put("birthday", new Date());
-        map.put("create", "2019-04-06 12:11:20");
+        map.put("create", strCreateDate);
         Map data = MapUtils.getMap(map, "data");
-        System.out.println("--1->" + data);
-        String str = MapUtils.getString(map, "create");
-        System.out.println("-2-->" + str);
-        System.out.println("-3-->" + MapUtils.getInt(map, "id"));
-        System.out.println("-4-->" + MapUtils.getLong(map, "age"));
-        System.out.println("-5-->" + MapUtils.getDouble(map, "amount"));
+        assertNull(data);
+//        System.out.println("--1->" + data);
+//        String str = MapUtils.getString(map, "create");
+        assertEquals(strCreateDate, MapUtils.getString(map, "create"));
+//        System.out.println("-2-->" + str);
+        assertEquals(1, MapUtils.getInt(map, "id"));
+        assertEquals(2, MapUtils.getLong(map, "age"));
+        assertEquals(10.14, MapUtils.getDouble(map, "amount"));
+//        System.out.println("-3-->" + MapUtils.getInt(map, "id"));
+//        System.out.println("-4-->" + MapUtils.getLong(map, "age"));
+//        System.out.println("-5-->" + MapUtils.getDouble(map, "amount"));
     }
 
     @Test
-    public void testSetValue() {
+    void testSetValue() {
         Map<String, Object> map = new HashMap<>();
         MapUtils.setValue(map, "a", null);
-        System.out.println("--1>>" + map);
+        assertTrue(map.isEmpty());
         MapUtils.setValue(map, "null", "null");
-        System.out.println("--2>>" + map);
-        MapUtils.setValue(map, "a", "1");
-        System.out.println("--4>>" + map);
+        assertTrue(map.isEmpty());
         MapUtils.setValue(map, "null", "1");
-        System.out.println("--3>>" + map);
+        assertTrue(map.isEmpty());
+        MapUtils.setValue(map, "a", "1");
+        assertEquals("1", map.get("a").toString());
     }
 
     @Test
@@ -85,7 +93,6 @@ public class MapTest {
         map.put("size", 2);
         for (int i = 0; i < 6000000; i++) {
             map.put(i++ + "", i);
-
         }
         map.put("id", 2);
         StopWatch stopWatch = new StopWatch();
@@ -123,8 +130,9 @@ public class MapTest {
         System.out.println("--6->>!>>>>" + MapUtils.sortByKeyDesc(stringMap));
     }
 
+    // 根据map中的value进行降序
     @Test
-    void testSortByDesc() {
+    void testSortByValueDesc() {
         Map<String, String> map = new HashMap<>();
         map.put("2", "a");
         map.put("5", "i");
@@ -132,7 +140,9 @@ public class MapTest {
         map.put("3", "c");
         map.put("6", "w");
         map.put("4", "n");
-        System.out.println("--4->>!>>>>" + MapUtils.sortByValueDesc(map));
+        String str = "{1=z, 6=w, 4=n, 5=i, 3=c, 2=a}";
+        assertEquals(str, MapUtils.sortByValueDesc(map).toString());
+//        System.out.println("--4->>!>>>>" + MapUtils.sortByValueDesc(map));
     }
 
     @Test
@@ -146,12 +156,13 @@ public class MapTest {
         map.put("list", "1,2,3,4");
         map.put("birthday", new Date());
         map.put("create", "2019-04-06 12:11:20");
-        Student o = MapUtils.toEntityNotEmpty(Student.class, map);
-        Student student = MapUtils.toEntityNotEmpty(new Student(), map);
-        System.out.println("--->" + o);
-        System.out.println("-1==>>" + student);
+        Student student1 = MapUtils.toEntityNotEmpty(Student.class, map);
+        Student student2 = MapUtils.toEntityNotEmpty(new Student(), map);
+        assertEquals(student1.toString(), student2.toString());
+//        System.out.println("--->" + o);
+//        System.out.println("-1==>>" + student);
 //        Student student3 = MapUtils.toEntityNotEmpty(null, map);
-        System.out.println("----");
+//        System.out.println("----");
     }
 
     @Test
@@ -165,18 +176,22 @@ public class MapTest {
         map.put("list", "1,2,3,4");
         map.put("birthday", new Date());
         map.put("create", "2019-04-06 12:11:20");
-        Student o = MapUtils.convertEntity(Student.class, map);
-        System.out.println("--->>" + o);
+        Student student = MapUtils.convertEntity(Student.class, map);
         Student student1 = MapUtils.convertEntity(new Student(), map);
-        System.out.println("--===>>"+ student1);
+        assertEquals(student.toString(), student1.toString());
+        assertEquals(1, student.getId());
+        assertEquals("null", student.getName());
     }
 
+    // 测试cookie转map
     @Test
-    void testCookieValueToMap(){
-        String string = "X-Cmmop-User-Token=739a8543-6ef1-42e9-b6d9-4234918d1d00; X-Cmmop-App-User-Token=88501fd998f1438fa64652deff345e22; Admin-Token=88501fd998f1438fa64652deff345e22; sidebarStatus=1";
+    void testCookieValueToMap() {
+        String userToken = "739a8543-6ef1-42e9-b6d9-4234918d1d00";
+        String string = "X-Cmmop-User-Token=" + userToken + "; X-Cmmop-App-User-Token=88501fd998f1438fa64652deff345e22; Admin-Token=88501fd998f1438fa64652deff345e22; sidebarStatus=1";
         String mapStr = "{Admin-Token=88501fd998f1438fa64652deff345e22, X-Cmmop-App-User-Token=88501fd998f1438fa64652deff345e22, X-Cmmop-User-Token=739a8543-6ef1-42e9-b6d9-4234918d1d00, sidebarStatus=1}";
-        Assertions.assertEquals(mapStr,MapUtils.cookieToMap(string).toString());
-
+        Map<String, String> stringStringMap = MapUtils.cookieToMap(string);
+        assertEquals(mapStr, stringStringMap.toString());
+        assertEquals(userToken, stringStringMap.get("X-Cmmop-User-Token"));
     }
 
 }

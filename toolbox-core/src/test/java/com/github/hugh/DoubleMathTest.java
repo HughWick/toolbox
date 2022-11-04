@@ -6,19 +6,22 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
+ * double 浮点小鼠测试
+ *
  * @author AS
  * @date 2020/8/31 15:34
  */
-public class DoubleMathTest {
+class DoubleMathTest {
 
     //测试加法
     @Test
     void testAdd() {
         double add = DoubleMathUtils.add(1, 2);
         assertEquals(3, add);
-//        System.out.println("--5->>" + DoubleMathUtils.round(1.000, 2));
-//        System.out.println("--7->>" + DoubleMathUtils.numberFormat.format(1.1234566123));
-//        System.out.println("--8->>" + DoubleMathUtils.numberGiveUp.format(1.1234566123));
+        assertEquals(1.0 , DoubleMathUtils.round(1.000, 2));
+        double d2 = 1.1234566123;
+        assertEquals("1.12", DoubleMathUtils.numberFormat.format(d2));
+        assertEquals("1.12345", DoubleMathUtils.numberGiveUp.format(d2));
     }
 
     // 测试减法
@@ -59,9 +62,10 @@ public class DoubleMathTest {
         double v1 = DoubleMathUtils.divFloor(5, 3.2);
         assertEquals(1, v1);
         // 结果为165.5 ，四舍五入后166
-        double v2 = DoubleMathUtils.divRound(331, 2);
-        System.out.println(v2);
+//        System.out.println(v2);
         assertEquals(1, v1);
+        double v2 = DoubleMathUtils.divRound(331, 2);
+        assertEquals(166.0, v2);
     }
 
     // 测试次方
@@ -72,10 +76,15 @@ public class DoubleMathTest {
         double pow = Math.pow(10, -i1);
         //10的负一次方等于
         assertEquals(10.0, pow);
+        assertEquals(100.0, Math.pow(10, -i2));
+        //10的负三次方等于
+        assertEquals(1000.0, Math.pow(10, -(-3)));
+        //负的括号内-1等于
+        assertEquals(1, -(-1));
 //        System.out.println("10的负一次方等于：" + pow);
-        System.out.println("10的负二次方等于：" + Math.pow(10, -i2));
-        System.out.println("10的负三次方等于：" + Math.pow(10, -(-3)));
-        System.out.println("-1等于：" + (-1));
-        System.out.println("负的括号内-1等于：" + -(-1));
+//        System.out.println("10的负二次方等于：" + Math.pow(10, -i2));
+//        System.out.println("10的负三次方等于：" + Math.pow(10, -(-3)));
+//        System.out.println("-1等于：" + (-1));
+//        System.out.println("负的括号内-1等于：" + -(-1));
     }
 }

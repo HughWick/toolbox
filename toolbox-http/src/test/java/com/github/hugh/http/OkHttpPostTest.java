@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * okhttp 工具 post请求方式测试类
  */
 @Slf4j
-public class OkHttpPostTest {
+class OkHttpPostTest {
 
     @Test
     void postFormReJsonObjectsTest() throws IOException {
@@ -45,12 +45,14 @@ public class OkHttpPostTest {
     void postFromTest() throws IOException {
         HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
         objectObjectHashMap.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-        log.info(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", objectObjectHashMap));
-        log.info(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2"));
+        String s1 = OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", objectObjectHashMap);
+        assertEquals("1", new JsonObjects(s1).getString("status"));
+        String s2 = OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2");
+        assertEquals("-5", new JsonObjects(s2).getString("status"));
+        assertEquals("请求参数不能为空!", new JsonObjects(s2).getString("msg"));
         OkHttpClient okHttpClient = OkHttpUtils.buildClient(15, 15);
-        log.info(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", objectObjectHashMap, okHttpClient));
-//        log.error(OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", JSONObject.fromObject(objectObjectHashMap)));
-//        log.error(OkHttpUtils.postForm("", JSONObject.fromObject(objectObjectHashMap)));
+        String s3 = OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", objectObjectHashMap, okHttpClient);
+        assertEquals("1", new JsonObjects(s3).getString("status"));
     }
 
     @Test
@@ -60,30 +62,19 @@ public class OkHttpPostTest {
         map.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
         Map<String, Object> head = new HashMap<>();
         head.put("a", "1");
-//        JSONObject json = new JSONObject();
-//        json.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-//        try {
-//            System.out.println("-postJson-1>" + OkHttpUtils.postJson("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json));
-//            System.out.println("-postJson-2>>" + OkHttpUtils.postJson("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", json.toString()));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
+    // 测试cookie 请求
     @Test
     void postCookieTest() throws IOException {
-        HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
-        objectObjectHashMap.put("recipientAddr", "四川省成都市温江区南熏大道四段红泰翰城");
-        String s0 = OkHttpUtils.postForm("https://sudo.191ec.com/silver-web-shop/manual/readInfo2", objectObjectHashMap);
-        System.out.println(s0);
-        String url = "http://hyga1.hnlot.com.cn:8000/v2/user/userLogin/login";
-        String url2 = "http://hyga1.hnlot.com.cn:8000/v2/user/user/getLoginUser";
+        String url = "https://cmmop.hnlot.com.cn/v2/user/userLogin/login";
+        String url2 = "https://cmmop.hnlot.com.cn/v2/user/user/getLoginUser";
         Map<String, Object> map = new HashMap<>();
-        map.put("userAccount", "fengtao");
-        map.put("userPassword", "88888888");
+        map.put("userAccount", "mushi");
+        map.put("userPassword", "8566889");
         String s = OkHttpUtils.postFormCookie(url, map);
-        System.out.println(s);
+        assertEquals("0000" , new JsonObjects(s).getString("code"));
         JsonObjects byCookieReJsonObjects = OkHttpUtils.getByCookieReJsonObjects(url2);
-        System.out.println("--->>" + byCookieReJsonObjects);
+        assertEquals("0000" , byCookieReJsonObjects.getString("code"));
     }
 }
