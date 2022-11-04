@@ -1,19 +1,24 @@
 package com.github.hugh.regex;
 
 import com.github.hugh.util.regex.PasswordRegex;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
+ * 密码测试工具类
+ *
  * @author AS
  * @date 2021/2/10 20:33
  */
-public class PasswordTest {
+class PasswordTest {
 
     @Test
-    public void test01(){
+    void test01() {
         String str = "11232！1";
         String str2 = "a112321";
-        System.out.println("-1-->>"+ PasswordRegex.moderate(str));
-        System.out.println("--2->>"+ PasswordRegex.moderate(str2));
+        assertTrue(PasswordRegex.moderate(str));
+        assertTrue(PasswordRegex.moderate(str2));
     }
 }

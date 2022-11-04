@@ -1,10 +1,10 @@
 package com.github.hugh.regex;
 
 import com.github.hugh.util.regex.RegexUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 字符串验证测试类
@@ -15,34 +15,35 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class RegexTest {
 
     @Test
-    void test01() {
+    void testSql() {
         String str = "escapeWord[]";
-        String str2 = "<>";
         String str3 = "1select>1";
-        System.out.println("-1-->>" + RegexUtils.escapeWord(str));
-        System.out.println("-2-->>" + RegexUtils.isPunctuation(str2));
-        System.out.println("-3-->>" + RegexUtils.isSql(str3));
-        System.out.println("-3-->>" + RegexUtils.isNotIp(str3));
+        assertEquals("escapeWord\\[\\]", RegexUtils.escapeWord(str));
+        assertFalse(RegexUtils.isSql(str3));
+        assertTrue(RegexUtils.isNotIp(str3));
     }
 
+    // 测试验证字符串中是否有特殊符号
     @Test
-    void testString() {
+    void testIsPunctuation() {
         String str1 = "123sf";
+        assertFalse(RegexUtils.isPunctuation(str1));
         String str2 = "_123sf";
+        assertTrue(RegexUtils.isPunctuation(str2));
         String str3 = "123sf@";
+        assertTrue(RegexUtils.isPunctuation(str3));
         String str4 = "123sf()";
+        assertTrue(RegexUtils.isPunctuation(str4));
         String str5 = "123sf-";
+        assertTrue(RegexUtils.isPunctuation(str5));
         String str6 = "123sf（）";
+        assertTrue(RegexUtils.isPunctuation(str6));
         String str7 = "skjh上课就会让她";
+        assertFalse(RegexUtils.isPunctuation(str7));
         String str8 = "skjh上 课就会让她 ";
-        System.out.println("---->>>" + RegexUtils.isPunctuation(str1));
-        System.out.println("---->>>" + RegexUtils.isPunctuation(str2));
-        System.out.println("---->>>" + RegexUtils.isPunctuation(str3));
-        System.out.println("---->>>" + RegexUtils.isPunctuation(str4));
-        System.out.println("---->>>" + RegexUtils.isPunctuation(str5));
-        System.out.println("---->>>" + RegexUtils.isPunctuation(str6));
-        System.out.println("---->>>" + RegexUtils.isPunctuation(str7));
-        System.out.println("---->>>" + RegexUtils.isPunctuation(str8));
+        assertFalse(RegexUtils.isPunctuation(str8));
+        String str9 = "<>";
+        assertFalse(RegexUtils.isPunctuation(str9));
     }
 
     // 测试经纬度
@@ -64,12 +65,11 @@ class RegexTest {
     @Test
     void testEmail() {
         String str = "136438455@qq.com";
-        String str2 = "136438455@qq";
-        String str3 = null;
         assertTrue(RegexUtils.isEmail(str));
+        String str2 = "136438455@qq";
         assertFalse(RegexUtils.isEmail(str2));
         assertTrue(RegexUtils.isNotEmail(str2));
-        assertTrue(RegexUtils.isNotEmail(str3));
+        assertTrue(RegexUtils.isNotEmail(null));
     }
 
     @Test
