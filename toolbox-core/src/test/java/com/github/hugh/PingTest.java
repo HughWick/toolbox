@@ -1,39 +1,52 @@
 package com.github.hugh;
 
+import com.github.hugh.bean.dto.PingDTO;
 import com.github.hugh.util.PingUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
+ * ping 工具测试类
+ *
  * @author AS
  * @date 2020/10/14 9:42
  */
 public class PingTest {
 
     @Test
-    public void test() {
-        System.out.println("-1-->" + PingUtils.send("192.168.1.45", 3, 1000));
-        System.out.println("-2-->" + PingUtils.batch("192.168.1.45", 4, 1000));
+    void testSend() {
+        String ip1 = "223.5.5.5";
+        boolean send = PingUtils.send(ip1, 3, 1000);
+        assertTrue(send);
+//        List<String> batch = PingUtils.batch(ip1, 4, 1000);
+//        batch.forEach(System.out::printf);
+//        assertEquals(4, batch.size());
+//        System.out.println("-2-->" +);
     }
 
     @Test
-    public void test02() {
-        System.out.println("--1->>" + PingUtils.ping("192.168.1.45"));
+    void testPing() {
+        String ip1 = "223.5.5.5";
+        String ip2 = "31.13.85.2";
+        String ip3 = "192.168.1.45";
+        PingDTO ping1 = PingUtils.ping(ip2);
+        assertEquals(-1, ping1.getStatus());
+        PingDTO ping2 = PingUtils.ping(ip1);
+        assertEquals(0, ping2.getStatus());
         try {
-            System.out.println("--2->>" + PingUtils.getConnectedCount("192.168.1.45", 5, 4000));
+            int connectedCount = PingUtils.getConnectedCount(ip3, 5, 4000);
+            assertEquals(0, connectedCount);
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
-    }
-
-    @Test
-    public void test03() {
-        System.out.println("---1>>" + PingUtils.ping("192.168.1.25"));
-        System.out.println("-2-->>" + PingUtils.ping("192.168.1.236", 2, 1000));
     }
 
     @Test
@@ -53,7 +66,7 @@ public class PingTest {
             socket = new Socket();
 //            InetAddress ip = InetAddress.getLocalHost();
             SocketAddress address = new InetSocketAddress("222.244.144.131", port);
-            socket.connect(address,2);
+            socket.connect(address, 2);
             socket.close();
 //            Socket testPortSocket = new Socket(HostIP, port);
 //            testPortSocket.close();

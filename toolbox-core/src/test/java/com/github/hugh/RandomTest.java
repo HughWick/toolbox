@@ -1,26 +1,33 @@
 package com.github.hugh;
 
 import com.github.hugh.util.RandomUtils;
+import com.github.hugh.util.regex.RegexUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
+ * 随机工具类
+ *
  * @author AS
  * @date 2020/9/9 11:01
  */
-public class RandomTest {
+class RandomTest {
 
     @Test
-    void test001() {
-        System.out.println("--1->>" + RandomUtils.getRandom());
-        System.out.println("--2->>" + RandomUtils.getSecureRandom());
-        System.out.println("--3->>" + RandomUtils.randomString(3));
-        System.out.println("--4->>" + RandomUtils.randomChar(2));
-        for (int i = 0; i < 10; i++) {
-            System.out.println("--5->>" + RandomUtils.randomNumber(3));
-        }
-        System.out.println("--6->>" + RandomUtils.randomInt(600, 900));
+    void testRandom() {
+        assertInstanceOf(ThreadLocalRandom.class, RandomUtils.getRandom());
+        assertInstanceOf(SecureRandom.class, RandomUtils.getSecureRandom());
+        assertEquals(3, RandomUtils.randomString(3).length());
+        assertEquals(2, RandomUtils.randomChar(2).length());
+        assertTrue(RegexUtils.isNumeric(RandomUtils.randomNumber(3)));
+        int i = RandomUtils.randomInt(600, 900);
+        assertTrue(i > 600 && i <= 900);
     }
 
     @Test

@@ -1,16 +1,21 @@
 package com.github.hugh.common;
 
 import com.github.hugh.util.common.PhoneUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
+ * 手机工具测试类
+ *
  * @author hugh
  * @version 1.0.0
  */
-public class PhoneTest {
+class PhoneTest {
 
     @Test
-    public void test01(){
-        System.out.println("---1>>>"+ PhoneUtils.encrypt("13825004872"));
+    void test01() {
+        assertEquals("138****4872", PhoneUtils.encrypt("13825004872"));
     }
 }
