@@ -167,6 +167,7 @@ public class FileUtils {
      * @param savePath 保存路径
      * @return boolean 成功返回true
      */
+    @Deprecated
     public static boolean downloadByStream(String fileUrl, String savePath) {
         try {
             URL url = new URL(fileUrl);
@@ -204,21 +205,19 @@ public class FileUtils {
      * @return boolean {@code true}存储成功
      * @since 1.5.1
      */
-    public static boolean downloadByNio(String uri, String path) {
+    public static boolean downloadByNio(String uri, String path) throws IOException {
         if (urlNotFileExist(uri)) {
             return false;
         }
-        try {
-            URL url = new URL(uri);
-            ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
+        try (InputStream inputStream = new URL(uri).openStream();
+             ReadableByteChannel readableByteChannel = Channels.newChannel(inputStream)) {
             FileOutputStream fileOutputStream = new FileOutputStream(path);
             try (readableByteChannel; fileOutputStream) {
                 fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
                 return true;
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+            throw new IOException();
         }
     }
 

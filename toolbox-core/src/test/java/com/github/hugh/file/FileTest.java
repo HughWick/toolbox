@@ -1,5 +1,6 @@
 package com.github.hugh.file;
 
+import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.file.FileUtils;
 import org.junit.jupiter.api.Test;
 
@@ -7,95 +8,118 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
+ * 文件测试
+ *
  * @author AS
  * @date 2020/9/10 11:06
  */
-public class FileTest {
+class FileTest {
 
-    public static void main(String[] args) throws IOException {
-        String path = "C:\\Users\\Lenovo\\Desktop\\3311523eaa9d64a9d278e5b5304ccae4.jpg";
-//        FileUtils.deleteDir(new File(path));
-//        FileUtils.delEmptyDir(path);
-        File directory = new File(path);//设定为当前文件夹
+//    @Test
+//    void testGetFilePath() {
+//        String path = FileTest.class.getResource("/69956256_p1.jpg").getFile();
+//        System.out.println(path);
+//        File directory = new File(path);//设定为当前文件夹
+//        String absolutePath = directory.getAbsolutePath();
+//        System.out.println("File full path : " + absolutePath);
+//    }
 
-        String absolutePath = directory.getAbsolutePath();
-        System.out.println("File full path : " + absolutePath);
-        String filePath = absolutePath.
-                substring(0, absolutePath.lastIndexOf(File.separator));
-        System.out.println("File path : " + filePath);
-        System.out.println(directory.getCanonicalFile());//返回类型为File
-        System.out.println(directory.getCanonicalPath());//获取标准的路径  ，返回类型为String
-        System.out.println(directory.getAbsoluteFile());//返回类型为File
-        System.out.println(directory.getAbsolutePath());//获取绝对路径，返回类型为String
-        System.out.println("==============");
-    }
-
+    // 删除文件与删除空目录
     @Test
-    public void test01() {
-        String path = "C:\\Users\\Lenovo\\Desktop\\新建文件夹\\bb9b12369c80588bbed1ea6ae744875e.jpg";
-        try {
-//            FileUtils.delFile(path);
-            FileUtils.delFile("C:\\Users\\Lenovo\\Desktop\\新建文件夹\\");
-        } catch (IOException e) {
-            e.printStackTrace();
+    void testDelFile() throws IOException {
+        String path1 = "D:\\java测试目录";
+        File fileDir = new File(path1);
+        if (!fileDir.exists()) {
+            assertTrue(fileDir.mkdir());
         }
-        System.out.println("======END=====");
+        String fileName = path1 + "\\file.txt";
+        File file = new File(fileName);
+        if (file.createNewFile()) {
+            System.out.println("file.txt File Created in Project root directory");
+        } else {
+            System.out.println("File file.txt already exists in the project root directory");
+        }
+        FileUtils.delFile(fileName);
+        assertFalse(new File(fileName).exists());
     }
 
+    // 测试删除空目录
     @Test
-    public void test02() {
-//        String dir = "C:\\Users\\Lenovo\\Desktop\\新建文件夹";
-//        FileUtils.deleteDir(new File(dir));
-//        System.out.println("========");
-//        String path = "C:\\Users\\Lenovo\\Desktop\\新建文件夹 (2)";
-//        FileUtils.deleteDir(path);
-        String dirs = "C:\\Users\\Lenovo\\Desktop";
-        FileUtils.delEmptyDir(dirs);
-        System.out.println("===END=====");
+    void testDelEmptyDir() {
+        String path1 = "D:\\java测试目录";
+        File fileDir = new File(path1);
+        if (!fileDir.exists()) {
+            assertTrue(fileDir.mkdir());
+        }
+        assertTrue(new File(path1).exists());
+        FileUtils.delEmptyDir(path1);
+        assertFalse(new File(path1).exists());
     }
 
+    // 测试url中的文件是否存在
     @Test
-    public void test03() {
+    void testUrlFileExist() {
         String url = "https://ym.191ec.com/img/goodsContent/901015857951990381/b632537a5b884ecc8309222fca1d835b_1588148150570.jpg";
-        System.out.println("---1>>" + FileUtils.urlFileExist(url));
-        System.out.println("--2->>" + FileUtils.urlFileExist(url + "1"));
-        System.out.println("--3->>" + FileUtils.urlNotFileExist(url));
-        System.out.println("--4->>" + FileUtils.urlNotFileExist(url + "1"));
+        assertTrue(FileUtils.urlFileExist(url));
+        assertFalse(FileUtils.urlFileExist(url + "1"));
+        assertFalse(FileUtils.urlNotFileExist(url));
+        assertTrue(FileUtils.urlNotFileExist(url + "1"));
     }
 
+    // 测试下载文件
     @Test
-    public void test04() {
-        String str = "https://pbs.twimg.com/media/FQI5rKPagAAVo1B?format=jpg&name=large";
+    void testDownloadFile() {
+        String str = "https://vilipix.oss-cn-beijing.aliyuncs.com/release/user/1100171014/1667786977146_share-1667786931.jpg?x-oss-process=image/resize,m_fill,w_1000";
         //图片保存路径
-        String filePath = "D:\\img\\";
-        // 截取最后/后的字符串
-        String fileName = new Date().getTime() + ".png";
-        FileUtils.downloadByStream(str, filePath + fileName);
-        FileUtils.downloadByNio(str, filePath + fileName);
-        System.out.println("===END====");
+        String filePath = "D:\\";
+        String fileName = filePath + new Date().getTime() + ".png";
+        try {
+            FileUtils.downloadByNio(str, fileName);
+            assertTrue(new File(fileName).exists());
+            // 下载成功后删除文件
+            FileUtils.delFile(fileName);
+            assertFalse(new File(fileName).exists());
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
     }
 
-    private static final String DEL_PATH = "D:\\test.db";
 
+    // 测试文件转byte数组
     @Test
-    public void test05() throws IOException {
-        byte[] bytes = FileUtils.toByteArray(DEL_PATH);
-        System.out.println("--->>" + bytes.length);
-        byte[] bytes2 = FileUtils.toByteArray(DEL_PATH + "2");
+    void testFileToByteArray() throws IOException {
+        String ip2DbPath = FileTest.class.getResource("/ip2region.xdb").getFile();
+        byte[] bytes = FileUtils.toByteArray(ip2DbPath);
+        assertEquals(58597, bytes.length);
+        ToolboxException toolboxException = assertThrowsExactly(ToolboxException.class, () -> {
+            FileUtils.toByteArray(ip2DbPath + "2");
+        });
+        assertEquals("file not exists !", toolboxException.getMessage());
     }
 
     @Test
-    public void testSizeCalc() {
-        String head = "C:\\Users\\Hugh\\Desktop\\";
-        String path = head + "FIGqfQdakAQeRiG.jpg";
-        File directory = new File(path);//设定为当前文件夹
-        System.out.println("--B->>" + FileUtils.formatFileSize(new File(head + "updateFile.http").length()));
-        System.out.println("--KB->>" + FileUtils.formatFileSize(new File(head + "FO2ufhraAAA-hpu.jpg").length()));
-        System.out.println("--MB->>" + FileUtils.formatFileSize(directory.length()));
-        System.out.println("--GB->>" + FileUtils.formatFileSize(new File("G:\\Learn\\骑\\奥田咲\\SSNI-057 全裸のままマキシワンピースを着させられて… 奥田咲.mp4").length()));
-        System.out.println("--path->>" + FileUtils.formatFileSize(head + "updateFile.http"));
-        System.out.println("--file->>" + FileUtils.formatFileSize(new File(head + "FO2ufhraAAA-hpu.jpg")));
+    void testSizeCalc() {
+        String ip2DbPath = FileTest.class.getResource("/ip2region.xdb").getFile();
+//        String head = "C:\\Users\\Hugh\\Desktop\\";
+//        String path = head + "FIGqfQdakAQeRiG.jpg";
+//        File directory = new File(ip2DbPath);//设定为当前文件
+
+//        System.out.println("--B->>" + FileUtils.formatFileSize(new File(head + "updateFile.http").length()));
+        String temp1 = "/file/img.gitconfig";
+        final String path = FileTest.class.getResource("/").getPath();
+//        System.out.println(path);
+        final File kbFile = new File(path + temp1);
+        //B
+        assertEquals("213.00B", FileUtils.formatFileSize(kbFile.length()));
+        assertEquals("57.22KB", FileUtils.formatFileSize(new File(ip2DbPath).length()));
+
+//        System.out.println("==b=>" + FileUtils.formatFileSize(new File(ip2DbPath).length()));
+//        System.out.println("--MB->>" + FileUtils.formatFileSize(directory.length()));
+//        System.out.println("--path->>" + FileUtils.formatFileSize(head + "updateFile.http"));
+//        System.out.println("--file->>" + FileUtils.formatFileSize(new File(head + "FO2ufhraAAA-hpu.jpg")));
 
     }
 }
