@@ -210,12 +210,10 @@ public class FileUtils {
             return false;
         }
         try (InputStream inputStream = new URL(uri).openStream();
-             ReadableByteChannel readableByteChannel = Channels.newChannel(inputStream)) {
-            FileOutputStream fileOutputStream = new FileOutputStream(path);
-            try (readableByteChannel; fileOutputStream) {
-                fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-                return true;
-            }
+             ReadableByteChannel readableByteChannel = Channels.newChannel(inputStream);
+             FileOutputStream fileOutputStream = new FileOutputStream(path)) {
+            fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+            return true;
         } catch (IOException e) {
             throw new IOException();
         }
