@@ -113,13 +113,12 @@ class FileTest {
 //        System.out.println(path);
         final File kbFile = new File(path + temp1);
         //B
-        assertEquals("213.00B", FileUtils.formatFileSize(kbFile.length()));
-        assertEquals("57.22KB", FileUtils.formatFileSize(new File(ip2DbPath).length()));
+//        assertEquals("213.00B", FileUtils.formatFileSize(kbFile.length()));
+//        assertEquals("57.22KB", FileUtils.formatFileSize(new File(ip2DbPath).length()));
 
-//        System.out.println("==b=>" + FileUtils.formatFileSize(new File(ip2DbPath).length()));
-//        System.out.println("--MB->>" + FileUtils.formatFileSize(directory.length()));
-//        System.out.println("--path->>" + FileUtils.formatFileSize(head + "updateFile.http"));
-//        System.out.println("--file->>" + FileUtils.formatFileSize(new File(head + "FO2ufhraAAA-hpu.jpg")));
-
+        assertEquals("1.26GB", FileUtils.formatFileSize(1354390941L));
+        assertEquals("981.58MB", FileUtils.formatFileSize(1029263971L));
+        assertEquals("410.04KB", FileUtils.formatFileSize(419880));
+        assertEquals("880.00B", FileUtils.formatFileSize(880));
     }
 }

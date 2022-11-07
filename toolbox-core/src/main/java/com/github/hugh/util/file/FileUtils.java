@@ -260,19 +260,22 @@ public class FileUtils {
      * @since 2.2.2
      */
     public static String formatFileSize(long fileSize) {
-        DecimalFormat df = new DecimalFormat("#.00");
         String wrongSize = "0";
         if (fileSize <= 0) {
             return wrongSize;
         }
-        if (fileSize < 1024) {
+        int kb = 1024;//定义KB的计算常量
+        int mb = kb * kb;//定义MB的计算常量
+        int gb = mb * kb;//定义GB的计算常量
+        if (fileSize < kb) {
+            DecimalFormat df = new DecimalFormat("#.00");
             return df.format((double) fileSize) + "B";
-        } else if (fileSize < 1048576) {
-            return DoubleMathUtils.div(fileSize, 1024, 2) + "KB";
-        } else if (fileSize < 1073741824) {
-            return DoubleMathUtils.div(fileSize, 1048576, 2) + "MB";
+        } else if (fileSize < mb) {
+            return DoubleMathUtils.div(fileSize, kb, 2) + "KB";
+        } else if (fileSize < gb) {
+            return DoubleMathUtils.div(fileSize, mb, 2) + "MB";
         } else {
-            return DoubleMathUtils.div(fileSize, 1073741824, 2) + "GB";
+            return DoubleMathUtils.div(fileSize, gb, 2) + "GB";
         }
     }
 
