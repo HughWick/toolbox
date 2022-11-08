@@ -7,17 +7,19 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
+ * quartz 定时器字符串验证类
+ *
  * @author AS
  * @date 2020/9/14 10:22
  */
-public class CronTest {
+class CronTest {
 
     @Test
-    void test01() {
+    void testIsCron() {
         assertTrue(CronRegex.isCron("20 * * * * ? "));
         assertFalse(CronRegex.isCron("10 ** * * ? "));
-        assertFalse(CronRegex.isTooShort("0/29 * * * * ? "), "错误");
-        System.out.println("===4=>>" + CronRegex.isTooShort("1-30 * * * * ? "));
-        System.out.println("===5=>>" + CronRegex.isTooShort("0 1 * * * ? "));
+        assertTrue(CronRegex.isTooShort("0/29 * * * * ? "), "错误");
+        assertFalse(CronRegex.isTooShort("1-30 * * * * ? "));
+        assertFalse(CronRegex.isTooShort("0 1 * * * ? "));
     }
 }

@@ -78,13 +78,16 @@ class TimeTest {
 
     @Test
     void testTime() {
-        System.out.println("--1---当前日期---->>" + TimeUtils.getTime());
-        System.out.println("--2---当前日期---->>" + TimeUtils.now());
+        assertEquals(TimeUtils.getTime(), TimeUtils.now());
+//        System.out.println("--1---当前日期---->>" + TimeUtils.getTime());
+//        System.out.println("--2---当前日期---->>" + TimeUtils.now());
         System.out.println("--月的第1天--->>" + TimeUtils.firstDayOfMonth());
         System.out.println("----最后1天----->>" + TimeUtils.lastDayOfMonth());
         System.out.println("---上个月的第1天------>>" + TimeUtils.earlyLastMonth());
         System.out.println("---上个月的最后1天------>>" + TimeUtils.endOfLastMonth());
-        System.out.println("--在当前系统时间之后-->>" + TimeUtils.exceedSystem("2020-04-17 13:59:59"));
+        assertTrue(TimeUtils.exceedSystem("2020-04-17 13:59:59"));
+        assertFalse(TimeUtils.exceedSystem("2120-04-17 13:59:59"));
+//        System.out.println("--在当前系统时间之后-->>" + TimeUtils.exceedSystem("2020-04-17 13:59:59"));
     }
 
     // gga utc时间+8小时

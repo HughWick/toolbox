@@ -6,7 +6,12 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
+ * 返回数据实体接口来
+ *
  * @author AS
  * @date 2021/2/1 9:52
  */
@@ -15,15 +20,8 @@ public class ResultTest {
     @Test
     void test01() {
         ResultDTO dto1 = new ResultDTO("0000", "ssss");
-//        System.out.println("--1->" + JsonObjectUtils.toJson(dto1));
-        System.out.println("===2=>>>" + dto1.equalCode("0000"));
-        System.out.println("==3==>>>" + dto1.notEqualCode("0000"));
-    }
-
-    @Test
-    void test02() {
-//        ResultDTO dto = new ResultDTO<>("0000", "操作成功");
-//        System.out.println("--->>"+ResultUtils.re());
+        assertTrue(dto1.equalCode("0000"));
+        assertFalse(dto1.notEqualCode("0000"));
     }
 
     public static void main(String[] args) {

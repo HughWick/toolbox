@@ -2,26 +2,30 @@ package com.github.hugh.net;
 
 import com.github.hugh.util.net.NetworkUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.StopWatch;
 
 import java.io.IOException;
 import java.net.InetAddress;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
+ * java 网络工具测试类
+ *
  * @author Hugh
- * @since
  **/
 @Slf4j
-public class NetworkTest {
+class NetworkTest {
 
+    //
     @Test
-    void test01() {
-        System.out.println("=1==>>" + NetworkUtils.ping("www.baidu.com"));
-        System.out.println("==2=>>" + NetworkUtils.ping("www.google.com", 500));
+    void testPing() {
+        assertTrue( NetworkUtils.ping("www.baidu.com"));
+        assertFalse(NetworkUtils.ping("www.google.com", 500));
+//        System.out.println("=1==>>" + NetworkUtils.ping("www.baidu.com"));
+//        System.out.println("==2=>>" + NetworkUtils.ping("www.google.com", 500));
     }
 
     @Test

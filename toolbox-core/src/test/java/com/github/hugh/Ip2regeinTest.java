@@ -7,14 +7,15 @@ import org.springframework.util.StopWatch;
 
 /**
  * IP 解析测试工具
+ *
  * @author AS
  * @date 2021/2/23 14:23
  */
 class Ip2regeinTest {
 
     @Test
-    void parseIp2Test(){
-        StopWatch stopWatch =new StopWatch("解析IP");
+    void parseIp2Test() {
+        StopWatch stopWatch = new StopWatch("解析IP");
         stopWatch.start();
         Ip2regionDTO parse = Ip2regionUtils.parse("222.244.144.131");
         stopWatch.stop();
