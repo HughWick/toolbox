@@ -38,8 +38,8 @@ public class ImageUtils {
      * @return boolean {@code true} 文件能被正常读取
      */
     public static boolean isImage(File file) {
-        try (ImageInputStream iis = ImageIO.createImageInputStream(file)) {
-            Iterator<ImageReader> iter = ImageIO.getImageReaders(iis);
+        try (ImageInputStream imageInputStream = ImageIO.createImageInputStream(file)) {
+            Iterator<ImageReader> iter = ImageIO.getImageReaders(imageInputStream);
             if (iter.hasNext()) {
                 return true;
             }

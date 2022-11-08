@@ -2,38 +2,48 @@ package com.github.hugh.file;
 
 import com.github.hugh.util.file.FileUtils;
 import com.github.hugh.util.file.ImageUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
+ * 图片工具测试类
+ *
  * @author AS
  * @date 2020/9/17 15:53
  */
 public class ImageTest {
 
     @Test
-    public void test01() {
-        String str = "C:\\Users\\AS\\Desktop\\Es_aaVKVcAogC45.jpg";
-        String str2 = "C:\\Users\\AS\\Desktop\\Es_aaVKVcAogC45.j";
-        System.out.println("-1-->>" + ImageUtils.isImage(str));
-        System.out.println("--2->>" + ImageUtils.isImage(str2));
+    void testIsImage() {
+        String image1 = "/file/image/69956256_p1.jpg";
+        String path = ImageTest.class.getResource(image1).getPath();
+        assertTrue(ImageUtils.isImage(path));
+        String image2 = "/file/image/20200718234953_grmzy.jpeg";
+        String path2 = ImageTest.class.getResource(image2).getPath();
+        assertTrue(ImageUtils.isImage(path2));
+        String image3 = "/file/image/Teresa.png";
+        String path3 = ImageTest.class.getResource(image3).getPath();
+        assertTrue(ImageUtils.isImage(path3));
     }
 
-    @Test
-    public void test02() {
-        try {
-            var a = 2;
-            try {
-                int i = a / 0;
-            } finally {
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("==========");
-    }
+//    @Test
+//    public void test02() {
+//        try {
+//            var a = 2;
+//            try {
+//                int i = a / 0;
+//            } finally {
+//
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println("==========");
+//    }
 
     public static void main(String[] args) {
 //        CatchPic pic = new CatchPic();/* 创建实例 */

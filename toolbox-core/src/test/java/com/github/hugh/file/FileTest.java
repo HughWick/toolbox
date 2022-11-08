@@ -18,6 +18,8 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class FileTest {
 
+    private static final String TEMP_PATH = "D:\\\\java测试目录";
+
 //    @Test
 //    void testGetFilePath() {
 //        String path = FileTest.class.getResource("/69956256_p1.jpg").getFile();
@@ -30,12 +32,12 @@ class FileTest {
     // 删除文件与删除空目录
     @Test
     void testDelFile() throws IOException {
-        String path1 = "D:\\java测试目录";
-        File fileDir = new File(path1);
+//        String path1 = "D:\\java测试目录";
+        File fileDir = new File(TEMP_PATH);
         if (!fileDir.exists()) {
             assertTrue(fileDir.mkdir());
         }
-        String fileName = path1 + "\\file.txt";
+        String fileName = TEMP_PATH + "\\file.txt";
         File file = new File(fileName);
         if (file.createNewFile()) {
             System.out.println("file.txt File Created in Project root directory");
@@ -49,15 +51,31 @@ class FileTest {
     // 测试删除空目录
     @Test
     void testDelEmptyDir() {
-        String path1 = "D:\\java测试目录";
-        File fileDir = new File(path1);
+        File fileDir = new File(TEMP_PATH);
         if (!fileDir.exists()) {
             assertTrue(fileDir.mkdir());
         }
-        assertTrue(new File(path1).exists());
-        FileUtils.delEmptyDir(path1);
-        assertFalse(new File(path1).exists());
+        assertTrue(new File(TEMP_PATH).exists());
+        FileUtils.delEmptyDir(TEMP_PATH);
+        assertFalse(new File(TEMP_PATH).exists());
     }
+
+    // 测试删除目录及其下所有文件
+    @Test
+    void testDelDir() throws IOException {
+        File fileDir = new File(TEMP_PATH);
+        if (!fileDir.exists()) {
+            assertTrue(fileDir.mkdir());
+        }
+        String name = "文件名";
+        for (int i = 0; i < 10; i++) {
+            File fileName = new File(TEMP_PATH + "\\" + name + i);
+            assertTrue(fileName.createNewFile());
+        }
+        FileUtils.deleteDir(TEMP_PATH);
+        assertFalse(new File(TEMP_PATH).exists());
+    }
+
 
     // 测试url中的文件是否存在
     @Test
@@ -106,16 +124,13 @@ class FileTest {
 //        String head = "C:\\Users\\Hugh\\Desktop\\";
 //        String path = head + "FIGqfQdakAQeRiG.jpg";
 //        File directory = new File(ip2DbPath);//设定为当前文件
-
 //        System.out.println("--B->>" + FileUtils.formatFileSize(new File(head + "updateFile.http").length()));
         String temp1 = "/file/img.gitconfig";
         final String path = FileTest.class.getResource("/").getPath();
-//        System.out.println(path);
         final File kbFile = new File(path + temp1);
         //B
-//        assertEquals("213.00B", FileUtils.formatFileSize(kbFile.length()));
-//        assertEquals("57.22KB", FileUtils.formatFileSize(new File(ip2DbPath).length()));
-
+        assertEquals("213.00B", FileUtils.formatFileSize(kbFile));
+        assertEquals("57.22KB", FileUtils.formatFileSize(ip2DbPath));
         assertEquals("1.26GB", FileUtils.formatFileSize(1354390941L));
         assertEquals("981.58MB", FileUtils.formatFileSize(1029263971L));
         assertEquals("410.04KB", FileUtils.formatFileSize(419880));

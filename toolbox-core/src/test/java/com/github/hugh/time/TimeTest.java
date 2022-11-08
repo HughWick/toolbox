@@ -2,36 +2,45 @@ package com.github.hugh.time;
 
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.TimeUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalTime;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
+ * java 1.8 后时间对象
+ *
  * @author AS
  * @date 2020/8/31 15:22
  */
-public class TimeTest {
+class TimeTest {
 
     @Test
-    public void test01() {
+    void test01() {
         long start = System.currentTimeMillis();
-        System.out.println("-1-->>" + TimeUtils.checkTimestamp(start + "", 1800000));
-        System.out.println("-2-->>" + TimeUtils.checkTimestamp(start + "1528858736043", 1800000));
+        assertTrue(TimeUtils.checkTimestamp(start + "", 1800000));
+        assertFalse(TimeUtils.checkTimestamp(start + "1528858736043", 1800000));
+        assertFalse(TimeUtils.checkTimestamp("1528858736043", 1800000));
+        assertTrue(DateUtils.isDateFormat(TimeUtils.now()));
+//        System.out.println("-1-->>" + );
+//        System.out.println("-2-->>" + TimeUtils.checkTimestamp(start + "1528858736043", 1800000));
 //        System.out.println("-3-->>" + TimeUtils.checkTimestamp(start + "1528858736043", 1800000));
-        System.out.println("-4-->>" + TimeUtils.checkTimestamp("1528858736043", 1800000));
-        System.out.println("--->>" + TimeUtils.getTime());
-        System.out.println("--->>" + TimeUtils.endOfLastMonth());
+//        System.out.println("-4-->>" + TimeUtils.checkTimestamp("1528858736043", 1800000));
+//        System.out.println("--->>" + TimeUtils.getTime());
+//        System.out.println("--->>" + TimeUtils.endOfLastMonth());
     }
 
+    // 校验开始日期与结束日期是否跨天
     @Test
-    public void test02() {
+    void testIsCrossDay() {
         String start = "2020-06-08 00:00:00";
         String end = "2020-06-10 00:00:00";
-        System.out.println("--->>" + TimeUtils.isCrossDay(start, end));
-        System.out.println("--->>" + TimeUtils.isCrossDay(start, end, 2));
+        assertFalse(TimeUtils.isCrossDay(start, end));
+        assertTrue(TimeUtils.isCrossDay(start, end, 2));
     }
 
     @Test
