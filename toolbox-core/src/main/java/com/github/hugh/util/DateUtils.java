@@ -73,6 +73,7 @@ public class DateUtils extends DateCode {
      *
      * @return String  yyyyMMdd
      */
+    @Deprecated
     public static String getDateSign() {
         return format(new Date(), YEAR_MONTH_DAY_SIMPLE);
     }

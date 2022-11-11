@@ -4,20 +4,24 @@ import com.github.hugh.json.gson.JsonObjectUtils;
 import com.github.hugh.json.gson.JsonObjects;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 /**
  * Okhttp get请求测试
  */
-public class OkHttpGetTest {
+class OkHttpGetTest {
 
     @Test
-    void getTest() throws IOException {
+    void testGet() throws IOException {
         String url = "https://sudo.191ec.com/silver-web-shop/manual/readInfo2";
         JsonObjects json = new JsonObjects();
         json.addProperty("recipientAddr", "湖南省湘西土家族苗族自治州花垣县花垣镇花垣县公安局农业园警务执勤室");
@@ -27,14 +31,40 @@ public class OkHttpGetTest {
         String s2 = OkHttpUtils.get(url, map);
         assertEquals("1", new JsonObjects(s1).getString("status"));
         assertEquals("1", new JsonObjects(s2).getString("status"));
+        String result3 = OkHttpUtils.get(url);
+        assertEquals("-5", new JsonObjects(result3).getString("status"));
+    }
 
+    @Test
+    void testGetTimeout() throws IOException {
+        String url = "https://www.google.com";
+        final SocketTimeoutException socketTimeoutException = assertThrowsExactly(SocketTimeoutException.class, () -> {
+            String result3 = OkHttpUtils.get(url);
+        });
+        assertEquals("connect timed out", socketTimeoutException.getMessage());
+    }
+
+    @Test
+//    @Timeout(value = 11)
+    void testGetTimeout2() throws IOException {
+        String url = "https://www.google.com";
+//        String result3 = OkHttpUtils.get(url, 8);
+        final SocketTimeoutException socketTimeoutException = assertThrowsExactly(SocketTimeoutException.class, () -> {
+            String result3 = OkHttpUtils.get(url, 8);
+        });
+        assertEquals("connect timed out", socketTimeoutException.getMessage());
+    }
+
+    @Test
+    void testGetReJsonObjects() throws IOException {
         Map<String, Object> params = new HashMap<>();
         params.put("size", 1);
-        String str2 = "http://factory.hnlot.com.cn/v2/contracts/find";
-
-        System.out.println("===1>>" + OkHttpUtils.getReJsonObjects(str2));
-        System.out.println("===2>>" + OkHttpUtils.getReJsonObjects(str2, params));
+        String url2 = "http://factory.hnlot.com.cn/v2/contracts/find";
+        final String s = OkHttpUtils.get(url2);
+        assertEquals(new JsonObjects(s).toJson(), OkHttpUtils.getReJsonObjects(url2).toJson());
+        assertEquals(new JsonObjects(OkHttpUtils.get(url2 + "?size=1")).toJson(), OkHttpUtils.getReJsonObjects(url2, params).toJson());
     }
+
 
     @Test
     void get() throws IOException {

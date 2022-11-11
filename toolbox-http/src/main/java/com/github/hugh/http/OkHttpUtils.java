@@ -352,6 +352,24 @@ public class OkHttpUtils {
     }
 
     /**
+     * 发送get请求，并且将结果集转换为 {@link JsonObjects}
+     *
+     * @param url    URL
+     * @param params 参数
+     * @param <T>    类型
+     * @return JsonObjects
+     * @since 2.4.2.
+     */
+    public static <T> JsonObjects getReJsonObjects(String url, T params, int timeout) throws IOException {
+        String result = get(url, params, timeout);
+        try {
+            return new JsonObjects(result);
+        } catch (Exception e) {
+            throw new ToolboxHttpException("url:" + url + ",返回结果参数格式错误:" + result);
+        }
+    }
+
+    /**
      * 发送get请求
      * <p>将data中的键值对拼接成标准的url访问参数</p>
      *
@@ -366,6 +384,21 @@ public class OkHttpUtils {
     }
 
     /**
+     * 发送get请求
+     * <p>将data中的键值对拼接成标准的url访问参数</p>
+     *
+     * @param url    URL
+     * @param params 请求参数
+     * @param <T>    请求参数类型
+     * @return String
+     * @since 2.4.2
+     */
+    public static <T> String get(String url, T params, int timeout) throws IOException {
+        url = UrlUtils.urlParam(url, params);
+        return get(url, timeout);
+    }
+
+    /**
      * get请求
      * <p>注：url自行拼接查询条件参数</p>
      *
@@ -373,8 +406,22 @@ public class OkHttpUtils {
      * @return String
      */
     public static String get(String url) throws IOException {
+        return get(url, 10);
+    }
+
+    /**
+     * get请求
+     * <p>注：url自行拼接查询条件参数</p>
+     *
+     * @param url     URL
+     * @param timeout 超时时间，单位：秒
+     * @return String
+     * @throws IOException IO异常
+     * @since 2.4.2
+     */
+    public static String get(String url, int timeout) throws IOException {
         Request request = new Request.Builder().url(url).build();
-        return send(request, buildClient());
+        return send(request, buildClient(timeout, timeout));
     }
 
     /**

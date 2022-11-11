@@ -34,13 +34,16 @@ class DateTest {
         String str = "2020-06-04 13:00:21";
         assertTrue(DateUtils.isDateFormat(str));
         System.out.println("-2-->" + DateUtils.parseDate(str));
-        System.out.println("--3->" + DateUtils.getDate("yyyy-MM-dd"));
+        final boolean dateFormat = DateUtils.isDateFormat(DateUtils.getDate(DateCode.YEAR_MONTH_DAY), DateCode.YEAR_MONTH_DAY);
+        assertTrue(dateFormat);
+//        System.out.println("--3->" + );
         System.out.println("--4->" + DateUtils.getDate(1));
         System.out.println("===>>" + DateUtils.toStringTime(str));
 //        System.out.println("--5->" + DateUtils.getDate(DateUtils.toStringTime(str)));
         System.out.println("--6->" + DateUtils.getDateSign());
         String s = DateUtils.toStringDate("20200604130021");
-        System.out.println(s);
+        assertTrue(DateUtils.isDateFormat(s));
+//        System.out.println(s);
         System.out.println("--根据当前时间的一天前的起始时间->" + DateUtils.getDayBeforeStartTime());
     }
 
@@ -63,8 +66,10 @@ class DateTest {
         Date date1 = new Date();
         assertTrue(DateUtils.isToday(date1));
         assertTrue(DateUtils.isToday(DateUtils.ofPattern(date1)));
+        assertFalse(DateUtils.isToday(DateUtils.parse("2022-01-03 22:11:22")));
         System.out.println("-3-->>" + DateUtils.dateStrToDate(date1.toString()));
     }
+
 
     @Test
     void test04() {
@@ -77,6 +82,8 @@ class DateTest {
     void test05() {
         Date begin = DateUtils.parseTimestamp(1617943680000L);
         Date end = DateUtils.parseTimestamp(1617948600000L);
+        String string = "2022-11-10 16:58:57";
+        System.out.println(DateUtils.minutesDifference(DateUtils.parse(string), new Date()));
         assertEquals(82, DateUtils.minutesDifference(begin, end));
         assertEquals(4920, DateUtils.secondsDifference(begin, end));
         System.out.println("3--->>" + DateUtils.format(DateUtils.getMin(begin, 5), DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
