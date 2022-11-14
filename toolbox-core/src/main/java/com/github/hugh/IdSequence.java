@@ -23,4 +23,16 @@ public class IdSequence {
         var snowflake = Instance.getInstance().singleton(Snowflake.class);
         return String.valueOf(snowflake.nextId());
     }
+
+    /**
+     * 雪花算法唯一ID
+     *
+     * @param dataCenterId 数据中心ID
+     * @param machineId    机器ID
+     * @return String 19位数字字符串
+     * @since 2.4.2
+     */
+    public static String snowflake(long dataCenterId, long machineId) {
+        return String.valueOf(new Snowflake(dataCenterId, machineId).nextId());
+    }
 }

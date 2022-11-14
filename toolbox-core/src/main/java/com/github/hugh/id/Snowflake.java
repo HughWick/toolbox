@@ -173,7 +173,7 @@ public class Snowflake {
      * @param id 雪花ID
      * @return Map
      */
-    public static Map<String,Object> decompile(long id) {
+    public static Map<String, Object> decompile(long id) {
         String binaryId = Long.toBinaryString(id);// ID转二进制字符串
         int len = binaryId.length();// 长度
         int sequenceStart = (int) (len < SEQUENCE_BIT ? 0 : len - SEQUENCE_BIT);
@@ -183,7 +183,7 @@ public class Snowflake {
         String workerId = sequenceStart == 0 ? "0" : binaryId.substring(workerStart, sequenceStart);
         String dataCenterId = workerStart == 0 ? "0" : binaryId.substring(timeStart, workerStart);
         String time = timeStart == 0 ? "0" : binaryId.substring(0, timeStart);
-        Map<String,Object> item = new HashMap<>();
+        Map<String, Object> item = new HashMap<>();
         item.put("sequence", Integer.valueOf(sequence, 2));// 二进制转自增ID
         item.put("workerId", Integer.valueOf(workerId, 2));// 二进制转机器ID
         item.put("dataCenter", Integer.valueOf(dataCenterId, 2));// 二进制转数据中心ID
