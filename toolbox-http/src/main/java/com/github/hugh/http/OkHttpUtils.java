@@ -343,7 +343,7 @@ public class OkHttpUtils {
      * @since 2.0.6
      */
     public static <T> JsonObjects getReJsonObjects(String url, T params) throws IOException {
-        String result = get(url, params);
+        String result = get(url, params, 10);
         try {
             return new JsonObjects(result);
         } catch (Exception e) {

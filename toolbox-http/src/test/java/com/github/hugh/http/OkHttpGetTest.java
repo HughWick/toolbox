@@ -36,12 +36,16 @@ class OkHttpGetTest {
     }
 
     @Test
-    void testGetTimeout() throws IOException {
+    void testGetTimeout() {
         String url = "https://www.google.com";
         final SocketTimeoutException socketTimeoutException = assertThrowsExactly(SocketTimeoutException.class, () -> {
-            String result3 = OkHttpUtils.get(url);
+            OkHttpUtils.get(url);
+        });
+        final SocketTimeoutException socketTimeoutException2 = assertThrowsExactly(SocketTimeoutException.class, () -> {
+            OkHttpUtils.getReJsonObjects(url, null, 5);
         });
         assertEquals("connect timed out", socketTimeoutException.getMessage());
+        assertEquals("connect timed out", socketTimeoutException2.getMessage());
     }
 
     @Test
