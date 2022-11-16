@@ -1,7 +1,6 @@
 package com.github.hugh.regex;
 
 import com.github.hugh.util.regex.RegexUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -103,5 +102,32 @@ class RegexTest {
         String phoneStr = "13825004872";
         assertTrue(RegexUtils.isPhone(phoneStr));
         assertTrue(RegexUtils.isNotPhone(phoneStr + "a"));
+    }
+
+    // 测试验证IP
+    @Test
+    void testVerifyIp() {
+        String ip1 = "192.168.1.25";
+        assertTrue(RegexUtils.isIp(ip1));
+        assertTrue(RegexUtils.isNotIp(ip1 + "23"));
+        assertTrue(RegexUtils.isNotIp(""));
+    }
+
+    // 测试验证端口
+    @Test
+    void testVerifyPort() {
+        String port1 = "25";
+        assertTrue(RegexUtils.isPort(port1));
+        assertTrue(RegexUtils.isNotPort(port1 + "2312"));
+        assertTrue(RegexUtils.isNotPort(""));
+    }
+
+    // 验证字符串是否全是中文
+    @Test
+    void testVerifyFullChinese() {
+        String string1 = "的撒开发和";
+        assertFalse(RegexUtils.isFullChinese(string1 + "213"));
+        assertTrue(RegexUtils.isFullChinese(string1));
+        assertTrue(RegexUtils.isNotFullChinese(string1 + "213"));
     }
 }

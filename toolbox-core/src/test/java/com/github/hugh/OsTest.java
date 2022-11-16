@@ -1,6 +1,7 @@
 package com.github.hugh;
 
 import com.github.hugh.util.system.OsUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -11,8 +12,10 @@ import org.junit.jupiter.api.Test;
 class OsTest {
 
     @Test
-    void test01() {
-        System.out.println(OsUtils.isWindows());
-        System.out.println(OsUtils.isLinux());
+    void testSystem() {
+        Assertions.assertTrue(OsUtils.isWindows());
+        Assertions.assertFalse(OsUtils.isLinux());
+//        System.out.println(OsUtils.isWindows());
+//        System.out.println(OsUtils.isLinux());
     }
 }

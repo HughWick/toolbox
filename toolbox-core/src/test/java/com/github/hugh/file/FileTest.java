@@ -109,7 +109,7 @@ class FileTest {
     // 测试文件转byte数组
     @Test
     void testFileToByteArray() throws IOException {
-        String ip2DbPath = FileTest.class.getResource("/ip2region.xdb").getFile();
+        String ip2DbPath = FileTest.class.getResource("/ip2region/ip2region.xdb").getFile();
         byte[] bytes = FileUtils.toByteArray(ip2DbPath);
         assertEquals(58597, bytes.length);
         ToolboxException toolboxException = assertThrowsExactly(ToolboxException.class, () -> {
@@ -120,7 +120,7 @@ class FileTest {
 
     @Test
     void testSizeCalc() {
-        String ip2DbPath = FileTest.class.getResource("/ip2region.xdb").getFile();
+        String ip2DbPath = FileTest.class.getResource("/ip2region/ip2region.xdb").getFile();
 //        String head = "C:\\Users\\Hugh\\Desktop\\";
 //        String path = head + "FIGqfQdakAQeRiG.jpg";
 //        File directory = new File(ip2DbPath);//设定为当前文件

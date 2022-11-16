@@ -1,11 +1,9 @@
 package com.github.hugh.io;
 
-import com.github.hugh.file.ImageTest;
 import com.github.hugh.util.file.FileUtils;
 import com.github.hugh.util.io.StreamUtils;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -21,8 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * @date 2020/10/26 15:11
  */
 class StreamTest {
-    //    private static final String DB_PATH =   "/ip2region/ip2region.db";
-    private static final String del_path = "D:\\battery-report.html";
 
     @Test
     void testToFile() throws IOException {
@@ -31,7 +27,7 @@ class StreamTest {
         String path2 = StreamTest.class.getResource("/").getPath();
         InputStream inputStream = StreamUtils.getInputStream(path);
         String outFilePath = path2 + "test.jpg";
-        StreamUtils.toFile(inputStream,outFilePath );
+        StreamUtils.toFile(inputStream, outFilePath);
         assertTrue(new File(outFilePath).exists());
         FileUtils.delFile(outFilePath);
         assertFalse(new File(outFilePath).exists());
@@ -39,14 +35,15 @@ class StreamTest {
 
     @Test
     void testToByteArray() throws IOException {
-        File file = new File(del_path);
+//        String path = "D:\\private\\toolbox-2.4.X\\toolbox-core\\src\\test\\resources\\file\\image\\Teresa.png";
+        String image1 = "/file/image/Teresa.png";
+        String path = StreamTest.class.getResource(image1).getPath();
+        File file = new File(path);
         ByteSource byteSource = Files.asByteSource(file);
         byte[] read = byteSource.read();
-//        System.out.println(read.length);
         byte[] bytes = Files.toByteArray(file);
-//        System.out.println(bytes.length);
         assertEquals(read.length, bytes.length);
-        byte[] bytes1 = StreamUtils.resourceToByteArray(del_path);
+        byte[] bytes1 = StreamUtils.resourceToByteArray(path);
         assertEquals(bytes.length, bytes1.length);
         assertArrayEquals(bytes, bytes1);
     }

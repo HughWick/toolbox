@@ -3,6 +3,7 @@ package com.github.hugh;
 import com.github.hugh.model.Student;
 import com.github.hugh.util.MapUtils;
 import com.github.hugh.util.SerializeUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -10,23 +11,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 序列号测试类
+ *
  * @author AS
  * @date 2020/8/31 17:59
  */
-public class SerializeTest {
+class SerializeTest {
 
     @Test
-    public void test01() {
+    void test01() {
         String str = "asdasdfdsafaeriuowqeyr4iu13y3iu4gh21juk3739yrfiohdkjcsjdnf`2随身带哦发i是大家都会覅凯撒觉得哈佛i安身的地方哈吉斯的话覅绿卡和肉IP就和外婆而减弱为啊圣诞快乐付款就会考虑就撒娇就发c";
-        for (int i = 0; i < 1000; i++) {
-            System.out.println(i + "--->" + SerializeUtils.toBytes(str));
-        }
-
-        System.out.println("--->" + SerializeUtils.toObject(SerializeUtils.toBytes(str)));
+//        for (int i = 0; i < 1000; i++) {
+//            System.out.println(i + "--->" + Arrays.toString(SerializeUtils.toBytes(str)));
+//        }
+        final byte[] bytes = SerializeUtils.toBytes(str);
+        Assertions.assertEquals(str, SerializeUtils.toObject(bytes));
     }
 
     @Test
-    public void test02() {
+    void test02() {
         Map<String, Object> map = new HashMap<>();
         map.put("id", 1);
         map.put("age", "2");

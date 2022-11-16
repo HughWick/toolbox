@@ -384,7 +384,6 @@ public class RegexUtils {
         return !isIp(string);
     }
 
-
     /**
      * 校验字符串是否为正确的端口
      *

@@ -131,7 +131,8 @@ class EntityTest {
 //            System.out.println(o1);
             assertEquals("张三" , o1.getName());
             Student student2 = EntityUtils.deepClone(o1);
-            System.out.println(student2);
+            assertEquals(o1, student2);
+//            System.out.println(student2);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -154,14 +155,14 @@ class EntityTest {
         map.put("create", "2019-04-06 12:11:20");
         Student student = MapUtils.toEntityNotEmpty(Student.class, map);
         List<Student> list = Lists.newArrayList(student, EntityUtils.deepClone(student), EntityUtils.deepClone(student), EntityUtils.deepClone(student), EntityUtils.deepClone(student));
-
-        System.out.println("---1->>" + list);
+//        System.out.println("---1->>" + list);
         List<Student1> student1s = EntityUtils.copyListProperties(list, Student1::new);
-        System.out.println("===2==>>" + student1s);
+
+//        System.out.println("===2==>>" + student1s);
+        String strName = "回调设置名称";
         List<Student1> student1ss = EntityUtils.copyListProperties(list, Student1::new, (st, student1) -> {
-//            System.out.println("---->>" + st);
-            student1.setName("回调设置名称");
+            student1.setName(strName);
         });
-        System.out.println("--->>" + student1ss);
+        assertEquals(strName , student1ss.iterator().next().getName());
     }
 }
