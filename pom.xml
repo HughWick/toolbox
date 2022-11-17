@@ -28,6 +28,7 @@
         <plugin.compiler.version>3.8.1</plugin.compiler.version>
         <plugin.sonar.version>3.1.1</plugin.sonar.version>
         <plugin.surefire.version>2.22.2</plugin.surefire.version>
+<!--        <plugin.surefire.version>3.0.0-M7</plugin.surefire.version>-->
         <plugin.surefire.skip-it>false</plugin.surefire.skip-it>
         <plugin.surefire.ignore-failure>false</plugin.surefire.ignore-failure>
         <plugin.maven-source-plugin.version>2.2.1</plugin.maven-source-plugin.version>
@@ -46,6 +47,18 @@
             <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.junit.jupiter</groupId>-->
+<!--            <artifactId>junit-jupiter-engine</artifactId>-->
+<!--            <version>${junit-jupiter.version}</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.junit.platform</groupId>-->
+<!--            <artifactId>junit-platform-runner</artifactId>-->
+<!--            <version>1.6.2</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -88,13 +101,29 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${plugin.surefire.version}</version>
+<!--                <type>maven-plugin</type>-->
                 <configuration>
-                    <skipTests>${plugin.surefire.skip-it}</skipTests>
-                    <!--suppress UnresolvedMavenProperty -->
-                    <argLine>${argLine} -Xms256m -Xmx2048m</argLine>
-                    <forkCount>1</forkCount>
-                    <runOrder>random</runOrder>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+<!--                    <skipTests>${plugin.surefire.skip-it}</skipTests>-->
+<!--                    &lt;!&ndash;suppress UnresolvedMavenProperty &ndash;&gt;-->
+<!--                    <argLine>${argLine} -Xms256m -Xmx2048m</argLine>-->
+<!--                    <forkCount>1</forkCount>-->
+<!--                    <runOrder>random</runOrder>-->
                 </configuration>
+                <dependencies>
+<!--                    <dependency>-->
+<!--                        <groupId>org.junit.platform</groupId>-->
+<!--                        <artifactId>junit-platform-surefire-provider</artifactId>-->
+<!--                        <version>1.3.2</version>-->
+<!--                    </dependency>-->
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-engine</artifactId>
+                        <version>${junit-jupiter.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>

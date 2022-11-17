@@ -40,8 +40,8 @@ class CoordinatesTest {
         String bdLongitude = "112.95321356";
         String bdLatitude = "28.22574022";
         GpsDTO gpsDTO = CoordinatesUtils.bd09ToGcj02(bdLongitude, bdLatitude);
-        System.out.println("-1-->>" + gpsDTO.getLongitude());
-        System.out.println("-2-->>" + gpsDTO.getLatitude());
+//        System.out.println("-1-->>" + gpsDTO.getLongitude());
+//        System.out.println("-2-->>" + gpsDTO.getLatitude());
         assertEquals(Double.parseDouble("112.94671139"), gpsDTO.getLongitude());
         assertEquals(Double.parseDouble("28.21967804"), gpsDTO.getLatitude());
     }
@@ -85,7 +85,7 @@ class CoordinatesTest {
     void testRmc() {
         String rmc = "$GNRMC,063234.00,A,2813.3615,N,11256.4649,E,0.329,,201022,,,A,V*18";
         RmcDTO rmcDTO = CoordinatesUtils.parseRmc(rmc);
-        System.out.println(rmcDTO);
+//        System.out.println(rmcDTO);
         assertEquals("2022-10-20 14:32:34", rmcDTO.getReadingDate());
         assertEquals("A", rmcDTO.getStatus());
         assertEquals("11256.4649", rmcDTO.getLongitude());
