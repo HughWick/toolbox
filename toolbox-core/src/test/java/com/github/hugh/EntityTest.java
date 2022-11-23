@@ -44,7 +44,7 @@ class EntityTest {
             Student1 student3 = EntityUtils.copy(student, Student1::new, (s, t) -> {
                 t.setAccount("银行账号");
             });
-            assertEquals(student3.getAccount(), "银行账号");
+            assertEquals("银行账号", student3.getAccount());
 //            System.out.println("--1->>" + EntityUtils.copy(student, Student1::new));
 //            System.out.println("--2-忽略>>" + EntityUtils.copy(student, Student1::new, "name", "accountName"));
 //            System.out.println("--3>>" + EntityUtils.copy(student, Student1::new, (s, t) -> {

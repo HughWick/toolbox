@@ -1,13 +1,11 @@
 package com.github.hugh.json;
 
-import com.alibaba.fastjson.JSON;
 import com.github.hugh.bean.dto.ResultDTO;
 import com.github.hugh.json.exception.ToolboxJsonException;
 import com.github.hugh.json.gson.JsonObjectUtils;
 import com.github.hugh.json.gson.JsonObjects;
 import com.github.hugh.json.model.ContractsDO;
 import com.github.hugh.json.model.GsonTest;
-import com.github.hugh.json.model.Student;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.ServletUtils;
 import com.google.common.collect.Lists;
@@ -35,7 +33,7 @@ public class JsonObjectsTest {
 
     @Test
     void testNewJsonObjects() {
-        String str = "{woman={name=dc, age=1}, name=账上的, sex_in=a,b,d}";
+//        String str = "{woman={name=dc, age=1}, name=账上的, sex_in=a,b,d}";
         Map<String, Object> map = new HashMap<>();
         Map<String, Object> map2 = new HashMap<>();
         map.put("name", "账上的");
@@ -209,8 +207,9 @@ public class JsonObjectsTest {
 //        System.out.println("--3->>" + new JsonObjects(json2.getJsonObject("data")));
     }
 
+    // 解析复杂类型
     @Test
-    void test04() {
+    void testReal() {
         String str = "{\"code\":\"0000\",\"int2\":1,\"data\":{\"hostSerialNumber\":\"202010260288\",\"networkType\":\"iot\",\"readIdList\":[\"000f0009\",\"000f0002\",\"000f0001\"]," +
                 "\"resultList\":[{\"action\":\"W\",\"commandId\":\"000f0001\",\"commandKey\":\"GPRS_TIMED_SEND_DATA_TIME\",\"commandName\":\"GPRS-定时发送数据时间\",\"remake\":\"0|W||0006\",\"type\":0,\"unit\":\"S\",\"value\":\"0006\",\"longValue\":\"12387643876872367867326476\",\"doubleValue\":\"123.321\"}," +
                 "{\"action\":\"W\",\"commandId\":\"000f0002\",\"commandKey\":\"GPRS_HEART_BEAT_TIME\",\"commandName\":\"GPRS-网络心跳包时间\",\"remake\":\"0|W||0006\",\"type\":0,\"unit\":\"S\",\"value\":\"0006\"}," +
@@ -220,7 +219,7 @@ public class JsonObjectsTest {
         JsonObjects jsonObjects = new JsonObjects(JsonObjectUtils.toJson(resultDTO.getData()));
         assertEquals(4, jsonObjects.size());
         JsonArray resultList = jsonObjects.getJsonArray("resultList");
-        assertEquals(3,resultList.size());
+        assertEquals(3, resultList.size());
     }
 
     // 测试添加属性
@@ -392,9 +391,11 @@ public class JsonObjectsTest {
                 "\t\"00100005\":\t{\"age\":2,\"amount\":15.14,\"birthday\":null}\n" +
                 "}";
         JsonObjects jsonObjects = new JsonObjects(str);
-        System.out.println(jsonObjects);
+        String jsonString = "{\"action\":\"R\",\"00100001\":[\"00010000\"],\"00100002\":[\"01010000\",\"02030000\"],\"00100003\":[\"01010009\"],\"00100004\":[\"0\"],\"00100005\":{\"age\":2,\"amount\":15.14}}";
+        assertEquals(jsonString, jsonObjects.toJson());
+//        System.out.println(jsonObjects);
         for (Map.Entry<String, JsonElement> entries : jsonObjects.entrySet()) {
-            System.out.println(entries.getKey() + "=--------" + JsonObjectUtils.getAsString(entries.getValue()));
+//            System.out.println(entries.getKey() + "=--------" + JsonObjectUtils.getAsString(entries.getValue()));
         }
     }
 }
