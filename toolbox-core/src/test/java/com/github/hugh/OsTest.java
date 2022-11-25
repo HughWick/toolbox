@@ -1,8 +1,10 @@
 package com.github.hugh;
 
 import com.github.hugh.util.system.OsUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 系统验证测试类
@@ -13,9 +15,9 @@ class OsTest {
 
     @Test
     void testSystem() {
-        Assertions.assertTrue(OsUtils.isWindows());
-        Assertions.assertFalse(OsUtils.isLinux());
-//        System.out.println(OsUtils.isWindows());
-//        System.out.println(OsUtils.isLinux());
+        assertTrue(OsUtils.isWindows());
+        assertFalse(OsUtils.isLinux());
+        assertTrue(OsUtils.is64());
+        assertFalse(OsUtils.isAarch64());
     }
 }
