@@ -28,8 +28,7 @@ public class OsUtils {
      * @since 1.1.0
      */
     public static boolean isWindows() {
-        String os = System.getProperty(OS_NAME);
-        return os.toLowerCase().startsWith("win");
+        return getOsName().toLowerCase().startsWith("win");
     }
 
     /**
@@ -39,16 +38,17 @@ public class OsUtils {
      * @since 2.1.11
      */
     public static boolean isLinux() {
-        return System.getProperty(OS_NAME).toLowerCase().contains("linux");
+        return getOsName().toLowerCase().contains("linux");
     }
 
     /**
      * 系统架构
      *
      * @return boolean {@code true}
+     * @since 2.4.3
      */
     public static boolean is64() {
-        final String property = System.getProperty(OS_ARCH);
+        final String property = getOsArch();
         return property.equals("amd64") || property.equals("x86_64");
     }
 
@@ -56,10 +56,27 @@ public class OsUtils {
      * 系统架构是arm 64
      *
      * @return boolean
+     * @since 2.4.3
      */
     public static boolean isAarch64() {
-        final String property = System.getProperty(OS_ARCH);
-        return property.equals("aarch64");
+        return getOsArch().equals("aarch64");
     }
 
+    /**
+     * 获取当前系统架构
+     *
+     * @return String
+     */
+    private static String getOsArch() {
+        return System.getProperty(OS_ARCH);
+    }
+
+    /**
+     * 获取系统名称，windows，linux
+     *
+     * @return String
+     */
+    private static String getOsName() {
+        return System.getProperty(OS_NAME);
+    }
 }

@@ -1,10 +1,7 @@
 package com.github.hugh.crypto;
 
 import com.github.hugh.crypto.exception.CryptoException;
-import com.github.hugh.util.base.BaseConvertUtils;
 import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,7 +17,7 @@ class Crc16Test {
     @Test
     void testDefCrc16() {
         String code1 = Crc16Utils.generate();
-//        System.out.println("==1=>" + m);
+        System.out.println("==1=>" + code1);
         assertEquals(10, code1.length());
         assertTrue(Crc16Utils.checkCode(code1));
         String code2 = Crc16Utils.generate(12);
