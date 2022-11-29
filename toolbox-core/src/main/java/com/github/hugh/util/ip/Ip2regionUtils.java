@@ -23,8 +23,6 @@ public class Ip2regionUtils {
      * ip数据文件目录
      */
     private static final String XDB_PATH = "/ip2region/ip2region.xdb";
-//    private static final String XDB_PATH = "C:\\Users\\Hugh\\Desktop\\ip2region.xdb";
-//    private static final String XDB_PATH = "D:\\Program Files\\Desktop\\ip2region.xdb";
 
     /**
      * 缓存数据
@@ -39,6 +37,7 @@ public class Ip2regionUtils {
      */
     public static synchronized byte[] getData() {
         if (defaultXdbDataSupplier == null) {
+//            Supplier<byte[]> easyRedisSupplier = () -> StreamUtils.resourceToByteArray(Ip2regionUtils.class.getResource(XDB_PATH).getPath());
             Supplier<byte[]> easyRedisSupplier = () -> StreamUtils.resourceToByteArray(XDB_PATH);
             defaultXdbDataSupplier = Suppliers.memoize(easyRedisSupplier::get);
         }
@@ -66,7 +65,6 @@ public class Ip2regionUtils {
 
     /**
      * 根据IP地址解析国家、省份、城市、运营商信息
-     * <p>例：{"country":"中国","region":"0","province":"广东省","city":"广州市","isp":"移动"}</p>
      *
      * @param ip IP
      * @return {@link Ip2regionDTO}

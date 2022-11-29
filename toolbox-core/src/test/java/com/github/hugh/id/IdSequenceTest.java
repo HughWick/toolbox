@@ -3,7 +3,6 @@ package com.github.hugh.id;
 import com.github.hugh.IdSequence;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.regex.RegexUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;

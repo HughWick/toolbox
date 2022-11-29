@@ -58,7 +58,6 @@ public class Instance {
      */
     @SuppressWarnings("unchecked")
     public <T> T singleton(Class<T> tClass) {
-        AssertUtils.notNull(tClass, "class");
         String fullClassName = tClass.getName();
         try {
             return (T) SINGLETON_CACHE.get(fullClassName);

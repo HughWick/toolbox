@@ -38,6 +38,7 @@
         <!--============================== other ==============================-->
         <lombok.version>1.18.24</lombok.version>
         <spring.version>5.3.23</spring.version>
+        <powermock.version>2.0.9</powermock.version>
     </properties>
 
     <dependencies>
@@ -48,22 +49,10 @@
             <scope>test</scope>
         </dependency>
         <!-- JUnit 测试套件 -->
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-suite</artifactId>
-            <version>1.8.2</version>
-            <scope>test</scope>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.junit.jupiter</groupId>-->
-<!--            <artifactId>junit-jupiter-engine</artifactId>-->
-<!--            <version>${junit-jupiter.version}</version>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
 <!--        <dependency>-->
 <!--            <groupId>org.junit.platform</groupId>-->
-<!--            <artifactId>junit-platform-runner</artifactId>-->
-<!--            <version>1.6.2</version>-->
+<!--            <artifactId>junit-platform-suite</artifactId>-->
+<!--            <version>1.8.2</version>-->
 <!--            <scope>test</scope>-->
 <!--        </dependency>-->
         <dependency>

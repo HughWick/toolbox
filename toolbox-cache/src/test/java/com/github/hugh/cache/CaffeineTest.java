@@ -9,13 +9,17 @@ import org.junit.jupiter.api.Test;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-/**
- * @author Hugh
- * @since
- **/
-public class CaffeineTest {
+import static org.junit.jupiter.api.Assertions.*;
 
-    static Cache<String, Object> cache = Caffeine.newBuilder()
+/**
+ * 本地缓存测试工具类
+ *
+ * @author Hugh
+ **/
+class CaffeineTest {
+
+    // 根据最后访问时间移除
+    static Cache<String, Object> afterAccessCache = Caffeine.newBuilder()
 //            .expireAfterWrite(3, TimeUnit.SECONDS)
             // 设置缓存策略在1天未写入过期缓存
             .expireAfterAccess(2, TimeUnit.SECONDS)
@@ -23,111 +27,94 @@ public class CaffeineTest {
             .recordStats()
             .build();
 
-    /**
-     * 手动加载
-     *
-     * @param key
-     * @return
-     */
-    public Object manulOperator(String key) {
-        //如果一个key不存在，那么会进入指定的函数生成value
-        Object value = cache.get(key, (Function<String, String>) k -> getValue(k));
-        //判断是否存在如果不存返回null
-        Object ifPresent = cache.getIfPresent(key);
-//        cache.put(key, ifPresent);
-        System.out.println(ifPresent);
-        //移除一个key
-//        cache.invalidate(key);
-//        System.out.println(cache.stats().toString());
-        return value;
-    }
-
-    // 缓存中找不到，则会进入这个方法。一般是从数据库获取内容
-    private static String getValue(String k) {
-        System.out.println("==生产==");
-        return k + ":value";
-    }
-//    public Function<String, Object> setValue(String key) {
-//        System.out.println("==生产==");
-//        return t -> key + "_value";
-//    }
 
     @Test
     void test01() throws InterruptedException {
-        CaffeineTest caffeineTest = new CaffeineTest();
-        caffeineTest.manulOperator("test01");
+        String key1 = "test01";
+        String value1 = key1 + "_value";
+        //手动加载
+        Object value = afterAccessCache.get(key1, (Function<String, String>) k -> k + "_value");
+        assertEquals(value1, value.toString());
+        Object ifPresentBefore = afterAccessCache.getIfPresent(key1);
+        assertNotNull(ifPresentBefore);
         Thread.sleep(1000);
-        caffeineTest.manulOperator("test01");
-        Thread.sleep(1000 * 2);
-        caffeineTest.manulOperator("test01");
+        Object ifPresentAfter2 = afterAccessCache.getIfPresent(key1);
+        assertNotNull(ifPresentBefore);
+        //移除一个key
+        afterAccessCache.invalidate(key1);
+        //判断是否存在如果不存返回null
+        Object ifPresentAfter = afterAccessCache.getIfPresent(key1);
+        assertNull(ifPresentAfter);
+//        System.out.println(cache.stats().toString());
+//        caffeineTest.manulOperator("test02");
+//        Thread.sleep(1000 * 2);
+//        caffeineTest.manulOperator("test03");
     }
 
+    // lambda
     @Test
-    void testo2() {
+    void testLambda() {
         String keys = "KEY_01";
-//        CacheLoader<String, Integer> cacheLoader = key -> -1;
         LoadingCache<String, Integer> loadingCache = CaffeineCache.create(key -> -1);
         //只查询缓存，没有命中，即返回null。 miss++
-        Integer ifPresent = loadingCache.getIfPresent(keys);
-        System.out.println("==>>" + ifPresent);
+        assertNull(loadingCache.getIfPresent(keys));
         // 查询缓存，未命中，调用load方法，返回-1. miss++
-        System.out.println("----2---->>" + loadingCache.get(keys));
+        assertEquals(-1, loadingCache.get(keys));
         //移除一个key
-//        cache.invalidate(key);
+//        cache.invalidate(keys);
 //        System.out.println("--3---->>" + BooleanCaffeineCache.isNotExists(keys));
 //        BooleanCaffeineCache.LOADING_CACHE.put(keys, false);
 //        System.out.println("--4---->>" + BooleanCaffeineCache.isNotExists(keys));
     }
 
+    // 测试 最后一次写入后经过固定时间过期
     @Test
     void expireAfterWrite() throws InterruptedException {
         String keys = "KEY_01";
         Cache<String, String> expireAfterWrite = CaffeineCache.createExpireAfterWrite(1);
 //        Integer ifPresent = expireAfterWrite.getIfPresent(keys);
-        System.out.println(expireAfterWrite.getIfPresent(keys));
-        System.out.println("---1->>" + expireAfterWrite.get(keys, k -> "abc"));
-        System.out.println("---2->>" + expireAfterWrite.getIfPresent(keys));
+        assertNull(expireAfterWrite.getIfPresent(keys));
+        assertEquals("abc", expireAfterWrite.get(keys, k -> "abc"));
+        // 根据key查询一个缓存，如果没有返回NULL
+        assertEquals("abc", expireAfterWrite.getIfPresent(keys));
         Thread.sleep(1000);
-        System.out.println("---3->>" + expireAfterWrite.getIfPresent(keys));
+        assertNull(expireAfterWrite.getIfPresent(keys));
     }
 
+    // 测试最后一次写入或访问后经过固定时间过期
     @Test
     void expireAfterAccess() throws InterruptedException {
         String keys = "KEY_01";
         Cache<Object, Object> expireAfterAccess = CaffeineCache.createExpireAfterAccess(1);
-        System.out.println(expireAfterAccess.getIfPresent(keys));
-        System.out.println("---1->>" + expireAfterAccess.get(keys, k -> "abc"));
-        System.out.println("---2->>" + expireAfterAccess.getIfPresent(keys));
+        assertNull(expireAfterAccess.getIfPresent(keys));
+        assertEquals("123", expireAfterAccess.get(keys, k -> "123"));
+        assertEquals("123", expireAfterAccess.getIfPresent(keys));
         Thread.sleep(1000);
-        System.out.println("---3->>" + expireAfterAccess.getIfPresent(keys));
-        Cache<Object, Object> expireAfterAccess2 = CaffeineCache.createExpireAfterAccess(1, (k) -> "scds");
-        System.out.println("---expireAfterAccess2->>" + expireAfterAccess2.get(keys, k -> "abc"));
-
+        assertNull(expireAfterAccess.getIfPresent(keys));
+        String key2 = "key2";
+        Cache<Object, Object> expireAfterAccess2 = CaffeineCache.createExpireAfterAccess(1, (k) -> key2);
+//        System.out.println("---expireAfterAccess2->>" + expireAfterAccess2.get(keys, k -> "abc"));
+        assertEquals("abc", expireAfterAccess2.get(keys, k -> "abc"));
+        assertEquals("abc", expireAfterAccess2.getIfPresent(key2));
     }
 
 
-    @Test
-    void testo4() throws InterruptedException {
-        String keys = "KEY_01";
-//        Cache<String, String> expireAfterWrite = CaffeineCache.createExpireAfterWrite(2, k -> "abc");
-        Cache<Object, Object> expireAfterWrite = CaffeineCache.createExpireAfterWrite(2);
-        System.out.println("---1->>" + expireAfterWrite.get(keys, k -> tem01()));
-        System.out.println(expireAfterWrite.getIfPresent(keys));
-        new Thread(() -> {
-            try {
-                System.out.println(expireAfterWrite.get(keys, k -> tem01()));
-                Thread.sleep(1000);
-            } catch (InterruptedException interruptedException) {
-                interruptedException.printStackTrace();
-            }
-        }).start();
-        Thread.sleep(3000);
-        System.out.println("===>" + expireAfterWrite.getIfPresent(keys));
-    }
-
-    private static String tem01() {
-        System.out.println("==进入==");
-        return "tem01";
-    }
-
+//    @Test
+//    void testo4() throws InterruptedException {
+//        String keys = "KEY_01";
+////        Cache<String, String> expireAfterWrite = CaffeineCache.createExpireAfterWrite(2, k -> "abc");
+//        Cache<Object, Object> expireAfterWrite = CaffeineCache.createExpireAfterWrite(2);
+//        System.out.println("---1->>" + expireAfterWrite.get(keys, k -> tem01()));
+//        System.out.println(expireAfterWrite.getIfPresent(keys));
+//        new Thread(() -> {
+//            try {
+//                System.out.println(expireAfterWrite.get(keys, k -> tem01()));
+//                Thread.sleep(1000);
+//            } catch (InterruptedException interruptedException) {
+//                interruptedException.printStackTrace();
+//            }
+//        }).start();
+//        Thread.sleep(3000);
+//        System.out.println("===>" + expireAfterWrite.getIfPresent(keys));
+//    }
 }

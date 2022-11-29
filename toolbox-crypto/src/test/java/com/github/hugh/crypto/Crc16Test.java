@@ -23,8 +23,6 @@ class Crc16Test {
         String code2 = Crc16Utils.generate(12);
         assertEquals(14, code2.length());
         assertTrue(Crc16Utils.checkCode(code2));
-//        String code3 = "48F432E3F9";
-//        System.out.println("--->>" + Crc16Utils.getVerCode(code3));
 //        System.out.println("==2=>" + get("48F432E3F9"));
 //        System.out.println(getVerCode("E5FF01140813"));
 //        System.out.println(getVerCode("F33299A548"));
