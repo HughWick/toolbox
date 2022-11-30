@@ -4,6 +4,7 @@ import com.github.hugh.util.regex.RegexUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * 字符串验证测试类
@@ -129,5 +130,14 @@ class RegexTest {
         assertFalse(RegexUtils.isFullChinese(string1 + "213"));
         assertTrue(RegexUtils.isFullChinese(string1));
         assertTrue(RegexUtils.isNotFullChinese(string1 + "213"));
+    }
+
+    // 测试是否为偶数
+    @Test
+    void testEvenNumber() {
+        int c1 = 2;
+        assertTrue(RegexUtils.isEvenNumber(c1));
+        assertFalse(RegexUtils.isEvenNumber(3));
+        assertTrue(RegexUtils.isNotEvenNumber(3));
     }
 }

@@ -3,6 +3,8 @@ package com.github.hugh.crypto;
 import com.github.hugh.crypto.exception.CryptoException;
 import org.junit.jupiter.api.Test;
 
+import java.util.Locale;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -64,12 +66,35 @@ class Crc16Test {
         String str = "14 01 01 01";
         String str2 = "54 30 01 00 04 31 32 33 34";
         String modbusChecksum = Crc16Utils.getModbusChecksum(str2);
-        System.out.println(modbusChecksum);
+        assertEquals("339C", modbusChecksum);
+//        System.out.println(modbusChecksum);
         assertTrue(Crc16Utils.verifyModbus(str, "4494"));
         assertTrue(Crc16Utils.verifyModbus(str, "44 94"));
         assertTrue(Crc16Utils.verifyModbus(str, "44 94 "));
         assertTrue(Crc16Utils.verifyModbus(str, "9444", true));
         assertThrowsExactly(CryptoException.class, () -> Crc16Utils.verifyModbus(null, "4494"), "data is empty");
         assertThrowsExactly(CryptoException.class, () -> Crc16Utils.verifyModbus(str, null), "data is 2empty");
+    }
+
+    @Test
+    void testWeXin() {
+        // 微信 open id
+        String str1 = "00f18fb4f65ab436";
+        assertEquals(16, str1.length());
+//        System.out.println(str1.length());
+        final String generate = Crc16Utils.generate(14);
+        System.out.println(generate.toLowerCase(Locale.ROOT));
+        assertEquals(16, generate.length());
+//        final boolean b = Crc16Utils.checkCode(generate);
+        assertTrue(Crc16Utils.checkCode(generate));
+    }
+
+    @Test
+    void testNew() {
+        final String generate = Crc16Utils.generate(14, 4);
+        System.out.println(generate.toLowerCase(Locale.ROOT));
+        assertTrue(Crc16Utils.verifyCode(generate, 4));
+        final CryptoException toolboxException = assertThrowsExactly(CryptoException.class, () -> Crc16Utils.verifyCode(generate, 3));
+        assertEquals("verify length error", toolboxException.getMessage());
     }
 }

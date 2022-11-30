@@ -1,6 +1,8 @@
 package com.github.hugh.cache.redis;
 
+import com.github.hugh.util.ListUtils;
 import com.google.common.base.Suppliers;
+import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,15 +11,19 @@ import redis.clients.jedis.JedisPoolConfig;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 /**
  * User: AS
  * Date: 2021/11/11 10:44
  */
 @Configuration
-public class EasyRedisTest {
+class EasyRedisTest {
 
     /**
      * 初始化redis连接池
@@ -45,7 +51,7 @@ public class EasyRedisTest {
         // 在空闲时检查有效性, 默认false
         jedisPoolConfig.setTestWhileIdle(true);
 //        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "43.128.14.188", 9991, 10000, "password123@");
-        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "192.168.1.81", 7779, 10000, "Th@8225586");
+        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "192.168.10.29", 7779, 10000, "PoliceRedis@0731");
 //        log.info("初始化redis pool。end...");
         System.out.println("初始化redis pool。end...");
         return jedisPool;
@@ -129,18 +135,17 @@ public class EasyRedisTest {
     @Test
     void setTest() {
         EasyRedis instance = supplier.get();
-        int dbIndex = 14;
+        int dbIndex = 13;
         String key = "set_test_01";
         String value = "sdjfhkj";
         String set = instance.set(key, value);
-        System.out.println("=====1==>>" + set);
+        assertEquals("OK", set);
         instance.set("set_test_02", value, 1000);
         String key3 = "set_test_03";
         instance.set(dbIndex, key3, value, 1000);
-        System.out.println("==-getkey3--->>" + instance.get(dbIndex, key3));
+        assertEquals(value, instance.get(dbIndex, key3));
         String setBytes = instance.set("byte_test_01".getBytes(StandardCharsets.UTF_8), value.getBytes(StandardCharsets.UTF_8));
-        System.out.println("====2>>>>>" + setBytes);
-        instance.set(1, "byte_test_01".getBytes(StandardCharsets.UTF_8), value.getBytes(StandardCharsets.UTF_8));
+        assertEquals("OK", setBytes);
     }
 
     @Test
@@ -151,21 +156,24 @@ public class EasyRedisTest {
         byte[] byteKey = "byte_test_01".getBytes(StandardCharsets.UTF_8);
         String value = "sdjfhkj";
         String get = instance.get(key);
-        System.out.println("----<>>>><>>" + get);
-        System.out.println("11111--->>" + instance.get(1, "set_test_03"));
-        System.out.println("222--->>" + Arrays.toString(instance.get(byteKey)));
-        System.out.println("33--->>" + Arrays.toString(instance.get(1, byteKey)));
-        System.out.println("444--->>" + (instance.mget(0, key, "set_test_02")));
-        System.out.println("444--->>" + (instance.mget(key, "set_test_02")));
-        System.out.println("555===>>" + instance.getAllKeys("*"));
+        assertNull(get);
+        assertNull(instance.get(1, "set_test_03"));
+        assertEquals("null", Arrays.toString(instance.get(byteKey)));
+        final byte[] bytes = new byte[]{115, 100, 106, 102, 104, 107, 106};
+        assertArrayEquals(bytes, instance.get(1, byteKey));
+        assertEquals(Lists.newArrayList(null, null), instance.mget(0, key, "set_test_02"));
+        final Set<String> allKeys = instance.getAllKeys(dbIndex, "*");
+        assertTrue(ListUtils.isEmpty(allKeys));
     }
 
     @Test
     void delTest() {
         EasyRedis instance = supplier.get();
         String key = "set_test_01";
-        System.out.println("---1-<>>>><>>" + instance.del(key));
-        System.out.println("--2--<>>>><>>" + instance.del("byte_test_01".getBytes(StandardCharsets.UTF_8)));
+        assertEquals(1, instance.del(key));
+        assertEquals(1, instance.del("byte_test_01".getBytes(StandardCharsets.UTF_8)));
+//        System.out.println("---1-<>>>><>>" + instance.del(key));
+//        System.out.println("--2--<>>>><>>" + instance.del("byte_test_01".getBytes(StandardCharsets.UTF_8)));
         System.out.println("---3-<>>>><>>" + instance.del(1, "set_test_03"));
     }
 

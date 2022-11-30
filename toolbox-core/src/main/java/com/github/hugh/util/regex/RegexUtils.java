@@ -515,4 +515,26 @@ public class RegexUtils {
         latitude = latitude.strip();
         return Pattern.matches(latitudePattern, latitude);
     }
+
+    /**
+     * 数为偶数
+     *
+     * @param number 数
+     * @return boolean 是偶数返回{@code true}
+     * @since 2.4.3
+     */
+    public static boolean isEvenNumber(long number) {
+        return (number % 2) == 0;
+    }
+
+    /**
+     * 数不是偶数
+     *
+     * @param number 数
+     * @return boolean 不是偶数返回{@code true}
+     * @since 2.4.3
+     */
+    public static boolean isNotEvenNumber(long number) {
+        return !isEvenNumber(number);
+    }
 }

@@ -2,6 +2,7 @@ package com.github.hugh.crypto;
 
 import com.github.hugh.crypto.exception.CryptoException;
 import com.github.hugh.util.EmptyUtils;
+import com.github.hugh.util.regex.RegexUtils;
 
 /**
  * CRC16相关计算工具类
@@ -147,23 +148,53 @@ public class Crc16Utils {
      * @since 1.4.12
      */
     public static String generate(int length) {
+        return generate(length, 2);
+    }
+
+    /**
+     * 生成指定长度的crc
+     * <p>根据指定长度生成crc 编码</p>
+     *
+     * @param length   长度
+     * @param verifyLe 验证码长度
+     * @return String
+     * @since 2.4.3
+     */
+    public static String generate(int length, int verifyLe) {
         if (length < 0) {
             throw new CryptoException("length error ");
         }
         String random = AppkeyUtils.generate().substring(0, length);
-        String code = random + getVerCode(random);//根据八位数随机码、计算一个crc16的校验码
+        String code = random + getVerCode(random, verifyLe);//根据八位数随机码、计算一个crc16的校验码
         return code.toUpperCase();
     }
 
     /**
      * 根据字符串中的数据计算出 CRC 16 验证码
+     * <p>
+     * 默认验证码长度为2个字符
+     * </p>
      *
      * @param data 字符串
      * @return String 验证码
      */
     private static String getVerCode(String data) {
+        return getVerCode(data, 2);
+    }
+
+    /**
+     * 根据字符串中的数据计算出 CRC 16 验证码
+     *
+     * @param data         字符串
+     * @param verifyLength 验证码长度
+     * @return String 验证码
+     */
+    private static String getVerCode(String data, int verifyLength) {
         if (data == null) {
             return null;
+        }
+        if (RegexUtils.isNotEvenNumber(verifyLength)) {
+            throw new CryptoException("verify length error");
         }
         int length = data.length() / 2;
         byte[] byteArray = new byte[length];
@@ -171,9 +202,22 @@ public class Crc16Utils {
             byteArray[i] = (byte) Short.parseShort(data.substring(i * 2, (i * 2) + 2), 16);
         }
         int crc = calcCrc16(byteArray);
-        String a = String.format("%04x", crc).toUpperCase().substring(1, 2);
-        String b = String.format("%04x", crc).toUpperCase().substring(0, 1);
+        int temp = verifyLength / 2;
+        String a = String.format("%04x", crc).toUpperCase().substring(temp, verifyLength);
+        String b = String.format("%04x", crc).toUpperCase().substring(0, temp);
         return a + b;
+    }
+
+    /**
+     * 验证校验码是否正确
+     * <p>由于命令不规范，标记为过期，使用{{@link #verifyCode(String)}}</p>
+     *
+     * @param str 字符串
+     * @return boolean {@code true} 正确
+     */
+    @Deprecated
+    public static boolean checkCode(String str) {
+        return verifyCode(str);
     }
 
     /**
@@ -181,15 +225,31 @@ public class Crc16Utils {
      *
      * @param str 字符串
      * @return boolean {@code true} 正确
+     * @since 2.4.3
      */
-    public static boolean checkCode(String str) {
+    public static boolean verifyCode(String str) {
+        return verifyCode(str, 2);
+    }
+
+    /**
+     * 验证校验码是否正确
+     *
+     * @param str          字符串
+     * @param verifyLength 验证码长度
+     * @return boolean {@code true} 正确
+     * @since 2.4.3
+     */
+    public static boolean verifyCode(String str, int verifyLength) {
         if (EmptyUtils.isEmpty(str)) {
             return false;
         }
+        if (RegexUtils.isNotEvenNumber(verifyLength)) {
+            throw new CryptoException("verify length error");
+        }
         try {
-            String checkBody = str.substring(0, str.length() - 2);// 随机码截取掉后两位验证码
-            String sign = str.substring(str.length() - 2);  // 获取验证码
-            String checkCode = getVerCode(checkBody);
+            String checkBody = str.substring(0, str.length() - verifyLength);// 随机码截取掉后两位验证码
+            String sign = str.substring(str.length() - verifyLength);  // 获取验证码
+            String checkCode = getVerCode(checkBody, verifyLength);
             return sign.equalsIgnoreCase(checkCode);
         } catch (Exception e) {
             return false;
