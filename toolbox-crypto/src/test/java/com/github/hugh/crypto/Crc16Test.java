@@ -1,6 +1,7 @@
 package com.github.hugh.crypto;
 
 import com.github.hugh.crypto.exception.CryptoException;
+import com.github.hugh.util.regex.RegexUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
@@ -22,6 +23,8 @@ class Crc16Test {
         System.out.println("==1=>" + code1);
         assertEquals(10, code1.length());
         assertTrue(Crc16Utils.checkCode(code1));
+        assertTrue(RegexUtils.isNotLowerCaseAndNumber(code1));
+
         String code2 = Crc16Utils.generate(12);
         assertEquals(14, code2.length());
         assertTrue(Crc16Utils.checkCode(code2));
@@ -33,15 +36,21 @@ class Crc16Test {
         // System.out.println(AppUtil.generateAppKey().toUpperCase());
     }
 
+    // 测试异常
+    @Test
+    void testException() {
+        final CryptoException cryptoException = assertThrowsExactly(CryptoException.class, () -> Crc16Utils.generate(0));
+        assertEquals("length error", cryptoException.getMessage());
+        final CryptoException cryptoException2 = assertThrowsExactly(CryptoException.class, () -> Crc16Utils.generate(8,3));
+        assertEquals("is not even number", cryptoException2.getMessage());
+    }
+
     // 磐石致维8位编码
     @Test
     void boxCode() {
         String code1 = Crc16Utils.generate(8);
         assertEquals(10, code1.length());
         assertTrue(Crc16Utils.checkCode(code1));
-//        System.out.println("==1=>" + m);
-//        System.out.println("==2=>" + m.length());
-//        System.out.println("==3=>" + Crc16Utils.checkCode(m));
     }
 
     @Test
@@ -85,16 +94,27 @@ class Crc16Test {
         final String generate = Crc16Utils.generate(14);
         System.out.println(generate.toLowerCase(Locale.ROOT));
         assertEquals(16, generate.length());
-//        final boolean b = Crc16Utils.checkCode(generate);
         assertTrue(Crc16Utils.checkCode(generate));
     }
 
     @Test
     void testNew() {
-        final String generate = Crc16Utils.generate(14, 4);
-        System.out.println(generate.toLowerCase(Locale.ROOT));
+        int codeLength = 12;
+        int verifyCodeLength = 4;
+        final String generate = Crc16Utils.generate(codeLength, verifyCodeLength);
+        assertEquals(codeLength + verifyCodeLength, generate.length());
+        assertTrue(RegexUtils.isUpperCaseAndNumber(generate));
         assertTrue(Crc16Utils.verifyCode(generate, 4));
         final CryptoException toolboxException = assertThrowsExactly(CryptoException.class, () -> Crc16Utils.verifyCode(generate, 3));
-        assertEquals("verify length error", toolboxException.getMessage());
+        assertEquals("is not even number", toolboxException.getMessage());
+    }
+
+    // 测试小写
+    @Test
+    void testLower() {
+        final String str1 = Crc16Utils.generateLowerCase(8);
+        assertEquals(10, str1.length());
+        assertTrue(RegexUtils.isLowerCaseAndNumber(str1));
+        assertFalse(RegexUtils.isNotLowerCaseAndNumber(str1));
     }
 }

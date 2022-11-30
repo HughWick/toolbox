@@ -537,4 +537,54 @@ public class RegexUtils {
     public static boolean isNotEvenNumber(long number) {
         return !isEvenNumber(number);
     }
+
+    /**
+     * 验证字符串是否为小写与数组组合
+     *
+     * @param string 字符串
+     * @return boolean 全都是小写与数字{@code true}
+     * @since 2.4.3
+     */
+    public static boolean isLowerCaseAndNumber(String string) {
+        if (EmptyUtils.isEmpty(string)) {
+            return false;
+        }
+        return string.matches("^[0-9a-z]+$");
+    }
+
+    /**
+     * 验证字符串是否为小写与数组组合
+     *
+     * @param string 字符串
+     * @return boolean 不是小写与数字{@code true}
+     * @since 2.4.3
+     */
+    public static boolean isNotLowerCaseAndNumber(String string) {
+        return !isLowerCaseAndNumber(string);
+    }
+
+    /**
+     * 验证字符串是否为大写与数组组合
+     *
+     * @param string 字符串
+     * @return boolean 不是大写与数字组合{@code true}
+     * @since 2.4.3
+     */
+    public static boolean isUpperCaseAndNumber(String string) {
+        if (EmptyUtils.isEmpty(string)) {
+            return false;
+        }
+        return string.matches("^[0-9A-Z]+$");
+    }
+
+    /**
+     * 验证字符串是否为大写与数组组合
+     *
+     * @param string 字符串
+     * @return boolean 不是大写与数字组合{@code true}
+     * @since 2.4.3
+     */
+    public static boolean isNotUpperCaseAndNumber(String string) {
+        return !isUpperCaseAndNumber(string);
+    }
 }

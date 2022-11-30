@@ -140,4 +140,25 @@ class RegexTest {
         assertFalse(RegexUtils.isEvenNumber(3));
         assertTrue(RegexUtils.isNotEvenNumber(3));
     }
+
+    // 字符串为小写+数字
+    @Test
+    void testLower() {
+        String string1 = "4fceb2d22F";
+        assertTrue(RegexUtils.isNotLowerCaseAndNumber(string1));
+        assertFalse(RegexUtils.isLowerCaseAndNumber(string1));
+        String string2 = "980bb8126e4046e3";
+        assertTrue(RegexUtils.isLowerCaseAndNumber(string2));
+    }
+
+    // 验证字符串为大写+数字
+    @Test
+    void testUpper() {
+        String string1 = "4fceb2d22F";
+        assertFalse(RegexUtils.isUpperCaseAndNumber(string1));
+        assertTrue(RegexUtils.isNotUpperCaseAndNumber(string1));
+        String string2 = "F80C5366D9";
+        assertTrue(RegexUtils.isUpperCaseAndNumber(string2));
+
+    }
 }

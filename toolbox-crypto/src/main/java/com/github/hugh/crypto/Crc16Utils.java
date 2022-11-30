@@ -141,7 +141,8 @@ public class Crc16Utils {
     /**
      * 生成指定长度的crc
      * <p>根据指定长度生成crc 编码</p>
-     * <p>PS：在指定长度后两位都为校验码,例：如果生成一个10位的crc,结果则生成返回为12位长度的字符串,后两位固定为校验码</p>
+     * <p>PS：在指定长度后两位都为校验码</p>
+     * <p>例：如果生成一个10位的crc,结果则生成返回为12位长度的字符串,后两位固定为校验码</p>
      *
      * @param length 长度
      * @return String
@@ -152,7 +153,21 @@ public class Crc16Utils {
     }
 
     /**
-     * 生成指定长度的crc
+     * 生成指定长度的小写+数组组合的crc字符串
+     * <p>根据指定长度生成crc 编码</p>
+     * <p>PS：在指定长度后两位都为校验码</p>
+     * <p>例：如果生成一个10位的crc,结果则生成返回为12位长度的字符串,后两位固定为校验码</p>
+     *
+     * @param length 长度
+     * @return String
+     * @since 2.4.3
+     */
+    public static String generateLowerCase(int length) {
+        return generate(length, 2, false);
+    }
+
+    /**
+     * 生成指定长度的大写+数组组合的crc字符串
      * <p>根据指定长度生成crc 编码</p>
      *
      * @param length   长度
@@ -161,25 +176,32 @@ public class Crc16Utils {
      * @since 2.4.3
      */
     public static String generate(int length, int verifyLe) {
-        if (length < 0) {
-            throw new CryptoException("length error ");
-        }
-        String random = AppkeyUtils.generate().substring(0, length);
-        String code = random + getVerCode(random, verifyLe);//根据八位数随机码、计算一个crc16的校验码
-        return code.toUpperCase();
+        return generate(length, verifyLe, true);
     }
 
     /**
-     * 根据字符串中的数据计算出 CRC 16 验证码
-     * <p>
-     * 默认验证码长度为2个字符
-     * </p>
+     * 生成指定长度的crc
+     * <p>根据指定长度生成crc 编码</p>
      *
-     * @param data 字符串
-     * @return String 验证码
+     * @param length       长度
+     * @param verifyLength 验证码长度
+     * @param flag         大小写标识
+     * @return String
+     * @since 2.4.3
      */
-    private static String getVerCode(String data) {
-        return getVerCode(data, 2);
+    private static String generate(int length, int verifyLength, boolean flag) {
+        if (length <= 0) {
+            throw new CryptoException("length error");
+        }
+        if (RegexUtils.isNotEvenNumber(verifyLength)) {
+            throw new CryptoException("is not even number");
+        }
+        String random = AppkeyUtils.generate().substring(0, length);
+        String code = random + getVerCode(random, verifyLength);//根据八位数随机码、计算一个crc16的校验码
+        if (flag) {
+            return code.toUpperCase();
+        }
+        return code.toLowerCase();
     }
 
     /**
@@ -190,12 +212,13 @@ public class Crc16Utils {
      * @return String 验证码
      */
     private static String getVerCode(String data, int verifyLength) {
-        if (data == null) {
-            return null;
-        }
-        if (RegexUtils.isNotEvenNumber(verifyLength)) {
-            throw new CryptoException("verify length error");
-        }
+// 如果是私有方法可以去掉验证，已达到提速的目的
+//        if (data == null) {
+//            return null;
+//        }
+//        if (RegexUtils.isNotEvenNumber(verifyLength)) {
+//            throw new CryptoException("verify length error");
+//        }
         int length = data.length() / 2;
         byte[] byteArray = new byte[length];
         for (int i = 0; i < length; i++) {
@@ -244,7 +267,7 @@ public class Crc16Utils {
             return false;
         }
         if (RegexUtils.isNotEvenNumber(verifyLength)) {
-            throw new CryptoException("verify length error");
+            throw new CryptoException("is not even number");
         }
         try {
             String checkBody = str.substring(0, str.length() - verifyLength);// 随机码截取掉后两位验证码
