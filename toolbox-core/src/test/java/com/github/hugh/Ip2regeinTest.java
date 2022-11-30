@@ -1,9 +1,12 @@
 package com.github.hugh;
 
 import com.github.hugh.bean.dto.Ip2regionDTO;
+import com.github.hugh.util.io.StreamUtils;
 import com.github.hugh.util.ip.Ip2regionUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.StopWatch;
+
+import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -15,12 +18,26 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @date 2021/2/23 14:23
  */
 class Ip2regeinTest {
+    /**
+     * ip数据文件目录
+     */
+    private static final String XDB_PATH = "/ip2region/ip2region.xdb";
+
+    @Test
+    void parseStringTest(){
+        String ip = "222.244.144.131";
+        Supplier<byte[]> easyRedisSupplier = () -> StreamUtils.resourceToByteArray(Ip2regionUtils.class.getResource(XDB_PATH).getPath());
+        final String cityInfo = Ip2regionUtils.getCityInfo(ip, easyRedisSupplier.get());
+        assertEquals("中国|0|湖南省|长沙市|电信", cityInfo);
+
+    }
 
     @Test
     void parseIp2Test() {
+        String ip = "222.244.144.131";
         StopWatch stopWatch = new StopWatch("解析IP");
         stopWatch.start();
-        Ip2regionDTO parse = Ip2regionUtils.parse("222.244.144.131");
+        Ip2regionDTO parse = Ip2regionUtils.parse(ip);
         stopWatch.stop();
         assertNotNull(parse);
         assertEquals("长沙市", parse.getCity());

@@ -5,6 +5,7 @@ import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.io.StreamUtils;
 import com.google.common.base.Suppliers;
 import org.lionsoul.ip2region.xdb.Searcher;
+
 import java.util.function.Supplier;
 
 /**
@@ -35,9 +36,8 @@ public class Ip2regionUtils {
      * @return byte[]
      * @since 2.3.5
      */
-    public static synchronized byte[] getData() {
+    private static synchronized byte[] getData() {
         if (defaultXdbDataSupplier == null) {
-//            Supplier<byte[]> easyRedisSupplier = () -> StreamUtils.resourceToByteArray(Ip2regionUtils.class.getResource(XDB_PATH).getPath());
             Supplier<byte[]> easyRedisSupplier = () -> StreamUtils.resourceToByteArray(XDB_PATH);
             defaultXdbDataSupplier = Suppliers.memoize(easyRedisSupplier::get);
         }
@@ -50,16 +50,27 @@ public class Ip2regionUtils {
      * @param ip IP地址
      * @return String 返回字符串格式：国家|大区|省份|城市|运营商
      */
-    private static String getCityInfo(String ip) {
+    public static String getCityInfo(String ip) {
+        return getCityInfo(ip, getData());
+    }
+
+    /**
+     * 根据IP地址解析省市区信息
+     *
+     * @param ip    IP地址
+     * @param cBuff 从 dbPath 加载整个 xdb 到内存
+     * @return String 返回字符串格式：国家|大区|省份|城市|运营商
+     */
+    public static String getCityInfo(String ip, byte[] cBuff) {
         try {
             // 1、从 dbPath 加载整个 xdb 到内存。
-            byte[] cBuff = getData();
+//            byte[] cBuff = getData();
             // 2、使用上述的 cBuff 创建一个完全基于内存的查询对象。
             Searcher searcher = Searcher.newWithBuffer(cBuff);
             // 3、查询
             return searcher.search(ip);
-        } catch (Exception e) {
-            throw new ToolboxException("failed to create content cached searcher:", e);
+        } catch (Exception exception) {
+            throw new ToolboxException("failed to create content cached searcher:", exception);
         }
     }
 
