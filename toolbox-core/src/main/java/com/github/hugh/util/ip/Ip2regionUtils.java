@@ -83,6 +83,8 @@ public class Ip2regionUtils {
      */
     public static Ip2regionDTO parse(String ip) {
         String str = getCityInfo(ip);
+//        Supplier<byte[]> easyRedisSupplier = () -> StreamUtils.resourceToByteArray(Ip2regionUtils.class.getResource(XDB_PATH).getPath());
+//        String str = getCityInfo(ip, easyRedisSupplier.get());
         if (str == null) {
             return null;
         }

@@ -24,7 +24,7 @@ class Ip2regeinTest {
     private static final String XDB_PATH = "/ip2region/ip2region.xdb";
 
     @Test
-    void parseStringTest(){
+    void parseStringTest() {
         String ip = "222.244.144.131";
         Supplier<byte[]> easyRedisSupplier = () -> StreamUtils.resourceToByteArray(Ip2regionUtils.class.getResource(XDB_PATH).getPath());
         final String cityInfo = Ip2regionUtils.getCityInfo(ip, easyRedisSupplier.get());
@@ -55,7 +55,11 @@ class Ip2regeinTest {
         stopWatch.start("4");
         System.out.println(Ip2regionUtils.parse("175.178.82.15"));
         stopWatch.stop();
-
+//        String ip5 = "43.128.14.188";
+        String ip5 = "141.147.176.125";
+        stopWatch.start("5");
+        System.out.println("--->>" + Ip2regionUtils.parse(ip5));
+        stopWatch.stop();
         System.out.println(stopWatch.prettyPrint());
     }
 }
