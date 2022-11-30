@@ -111,7 +111,7 @@ class FileTest {
     void testFileToByteArray() throws IOException {
         String ip2DbPath = FileTest.class.getResource("/ip2region/ip2region.xdb").getFile();
         byte[] bytes = FileUtils.toByteArray(ip2DbPath);
-        assertEquals(58597, bytes.length);
+        assertEquals(11065998, bytes.length);
         ToolboxException toolboxException = assertThrowsExactly(ToolboxException.class, () -> {
             FileUtils.toByteArray(ip2DbPath + "2");
         });
@@ -130,7 +130,7 @@ class FileTest {
         final File kbFile = new File(path + temp1);
         //B
         assertEquals("213.00B", FileUtils.formatFileSize(kbFile));
-        assertEquals("57.22KB", FileUtils.formatFileSize(ip2DbPath));
+        assertEquals("10.55MB", FileUtils.formatFileSize(ip2DbPath));
         assertEquals("1.26GB", FileUtils.formatFileSize(1354390941L));
         assertEquals("981.58MB", FileUtils.formatFileSize(1029263971L));
         assertEquals("410.04KB", FileUtils.formatFileSize(419880));
