@@ -24,7 +24,6 @@ class Crc16Test {
         assertEquals(10, code1.length());
         assertTrue(Crc16Utils.checkCode(code1));
         assertTrue(RegexUtils.isNotLowerCaseAndNumber(code1));
-
         String code2 = Crc16Utils.generate(12);
         assertEquals(14, code2.length());
         assertTrue(Crc16Utils.checkCode(code2));

@@ -20,10 +20,10 @@ class DateTest {
     void testParse() throws ParseException {
         String strDateObj = "Mon Mar 21 18:02:11 CST 2022";
         System.out.println(strDateObj.length());
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat(DateCode.CST_FORM, Locale.US);
         Date d = sdf.parse(strDateObj);
 
-        Date parse = DateUtils.parseDate(strDateObj, "EEE MMM dd HH:mm:ss zzz yyyy");
+        Date parse = DateUtils.parseDate(strDateObj, DateCode.CST_FORM);
 //        assertInstanceOf(Date.class, parse);
         System.out.println(d.getTime());
 //        assertEquals(parse.getTime() , );
@@ -49,15 +49,18 @@ class DateTest {
 
     @Test
     void test02() {
-//        String str = "2020-06-04 13:00:21";
-        System.out.println("-1-->" + DateUtils.setMonthFirstDay(new Date()));
-        System.out.println("-2-->" + DateUtils.setMonthLastDay(new Date()));
+        String str = "2020-06-04 13:00:21";
+        final Date parse = DateUtils.parse(str);
+        assertEquals("2020-06-01 13:00:21", DateUtils.setMonthFirstDay(parse));
+        assertEquals("2020-06-30 23:59:59", DateUtils.setMonthLastDay(parse));
+//        assertEquals(DateUtils.parseDate() + " 23:59:59", DateUtils.setMonthLastDay(null));
+//        System.out.println("-1-->" + DateUtils.setMonthFirstDay(parse));
+//        System.out.println("-2-->" + DateUtils.setMonthLastDay(new Date()));
         System.out.println("-2-null->" + DateUtils.setMonthLastDay(null));
         System.out.println("-3-->" + DateUtils.getMonthBeforeStartTime());
         System.out.println("-4-->" + DateUtils.getMonthBeforeEndTime());
-        System.out.println("-5-->" + DateUtils.ofPattern(new Date()));
-        System.out.println("-6-->" + DateUtils.format(new Date()));
-        assertEquals("a", "a");
+        assertEquals(str, DateUtils.ofPattern(parse));
+        assertEquals("2020-06-04", DateUtils.format(parse));
     }
 
     // 测试日期是否是今天
