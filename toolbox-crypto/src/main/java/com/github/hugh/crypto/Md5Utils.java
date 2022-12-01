@@ -80,14 +80,12 @@ public class Md5Utils {
             while ((len = fileInputStream.read(buffer)) > 0) {
                 digest.update(buffer, 0, len);
             }
-            String md5 = new BigInteger(1, digest.digest()).toString(16);
+            StringBuilder md5 = new StringBuilder(new BigInteger(1, digest.digest()).toString(16));
             int length = 32 - md5.length();
             if (length > 0) {
-                for (int i = 0; i < length; i++) {
-                    md5 = "0" + md5;
-                }
+                md5.append(("0" + md5.toString()).repeat(length));
             }
-            return md5;
+            return md5.toString();
         } catch (NoSuchAlgorithmException | IOException e) {
             throw new ToolboxException(e);
         }

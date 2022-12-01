@@ -1,5 +1,6 @@
 package com.github.hugh.crypto;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -32,10 +33,11 @@ class Md5Test {
 
     @Test
     void testFile() {
-        String path = "D:\\public\\newFile.bin";
-        File file = new File(path);
-        assertEquals("4a61626dce2f490c1462acd8afa5e052", Md5Utils.encryptFile(file));
-        assertEquals("4a61626dce2f490c1462acd8afa5e052", Md5Utils.encryptFile(path));
-
+        String ip2DbPath = Md5Test.class.getResource("/logo.png").getFile();
+        Assertions.assertNotNull(ip2DbPath);
+        File file = new File(ip2DbPath);
+        String md5Result = "559e0c4bd56eb91202e60b398b8c556d";
+        assertEquals(md5Result, Md5Utils.encryptFile(file));
+        assertEquals(md5Result, Md5Utils.encryptFile(ip2DbPath));
     }
 }
