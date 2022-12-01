@@ -43,6 +43,8 @@ class Crc16Test {
         assertEquals("length error", cryptoException.getMessage());
         final CryptoException cryptoException2 = assertThrowsExactly(CryptoException.class, () -> Crc16Utils.generate(8, 3));
         assertEquals("is not even number", cryptoException2.getMessage());
+        final CryptoException cryptoException3= assertThrowsExactly(CryptoException.class, () -> Crc16Utils.generate(4, 4));
+        assertEquals("code length less than verify length error", cryptoException3.getMessage());
     }
 
     // 磐石致维8位编码
@@ -118,5 +120,8 @@ class Crc16Test {
         assertFalse(RegexUtils.isNotLowerCaseAndNumber(str1));
         final String str2 = Crc16Utils.generateLowerCase(12, 4);
         assertEquals(16, str2.length());
+        String str3 = "8a566f5d68953414";
+        assertTrue(RegexUtils.isLowerCaseAndNumber(str3));
+        assertTrue(Crc16Utils.verifyCode(str3, 4));
     }
 }

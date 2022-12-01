@@ -211,6 +211,9 @@ public class Crc16Utils {
         if (RegexUtils.isNotEvenNumber(verifyLength)) {
             throw new CryptoException("is not even number");
         }
+        if(length <= verifyLength){
+            throw new CryptoException("code length less than verify length error");
+        }
         String random = AppkeyUtils.generate().substring(0, length);
         String code = random + getVerCode(random, verifyLength);//根据八位数随机码、计算一个crc16的校验码
         if (flag) {
