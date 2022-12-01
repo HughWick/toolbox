@@ -41,7 +41,7 @@ class Crc16Test {
     void testException() {
         final CryptoException cryptoException = assertThrowsExactly(CryptoException.class, () -> Crc16Utils.generate(0));
         assertEquals("length error", cryptoException.getMessage());
-        final CryptoException cryptoException2 = assertThrowsExactly(CryptoException.class, () -> Crc16Utils.generate(8,3));
+        final CryptoException cryptoException2 = assertThrowsExactly(CryptoException.class, () -> Crc16Utils.generate(8, 3));
         assertEquals("is not even number", cryptoException2.getMessage());
     }
 
@@ -116,5 +116,7 @@ class Crc16Test {
         assertEquals(10, str1.length());
         assertTrue(RegexUtils.isLowerCaseAndNumber(str1));
         assertFalse(RegexUtils.isNotLowerCaseAndNumber(str1));
+        final String str2 = Crc16Utils.generateLowerCase(12, 4);
+        assertEquals(16, str2.length());
     }
 }

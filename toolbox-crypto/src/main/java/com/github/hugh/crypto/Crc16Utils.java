@@ -141,7 +141,7 @@ public class Crc16Utils {
     /**
      * 生成指定长度的crc
      * <p>根据指定长度生成crc 编码</p>
-     * <p>PS：在指定长度后两位都为校验码</p>
+     * <p>PS：字符串后两位都为校验码</p>
      * <p>例：如果生成一个10位的crc,结果则生成返回为12位长度的字符串,后两位固定为校验码</p>
      *
      * @param length 长度
@@ -155,7 +155,7 @@ public class Crc16Utils {
     /**
      * 生成指定长度的小写+数组组合的crc字符串
      * <p>根据指定长度生成crc 编码</p>
-     * <p>PS：在指定长度后两位都为校验码</p>
+     * <p>PS：字符串后两位都为校验码</p>
      * <p>例：如果生成一个10位的crc,结果则生成返回为12位长度的字符串,后两位固定为校验码</p>
      *
      * @param length 长度
@@ -163,7 +163,22 @@ public class Crc16Utils {
      * @since 2.4.3
      */
     public static String generateLowerCase(int length) {
-        return generate(length, 2, false);
+        return generateLowerCase(length, 2);
+    }
+
+
+    /**
+     * 生成指定长度的小写+数组组合的crc字符串
+     * <p>根据指定长度生成crc 编码</p>
+     * <p>例：如果生成一个10位的crc,结果则生成返回为12位长度的字符串,后两位固定为校验码</p>
+     *
+     * @param length       长度
+     * @param verifyLength 验证码长度
+     * @return String
+     * @since 2.4.4
+     */
+    public static String generateLowerCase(int length, int verifyLength) {
+        return generate(length, verifyLength, false);
     }
 
     /**
@@ -233,7 +248,7 @@ public class Crc16Utils {
 
     /**
      * 验证校验码是否正确
-     * <p>由于命令不规范，标记为过期，使用{{@link #verifyCode(String)}}</p>
+     * <p>由于命名不规范，标记为过期，使用{{@link #verifyCode(String)}}</p>
      *
      * @param str 字符串
      * @return boolean {@code true} 正确
