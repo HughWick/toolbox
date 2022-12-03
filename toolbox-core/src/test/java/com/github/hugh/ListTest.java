@@ -1,5 +1,6 @@
 package com.github.hugh;
 
+import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.model.Student;
 import com.github.hugh.util.ListUtils;
 import com.github.hugh.util.regex.RegexUtils;
@@ -207,6 +208,17 @@ class ListTest {
         list2.add(student3);
         list2.add(student4);
         assertEquals("'张三','李四','王五'", ListUtils.listToInSql(list2, "name"));
+    }
+
+    // 测试字符串数组直接转in sql语句的字符串
+    @Test
+    void testStrArrayToInSql() {
+        String strArray1 = "a,b,c";
+        assertEquals("'a','b','c'", ListUtils.strArrayToInSql(strArray1, ","));
+        assertEquals("'a','b','c'", ListUtils.strArrayToInSql(strArray1));
+        String strArray2 = "123";
+//        ToolboxException toolboxException = assertThrowsExactly(ToolboxException.class, () -> ListUtils.strArrayToInSql(strArray2));
+//        assertEquals("unknown separator : " + strArray2, toolboxException.getMessage());
     }
 
     // list 转字符串

@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.rmi.ServerException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -149,6 +150,33 @@ public class ListUtils {
      */
     public static <T> String listToString(List<T> list, String separator) {
         return listObjectToString(list, null, separator, false);
+    }
+
+    /**
+     * 字符串数组 转 in sql 语句字符串
+     *
+     * @param strArray 源字符串
+     * @return String
+     * @since 2.4.4
+     */
+    public static String strArrayToInSql(String strArray) {
+        return strArrayToInSql(strArray, LIST_SEPARATOR);
+    }
+
+    /**
+     * 字符串数组 转 in sql 语句字符串
+     *
+     * @param strArray  源字符串
+     * @param separator 分隔符
+     * @return String
+     * @since 2.4.4
+     */
+    public static String strArrayToInSql(String strArray, String separator) {
+        if (EmptyUtils.isEmpty(strArray)) {
+            throw new ToolboxException("string is null");
+        }
+        List<String> strings = guavaStringToList(strArray, separator);
+        return listToInSql(strings);
     }
 
     /**
