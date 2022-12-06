@@ -4,8 +4,6 @@ import com.github.hugh.crypto.exception.CryptoException;
 import com.github.hugh.util.regex.RegexUtils;
 import org.junit.jupiter.api.Test;
 
-import java.util.Locale;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -42,7 +40,7 @@ class Crc16Test {
         assertEquals("length error", cryptoException.getMessage());
         final CryptoException cryptoException2 = assertThrowsExactly(CryptoException.class, () -> Crc16Utils.generate(8, 3));
         assertEquals("is not even number", cryptoException2.getMessage());
-        final CryptoException cryptoException3= assertThrowsExactly(CryptoException.class, () -> Crc16Utils.generate(4, 4));
+        final CryptoException cryptoException3 = assertThrowsExactly(CryptoException.class, () -> Crc16Utils.generate(4, 4));
         assertEquals("code length less than verify length error", cryptoException3.getMessage());
     }
 
@@ -89,11 +87,14 @@ class Crc16Test {
     @Test
     void testWeXin() {
         // 微信 open id
-        String str1 = "00f18fb4f65ab436";
-        assertEquals(16, str1.length());
-//        System.out.println(str1.length());
+        String wxOpenIdStr = "00f18fb4f65ab436";
+        assertEquals(16, wxOpenIdStr.length());
+        String str2 = "fbf5018fbf751845";
+        assertEquals(str2.length() , wxOpenIdStr.length());
+        String str3 = "8a566f5d68953414";
         final String generate = Crc16Utils.generate(14);
-        System.out.println(generate.toLowerCase(Locale.ROOT));
+        assertTrue(RegexUtils.isUpperCaseAndNumber(generate));
+//        System.out.println(generate.toLowerCase(Locale.ROOT));
         assertEquals(16, generate.length());
         assertTrue(Crc16Utils.checkCode(generate));
     }

@@ -16,29 +16,30 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class DateTest {
 
+    // 测速 cst时间格式转换
     @Test
     void testParse() throws ParseException {
         String strDateObj = "Mon Mar 21 18:02:11 CST 2022";
-        System.out.println(strDateObj.length());
+        assertEquals(28, strDateObj.length());
         SimpleDateFormat sdf = new SimpleDateFormat(DateCode.CST_FORM, Locale.US);
         Date d = sdf.parse(strDateObj);
-
+        assertEquals(1647856931000L, d.getTime());
         Date parse = DateUtils.parseDate(strDateObj, DateCode.CST_FORM);
-//        assertInstanceOf(Date.class, parse);
-        System.out.println(d.getTime());
-//        assertEquals(parse.getTime() , );
+        assertNotNull(parse);
+        assertEquals(parse.getTime(), d.getTime());
     }
 
     @Test
     void test01() {
         String str = "2020-06-04 13:00:21";
         assertTrue(DateUtils.isDateFormat(str));
-        System.out.println("-2-->" + DateUtils.parseDate(str));
+        assertEquals("Thu Jun 04 00:00:00 CST 2020", DateUtils.parseDate(str).toString());
+//        System.out.println("-2-->" + );
         final boolean dateFormat = DateUtils.isDateFormat(DateUtils.getDate(DateCode.YEAR_MONTH_DAY), DateCode.YEAR_MONTH_DAY);
         assertTrue(dateFormat);
 //        System.out.println("--3->" + );
         System.out.println("--4->" + DateUtils.getDate(1));
-        System.out.println("===>>" + DateUtils.toStringTime(str));
+        assertEquals("20200604130021", DateUtils.toStringTime(str));
 //        System.out.println("--5->" + DateUtils.getDate(DateUtils.toStringTime(str)));
         System.out.println("--6->" + DateUtils.getDateSign());
         String s = DateUtils.toStringDate("20200604130021");

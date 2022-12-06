@@ -501,9 +501,14 @@ public class MapUtils {
      * @since 2.1.11
      */
     public static <K extends Comparable<? super K>, V> Map<K, V> sortByKeyAsc(Map<K, V> map) {
-        Map<K, V> result = new LinkedHashMap<>();
-        map.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEachOrdered(e -> result.put(e.getKey(), e.getValue()));
-        return result;
+        Map<K, V> obj = new LinkedHashMap<>();
+        final List<Map.Entry<K, V>> infos = new ArrayList<>(map.entrySet());
+        // 重写集合的排序方法：按字母顺序
+        infos.sort(Map.Entry.comparingByKey());
+        for (final Map.Entry<K, V> m : infos) {
+            obj.put(m.getKey(), m.getValue());
+        }
+        return obj;
     }
 
     /**
