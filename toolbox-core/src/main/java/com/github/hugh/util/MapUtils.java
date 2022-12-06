@@ -479,16 +479,14 @@ public class MapUtils {
     /**
      * 集合内的数据按key的字母降序排序
      *
-     * @param <K> 键
-     * @param <V> 值
-     * @param map 需要排序的参数
+     * @param <K>  键
+     * @param <MV> 值
+     * @param map  需要排序的参数
      * @return map 按字母排序后的map
      * @since 2.1.11
      */
-    public static <K extends Comparable<? super K>, V> Map<K, V> sortByKeyDesc(Map<K, V> map) {
-        Map<K, V> result = new LinkedHashMap<>();
-        map.entrySet().stream().sorted(Map.Entry.<K, V>comparingByKey().reversed()).forEachOrdered(e -> result.put(e.getKey(), e.getValue()));
-        return result;
+    public static <K extends Comparable<? super K>, MV> Map<K, MV> sortByKeyDesc(Map<K, MV> map) {
+        return sortByKey(map, true);
     }
 
     /**
@@ -501,12 +499,29 @@ public class MapUtils {
      * @since 2.1.11
      */
     public static <K extends Comparable<? super K>, V> Map<K, V> sortByKeyAsc(Map<K, V> map) {
+        return sortByKey(map, false);
+    }
+
+    /**
+     * 集合内的数据按key的字母升序排序
+     *
+     * @param <K>  键
+     * @param <V>  值
+     * @param map  需要排序的参数
+     * @param flag 升序与降标识
+     * @return map 按字母排序后的map
+     * @since 2.4.4
+     */
+    private static <K extends Comparable<? super K>, V> Map<K, V> sortByKey(Map<K, V> map, boolean flag) {
         Map<K, V> obj = new LinkedHashMap<>();
         final List<Map.Entry<K, V>> infos = new ArrayList<>(map.entrySet());
-        // 重写集合的排序方法：按字母顺序
-        infos.sort(Map.Entry.comparingByKey());
-        for (final Map.Entry<K, V> m : infos) {
-            obj.put(m.getKey(), m.getValue());
+        if (flag) {
+            infos.sort(Map.Entry.<K, V>comparingByKey().reversed());
+        } else {
+            infos.sort(Map.Entry.comparingByKey());// 重写集合的排序方法：按字母顺序
+        }
+        for (final Map.Entry<K, V> subMap : infos) {
+            obj.put(subMap.getKey(), subMap.getValue());
         }
         return obj;
     }

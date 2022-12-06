@@ -103,30 +103,45 @@ class MapTest {
 //        System.out.println(map);
     }
 
+    // 测试map升序与降序
     @Test
     void testSort() {
-        Map<String, Integer> map1 = new HashMap<>();
+        Map<String, Object> map1 = new HashMap<>();
         map1.put("z", 1);
         map1.put("a", 1);
         map1.put("w", 1);
         map1.put("i", 1);
         map1.put("n", 1);
         map1.put("m", 1);
+        map1.put("c", "建");
         map1.put("e", 1);
-        System.out.println("--->原来>!>>>>" + map1);
+        String str = "{a=1, c=建, e=1, w=1, i=1, z=1, m=1, n=1}";
+        assertEquals(str, map1.toString());
+        String str2 = "{a=1, c=建, e=1, i=1, m=1, n=1, w=1, z=1}";
+        assertEquals(str2, MapUtils.sortByKeyAsc(map1).toString());
+        Map<String, Object> contentMap = new HashMap<>();
+        contentMap.put("account", "bsd");
+        contentMap.put("password", "bsd");
+        map1.put("content", contentMap);
+        String str3 = "{a=1, c=建, content={password=bsd, account=bsd}, e=1, i=1, m=1, n=1, w=1, z=1}";
+        assertEquals(str3, MapUtils.sortByKeyAsc(map1).toString());
+        String str4 = "{z=1, w=1, n=1, m=1, i=1, e=1, content={password=bsd, account=bsd}, c=建, a=1}";
+        assertEquals(str4, MapUtils.sortByKeyDesc(map1).toString());
+//        System.out.println("--->原来>!>>>>" +  MapUtils.sortByKeyAsc(map1));
 //        System.out.println("--2->>!>>>>" + MapUtils.sortMap(map));
-        System.out.println("--6->>!>>>>" + MapUtils.sortByKeyAsc(map1));
+//        System.out.println("--6->>!>>>>" + MapUtils.sortByKeyDesc(map1));
 //        Assertions.assertEquals(MapUtils.sortMap(map) ,MapUtils.sortByKeyAsc(map));
-        Map<String, String> stringMap = new HashMap<>();
+        Map<String, Object> stringMap = new HashMap<>();
         stringMap.put("2", "a");
         stringMap.put("5", "i");
         stringMap.put("1", "z");
         stringMap.put("3", "c");
+        stringMap.put("111", "csa");
         stringMap.put("6", "w");
         stringMap.put("4", "n");
         System.out.println("--3->排序前>!>>>>" + stringMap);
-        System.out.println("--4->>!>>>>" + MapUtils.sortByValueDesc(stringMap));
-        System.out.println("--5->>!>>>>" + MapUtils.sortByValueAsc(stringMap));
+//        System.out.println("--4->>!>>>>" + MapUtils.sortByValueDesc(stringMap));
+//        System.out.println("--5->>!>>>>" + MapUtils.sortByValueAsc(stringMap));
         System.out.println("--6->>!>>>>" + MapUtils.sortByKeyDesc(stringMap));
     }
 
