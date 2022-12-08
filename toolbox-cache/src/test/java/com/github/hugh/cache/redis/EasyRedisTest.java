@@ -162,7 +162,7 @@ class EasyRedisTest {
         final byte[] bytes = new byte[]{115, 100, 106, 102, 104, 107, 106};
         assertArrayEquals(bytes, instance.get(1, byteKey));
         assertEquals(Lists.newArrayList(null, null), instance.mget(0, key, "set_test_02"));
-        final Set<String> allKeys = instance.getAllKeys(dbIndex, "*");
+        final Set<String> allKeys = instance.getAllKeys(13, "*");
         assertTrue(ListUtils.isEmpty(allKeys));
     }
 

@@ -2,15 +2,12 @@ package com.github.hugh.http;
 
 import com.github.hugh.json.gson.JsonObjectUtils;
 import com.github.hugh.json.gson.JsonObjects;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
@@ -89,7 +86,8 @@ class OkHttpGetTest {
         params.put("type", "oauth_token");
 //        String resultStr = YmHttpUtil.HttpPost(UrlConfig.YIN_MENG_TOKEN, params);
         String str = OkHttpUtils.postForm("https://ym.191ec.com/silver-web/oauth/token", params);
-        System.out.println("--->>" + str);
+        assertEquals(-2 , new JsonObjects(str).getInt("status"));
+//        System.out.println("--->>" + str);
 //        if (StringEmptyUtils.isNotEmpty(resultStr)) {
 //            return JSONObject.fromObject(resultStr);
 //        } else {

@@ -3,6 +3,9 @@ package com.github.hugh;
 import com.github.hugh.util.DoubleMathUtils;
 import org.junit.jupiter.api.Test;
 
+import java.math.RoundingMode;
+import java.text.NumberFormat;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -18,7 +21,7 @@ class DoubleMathTest {
     void testAdd() {
         double add = DoubleMathUtils.add(1, 2);
         assertEquals(3, add);
-        assertEquals(1.0 , DoubleMathUtils.round(1.000, 2));
+        assertEquals(1.0, DoubleMathUtils.round(1.000, 2));
         double d2 = 1.1234566123;
         assertEquals("1.12", DoubleMathUtils.numberFormat.format(d2));
         assertEquals("1.12345", DoubleMathUtils.numberGiveUp.format(d2));
@@ -86,5 +89,16 @@ class DoubleMathTest {
 //        System.out.println("10的负三次方等于：" + Math.pow(10, -(-3)));
 //        System.out.println("-1等于：" + (-1));
 //        System.out.println("负的括号内-1等于：" + -(-1));
+    }
+
+    @Test
+    void test010() {
+        NumberFormat numberFormat = NumberFormat.getNumberInstance();
+        numberFormat.setMaximumFractionDigits(8);
+        numberFormat.setGroupingUsed(false);
+        numberFormat.setRoundingMode(RoundingMode.DOWN);
+        String longitude = "112.94670227122846";
+        System.out.println("---->>" + numberFormat.format(Double.parseDouble(longitude)));
+
     }
 }
