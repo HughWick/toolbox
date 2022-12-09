@@ -3,6 +3,7 @@ package com.github.hugh.util;
 import com.github.hugh.constant.guava.CharMatchers;
 import com.google.common.base.CaseFormat;
 
+import java.math.RoundingMode;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -494,5 +495,56 @@ public class StringUtils {
      */
     public static String trimLastPlace(StringBuilder source) {
         return trimLastPlace(source.toString());
+    }
+
+    /**
+     * 格式化字符串向下取整
+     * <p>
+     * 默认为不分组
+     * </p>
+     *
+     * @param value                 值
+     * @param maximumFractionDigits 小数点后最大保留个数
+     * @return String
+     * @since 2.4.5
+     */
+    public static <T> String retainDecimalDown(T value, int maximumFractionDigits) {
+        final double d1 = Double.parseDouble(String.valueOf(value));
+        return retainDecimal(d1, maximumFractionDigits, false, RoundingMode.DOWN);
+    }
+
+    /**
+     * 向下取整
+     * <ul>
+     *     <li>例值4000</li>
+     *     <li>true：4,000,000</li>
+     *     <li>false：4000</li>
+     * </ul>
+     *
+     * @param value                 值
+     * @param maximumFractionDigits 最大保留个数
+     * @param groupingUsed          是否用逗号分割
+     * @return String
+     * @since 2.4.5
+     */
+    public static <T> String retainDecimalDown(T value, int maximumFractionDigits, boolean groupingUsed) {
+        return retainDecimal(value, maximumFractionDigits, groupingUsed, RoundingMode.DOWN);
+    }
+
+    /**
+     * 小数点后保留指定个数格式化
+     *
+     * @param value                 值
+     * @param maximumFractionDigits 最大保留个数
+     * @param groupingUsed          是否用逗号分割
+     * @param roundingMode          取整模型{@link RoundingMode}
+     * @return String
+     * @since 2.4.5
+     */
+    public static <T> String retainDecimal(T value, int maximumFractionDigits, boolean groupingUsed, RoundingMode roundingMode) {
+        DoubleMathUtils.numberFormat.setMaximumFractionDigits(maximumFractionDigits);
+        DoubleMathUtils.numberFormat.setGroupingUsed(groupingUsed);
+        DoubleMathUtils.numberFormat.setRoundingMode(roundingMode);
+        return DoubleMathUtils.numberFormat.format(value);
     }
 }

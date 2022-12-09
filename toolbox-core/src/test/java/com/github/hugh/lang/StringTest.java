@@ -3,6 +3,8 @@ package com.github.hugh.lang;
 import com.github.hugh.util.StringUtils;
 import org.junit.jupiter.api.Test;
 
+import java.math.RoundingMode;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -59,8 +61,10 @@ class StringTest {
     @Test
     void testChinese() {
         var str = "[a, b, [c]]]";
-        System.out.println("==2=>>>" + StringUtils.trim(str, "]"));
-        System.out.println("==2=>>>" + StringUtils.trim(str, "["));
+        assertEquals("[a, b, [c]]", StringUtils.trim(str, "]"));
+        assertEquals("a, b, [c]]]", StringUtils.trim(str, "["));
+//        System.out.println("==2=>>>" + StringUtils.trim(str, "]"));
+//        System.out.println("==2=>>>" + StringUtils.trim(str, "["));
         assertTrue(StringUtils.isContainChinese("；"));
         assertTrue(StringUtils.isContainChinese("中文"));
         assertFalse(StringUtils.isNotContainChinese("中文2"));
@@ -120,5 +124,20 @@ class StringTest {
         String str2 = "Ass>";
         assertTrue(StringUtils.startWithIgnoreCase(str, "<"));
         assertFalse(StringUtils.startWith(str2, "a", false));
+    }
+
+    // 测试保留小数点后指定位数
+    @Test
+    void testRetainDecimal() {
+        String str1 = "112.94677848482011";
+        final String s = StringUtils.retainDecimalDown(str1, 8);
+        assertEquals(12, s.length());
+        String str2 = "28.219683340569325";
+        assertEquals(11, StringUtils.retainDecimalDown(str2, 8).length());
+        final String s1 = StringUtils.retainDecimal(Double.parseDouble(str1), 8, false, RoundingMode.UP);
+        assertEquals("112.94677849", s1);
+        String str3 = "1401231485.123";
+        final String s2 = StringUtils.retainDecimalDown(Double.parseDouble(str3), 2, true);
+        assertEquals("1,401,231,485.12", s2);
     }
 }
