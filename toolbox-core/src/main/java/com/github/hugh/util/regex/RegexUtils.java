@@ -451,7 +451,7 @@ public class RegexUtils {
      * 只校验正数 0-90.000000 0-180.000000 范围内
      * 经纬度校验
      * <pre>
-     *      经度longitude： -180.0～+180.0（整数部分为0～180，必须输入1到8位小数）
+     *      经度 longitude： -180.0～+180.0（整数部分为0～180，必须输入1到8位小数）
      *      纬度 latitude ： -90.0～+90.0（整数部分为0～90，必须输入1到8位小数）
      * </pre>
      *
@@ -497,14 +497,25 @@ public class RegexUtils {
     }
 
     /**
+     * 字符串不是正确的经度
+     *
+     * @param longitude 经度
+     * @return boolean {@code true}错误的经度
+     * @since 2.4.5
+     */
+    public static boolean isNotLongitude(String longitude) {
+        return !isLongitude(longitude);
+    }
+
+    /**
      * 只校验正数 0-90.000000 范围内
      * 纬度校验
      * <pre>
      *      纬度 latitude ： -90.0～+90.0（整数部分为0～90，必须输入1到8位小数）
      * </pre>
      *
-     * @param latitude 维度
-     * @return boolean {@code true} 维度正确
+     * @param latitude 纬度
+     * @return boolean {@code true} 纬度正确
      * @since 1.4.16
      */
     public static boolean isLatitude(String latitude) {
@@ -514,6 +525,17 @@ public class RegexUtils {
         String latitudePattern = "^[\\-+]?([0-8]?\\d{1}\\.\\d{1,8}|90\\.0{1,8})$";
         latitude = latitude.strip();
         return Pattern.matches(latitudePattern, latitude);
+    }
+
+    /**
+     * 验证错误是否为错误的纬度
+     *
+     * @param latitude 纬度
+     * @return boolean {@code true}错误的纬度
+     * @since 2.4.5
+     */
+    public static boolean isNotLatitude(String latitude) {
+        return !isLatitude(latitude);
     }
 
     /**

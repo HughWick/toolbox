@@ -4,7 +4,6 @@ import com.github.hugh.util.regex.RegexUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * 字符串验证测试类
@@ -49,17 +48,28 @@ class RegexTest {
     // 测试经纬度
     @Test
     void testLonLat() {
-        String longitude = "112.94662109375";
+        // 纬度
+        String str1 = "28.219310709636";
         String latitude = "28.219310709636";
-        String longitude2 = "1019.48427455";
         String latitude2 = "218.59640742";
+        String lat3 = "28.21931070";
+        //经度
+        String str2 = "112.94662109375";
+        String str3 = "112.94662109";
+        String longitude = "112.94662109375";
+        String longitude2 = "1019.48427455";
         assertFalse(RegexUtils.isLonLat(longitude, latitude));
         assertTrue(RegexUtils.isNotLonLat(longitude, latitude));
 
         assertFalse(RegexUtils.isLongitude(longitude));
         assertFalse(RegexUtils.isLongitude(longitude2));
+        assertTrue(RegexUtils.isLongitude(str3));
+
         assertFalse(RegexUtils.isLatitude(latitude));
         assertFalse(RegexUtils.isLatitude(latitude2));
+        assertTrue(RegexUtils.isLatitude(lat3));
+        assertTrue(RegexUtils.isNotLatitude(str2));
+        assertTrue(RegexUtils.isNotLongitude(str1));
     }
 
     @Test
