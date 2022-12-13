@@ -2,7 +2,6 @@ package com.github.hugh.file;
 
 import com.github.hugh.util.file.FileUtils;
 import com.github.hugh.util.file.ImageUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -28,22 +27,11 @@ public class ImageTest {
         String image3 = "/file/image/Teresa.png";
         String path3 = ImageTest.class.getResource(image3).getPath();
         assertTrue(ImageUtils.isImage(path3));
+//        String image4 = "/file/image/share_1b1c03ab50c37b1462ac6a1d86cf9119.png";
+//        String path4 = ImageTest.class.getResource(image4).getPath();
+//        assertFalse(ImageUtils.isImage(path4));
     }
 
-//    @Test
-//    public void test02() {
-//        try {
-//            var a = 2;
-//            try {
-//                int i = a / 0;
-//            } finally {
-//
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println("==========");
-//    }
 
     public static void main(String[] args) {
 //        CatchPic pic = new CatchPic();/* 创建实例 */

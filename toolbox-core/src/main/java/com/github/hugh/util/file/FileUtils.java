@@ -1,9 +1,11 @@
 package com.github.hugh.util.file;
 
+import com.github.hugh.constant.enums.FileType;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.DoubleMathUtils;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.StringUtils;
+import com.github.hugh.util.base.BaseConvertUtils;
 import com.google.common.io.Files;
 import lombok.Cleanup;
 
@@ -299,5 +301,68 @@ public class FileUtils {
      */
     public static String formatFileSize(String path) {
         return formatFileSize(new File(path));
+    }
+
+    /**
+     * 获取文件真实类型
+     *
+     * @param filePath 文件路径
+     * @return String 文件类型
+     * @throws FileNotFoundException 文件未找到异常
+     * @since 2.4.6
+     */
+    public static String getFileType(String filePath) throws FileNotFoundException {
+        return getFileType(new FileInputStream(filePath));
+    }
+
+    /**
+     * 获取文件真实类型
+     *
+     * @param file 文件
+     * @return String 文件类型
+     * @throws FileNotFoundException 文件未找到异常
+     * @since 2.4.6
+     */
+    public static String getFileType(File file) throws FileNotFoundException {
+        return getFileType(new FileInputStream(file));
+    }
+
+    /**
+     * 获取文件真实类型
+     *
+     * @param inputStream 文件流
+     * @return String 文件类型
+     * @since 2.4.6
+     */
+    public static String getFileType(InputStream inputStream) {
+        String fileHead = getFileHead(inputStream);
+        if (fileHead == null || fileHead.length() == 0) {
+            return null;
+        }
+        fileHead = fileHead.toUpperCase();
+        FileType[] fileTypes = FileType.values();
+        for (FileType type : fileTypes) {
+            if (fileHead.startsWith(type.getValue())) {
+                return type.name().toLowerCase();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取文件流中文件头内容，并且转十六进制
+     *
+     * @param inputStream 文件流
+     * @return String 文件头十六进制
+     * @since 2.4.6
+     */
+    private static String getFileHead(InputStream inputStream) {
+        byte[] bytes = new byte[28];
+        try (inputStream) {
+            inputStream.read(bytes, 0, 28);
+        } catch (IOException ioException) {
+            throw new ToolboxException(ioException);
+        }
+        return BaseConvertUtils.hexBytesToString(bytes);
     }
 }

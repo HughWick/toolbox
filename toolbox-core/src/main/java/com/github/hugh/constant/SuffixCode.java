@@ -9,12 +9,23 @@ package com.github.hugh.constant;
 public class SuffixCode {
 
     //图片类型
-    public static final String PNG = "PNG";
     public static final String JPG = "JPG";
     public static final String JPEG = "JPEG";
+    public static final String PNG = "PNG";
     public static final String BMP = "BMP";
     public static final String GIF = "GIF";
     public static final String SVG = "SVG";
+    public static final String TIF = "TIF";
+    public static final String WEBP = "WEBP";
+    // 图片类型，小写
+    public static final String JPG_LOWER_CASE = "jpg";
+    public static final String JPEG_LOWER_CASE = "jpeg";
+    public static final String PNG_LOWER_CASE = "png";
+    public static final String BMP_LOWER_CASE = "bmp";
+    public static final String GIF_LOWER_CASE = "gif";
+    public static final String SVG_LOWER_CASE = "svg";
+    public static final String TIF_LOWER_CASE = "tif";
+    public static final String WEBP_LOWER_CASE = "webp";
     //PDF
     public static final String PDF = "PDF";
     //压缩文件类型

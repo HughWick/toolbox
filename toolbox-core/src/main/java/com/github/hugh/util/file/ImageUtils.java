@@ -1,5 +1,7 @@
 package com.github.hugh.util.file;
 
+import com.github.hugh.exception.ToolboxException;
+
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
@@ -40,12 +42,9 @@ public class ImageUtils {
     public static boolean isImage(File file) {
         try (ImageInputStream imageInputStream = ImageIO.createImageInputStream(file)) {
             Iterator<ImageReader> iter = ImageIO.getImageReaders(imageInputStream);
-            if (iter.hasNext()) {
-                return true;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+            return iter.hasNext();
+        } catch (IOException ioException) {
+            throw new ToolboxException(ioException);
         }
-        return false;
     }
 }

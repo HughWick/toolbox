@@ -21,9 +21,10 @@ public class SuffixUtils {
         if (EmptyUtils.isEmpty(suffix)) {
             return false;
         }
-        return SuffixCode.PNG.equalsIgnoreCase(suffix) || SuffixCode.JPG.equalsIgnoreCase(suffix) ||
-                SuffixCode.JPEG.equalsIgnoreCase(suffix) || SuffixCode.BMP.equalsIgnoreCase(suffix) ||
-                SuffixCode.GIF.equalsIgnoreCase(suffix) || SuffixCode.SVG.equalsIgnoreCase(suffix);
+        return SuffixCode.PNG.equalsIgnoreCase(suffix) || SuffixCode.JPG.equalsIgnoreCase(suffix)
+                || SuffixCode.JPEG.equalsIgnoreCase(suffix) || SuffixCode.BMP.equalsIgnoreCase(suffix)
+                || SuffixCode.GIF.equalsIgnoreCase(suffix) || SuffixCode.SVG.equalsIgnoreCase(suffix)
+                || SuffixCode.WEBP.equalsIgnoreCase(suffix);
     }
 
     /**
