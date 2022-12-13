@@ -336,10 +336,9 @@ public class FileUtils {
      */
     public static String getFileType(InputStream inputStream) {
         String fileHead = getFileHead(inputStream);
-        if (fileHead == null || fileHead.length() == 0) {
+        if (EmptyUtils.isEmpty(fileHead)) {
             return null;
         }
-        fileHead = fileHead.toUpperCase();
         FileType[] fileTypes = FileType.values();
         for (FileType type : fileTypes) {
             if (fileHead.startsWith(type.getValue())) {

@@ -34,13 +34,20 @@ public class OkHttpUpdateFileTest {
 
     @Test
     void testMinio() throws IOException {
-        String url = "http://192.168.1.213:8001/file/minio/upload";
+//        String url = "http://192.168.1.213:8001/file/minio/upload";
+        String url = "https://dev.hnlot.com.cn/file/minio/upload";
+        String path1 = "D:\\OneDrive\\图片\\QQ图片20220206181047.png";
+        String path2 = "D:\\Program Files\\Desktop\\share_0a3835617ff336a3004dbf9115dac414.png";
+        // ------------------------
+        String path3 = "D:\\Program Files\\Desktop\\images\\test_001.webp";
         var params = new HashMap<>();
         params.put("type", "0");
         var fileMap = new HashMap<>();
-//        fileMap.put("鬼灭之刃1.jpg", "D:\\OneDrive\\图片\\鬼灭之刃\\78133846_p0.jpg");
-        fileMap.put("缘一.jpg", "D:\\Program Files\\Desktop\\71EcJAenv0L_.jpg");
-        fileMap.put("XXX.png", "D:\\OneDrive\\图片\\41427030_p0.png");
+//        fileMap.put("鬼灭之刃1.png", "D:\\Program Files\\Desktop\\111.png");
+//        fileMap.put("缘一.jpg", "D:\\Program Files\\Desktop\\71EcJAenv0L_.jpg");
+//        fileMap.put("XXX.png", path1);
+//        fileMap.put("share_0a3835617ff336a3004dbf9115dac414.png", path2);
+        fileMap.put("test_001.webp", path3);
         String result = OkHttpUtils.upload(url, params, "file", fileMap);
         System.out.println("--->" + result);
     }
