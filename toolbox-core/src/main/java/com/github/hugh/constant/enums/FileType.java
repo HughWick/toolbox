@@ -9,12 +9,19 @@ import lombok.ToString;
  * <p>
  * 注意：txt文档没有文件头
  * </p>
- * <li>
- * 该枚举命名方式都为长度为3的后缀字母，
+ * <ul>
+ * <p>
+ * 该枚举命名方式都为长度为3的后缀字母
+ *  <li>
  * 如：
+ * </li>
+ * <li>
  * jpg=jpg; jpe; jpeg
+ * </li>
+ *  <li>
  * tif=tiff,tif
  * </li>
+ * </ul>
  *
  * @author hugh
  * @since 2.4.6
