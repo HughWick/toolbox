@@ -23,6 +23,7 @@ public class UrlUtils {
      *
      * @param url  URL
      * @param data 参数
+     * @param <T>  参数类型
      * @return String 拼接好参数的Get请求url
      * @since 1.3.0
      */
@@ -43,6 +44,7 @@ public class UrlUtils {
      * 将json中键值对拼接为url对应的参数
      *
      * @param json 参数
+     * @param <T>  参数类型
      * @return String 拼接后的URL参数字符串
      */
     public static <T> String jsonParse(T json) {
