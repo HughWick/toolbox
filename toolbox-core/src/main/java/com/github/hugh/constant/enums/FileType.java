@@ -10,10 +10,8 @@ import lombok.ToString;
  * 注意：txt文档没有文件头
  * </p>
  * <ul>
- * <p>
- * 该枚举命名方式都为长度为3的后缀字母
  *  <li>
- * 如：
+ * 该枚举命名方式都为长度为3的后缀字母，如：
  * </li>
  * <li>
  * jpg=jpg; jpe; jpeg
