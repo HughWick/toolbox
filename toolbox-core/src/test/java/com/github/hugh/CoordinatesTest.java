@@ -21,14 +21,13 @@ class CoordinatesTest {
     // 测试高德转百度坐标系
     @Test
     void testGaoDeToBaiDu() {
+        String long1 = "112.95321356";
+        String latitude2 = "28.22574022";
+         // 112.95321356,28.22574022
         GpsDTO gpsDTO = CoordinatesUtils.gcj02ToBd09(112.94671143, 28.21967801);
-//        System.out.println("-1-->>" + gpsDTO.getLongitude());
-//        System.out.println("-2-->>" + gpsDTO.getLatitude());
-        assertEquals(Double.parseDouble("112.95321356"), gpsDTO.getLongitude());
-        assertEquals(Double.parseDouble("28.22574022"), gpsDTO.getLatitude());
+        assertEquals(Double.parseDouble(long1), gpsDTO.getLongitude());
+        assertEquals(Double.parseDouble(latitude2), gpsDTO.getLatitude());
         GpsDTO gpsDTO2 = CoordinatesUtils.gcj02ToBd09("109.48426107", "28.56126845");
-//        System.out.println("-3-->>" + gpsDTO2.getLongitude());
-//        System.out.println("-4-->>" + gpsDTO2.getLatitude());
         assertEquals(Double.parseDouble("109.49082055"), gpsDTO2.getLongitude());
         assertEquals(Double.parseDouble("28.56704569"), gpsDTO2.getLatitude());
     }

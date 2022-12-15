@@ -6,7 +6,6 @@ import com.github.hugh.util.file.FileUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
@@ -140,13 +139,13 @@ class FileTest {
         assertEquals("880.00B", FileUtils.formatFileSize(880));
     }
 
-    // 验证图片后缀
+    // 验证图片类型
     @Test
     void testVerifyType() throws FileNotFoundException {
         String image1 = "/file/image/webp/share_572031b53d646c2c8a8191bdd93a95b2.png";
         String path1 = ImageTest.class.getResource(image1).getPath();
         final String picTyp1 = FileUtils.getFileType(path1);
-        assertEquals(SuffixCode.WEBP.toLowerCase(), picTyp1);
+        assertEquals(SuffixCode.WEBP_LOWER_CASE, picTyp1);
 
         String image2 = "/file/image/20200718234953_grmzy.jpeg";
         String path2 = ImageTest.class.getResource(image2).getPath();
@@ -173,6 +172,9 @@ class FileTest {
         String image7 = "/file/image/tiff.tif";
         final String picTyp7 = FileUtils.getFileType(getPath(image7));
         assertEquals(SuffixCode.TIF_LOWER_CASE, picTyp7);
+        String image8 = "/file/image/webp/share_875d7016c30cc485a2d35f7aad804aaa.png";
+        final String picTyp8 = FileUtils.getFileType(getPath(image8));
+        assertEquals(SuffixCode.WEBP_LOWER_CASE, picTyp8);
     }
 
     private static String getPath(String fileName) {
@@ -181,24 +183,24 @@ class FileTest {
 
     @Test
     void testFormat() throws IOException {
-        String image1 = "/file/image/webp/share_572031b53d646c2c8a8191bdd93a95b2.png";
-        String path1 = ImageTest.class.getResource(image1).getPath();
-        final File file1 = new File(path1);
-        final String picTyp1 = FileUtils.getFileType(new FileInputStream(file1));
-        System.out.println(picTyp1);
+//        String image1 = "/file/image/webp/share_572031b53d646c2c8a8191bdd93a95b2.png";
+//        String path1 = ImageTest.class.getResource(image1).getPath();
+//        final File file1 = new File(path1);
+//        final String picTyp1 = FileUtils.getFileType(new FileInputStream(file1));
+//        System.out.println(picTyp1);
 
 //        String image4 = "/file/image/share_1b1c03ab50c37b1462ac6a1d86cf9119.png";
 //        String image4 = "/file/image/69956256_p1.jpg";
 //        String image4 = "/file/image/20200718234953_grmzy.jpeg";
-        String image4 = "/file/image/Teresa.png";
-        String path4 = ImageTest.class.getResource(image4).getPath();
-        final File file = new File(path4);
-        final String picType = FileUtils.getFileType(new FileInputStream(path4));
-        System.out.println(picType);
-        String image5 = "D:\\Program Files\\Desktop\\images\\share_572031b53d646c2c8a8191bdd93a95b2.png";
-        final File file5 = new File(image5);
-        final String picType5 = FileUtils.getFileType(new FileInputStream(file5));
-        System.out.println(picType5);
+//        String image4 = "/file/image/Teresa.png";
+//        String path4 = ImageTest.class.getResource(image4).getPath();
+//        final File file = new File(path4);
+//        final String picType = FileUtils.getFileType(new FileInputStream(path4));
+//        System.out.println(picType);
+//        String image5 = "D:\\Program Files\\Desktop\\images\\share_572031b53d646c2c8a8191bdd93a95b2.png";
+//        final File file5 = new File(image5);
+//        final String picType5 = FileUtils.getFileType(new FileInputStream(file5));
+//        System.out.println(picType5);
 //        StreamUtils.toFile(new FileInputStream(file5), "D:\\Program Files\\Desktop\\images\\test_001" + picTyp6);
     }
 }
