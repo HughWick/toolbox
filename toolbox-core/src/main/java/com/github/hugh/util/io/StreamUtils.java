@@ -150,13 +150,10 @@ public class StreamUtils {
      *
      * @param closeable 可关闭的对象资源
      */
-    public void close(Closeable closeable) {
-        try {
-            if (closeable != null) {
-                closeable.close();
-            }
-        } catch (IOException e) {
-            throw new ToolboxException(e);
+    public static void close(Closeable closeable) {
+        try (closeable) {
+        } catch (IOException ioException) {
+            throw new ToolboxException(ioException);
         }
     }
 
@@ -172,6 +169,26 @@ public class StreamUtils {
             return toByteArray(inputStream);
         } catch (IOException ioe) {
             throw new ToolboxException(ioe);
+        }
+    }
+
+    /**
+     * 克隆文件流
+     *
+     * @param inputStream 文件输出流
+     * @since 2.4.7
+     */
+    private static InputStream cloneInputStream(InputStream inputStream) {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = inputStream.read(buffer)) > -1) {
+                byteArrayOutputStream.write(buffer, 0, len);
+            }
+            byteArrayOutputStream.flush();
+            return new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        } catch (IOException ioException) {
+            throw new ToolboxException(ioException);
         }
     }
 }

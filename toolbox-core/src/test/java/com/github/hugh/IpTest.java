@@ -24,6 +24,7 @@ class IpTest {
         assertTrue(RegexUtils.isIp(IpUtils.random()));
     }
 
+    // 测试计算IP地址长度
     @Test
     void test002() {
         String ip = "43.112.134.143";//ip
@@ -32,7 +33,10 @@ class IpTest {
         //获得起始IP和终止IP的方法（包含网络地址和广播地址）
         String startIp = IpUtils.calcBeginIp(ip, mask);
         String endIp = IpUtils.calcEndIp(ip, mask);
-        System.out.println("起始IP：" + startIp + "终止IP：" + endIp);
+        // 起始IP
+        assertEquals("43.112.128.0", startIp);
+        assertEquals("43.112.143.255", endIp);
+//        System.out.println("起始IP：" + startIp + "终止IP：" + endIp);
         assertEquals("255.255.240.0", IpUtils.getNetmask(mask));
 
         //获得起始IP和终止IP的方法（不包含网络地址和广播地址）
@@ -40,7 +44,9 @@ class IpTest {
         String subEnd = endIp.split("\\.")[0] + "." + endIp.split("\\.")[1] + "." + endIp.split("\\.")[2] + ".";
         startIp = subStart + (Integer.parseInt(startIp.split("\\.")[3]) + 1);
         endIp = subEnd + (Integer.parseInt(endIp.split("\\.")[3]) - 1);
-        System.out.println("起始IP：" + startIp + "终止IP：" + endIp);
+        assertEquals("43.112.128.1", startIp);
+        assertEquals("43.112.143.254", endIp);
+//        System.out.println("起始IP：" + startIp + "终止IP：" + endIp);
 //        System.out.println("--子网掩码->>" + IpUtils.getNetmask(mask));
         //判断一个IP是否属于某个网段
         boolean flag = IpUtils.isInRange("10.2.0.0", "10.3.0.0/17");
@@ -87,5 +93,7 @@ class IpTest {
         assertTrue(IpUtils.isSameNetworkSegment("43.115.33.1", "43.115.33.155", mask2));
         assertFalse(IpUtils.isSameNetworkSegment("192.168.1.213", "192.168.2.2", mask2));
         assertFalse(IpUtils.isSameNetworkSegment("115.91.255.132", "43.115.88.1", mask1));
+        assertFalse(IpUtils.isSameNetworkSegment("192.168.10.220", "192.168.11.1", mask2));
+        assertTrue(IpUtils.isSameNetworkSegment("192.168.10.220", "192.168.10.1", mask2));
     }
 }

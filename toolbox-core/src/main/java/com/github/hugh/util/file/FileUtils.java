@@ -357,7 +357,7 @@ public class FileUtils {
      */
     private static String getFileHead(InputStream inputStream) {
         byte[] bytes = new byte[28];
-        try (inputStream) {
+        try {
             inputStream.read(bytes, 0, 28);
         } catch (IOException ioException) {
             throw new ToolboxException(ioException);
