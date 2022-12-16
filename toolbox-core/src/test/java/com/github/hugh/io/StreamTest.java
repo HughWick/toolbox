@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
  * stream 流处理工具类
@@ -33,6 +34,7 @@ class StreamTest {
         assertFalse(new File(outFilePath).exists());
     }
 
+    //  测试文件转字节
     @Test
     void testToByteArray() throws IOException {
 //        String path = "D:\\private\\toolbox-2.4.X\\toolbox-core\\src\\test\\resources\\file\\image\\Teresa.png";
@@ -46,6 +48,22 @@ class StreamTest {
         byte[] bytes1 = StreamUtils.resourceToByteArray(path);
         assertEquals(bytes.length, bytes1.length);
         assertArrayEquals(bytes, bytes1);
+    }
+
+
+    @Test
+    void testCloneInputStream() throws IOException {
+        String image1 = "/file/image/Teresa.png";
+        String path = StreamTest.class.getResource(image1).getPath();
+//        File file = new File(path);
+        InputStream inputStream = StreamUtils.getInputStream(path);
+        InputStream inputStream2 = StreamUtils.getInputStream(path);
+        final InputStream cloneInputStream1 = StreamUtils.cloneInputStream(inputStream);
+
+        assertArrayEquals(inputStream.readAllBytes(), inputStream2.readAllBytes());
+        assertNotEquals(inputStream2.hashCode(), inputStream.hashCode());
+//        assertEquals(inputStream2.hashCode(), inputStream3.hashCode());
+        assertArrayEquals(inputStream.readAllBytes(), cloneInputStream1.readAllBytes());
     }
 
 }

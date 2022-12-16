@@ -3,9 +3,12 @@ package com.github.hugh.file;
 import com.github.hugh.constant.SuffixCode;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.file.FileUtils;
+import com.github.hugh.util.file.ImageUtils;
+import com.github.hugh.util.io.StreamUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
@@ -161,20 +164,32 @@ class FileTest {
         String image4 = "/file/image/tom.gif";
         final String picTyp4 = FileUtils.getFileType(getPath(image4));
         assertEquals(SuffixCode.GIF_LOWER_CASE, picTyp4);
-
         String image5 = "/file/image/BMP.bmp";
         final String picTyp5 = FileUtils.getFileType(getPath(image5));
         assertEquals(SuffixCode.BMP_LOWER_CASE, picTyp5);
-        // svg 暂时无法获取
-        String image6 = "/file/image/svg.svg";
-        final String picTyp6 = FileUtils.getFileType(getPath(image6));
-        assertNull(picTyp6);
         String image7 = "/file/image/tiff.tif";
         final String picTyp7 = FileUtils.getFileType(getPath(image7));
         assertEquals(SuffixCode.TIF_LOWER_CASE, picTyp7);
         String image8 = "/file/image/webp/share_875d7016c30cc485a2d35f7aad804aaa.png";
         final String picTyp8 = FileUtils.getFileType(getPath(image8));
         assertEquals(SuffixCode.WEBP_LOWER_CASE, picTyp8);
+        String image9 = "D:\\Program Files\\Desktop\\QQ图片20221216105859.png";
+        final String picTyp9 = FileUtils.getFileType(image9);
+        assertEquals(SuffixCode.PNG_LOWER_CASE, picTyp9);
+
+        String imageHeif = "/file/image/heif/share_a4b448c4f972858f42640e36ffc3a8e6.png";
+        final String picTypHeif = FileUtils.getFileType(getPath(imageHeif));
+        assertEquals(SuffixCode.HEIF_LOWER_CASE, picTypHeif);
+    }
+
+    @Test
+    void testErrorFileType() throws FileNotFoundException {
+        // svg 暂时无法获取
+        String image6 = "/file/image/svg.svg";
+        final String picTyp6 = FileUtils.getFileType(getPath(image6));
+        assertNull(picTyp6);
+
+
     }
 
     private static String getPath(String fileName) {
@@ -183,24 +198,21 @@ class FileTest {
 
     @Test
     void testFormat() throws IOException {
-//        String image1 = "/file/image/webp/share_572031b53d646c2c8a8191bdd93a95b2.png";
-//        String path1 = ImageTest.class.getResource(image1).getPath();
-//        final File file1 = new File(path1);
-//        final String picTyp1 = FileUtils.getFileType(new FileInputStream(file1));
-//        System.out.println(picTyp1);
+        String image9 = "/file/image/heif/share_a4b448c4f972858f42640e36ffc3a8e6.png";
+        final File kbFile = new File(getPath(image9));
+        // 无法正确读取文件格式
+        final String picTyp9 = FileUtils.getFileType(getPath(image9));
+//        assertNull(picTyp9);
+        assertEquals(SuffixCode.HEIF_LOWER_CASE, picTyp9);
+        assertFalse(ImageUtils.isImage(getPath(image9)));
+        String tempFile = "D:\\temp.jpg";
 
-//        String image4 = "/file/image/share_1b1c03ab50c37b1462ac6a1d86cf9119.png";
-//        String image4 = "/file/image/69956256_p1.jpg";
-//        String image4 = "/file/image/20200718234953_grmzy.jpeg";
-//        String image4 = "/file/image/Teresa.png";
-//        String path4 = ImageTest.class.getResource(image4).getPath();
-//        final File file = new File(path4);
-//        final String picType = FileUtils.getFileType(new FileInputStream(path4));
-//        System.out.println(picType);
-//        String image5 = "D:\\Program Files\\Desktop\\images\\share_572031b53d646c2c8a8191bdd93a95b2.png";
-//        final File file5 = new File(image5);
-//        final String picType5 = FileUtils.getFileType(new FileInputStream(file5));
-//        System.out.println(picType5);
-//        StreamUtils.toFile(new FileInputStream(file5), "D:\\Program Files\\Desktop\\images\\test_001" + picTyp6);
+        StreamUtils.toFile(new FileInputStream(kbFile), tempFile);
+
+        final File file = new File(tempFile);
+        assertTrue(file.exists());
+        assertTrue(file.delete());
+
+
     }
 }

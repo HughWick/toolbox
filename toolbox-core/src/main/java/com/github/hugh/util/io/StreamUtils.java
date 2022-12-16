@@ -178,7 +178,7 @@ public class StreamUtils {
      * @param inputStream 文件输出流
      * @since 2.4.7
      */
-    private static InputStream cloneInputStream(InputStream inputStream) {
+    public static InputStream cloneInputStream(InputStream inputStream) {
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             byte[] buffer = new byte[1024];
             int len;

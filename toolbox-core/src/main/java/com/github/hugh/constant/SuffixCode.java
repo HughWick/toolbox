@@ -17,6 +17,7 @@ public class SuffixCode {
     public static final String SVG = "SVG";
     public static final String TIF = "TIF";
     public static final String WEBP = "WEBP";
+    public static final String HEIF = "heif";
     // 图片类型，小写
     public static final String JPG_LOWER_CASE = "jpg";
     public static final String JPEG_LOWER_CASE = "jpeg";
@@ -26,6 +27,7 @@ public class SuffixCode {
     public static final String SVG_LOWER_CASE = "svg";
     public static final String TIF_LOWER_CASE = "tif";
     public static final String WEBP_LOWER_CASE = "webp";
+    public static final String HEIF_LOWER_CASE = "heif";
     //PDF
     public static final String PDF = "PDF";
     //压缩文件类型

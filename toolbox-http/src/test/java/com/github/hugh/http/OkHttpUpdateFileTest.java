@@ -34,24 +34,23 @@ public class OkHttpUpdateFileTest {
 
     @Test
     void testMinio() throws IOException {
-//        String url = "http://192.168.1.213:8001/file/minio/upload";
-        String url = "https://dev.hnlot.com.cn/file/minio/upload";
+        String url = "http://192.168.1.213:8001/file/minio/upload";
+//        String url = "https://dev.hnlot.com.cn/file/minio/upload";
 //         后缀为png，实际为webp
         String path2 = "D:\\Program Files\\Desktop\\images\\share_1322b604f79fe349fe885346d703f414.png";
-        String path1 = "D:\\Program Files\\Desktop\\images\\share_875d7016c30cc485a2d35f7aad804aaa.png";
         // ------------------------
+        String path1 = "/file/image/84630805_p0.png";
         String path3 = "/file/image/69956256_p1.jpg";
         String path4 = "/file/image/20200718234953_grmzy.jpeg";
+        String path5 = "/file/image/webp/share_a4b448c4f972858f42640e36ffc3a8e6.png";
         var params = new HashMap<>();
         params.put("type", "0");
         var fileMap = new HashMap<>();
-        fileMap.put("20200718234953_grmzy.jpeg", getPath(path4));
-        fileMap.put("79733019_p0.jpg", getPath(path3));
-//        String path5 = "D:\\Program Files\\Desktop\\images\\share_1f06bb90ceba93dfc923678a11c5e191.png";
-//        fileMap.put("share_1f06bb90ceba93dfc923678a11c5e191.png", path5);
-        fileMap.put("share_875d7016c30cc485a2d35f7aad804aaa.png", path1);
+//        fileMap.put("84630805_p0.png",  getPath(path1));
 //        fileMap.put("share_0a3835617ff336a3004dbf9115dac414.png", path2);
-//        fileMap.put("test_001.webp", path3);
+//        fileMap.put("79733019_p0.jpg", getPath(path3));
+//        fileMap.put("20200718234953_grmzy.jpeg", getPath(path4));
+        fileMap.put("share_a4b448c4f972858f42640e36ffc3a8e6.png", getPath(path5));
         String result = OkHttpUtils.upload(url, params, "file", fileMap);
         System.out.println("--->" + result);
     }

@@ -140,4 +140,12 @@ class StringTest {
         final String s2 = StringUtils.retainDecimalDown(Double.parseDouble(str3), 2, true);
         assertEquals("1,401,231,485.12", s2);
     }
+
+    @Test
+    void test002() {
+        String str2 = "WC-TX65 望城一中新校门门口-(五期)";
+
+        System.out.println("--->>" + str2.length());
+        System.out.println("--->>" + "WC-TX65望城一中新校门门口-(五期)".length());
+    }
 }

@@ -345,6 +345,8 @@ public class FileUtils {
                 return type.name().toLowerCase();
             }
         }
+        System.out.println("Unknown file header code : " + fileHead);
+//        throw new ToolboxException("Unknown file header code : " + fileHead);
         return null;
     }
 
