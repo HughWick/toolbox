@@ -211,6 +211,10 @@ class FileTest {
 
         final File file = new File(tempFile);
         assertTrue(file.exists());
+
+        assertFalse(ImageUtils.isImage(file));
+
+
         assertTrue(file.delete());
 
 

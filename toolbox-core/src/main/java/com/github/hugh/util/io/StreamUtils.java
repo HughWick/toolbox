@@ -77,28 +77,28 @@ public class StreamUtils {
      * <p>内部调用{@link #toFile(InputStream, File)} </p>
      *
      * @param inputStream 输入流
-     * @param filePath    文件路径
+     * @param newFilePath 文件路径
      */
-    public static void toFile(InputStream inputStream, String filePath) {
-        toFile(inputStream, new File(filePath));
+    public static void toFile(InputStream inputStream, String newFilePath) {
+        toFile(inputStream, new File(newFilePath));
     }
 
     /**
      * 将InputStream 输出至指定的文件
      *
      * @param inputStream 输入流
-     * @param file        文件
+     * @param newFile     文件
      */
-    public static void toFile(InputStream inputStream, File file) {
-        try (OutputStream os = new FileOutputStream(file)) {
+    public static void toFile(InputStream inputStream, File newFile) {
+        try (OutputStream outputStream = new FileOutputStream(newFile);
+             inputStream) {
             int bytesRead;
             byte[] buffer = new byte[8192];
             while ((bytesRead = inputStream.read(buffer, 0, 8192)) != -1) {
-                os.write(buffer, 0, bytesRead);
+                outputStream.write(buffer, 0, bytesRead);
             }
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ioException) {
+            throw new ToolboxException(ioException);
         }
     }
 
