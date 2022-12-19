@@ -44,6 +44,8 @@ public enum FileType {
 
     /**
      * 高效率图像文件格式
+     *
+     * @since 2.4.7
      */
     HEIF("0000001C66747970"),
 
