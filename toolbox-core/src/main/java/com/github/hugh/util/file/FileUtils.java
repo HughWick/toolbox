@@ -329,7 +329,9 @@ public class FileUtils {
 
     /**
      * 获取文件真实类型
-     *
+     * <p>
+     *     该方法不会关闭{@link InputStream}，请自行关闭
+     * </p>
      * @param inputStream 文件流
      * @return String 文件类型
      * @since 2.4.6
@@ -345,7 +347,7 @@ public class FileUtils {
                 return type.name().toLowerCase();
             }
         }
-        System.out.println("Unknown file header code : " + fileHead);
+//        System.out.println("Unknown file header code : " + fileHead);
 //        throw new ToolboxException("Unknown file header code : " + fileHead);
         return null;
     }

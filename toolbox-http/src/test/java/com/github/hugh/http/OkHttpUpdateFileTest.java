@@ -34,15 +34,15 @@ public class OkHttpUpdateFileTest {
 
     @Test
     void testMinio() throws IOException {
-        String url = "http://192.168.1.213:8001/file/minio/upload";
-//        String url = "https://dev.hnlot.com.cn/file/minio/upload";
+//        String url = "http://192.168.1.213:8001/file/minio/upload";
+        String url = "https://dev.hnlot.com.cn/file/minio/upload";
 //         后缀为png，实际为webp
         String path2 = "D:\\Program Files\\Desktop\\images\\share_1322b604f79fe349fe885346d703f414.png";
         // ------------------------
         String path1 = "/file/image/84630805_p0.png";
         String path3 = "/file/image/69956256_p1.jpg";
         String path4 = "/file/image/20200718234953_grmzy.jpeg";
-        String path5 = "/file/image/webp/share_a4b448c4f972858f42640e36ffc3a8e6.png";
+        String path5 = "/file/image/heif/share_a4b448c4f972858f42640e36ffc3a8e6.png";
         var params = new HashMap<>();
         params.put("type", "0");
         var fileMap = new HashMap<>();
