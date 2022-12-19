@@ -7,7 +7,6 @@ import com.google.common.collect.Lists;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.rmi.ServerException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -65,6 +64,7 @@ public class ListUtils {
      * @param originList 数据
      * @param page       页数
      * @param size       条数
+     * @param <T>        源数据类型
      * @return List 切割后的list
      * @since 1.1.0
      */
@@ -143,8 +143,9 @@ public class ListUtils {
      * 拼接格式为：A,B,C
      * </p>
      *
-     * @param list 源
-     * @param <T>  类型
+     * @param list      源
+     * @param separator 分隔符
+     * @param <T>       类型
      * @return String
      * @since 2.1.10
      */

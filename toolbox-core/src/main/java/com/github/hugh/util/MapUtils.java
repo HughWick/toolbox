@@ -27,6 +27,8 @@ public class MapUtils {
      * @param map  Map
      * @param key  map中的key
      * @param code 需要验证的code码
+     * @param <K>  key 类型
+     * @param <V>  value 类型
      * @return boolean {@code true} 一致
      */
     public static <K, V> boolean isSuccess(Map<K, V> map, K key, String code) {
@@ -45,6 +47,8 @@ public class MapUtils {
      * @param map  参数
      * @param key  键
      * @param code 值
+     * @param <K>  key 类型
+     * @param <V>  value 类型
      * @return boolean {@code true} 不一致
      */
     public static <K, V> boolean isFailure(Map<K, V> map, K key, String code) {
@@ -435,6 +439,8 @@ public class MapUtils {
      *
      * @param map  map
      * @param keys keys
+     * @param <K>  key 类型
+     * @param <V>  value 类型
      * @since 2.1.2
      */
     public static <K, V> void removeKeys(Map<K, V> map, String... keys) {

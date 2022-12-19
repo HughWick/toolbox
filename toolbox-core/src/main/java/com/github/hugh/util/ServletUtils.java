@@ -17,6 +17,8 @@ public class ServletUtils {
      * 循环所有request中的参数放入至map
      *
      * @param request 客户端的请求
+     * @param <K>  key 类型
+     * @param <V>  value 类型
      * @return Map
      */
     public static <K, V> Map<K, V> getParams(HttpServletRequest request) {
@@ -40,6 +42,8 @@ public class ServletUtils {
      * </ul>
      *
      * @param request 请求头
+     * @param <K>  key 类型
+     * @param <V>  value 类型
      * @return Map
      */
     public static <K, V> Map<K, V> getParamsDeleteLimit(HttpServletRequest request) {
@@ -51,6 +55,8 @@ public class ServletUtils {
      *
      * @param request 客户端的请求
      * @param keys    需要删除的key
+     * @param <K>  key 类型
+     * @param <V>  value 类型
      * @return Map
      */
     public static <K, V> Map<K, V> getParams(HttpServletRequest request, String... keys) {

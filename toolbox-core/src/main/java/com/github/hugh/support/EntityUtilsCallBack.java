@@ -3,8 +3,8 @@ package com.github.hugh.support;
 /**
  * 回调方法
  *
- * @param <S>
- * @param <T>
+ * @param <S> 源参数类型
+ * @param <T> 目标参数类型
  * @since 2.1.12
  */
 @FunctionalInterface
