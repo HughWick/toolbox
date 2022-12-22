@@ -58,4 +58,9 @@ public class SuffixCode {
 
     // 视频
     public static final String MP4 = "MP4";
+
+    /**
+     * 音频
+     */
+    public static final String M4A = "M4A";
 }

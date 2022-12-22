@@ -227,11 +227,11 @@ public class JsonObjectsTest {
     void testAddProperty() {
         String jsonStr = "{\"string\":\"111\",\"int\":22,\"double\":12.34,\"long\":12345678998123124,\"boolean\":true}";
         JsonObjects jsonObjects = new JsonObjects();
-        jsonObjects.addProperty("string", "111");
-        jsonObjects.addProperty("int", 22);
-        jsonObjects.addProperty("double", 12.34);
-        jsonObjects.addProperty("long", 12345678998123124L);
-        jsonObjects.addProperty("boolean", true);
+        jsonObjects.addProperty("string", "111")
+                .addProperty("int", 22)
+                .addProperty("double", 12.34)
+                .addProperty("long", 12345678998123124L)
+                .addProperty("boolean", true);
         assertEquals(jsonStr, jsonObjects.toJson());
         assertEquals(5, jsonObjects.size());
         assertFalse(jsonObjects.isEquals("a", "s"));
@@ -355,18 +355,18 @@ public class JsonObjectsTest {
         assertEquals(jsonObjects1.toJson(), new JsonObjects(str).toJson());
 //        System.out.println(new JsonObjects(str).toJson());
         String str2 = "{\"age\":2,\"amount\":15.14,\"birthday\":null,\"name\":\"张三\",\"create\":\"2022-03-21 18:02:11\"}";
-        JsonObjects jsonObjects2 = new JsonObjects();
-        jsonObjects2.addProperty("age", 2);
-        jsonObjects2.addProperty("amount", 15.14);
-        jsonObjects2.addProperty("name", "张三");
-        jsonObjects2.addProperty("create", "2022-03-21 18:02:11");
+        JsonObjects jsonObjects2 = new JsonObjects()
+                .addProperty("age", 2)
+                .addProperty("amount", 15.14)
+                .addProperty("name", "张三")
+                .addProperty("create", "2022-03-21 18:02:11");
         assertEquals(jsonObjects2.toJson(), new JsonObjects(str2).toJson());
         String str3 = "{\"age\":2,\"amount\":15.14,\"name\":\"张三\",\"create\":2022-03-21}";
-        JsonObjects jsonObjects3 = new JsonObjects();
-        jsonObjects3.addProperty("age", 2);
-        jsonObjects3.addProperty("amount", 15.14);
-        jsonObjects3.addProperty("name", "张三");
-        jsonObjects3.addProperty("create", "2022-03-21");
+        JsonObjects jsonObjects3 = new JsonObjects()
+                .addProperty("age", 2)
+                .addProperty("amount", 15.14)
+                .addProperty("name", "张三")
+                .addProperty("create", "2022-03-21");
         assertEquals(jsonObjects3.toJson(), new JsonObjects(str3).toJson());
     }
 

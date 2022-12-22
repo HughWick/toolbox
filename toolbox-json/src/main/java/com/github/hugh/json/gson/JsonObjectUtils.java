@@ -482,9 +482,6 @@ public class JsonObjectUtils {
      */
     public static <E, T> T fromJson(E json, Class<T> classOfT) {
         GsonBuilder gsonBuilder = new GsonBuilder();
-//        if (EmptyUtils.isNotEmpty(dateFormat)) {
-//            gsonBuilder.setDateFormat(dateFormat);
-//        }
         gsonBuilder.registerTypeAdapter(Date.class, new CustomDateTypeAdapter());
         return fromJson(gsonBuilder, json, classOfT);
     }
@@ -550,8 +547,6 @@ public class JsonObjectUtils {
     public static <E, T> T fromJsonTimeStamp(E value, Class<T> classOfT) {
         GsonBuilder builder = new GsonBuilder();
         //注册一个日期解析器、将时间戳转换为Date 类型
-//        builder.registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (jsonElement, typeOfT, context) ->
-//                new Date(jsonElement.getAsJsonPrimitive().getAsLong()));
         builder.registerTypeAdapter(Date.class, new CustomDateTypeAdapter());
         return fromJson(builder, value, classOfT);
     }

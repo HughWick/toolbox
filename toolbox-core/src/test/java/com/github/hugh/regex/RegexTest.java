@@ -59,17 +59,23 @@ class RegexTest {
         String longitude = "112.94662109375";
         String longitude2 = "1019.48427455";
         assertFalse(RegexUtils.isLonLat(longitude, latitude));
+        assertFalse(RegexUtils.isLonLat(longitude + "," + latitude));
         assertTrue(RegexUtils.isNotLonLat(longitude, latitude));
+        assertTrue(RegexUtils.isNotLonLat(longitude + "," + latitude));
 
         assertFalse(RegexUtils.isLongitude(longitude));
         assertFalse(RegexUtils.isLongitude(longitude2));
         assertTrue(RegexUtils.isLongitude(str3));
-
         assertFalse(RegexUtils.isLatitude(latitude));
         assertFalse(RegexUtils.isLatitude(latitude2));
         assertTrue(RegexUtils.isLatitude(lat3));
         assertTrue(RegexUtils.isNotLatitude(str2));
         assertTrue(RegexUtils.isNotLongitude(str1));
+
+        String str4 = "112.944468,28.218373";
+        assertTrue(RegexUtils.isLonLat(str4));
+        String str5 = "28.218373,112.944468";
+        assertFalse(RegexUtils.isLonLat(str5));
     }
 
     @Test

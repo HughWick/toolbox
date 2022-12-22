@@ -12,7 +12,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -176,11 +175,18 @@ class FileTest {
         assertEquals(SuffixCode.WEBP_LOWER_CASE, pngType);
         String mp4Path = "/file/mp4/1cbf9f6b76484cbb96515f8ecef16efd.mp4";
         final String mp4Type = FileUtils.getFileType(getPath(mp4Path));
-        assertEquals(SuffixCode.MP4.toLowerCase(Locale.ROOT), mp4Type);
+        assertEquals(SuffixCode.MP4.toLowerCase(), mp4Type);
 
         String imageHeif = "/file/image/heif/share_a4b448c4f972858f42640e36ffc3a8e6.png";
         final String picTypHeif = FileUtils.getFileType(getPath(imageHeif));
         assertEquals(SuffixCode.HEIF_LOWER_CASE, picTypHeif);
+        String zipPath = "/file/zip/test.zip";
+        final String zipType = FileUtils.getFileType(getPath(zipPath));
+        assertEquals(SuffixCode.ZIP.toLowerCase(), zipType);
+        String rarPath = "/file/rar/files.rar";
+        final String rarType = FileUtils.getFileType(getPath(rarPath));
+        assertEquals(SuffixCode.RAR.toLowerCase(), rarType);
+
     }
 
     @Test
@@ -189,8 +195,6 @@ class FileTest {
         String image6 = "/file/image/svg.svg";
         final String picTyp6 = FileUtils.getFileType(getPath(image6));
         assertNull(picTyp6);
-
-
     }
 
     private static String getPath(String fileName) {

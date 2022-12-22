@@ -6,6 +6,8 @@ import com.github.hugh.bean.dto.coordinates.GpsDTO;
 import com.github.hugh.bean.dto.coordinates.RmcDTO;
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.exception.ToolboxException;
+import com.github.hugh.util.regex.RegexUtils;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -17,7 +19,10 @@ import java.text.DecimalFormat;
  * @since 1.6.3
  */
 public class CoordinatesUtils {
-
+    /**
+     * 分隔符
+     */
+    private static final String comma = ",";
     /**
      * 圆周率
      */
@@ -158,7 +163,7 @@ public class CoordinatesUtils {
             throw new ToolboxException("string is null");
         }
         GgaDTO ggaDTO = new GgaDTO();
-        String[] arr = gga.split(","); // 用,分割
+        String[] arr = gga.split(comma); // 用,分割
         ggaDTO.setName(arr[0]);
         ggaDTO.setDate(arr[1]);
         ggaDTO.setLatitude(arr[2]);
@@ -211,7 +216,7 @@ public class CoordinatesUtils {
         if (EmptyUtils.isEmpty(rmcStr)) {
             throw new ToolboxException("string is null");
         }
-        String[] arr = rmcStr.split(","); // 用,分割
+        String[] arr = rmcStr.split(comma); // 用,分割
         RmcDTO rmcDTO = new RmcDTO();
         rmcDTO.setName(arr[0]);
         rmcDTO.setTime(arr[1]);
@@ -230,5 +235,70 @@ public class CoordinatesUtils {
         String dateStr = DateUtils.utcToCst(rmcDTO.getDate() + " " + rmcDTO.getTime(), "ddMMyy HHmmss");
         rmcDTO.setReadingDate(dateStr);
         return rmcDTO;
+    }
+
+    /**
+     * 计算两点之间距离
+     *
+     * @param longitudeCommaLatitude1 第一点的经度 纬度,格式：{@code 112.944468,28.218373}
+     * @param longitudeCommaLatitude2 第二点的经度 纬度,格式：{@code 112.933732,28.280851}
+     * @return double 返回的距离，单位m
+     * @since 2.4.8
+     */
+    public static double getDistance(String longitudeCommaLatitude1, String longitudeCommaLatitude2) {
+        if (!longitudeCommaLatitude1.contains(comma) || !longitudeCommaLatitude2.contains(comma)) {
+            throw new ToolboxException("latitude and longitude separator does not exist");
+        } else if (StringUtils.countOccurrencesOf(longitudeCommaLatitude1, comma) > 1 || StringUtils.countOccurrencesOf(longitudeCommaLatitude2, comma) > 1) {
+            throw new ToolboxException("multiple latitude and longitude separators");
+        }
+        final String[] split1 = longitudeCommaLatitude1.split(comma);
+        final String[] split2 = longitudeCommaLatitude2.split(comma);
+        return getDistance(split1[0], split1[1], split2[0], split2[1]);
+    }
+
+    /**
+     * 计算两点之间距离
+     *
+     * @param long1 第一点的精度
+     * @param lat1  第一点的纬度
+     * @param long2 第二点的精度
+     * @param lat2  第二点的纬度
+     * @return double 返回的距离，单位m
+     * @since 2.4.8
+     */
+    public static double getDistance(String long1, String lat1, String long2, String lat2) {
+        return getDistance(Double.parseDouble(long1), Double.parseDouble(lat1), Double.parseDouble(long2), Double.parseDouble(lat2));
+    }
+
+    /**
+     * 计算两点之间距离
+     *
+     * @param long1 第一点的精度
+     * @param lat1  第一点的纬度
+     * @param long2 第二点的精度
+     * @param lat2  第二点的纬度
+     * @return double 返回的距离，单位m
+     * @since 2.4.8
+     */
+    public static double getDistance(double long1, double lat1, double long2, double lat2) {
+        if (RegexUtils.isNotLongitude(String.valueOf(long1))) {
+            throw new ToolboxException("first longitude error : " + long1);
+        } else if (RegexUtils.isNotLongitude(String.valueOf(long2))) {
+            throw new ToolboxException("second longitude error : " + long2);
+        } else if (RegexUtils.isNotLatitude(String.valueOf(lat1))) {
+            throw new ToolboxException("first latitude error : " + lat1);
+        } else if (RegexUtils.isNotLatitude(String.valueOf(lat2))) {
+            throw new ToolboxException("second latitude error : " + lat2);
+        }
+        double earthRadius = 6378137; // 地球半径
+        lat1 = lat1 * Math.PI / 180.0;
+        lat2 = lat2 * Math.PI / 180.0;
+        double a = lat1 - lat2;
+        double b = (long1 - long2) * Math.PI / 180.0;
+        double sa2 = Math.sin(a / 2.0);
+        double sb2 = Math.sin(b / 2.0);
+        double result = 2 * earthRadius * Math.asin(Math.sqrt(sa2 * sa2 + Math.cos(lat1) * Math.cos(lat2) * sb2 * sb2));
+        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+        return Double.parseDouble(decimalFormat.format(result));
     }
 }

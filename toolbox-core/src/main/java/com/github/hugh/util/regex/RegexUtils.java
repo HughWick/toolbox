@@ -455,6 +455,34 @@ public class RegexUtils {
      *      纬度 latitude ： -90.0～+90.0（整数部分为0～90，必须输入1到8位小数）
      * </pre>
      *
+     * @param longitudeCommaLatitude 经度 纬度 格式：{@code 112.944468,28.218373}
+     * @return boolean {@code true} 正确的经纬度
+     * @since 2.4.8
+     */
+    public static boolean isLonLat(String longitudeCommaLatitude) {
+        final String[] split1 = longitudeCommaLatitude.split(",");
+        return isLongitude(split1[0]) && isLatitude(split1[1]);
+    }
+
+    /**
+     * 验证字符串是错误的经纬度
+     *
+     * @param longitudeCommaLatitude 经度 纬度 格式：{@code 112.944468,28.218373}
+     * @return boolean {@code true} 错误的经纬度
+     * @since 2.4.8
+     */
+    public static boolean isNotLonLat(String longitudeCommaLatitude) {
+        return !isLonLat(longitudeCommaLatitude);
+    }
+
+    /**
+     * 只校验正数 0-90.000000 0-180.000000 范围内
+     * 经纬度校验
+     * <pre>
+     *      经度 longitude： -180.0～+180.0（整数部分为0～180，必须输入1到8位小数）
+     *      纬度 latitude ： -90.0～+90.0（整数部分为0～90，必须输入1到8位小数）
+     * </pre>
+     *
      * @param longitude 经度
      * @param latitude  纬度
      * @return boolean {@code true} 正确的经纬度
@@ -465,7 +493,7 @@ public class RegexUtils {
     }
 
     /**
-     * 经纬度错误
+     * 验证字符串是错误的经纬度
      *
      * @param longitude 经度
      * @param latitude  维度

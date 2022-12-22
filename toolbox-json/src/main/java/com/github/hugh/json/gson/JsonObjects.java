@@ -257,9 +257,10 @@ public class JsonObjects extends JsonObjectUtils {
      *
      * @param key   键
      * @param value 值
+     * @return JsonObjects
      * @since 1.7.6
      */
-    public <E> void addProperty(String key, E value) {
+    public <E> JsonObjects addProperty(String key, E value) {
         if (this.jsonObject == null) {
             this.jsonObject = new JsonObject();
         }
@@ -276,6 +277,7 @@ public class JsonObjects extends JsonObjectUtils {
         } else {
             throw new ToolboxJsonException("Not supported type : " + value.getClass().getName());
         }
+        return this;
     }
 
     /**
