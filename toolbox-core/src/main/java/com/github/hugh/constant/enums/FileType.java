@@ -261,9 +261,14 @@ public enum FileType {
     MID("4D546864"),
 
     /**
-     * MP4.
+     * m4a（Apple Lossless Audio Codec file）、m4v（QuickTime M4A/M4V file）
      */
-    MP4("00000020667479706d70"),
+    M4A("0000002066747970"),
+
+    /**
+     * MP4  MPEG-4 video files
+     */
+    MP4("0000001866747970"),
 
     /**
      * MP3.

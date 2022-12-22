@@ -43,14 +43,18 @@ public class OkHttpUpdateFileTest {
         String path3 = "/file/image/69956256_p1.jpg";
         String path4 = "/file/image/20200718234953_grmzy.jpeg";
         String path5 = "/file/image/heif/share_a4b448c4f972858f42640e36ffc3a8e6.png";
+        String path6 = "/file/image/webp/share_572031b53d646c2c8a8191bdd93a95b2.png";
+        String path7 = "/file/image/vant_log_150x150.png";
         var params = new HashMap<>();
         params.put("type", "0");
         var fileMap = new HashMap<>();
 //        fileMap.put("84630805_p0.png",  getPath(path1));
 //        fileMap.put("share_0a3835617ff336a3004dbf9115dac414.png", path2);
-//        fileMap.put("79733019_p0.jpg", getPath(path3));
-//        fileMap.put("20200718234953_grmzy.jpeg", getPath(path4));
+        fileMap.put("69956256_p1.jpg", getPath(path3));
+        fileMap.put("20200718234953_grmzy.jpeg", getPath(path4));
         fileMap.put("share_a4b448c4f972858f42640e36ffc3a8e6.png", getPath(path5));
+        fileMap.put("share_572031b53d646c2c8a8191bdd93a95b2.png", getPath(path6));
+        fileMap.put("vant_log_150x150.png", getPath(path7));
         String result = OkHttpUtils.upload(url, params, "file", fileMap);
         System.out.println("--->" + result);
     }

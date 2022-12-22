@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -142,7 +143,7 @@ class FileTest {
         assertEquals("880.00B", FileUtils.formatFileSize(880));
     }
 
-    // 验证图片类型
+    // 验证文件类型
     @Test
     void testVerifyType() throws FileNotFoundException {
         String image1 = "/file/image/webp/share_572031b53d646c2c8a8191bdd93a95b2.png";
@@ -170,12 +171,12 @@ class FileTest {
         String image7 = "/file/image/tiff.tif";
         final String picTyp7 = FileUtils.getFileType(getPath(image7));
         assertEquals(SuffixCode.TIF_LOWER_CASE, picTyp7);
-        String image8 = "/file/image/webp/share_875d7016c30cc485a2d35f7aad804aaa.png";
-        final String picTyp8 = FileUtils.getFileType(getPath(image8));
-        assertEquals(SuffixCode.WEBP_LOWER_CASE, picTyp8);
-        String image9 = "D:\\Program Files\\Desktop\\QQ图片20221216105859.png";
-        final String picTyp9 = FileUtils.getFileType(image9);
-        assertEquals(SuffixCode.PNG_LOWER_CASE, picTyp9);
+        String imagePng = "/file/image/webp/share_875d7016c30cc485a2d35f7aad804aaa.png";
+        final String pngType = FileUtils.getFileType(getPath(imagePng));
+        assertEquals(SuffixCode.WEBP_LOWER_CASE, pngType);
+        String mp4Path = "/file/mp4/1cbf9f6b76484cbb96515f8ecef16efd.mp4";
+        final String mp4Type = FileUtils.getFileType(getPath(mp4Path));
+        assertEquals(SuffixCode.MP4.toLowerCase(Locale.ROOT), mp4Type);
 
         String imageHeif = "/file/image/heif/share_a4b448c4f972858f42640e36ffc3a8e6.png";
         final String picTypHeif = FileUtils.getFileType(getPath(imageHeif));
@@ -213,10 +214,7 @@ class FileTest {
         assertTrue(file.exists());
 
         assertFalse(ImageUtils.isImage(file));
-
-
         assertTrue(file.delete());
-
-
     }
+
 }
