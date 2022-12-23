@@ -98,6 +98,8 @@ public class MybatisPlusQueryUtils {
      * </ul>
      *
      * @param params 查询条件
+     * @param <K>    KEY对象类型
+     * @param <V>    VALUE象类型
      * @return QueryWrapper
      */
     public static <T, K, V> QueryWrapper<T> create(Map<K, V> params) {
@@ -242,6 +244,7 @@ public class MybatisPlusQueryUtils {
      * @param request 请求头
      * @param key     键
      * @param value   值
+     * @param <T>     mybatisPlus查询对象类型
      * @param <K>     KEY类型
      * @param <V>     VALUE 类型
      * @return QueryWrapper
