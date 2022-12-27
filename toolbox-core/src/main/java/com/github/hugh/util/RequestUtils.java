@@ -3,6 +3,7 @@ package com.github.hugh.util;
 import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.OperatingSystem;
 import eu.bitwalker.useragentutils.UserAgent;
+import eu.bitwalker.useragentutils.Version;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,6 +15,10 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class RequestUtils {
 
+    /**
+     * 浏览器用户代理常量
+     */
+    private static final String USER_AGENT = "user-agent";
 
     /**
      * 根据{@link HttpServletRequest}获取请求头内的设备类型
@@ -25,7 +30,7 @@ public class RequestUtils {
      * @return String 设备类型
      */
     public static String getSystemType(HttpServletRequest request) {
-        String userAgent = request.getHeader("user-agent").toLowerCase();
+        String userAgent = request.getHeader(USER_AGENT).toLowerCase();
         if (userAgent.contains("micromessenger")) { // 微信
             return "wx";
         } else if (userAgent.contains("android")) { // 安卓
@@ -91,10 +96,24 @@ public class RequestUtils {
      * @since 2.3.6
      */
     public static String getBrowserName(HttpServletRequest request) {
-        String userAgent = request.getHeader("User-Agent");
+        String userAgent = request.getHeader(USER_AGENT);
         UserAgent ua = UserAgent.parseUserAgentString(userAgent);
         Browser browser = ua.getBrowser();
         return browser.getName() + "/" + browser.getVersion(userAgent);
+    }
+
+    /**
+     * 获取浏览器的版本号
+     *
+     * @param request 请求信息头
+     * @return Version 版本号
+     * @since 2.4.9
+     */
+    public static Version getBrowserVersion(HttpServletRequest request) {
+        String userAgent = request.getHeader(USER_AGENT);
+        UserAgent ua = UserAgent.parseUserAgentString(userAgent);
+        Browser browser = ua.getBrowser();
+        return browser.getVersion(userAgent);
     }
 
     /**
@@ -105,7 +124,7 @@ public class RequestUtils {
      * @since 2.3.6
      */
     public static String getOsName(HttpServletRequest request) {
-        String userAgent = request.getHeader("User-Agent");
+        String userAgent = request.getHeader(USER_AGENT);
         UserAgent ua = UserAgent.parseUserAgentString(userAgent);
         OperatingSystem os = ua.getOperatingSystem();
         return os.getName();

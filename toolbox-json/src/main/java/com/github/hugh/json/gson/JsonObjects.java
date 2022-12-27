@@ -257,6 +257,7 @@ public class JsonObjects extends JsonObjectUtils {
      *
      * @param key   键
      * @param value 值
+     * @param <E>   value 参数类型
      * @return JsonObjects
      * @since 1.7.6
      */
