@@ -8,6 +8,8 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * Servlet 测试类
  *
@@ -30,12 +32,12 @@ public class ServletTest {
 //        assertEquals(params2.toString(), "{userId=9001}");
     }
 
+    // 请求头中body内容
     @Test
     void testGetBody() {
         Map<String, Object> map = new HashMap<>();
         map.put("userId", "9001");
         MockHttpServletRequest request = new MockHttpServletRequest();
-
         byte[] bytes = map.toString().getBytes(Charset.defaultCharset());
 //        request.setContentType("application/json;charset=UTF-8");
         request.addParameter("page", "1");
@@ -43,8 +45,8 @@ public class ServletTest {
         request.setMethod("POST");
         request.setContent(bytes);
         final String body = ServletUtils.getBody(request);
-        System.out.println("-->" + body);
+        assertEquals("{userId=9001}", body);
         Map<String, Object> params = ServletUtils.getParams(request);
-        System.out.println("====>>" + params);
+        assertEquals("{page=1, size=20}", params.toString());
     }
 }
