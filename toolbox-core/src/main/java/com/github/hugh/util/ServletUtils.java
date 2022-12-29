@@ -1,6 +1,12 @@
 package com.github.hugh.util;
 
+import com.github.hugh.exception.ToolboxException;
+import com.github.hugh.util.io.StreamUtils;
+
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -66,5 +72,21 @@ public class ServletUtils {
         }
         MapUtils.removeKeys(map, keys);
         return map;
+    }
+
+    /**
+     * 获取请求体<br>
+     * 调用该方法后，getParam方法将失效
+     *
+     * @param request {@link ServletRequest}
+     * @return 获得请求体
+     * @since 2.4.9
+     */
+    public static String getBody(ServletRequest request) {
+        try (final BufferedReader reader = request.getReader()) {
+            return StreamUtils.read(reader);
+        } catch (IOException ioException) {
+            throw new ToolboxException(ioException);
+        }
     }
 }

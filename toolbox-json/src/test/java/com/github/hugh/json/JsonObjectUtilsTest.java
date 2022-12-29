@@ -377,6 +377,18 @@ class JsonObjectUtilsTest {
 //        System.out.println("-list-null->>" + JsonObjectUtils.parseMultipleJson(str, null));
         assertEquals(JsonObjectUtils.countJson(str), 2);
         assertEquals(JsonObjectUtils.parseMultipleJson(str, null).toString(), JsonObjectUtils.parseMultipleJson(str).toString());
+    }
 
+    @Test
+    void test01() {
+        String str = "{\"age\":2,\"amount\":10.14,\"money\":12.3456,\"birthday\":\"2022-01-15 12:32:11\",\"create\":\"2020-10-01 11:22:33\",\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\",\"id\":null,\"opType\":1}";
+//        JsonObject json2 = JsonObjectUtils.parse(str);
+        StopWatch stopWatch = new StopWatch("测试转换日期效率");
+        stopWatch.start();
+        for (int i = 0; i < 1000; i++) {
+            JsonObjectUtils.fromJson(str, Student.class);
+        }
+        stopWatch.stop();
+        System.out.println(stopWatch.prettyPrint());
     }
 }

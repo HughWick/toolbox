@@ -30,7 +30,7 @@ public class RequestUtils {
      * @return String 设备类型
      */
     public static String getSystemType(HttpServletRequest request) {
-        String userAgent = request.getHeader(USER_AGENT).toLowerCase();
+        String userAgent = getUserAgent(request).toLowerCase();
         if (userAgent.contains("micromessenger")) { // 微信
             return "wx";
         } else if (userAgent.contains("android")) { // 安卓
@@ -96,24 +96,10 @@ public class RequestUtils {
      * @since 2.3.6
      */
     public static String getBrowserName(HttpServletRequest request) {
-        String userAgent = request.getHeader(USER_AGENT);
+        String userAgent = getUserAgent(request);
         UserAgent ua = UserAgent.parseUserAgentString(userAgent);
         Browser browser = ua.getBrowser();
         return browser.getName() + "/" + browser.getVersion(userAgent);
-    }
-
-    /**
-     * 获取浏览器的版本号
-     *
-     * @param request 请求信息头
-     * @return Version 版本号
-     * @since 2.4.9
-     */
-    public static Version getBrowserVersion(HttpServletRequest request) {
-        String userAgent = request.getHeader(USER_AGENT);
-        UserAgent ua = UserAgent.parseUserAgentString(userAgent);
-        Browser browser = ua.getBrowser();
-        return browser.getVersion(userAgent);
     }
 
     /**
@@ -124,9 +110,37 @@ public class RequestUtils {
      * @since 2.3.6
      */
     public static String getOsName(HttpServletRequest request) {
-        String userAgent = request.getHeader(USER_AGENT);
+        String userAgent = getUserAgent(request);
         UserAgent ua = UserAgent.parseUserAgentString(userAgent);
         OperatingSystem os = ua.getOperatingSystem();
         return os.getName();
+    }
+
+    /**
+     * 获取浏览器的版本号
+     *
+     * @param request 请求信息头
+     * @return Version 版本号
+     * @since 2.4.9
+     */
+    public static Version getBrowserVersion(HttpServletRequest request) {
+        String userAgent = getUserAgent(request);
+        UserAgent ua = UserAgent.parseUserAgentString(userAgent);
+        Browser browser = ua.getBrowser();
+        return browser.getVersion(userAgent);
+    }
+
+    /**
+     * 获取用户浏览器信息与系统信息
+     *
+     * @param request 请求头
+     * @return String
+     * @since 2.4.9
+     */
+    public static String getUserAgent(HttpServletRequest request) {
+        if (request == null) {
+            return null;
+        }
+        return request.getHeader(USER_AGENT);
     }
 }

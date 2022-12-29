@@ -1,6 +1,6 @@
 package com.github.hugh.util.file;
 
-import com.github.hugh.constant.enums.FileType;
+import com.github.hugh.constant.enums.FileTypeEnum;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.DoubleMathUtils;
 import com.github.hugh.util.EmptyUtils;
@@ -341,8 +341,8 @@ public class FileUtils {
         if (EmptyUtils.isEmpty(fileHead)) {
             return null;
         }
-        FileType[] fileTypes = FileType.values();
-        for (FileType type : fileTypes) {
+        FileTypeEnum[] fileTypes = FileTypeEnum.values();
+        for (FileTypeEnum type : fileTypes) {
             if (fileHead.startsWith(type.getValue())) {
                 return type.name().toLowerCase();
             }

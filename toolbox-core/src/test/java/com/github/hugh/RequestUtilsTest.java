@@ -22,18 +22,30 @@ class RequestUtilsTest {
         request.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36");
         String browserName = RequestUtils.getBrowserName(request);
         assertEquals("Chrome 8/86.0.4240.198", browserName);
-        final Version browserVersion = RequestUtils.getBrowserVersion(request);
-        assertEquals("86.0.4240.198", browserVersion.toString());
-        assertEquals("86", browserVersion.getMajorVersion());
-        assertEquals("86.0.4240.198", browserVersion.getVersion());
         MockHttpServletRequest request2 = new MockHttpServletRequest();
-        request2.addHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.66 Safari/537.36 Edg/103.0.1264.44");
+        String userAgent2 = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.66 Safari/537.36 Edg/103.0.1264.44";
+        request2.addHeader("user-agent", userAgent2);
         assertEquals("Chrome 10/103.0.5060.66", RequestUtils.getBrowserName(request2));
         assertEquals("Windows 10", RequestUtils.getOsName(request2));
-//        System.out.println(RequestUtils.getBrowserName(request2));
-//        System.out.println(RequestUtils.getOsName(request2));
+        assertEquals(userAgent2, RequestUtils.getUserAgent(request2));
+//        MapUtil.<String, Object>builder()
+//                .put("query", ServletUtil.getParamMap(request))
+//                .put("body", ServletUtil.getBody(request)).build();
     }
 
+    // 获取浏览器的版本号
+    @Test
+    void testVerifyVersion() {
+        String userAgent1 = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36";
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("User-Agent", userAgent1);
+        final Version browserVersion = RequestUtils.getBrowserVersion(request);
+        assertEquals("95.0.4638.69", browserVersion.toString());
+        assertEquals("95.0.4638.69", browserVersion.getVersion());
+        assertEquals("95", browserVersion.getMajorVersion());
+    }
+
+    // 验证请求头中操作系统类型
     @Test
     void testRequestSystem() {
         String str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 Edg/108.0.1462.54";

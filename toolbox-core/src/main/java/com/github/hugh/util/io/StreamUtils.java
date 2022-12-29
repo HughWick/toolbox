@@ -7,6 +7,7 @@ import com.github.hugh.util.system.OsUtils;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.CharBuffer;
 
 /**
  * Java 流处理工具类
@@ -16,6 +17,10 @@ import java.net.URL;
  * @since 1.3.5
  */
 public class StreamUtils {
+    /**
+     * 默认缓存大小 8192
+     */
+    public static final int DEFAULT_BUFFER_SIZE = 2 << 12;
 
     /**
      * 获取文件对应输入流
@@ -190,5 +195,42 @@ public class StreamUtils {
         } catch (IOException ioException) {
             throw new ToolboxException(ioException);
         }
+    }
+
+    /**
+     * 从Reader中读取String，读取完毕后关闭Reader
+     *
+     * @param reader Reader
+     * @return String
+     * @throws IOException IO异常
+     * @since 2.4.9
+     */
+    public static String read(Reader reader) throws IOException {
+        return read(reader, true);
+    }
+
+    /**
+     * 从{@link Reader}中读取String
+     *
+     * @param reader  {@link Reader}
+     * @param isClose 是否关闭{@link Reader}
+     * @return String
+     * @since 2.4.9
+     */
+    public static String read(Reader reader, boolean isClose) throws IOException {
+        final StringBuilder builder = new StringBuilder();
+        final CharBuffer buffer = CharBuffer.allocate(DEFAULT_BUFFER_SIZE);
+        try {
+            while (-1 != reader.read(buffer)) {
+                builder.append(buffer.flip());
+            }
+        } catch (IOException ioException) {
+            throw ioException;
+        } finally {
+            if (isClose) {
+                close(reader);
+            }
+        }
+        return builder.toString();
     }
 }

@@ -27,7 +27,7 @@ import lombok.ToString;
 @ToString
 @Getter
 @AllArgsConstructor
-public enum FileType {
+public enum FileTypeEnum {
 
     /**
      * JPG
