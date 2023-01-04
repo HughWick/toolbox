@@ -98,16 +98,16 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${plugin.surefire.version}</version>
 <!--                <type>maven-plugin</type>-->
-                <configuration>
-                    <includes>
-                        <include>**/*Test.java</include>
-                    </includes>
+<!--                <configuration>-->
+<!--                    <includes>-->
+<!--                        <include>**/*Test.java</include>-->
+<!--                    </includes>-->
 <!--                    <skipTests>${plugin.surefire.skip-it}</skipTests>-->
 <!--                    &lt;!&ndash;suppress UnresolvedMavenProperty &ndash;&gt;-->
 <!--                    <argLine>${argLine} -Xms256m -Xmx2048m</argLine>-->
 <!--                    <forkCount>1</forkCount>-->
 <!--                    <runOrder>random</runOrder>-->
-                </configuration>
+<!--                </configuration>-->
                 <dependencies>
 <!--                    <dependency>-->
 <!--                        <groupId>org.junit.platform</groupId>-->
