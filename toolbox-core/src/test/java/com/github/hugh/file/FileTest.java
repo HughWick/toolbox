@@ -7,10 +7,7 @@ import com.github.hugh.util.file.ImageUtils;
 import com.github.hugh.util.io.StreamUtils;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -211,9 +208,8 @@ class FileTest {
         assertEquals(SuffixCode.HEIF_LOWER_CASE, picTyp9);
         assertFalse(ImageUtils.isImage(getPath(image9)));
         String tempFile = "D:\\temp.jpg";
-
-        StreamUtils.toFile(new FileInputStream(kbFile), tempFile);
-
+        InputStream fileInputStream = new FileInputStream(kbFile);
+        StreamUtils.toFile(fileInputStream, tempFile);
         final File file = new File(tempFile);
         assertTrue(file.exists());
 
