@@ -31,7 +31,7 @@ class DateTest {
     }
 
     @Test
-    void test01() {
+    void testDate01() {
         String str = "2020-06-04 13:00:21";
         assertTrue(DateUtils.isDateFormat(str));
         assertEquals("Thu Jun 04 00:00:00 CST 2020", DateUtils.parseDate(str).toString());
