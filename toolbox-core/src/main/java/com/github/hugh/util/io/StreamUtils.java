@@ -116,13 +116,13 @@ public class StreamUtils {
      * @return String 字符串
      */
     public static String toString(InputStream inputStream, String charset) {
-        try (ByteArrayOutputStream boa = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             int len;
             byte[] buffer = new byte[1024];
             while ((len = inputStream.read(buffer)) != -1) {
-                boa.write(buffer, 0, len);
+                byteArrayOutputStream.write(buffer, 0, len);
             }
-            return boa.toString(charset);
+            return byteArrayOutputStream.toString(charset);
         } catch (Exception e) {
             throw new ToolboxException(e);
         }

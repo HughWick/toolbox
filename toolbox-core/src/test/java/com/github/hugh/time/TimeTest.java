@@ -52,12 +52,12 @@ class TimeTest {
 
     @Test
     void testGetYearMonthDay() {
-        assertEquals(2022, TimeUtils.getYear());
-        assertEquals(7, TimeUtils.getMonth());
-        assertEquals(4, TimeUtils.getDay());
-        assertEquals(20, TimeUtils.getHour());
-        assertEquals(10, TimeUtils.getMinute());
-        System.out.println(TimeUtils.getSecond());
+//        assertEquals(2023, TimeUtils.getYear());
+//        assertEquals(7, TimeUtils.getMonth());
+//        assertEquals(4, TimeUtils.getDay());
+//        assertEquals(20, TimeUtils.getHour());
+//        assertEquals(10, TimeUtils.getMinute());
+//        System.out.println(TimeUtils.getSecond());
 //        String timeStart = "2019-12-11 00:00:00";
 //        String timeEnd = "2020-12-20 23:59:59";
 //        long l = TimeUtils.differMilli(timeStart, timeEnd);

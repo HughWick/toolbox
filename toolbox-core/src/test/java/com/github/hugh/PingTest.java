@@ -39,11 +39,11 @@ public class PingTest {
         PingDTO ping2 = PingUtils.ping(ip1);
         assertEquals(0, ping2.getStatus());
         String ip2 = "31.13.85.2";
-        PingDTO ping1 = PingUtils.ping(ip2);
+        PingDTO ping1 = PingUtils.ping(ip2,3,500);
         assertEquals(-1, ping1.getStatus());
         try {
             String ip3 = "192.168.1.45";
-            int connectedCount = PingUtils.getConnectedCount(ip3, 5, 4000);
+            int connectedCount = PingUtils.getConnectedCount(ip3, 5, 1000);
             assertEquals(0, connectedCount);
         } catch (IOException ioException) {
             ioException.printStackTrace();

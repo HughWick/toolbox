@@ -58,9 +58,8 @@ class StreamTest {
 //        File file = new File(path);
         InputStream inputStream = StreamUtils.getInputStream(path);
         InputStream inputStream2 = StreamUtils.getInputStream(path);
-        final InputStream cloneInputStream1 = StreamUtils.cloneInputStream(inputStream);
-
         assertArrayEquals(inputStream.readAllBytes(), inputStream2.readAllBytes());
+        final InputStream cloneInputStream1 = StreamUtils.cloneInputStream(inputStream);
         assertNotEquals(inputStream2.hashCode(), inputStream.hashCode());
 //        assertEquals(inputStream2.hashCode(), inputStream3.hashCode());
         assertArrayEquals(inputStream.readAllBytes(), cloneInputStream1.readAllBytes());
