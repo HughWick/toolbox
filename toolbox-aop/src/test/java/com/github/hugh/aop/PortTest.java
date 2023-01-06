@@ -7,12 +7,12 @@ import java.lang.reflect.Method;
 /**
  * 端口注解测试类
  */
-public class PortTest {
+//public class PortTest {
 
-    @Test
-    void testPort() throws ClassNotFoundException {
-        Class<?> cls = Class.forName("com.zbz.annotation.pattern3.Worker");
-        Method[] method = cls.getMethods();
+//    @Test
+//    void testPort() throws ClassNotFoundException {
+//        Class<?> cls = Class.forName("com.zbz.annotation.pattern3.Worker");
+//        Method[] method = cls.getMethods();
         /**判断Worker类上是否有TypeAnnotation注解*/
 //        boolean flag = cls.isAnnotationPresent(TypeAnnotation.class);
 //        /**获取Worker类上的TypeAnnotation注解值*/
@@ -42,5 +42,5 @@ public class PortTest {
 //            System.out.println("属性名称:" + f.getName());
 //            System.out.println("属性注解值FiledAnnotation = " + filedAno.value());
 //        }
-    }
-}
+//    }
+//}
