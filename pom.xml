@@ -23,7 +23,7 @@
         <!--============================== MAIN ==============================-->
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit-jupiter.version>5.8.2</junit-jupiter.version>
+        <junit-jupiter.version>5.9.0</junit-jupiter.version>
         <!--========================== All Plugins START =====================-->
         <plugin.compiler.version>3.8.1</plugin.compiler.version>
         <plugin.sonar.version>3.1.1</plugin.sonar.version>
