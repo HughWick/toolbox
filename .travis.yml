@@ -1,5 +1,5 @@
 language: java
-sudo: false # faster builds
+#sudo: false # faster builds
 # 缓存maven jar包
 cache:
   directories:
@@ -11,5 +11,7 @@ env:
     - CODECOV_TOKEN=8aa94f39-8dbc-4ee0-9517-617e02ff49fb
 script:
   - export TZ='Asia/Shanghai'
+install:
+  - mvn install -Dmaven.javadoc.skip=true -B -V
 after_success:
   - bash <(curl -s https://codecov.io/bash)
