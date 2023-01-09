@@ -1,46 +1,20 @@
 package com.github.hugh.id;
 
+import com.github.hugh.util.regex.RegexUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
- * @author AS
- * @date 2021/1/12 9:50
+ * uuid 工具测试类
+ *
+ * @author hugh
  */
-public class UuidTest {
-
+class UuidTest {
 
     @Test
-    public void test01() {
-        System.out.println("-1-->>" + Uuid.genId(12));
-        System.out.println("--2->>" + Uuid.genId(12).length());
-    }
-
-
-    public static void main(String[] args) {
-//        List<String> list = new ArrayList<>();
-//        new Thread(() -> {
-//            for (int i = 0; i < 100000; i++) {
-//                String id = genId();
-//                if (list.contains(id)) {
-//                    System.out.println("=============相同uuid====" + id);
-//                } else {
-//                    list.add(id);
-//                }
-//            }
-//            System.out.println("==1==END====");
-//        }).start();
-//        new Thread(() -> {
-//            for (int i = 0; i < 10000; i++) {
-//                String id = genId();
-//                if (list.contains(id)) {
-//                    System.out.println("=============相同uuid====" + id);
-//                } else {
-//                    list.add(id);
-//                }
-//            }
-//            System.out.println("==2==END====");
-//        }).start();
-//        System.out.println("====END====");
-//        System.out.println("--->>" + genId());
+    void test01() {
+        final String genId = Uuid.genId(12);
+        Assertions.assertEquals(12, genId.length());
+        Assertions.assertTrue(RegexUtils.isLowerCaseAndNumber(genId.toLowerCase()));
     }
 }

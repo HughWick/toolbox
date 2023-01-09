@@ -37,7 +37,7 @@ public class PingTest {
         String ip1 = "223.5.5.5";
         PingDTO ping2 = PingUtils.ping(ip1);
         assertEquals(0, ping2.getStatus());
-        String ip2 = "192.168.10.11";
+        String ip2 = "172.17.10.11";
         PingDTO ping1 = PingUtils.ping(ip2,3,500);
         assertEquals(-1, ping1.getStatus());
         try {

@@ -34,6 +34,7 @@ class EasyRedisTest {
     public static final int PORT = 7779;
     public static final String PASSWORD = "password123";
     public static final int GET_TEST_INDEX = 14;
+
     /**
      * 初始化redis连接池
      */
@@ -145,18 +146,15 @@ class EasyRedisTest {
         } catch (InterruptedException e) {
         }
         for (int hashCode : integerList) {
-//            System.out.println("---->>"+ hashCode);
             if (hashcode.get() == 0) {
                 hashcode.set(hashCode);
             }
-            assertTrue(hashcode.get() == hashCode);
+            assertNotEquals(hashcode.get(), hashCode);
         }
         // 刷新单例
         fixedThreadPool2.execute(() -> {
             EasyRedis easyRedis = EasyRedis.getInstance(jedisPool, 2, true);
-//            if (hashcode2.get() == 0) {
             hashcode2.set(easyRedis.hashCode());
-//            }
         });
         if (!fixedThreadPool2.isShutdown()) {
             fixedThreadPool2.shutdown();
@@ -166,12 +164,8 @@ class EasyRedisTest {
         } catch (InterruptedException e) {
         }
         for (int hashCode : integerList) {
-//            System.out.println("---->>"+ hashCode);
-
-            assertTrue(hashcode2.get() != hashCode);
+            assertNotEquals(hashcode2.get(), hashCode);
         }
-
-
     }
 
     @Test
