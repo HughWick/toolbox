@@ -2,7 +2,7 @@
 
 收集日常工作中常用的工具类
 
-[![Build Status](https://travis-ci.com/HughWick/toolbox.svg?branch=master)](https://travis-ci.com/HughWick/toolbox)
+[![Build Status](https://app.travis-ci.com/HughWick/toolbox.svg?branch=2.4.X)](https://app.travis-ci.com/github/HughWick/toolbox)
 [![codecov](https://codecov.io/gh/HughWick/toolbox/branch/master/graph/badge.svg)](https://codecov.io/gh/HughWick/toolbox)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.hughwick/toolbox-all/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.hughwick/toolbox-all)
 [![](https://img.shields.io/badge/license-Apache2-FF0080.svg)](https://github.com/hughwick/toolbox/blob/master/LICENSE.txt)
