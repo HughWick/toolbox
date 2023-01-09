@@ -12,14 +12,6 @@
     <artifactId>toolbox-core</artifactId>
     <packaging>jar</packaging>
     <description>toolbox 公共工具类核心包</description>
-    <properties>
-        <servlet-api.version>4.0.1</servlet-api.version>
-        <google-guava.version>31.1-jre</google-guava.version>
-        <kryo.version>4.0.2</kryo.version>
-        <slf4j-simple.version>1.7.36</slf4j-simple.version>
-        <ip2region.version>2.6.6</ip2region.version>
-        <UserAgentUtils.version>1.21</UserAgentUtils.version>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -36,30 +28,25 @@
         <dependency>
             <groupId>com.esotericsoftware</groupId>
             <artifactId>kryo</artifactId>
-            <version>${kryo.version}</version>
         </dependency>
         <!-- 谷歌套件 https://mvnrepository.com/artifact/com.google.guava/guava -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>${google-guava.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j-simple.version}</version>
         </dependency>
         <!--  IP解析  https://mvnrepository.com/artifact/org.lionsoul/ip2region  -->
         <dependency>
             <groupId>org.lionsoul</groupId>
             <artifactId>ip2region</artifactId>
-            <version>${ip2region.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/eu.bitwalker/UserAgentUtils -->
         <dependency>
             <groupId>eu.bitwalker</groupId>
             <artifactId>UserAgentUtils</artifactId>
-            <version>${UserAgentUtils.version}</version>
         </dependency>
     </dependencies>
     <build>
