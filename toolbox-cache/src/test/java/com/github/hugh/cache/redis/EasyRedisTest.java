@@ -263,26 +263,33 @@ class EasyRedisTest {
 //        System.out.println("tll===2>>" + easyRedis.ttl(1, key));
     }
 
+    // redis自增测试
     @Test
     void incrTest() {
-        EasyRedis easyRedis = supplier.get();
         String key = "incr_test_01";
+        EasyRedis easyRedis = supplier.get();
+        final long l = easyRedis.del(key);
+        assertEquals(1, l);
         Long ttl = easyRedis.incr(key);
-        System.out.println(ttl);
+        assertEquals(1, ttl.intValue());
     }
 
     @Test
     void hsetTest() {
+        String url1 = "www.baidu.com";
         EasyRedis easyRedis = supplier.get();
         String key = "test02";
         Long hset = easyRedis.hset(key, "json", "www.google.com");
-        easyRedis.hset(key, "url", "www.baidu.com");
+        assertEquals(0, hset);
+//        System.out.println(hset);
+        easyRedis.hset(key, "url", url1);
+        assertEquals(url1, easyRedis.hget(key, "url"));
         easyRedis.hset(key, "account", "hugh");
-        System.out.println(hset);
-        System.out.println(easyRedis.hget(key, "url"));
+//        System.out.println(easyRedis.hget(key, "url"));
         System.out.println(easyRedis.hgetAll(key));
         Long account = easyRedis.hdel(key, "account");
-        System.out.println("===del=>" + account);
+        assertEquals(1, account);
+//        System.out.println("===del=>" + account);
     }
 
     @Test
