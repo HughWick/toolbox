@@ -98,7 +98,8 @@ class DoubleMathTest {
         numberFormat.setGroupingUsed(false);
         numberFormat.setRoundingMode(RoundingMode.DOWN);
         String longitude = "112.94670227122846";
-        System.out.println("---->>" + numberFormat.format(Double.parseDouble(longitude)));
+        assertEquals("112.94670227", numberFormat.format(Double.parseDouble(longitude)));
+//        System.out.println("---->>" + numberFormat.format(Double.parseDouble(longitude)));
 
     }
 }

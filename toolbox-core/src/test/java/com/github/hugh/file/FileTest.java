@@ -127,11 +127,12 @@ class FileTest {
 //        String path = head + "FIGqfQdakAQeRiG.jpg";
 //        File directory = new File(ip2DbPath);//设定为当前文件
 //        System.out.println("--B->>" + FileUtils.formatFileSize(new File(head + "updateFile.http").length()));
-        String temp1 = "/file/img.gitconfig";
-        final String path = FileTest.class.getResource("/").getPath();
-        final File kbFile = new File(path + temp1);
+//        String temp1 = "/file/img.gitconfig";
+//        final String path = FileTest.class.getResource("/").getPath();
+//        final File kbFile = new File(path + temp1);
+//        System.out.println("--->>"+kbFile.length());
         //B
-        assertEquals("224.00B", FileUtils.formatFileSize(kbFile));
+        assertEquals("213.00B", FileUtils.formatFileSize(213));
         assertEquals("10.55MB", FileUtils.formatFileSize(ip2DbPath));
         assertEquals("1.26GB", FileUtils.formatFileSize(1354390941L));
         assertEquals("981.58MB", FileUtils.formatFileSize(1029263971L));

@@ -2,16 +2,15 @@ package com.github.hugh;
 
 import com.github.hugh.bean.dto.PingDTO;
 import com.github.hugh.util.PingUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * ping 工具测试类
@@ -42,9 +41,9 @@ public class PingTest {
         PingDTO ping1 = PingUtils.ping(ip2,3,500);
         assertEquals(-1, ping1.getStatus());
         try {
-            String ip3 = "192.168.1.45";
-            int connectedCount = PingUtils.getConnectedCount(ip3, 5, 1000);
-            assertEquals(0, connectedCount);
+            String ip3 = "8.8.8.8";
+            int connectedCount = PingUtils.getConnectedCount(ip3, 5, 500);
+            assertTrue(5 == connectedCount);
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
