@@ -13,7 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Date: 2022/6/1 16:09
  */
 @Configuration
-public class EasyRedisByteTest {
+class EasyRedisByteTest {
+
+
     @Bean
     public JedisPool redisPoolFactory() {
 //        log.info("初始化redis pool。start...");
@@ -36,7 +38,7 @@ public class EasyRedisByteTest {
         jedisPoolConfig.setTestOnBorrow(true);
         // 在空闲时检查有效性, 默认false
         jedisPoolConfig.setTestWhileIdle(true);
-        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "43.128.14.188", 9991, 10000, "password123@");
+        JedisPool jedisPool = new JedisPool(jedisPoolConfig, EasyRedisTest.IP_ADDR, EasyRedisTest.PORT, 10000, EasyRedisTest.PASSWORD);
 //        log.info("初始化redis pool。end...");
         System.out.println("初始化redis pool。end...");
         return jedisPool;
@@ -50,10 +52,10 @@ public class EasyRedisByteTest {
         String set = easyRedis.set(key.getBytes(), value.getBytes());
         assertEquals("OK", set);
         String key2 = "byteKey-time";
-        String setTime = easyRedis.set(key2.getBytes(), value.getBytes() ,300);
+        String setTime = easyRedis.set(key2.getBytes(), value.getBytes(), 300);
         assertEquals("OK", setTime);
 //        String key3 = "byteKey-time";
-        String setTime3 = easyRedis.set(0,key2.getBytes(), value.getBytes() ,300);
+        String setTime3 = easyRedis.set(0, key2.getBytes(), value.getBytes(), 300);
         assertEquals("OK", setTime3);
     }
 

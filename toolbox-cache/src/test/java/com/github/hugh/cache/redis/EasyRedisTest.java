@@ -19,11 +19,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 /**
+ * redis 工具类测试
  * User: AS
  * Date: 2021/11/11 10:44
  */
 @Configuration
 class EasyRedisTest {
+
+    public static final String IP_ADDR = "141.147.176.125";
+    public static final int PORT = 7779;
+    public static final String PASSWORD = "password123";
 
     /**
      * 初始化redis连接池
@@ -51,7 +56,7 @@ class EasyRedisTest {
         // 在空闲时检查有效性, 默认false
         jedisPoolConfig.setTestWhileIdle(true);
 //        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "43.128.14.188", 9991, 10000, "password123@");
-        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "192.168.10.29", 7779, 10000, "PoliceRedis@0731");
+        JedisPool jedisPool = new JedisPool(jedisPoolConfig, IP_ADDR, PORT, 10000, PASSWORD);
 //        log.info("初始化redis pool。end...");
         System.out.println("初始化redis pool。end...");
         return jedisPool;
@@ -172,16 +177,21 @@ class EasyRedisTest {
         String key = "set_test_01";
         assertEquals(1, instance.del(key));
         assertEquals(1, instance.del("byte_test_01".getBytes(StandardCharsets.UTF_8)));
+        assertEquals(0, instance.del(1, "set_test_03"));
 //        System.out.println("---1-<>>>><>>" + instance.del(key));
 //        System.out.println("--2--<>>>><>>" + instance.del("byte_test_01".getBytes(StandardCharsets.UTF_8)));
-        System.out.println("---3-<>>>><>>" + instance.del(1, "set_test_03"));
+//        System.out.println("---3-<>>>><>>" + instance.del(1, "set_test_03"));
     }
 
     @Test
     void existsTest() {
+        String existsKey = "existsKey_01";
         EasyRedis instance = supplier.get();
-        String key = "set_test_01";
-        System.out.println("---1-<>>>><>>" + instance.exists(key));
+        assertFalse(instance.exists(existsKey));
+        instance.set(existsKey, "abc");
+        assertTrue(instance.exists(existsKey));
+        assertEquals(1, instance.del(existsKey));
+//        System.out.println("---1-<>>>><>>" + instance.exists(key));
     }
 
     @Test

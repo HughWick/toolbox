@@ -91,11 +91,11 @@ class CaffeineTest {
         assertEquals("123", expireAfterAccess.getIfPresent(keys));
         Thread.sleep(1000);
         assertNull(expireAfterAccess.getIfPresent(keys));
+//        System.out.println("---expireAfterAccess2->>" + expireAfterAccess2.get(keys, k -> "abc"));
         String key2 = "key2";
         Cache<Object, Object> expireAfterAccess2 = CaffeineCache.createExpireAfterAccess(1, (k) -> key2);
-//        System.out.println("---expireAfterAccess2->>" + expireAfterAccess2.get(keys, k -> "abc"));
         assertEquals("abc", expireAfterAccess2.get(keys, k -> "abc"));
-        assertEquals("abc", expireAfterAccess2.getIfPresent(key2));
+        assertNull(expireAfterAccess2.getIfPresent(key2));
     }
 
 

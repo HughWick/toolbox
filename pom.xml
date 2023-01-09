@@ -199,7 +199,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${plugin.surefire.version}</version>
                 <configuration>
-                    <argLine>-Dfile.encoding=UTF-8</argLine><!-- 解决从mvn test中读取测试数据时的中文乱码问题 -->
+                    <argLine> -Xmx1024m -Dfile.encoding=UTF-8</argLine><!-- 解决从mvn test中读取测试数据时的中文乱码问题 -->
                 </configuration>
             </plugin>
             <!--=================================== coveralls END ===================================-->
