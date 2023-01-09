@@ -1,5 +1,6 @@
 package com.github.hugh.base;
 
+import com.github.hugh.constant.StrPool;
 import com.github.hugh.util.base.BaseConvertUtils;
 import org.junit.jupiter.api.Test;
 
@@ -64,7 +65,7 @@ class BaseConvertTest {
         assertEquals("0100", s1);
         String hexStr1 = "31";
         assertEquals("110001", BaseConvertUtils.hexToBinaryStr(hexStr1));
-        assertEquals("0000000000110001", BaseConvertUtils.hexToBinaryStr(hexStr1,16));
+        assertEquals("0000000000110001", BaseConvertUtils.hexToBinaryStr(hexStr1, 16));
     }
 
     // 二进制转十进制
@@ -131,9 +132,9 @@ class BaseConvertTest {
         assertEquals("34", s);
 
         String str1 = "7e 00 18 20 20 10 26 02 88 87 00 10 00 0b 7a 68 6f 75 35 39 37 38 38 31 c6 7e";
-        String[] strings = str1.split(" ");
+        String[] strings = str1.split(StrPool.SPACE);
         byte[] bytes = BaseConvertUtils.hexArrToBytes(strings);
-        String replace = str1.replace(" ", "");
+        String replace = str1.replace(StrPool.SPACE, StrPool.EMPTY);
         String s1 = BaseConvertUtils.hexToAscii(replace);
         assertEquals(new String(bytes), s1);
 

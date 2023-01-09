@@ -1,8 +1,9 @@
 package com.github.hugh.exception;
 
 import com.github.hugh.util.exception.ExceptionUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 异常工具测试类
@@ -15,12 +16,13 @@ class ExceptionTest {
     void testException() {
         ToolboxException toolboxException = new ToolboxException("s圣诞节卡");
         final String message = ExceptionUtils.getMessage(toolboxException);
-        Assertions.assertEquals("ToolboxException: s圣诞节卡", message);
+        assertEquals("ToolboxException: s圣诞节卡", message);
         try {
             int i = 1 / 0;
         } catch (ArithmeticException arithmeticException) {
             final String rootCauseMessage = ExceptionUtils.getRootCauseMessage(arithmeticException);
-            Assertions.assertEquals("ArithmeticException: / by zero", rootCauseMessage);
+            assertEquals("ArithmeticException: / by zero", rootCauseMessage);
         }
+//        ExceptionUtil.getRootCauseMessage()
     }
 }

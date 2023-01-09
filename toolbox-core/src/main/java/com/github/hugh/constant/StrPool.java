@@ -34,6 +34,11 @@ public class StrPool {
     public static final String EMPTY = "";
 
     /**
+     * 字符常量：空格符 {@code ' '}
+     */
+    public static final String SPACE = " ";
+
+    /**
      * 字符串常量：制表符 {@code "\t"}
      */
     public static final String TAB = "\t";

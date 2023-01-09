@@ -3,7 +3,6 @@ package com.github.hugh;
 import com.github.hugh.model.Student;
 import com.github.hugh.util.EntityUtils;
 import com.github.hugh.util.MapUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.StopWatch;
 
@@ -139,10 +138,12 @@ class MapTest {
         stringMap.put("111", "csa");
         stringMap.put("6", "w");
         stringMap.put("4", "n");
-        System.out.println("--3->排序前>!>>>>" + stringMap);
+        // 排序前
+        assertEquals("{1=z, 111=csa, 2=a, 3=c, 4=n, 5=i, 6=w}" , stringMap.toString());
+        assertEquals("{6=w, 5=i, 4=n, 3=c, 2=a, 111=csa, 1=z}" , MapUtils.sortByKeyDesc(stringMap).toString());
 //        System.out.println("--4->>!>>>>" + MapUtils.sortByValueDesc(stringMap));
 //        System.out.println("--5->>!>>>>" + MapUtils.sortByValueAsc(stringMap));
-        System.out.println("--6->>!>>>>" + MapUtils.sortByKeyDesc(stringMap));
+//        System.out.println("--6->>!>>>>" + MapUtils.sortByKeyDesc(stringMap));
     }
 
     // 根据map中的value进行降序
