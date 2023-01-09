@@ -354,9 +354,10 @@ public class OkHttpUtils {
     /**
      * 发送get请求，并且将结果集转换为 {@link JsonObjects}
      *
-     * @param url    URL
-     * @param params 参数
-     * @param <T>    类型
+     * @param url     URL
+     * @param params  参数
+     * @param timeout 超时时间，单位：秒
+     * @param <T>     类型
      * @return JsonObjects
      * @since 2.4.2.
      */
@@ -387,9 +388,10 @@ public class OkHttpUtils {
      * 发送get请求
      * <p>将data中的键值对拼接成标准的url访问参数</p>
      *
-     * @param url    URL
-     * @param params 请求参数
-     * @param <T>    请求参数类型
+     * @param url     URL
+     * @param params  请求参数
+     * @param timeout 超时时间，单位：秒
+     * @param <T>     请求参数类型
      * @return String
      * @since 2.4.2
      */
@@ -448,11 +450,12 @@ public class OkHttpUtils {
      * @param url           请求URL
      * @param data          参数
      * @param headerContent header 附加内容
+     * @param <D>           数据类型
      * @return String
      * @throws IOException IO流错误
      * @since 1.3.0
      */
-    public static <P> String get(String url, P data, Map<String, String> headerContent) throws IOException {
+    public static <D> String get(String url, D data, Map<String, String> headerContent) throws IOException {
         url = UrlUtils.urlParam(url, data);
         Headers headers = Headers.of(headerContent);
         Request request = new Request.Builder()
