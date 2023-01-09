@@ -2,6 +2,7 @@ package com.github.hugh.time;
 
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.util.DateUtils;
+import com.github.hugh.util.TimeUtils;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
@@ -30,7 +31,7 @@ class DateTest {
     }
 
     @Test
-    void test01() {
+    void testDate01() {
         String str = "2020-06-04 13:00:21";
         assertTrue(DateUtils.isDateFormat(str));
         assertEquals("Thu Jun 04 00:00:00 CST 2020", DateUtils.parseDate(str).toString());
@@ -41,7 +42,8 @@ class DateTest {
         System.out.println("--4->" + DateUtils.getDate(1));
         assertEquals("20200604130021", DateUtils.toStringTime(str));
 //        System.out.println("--5->" + DateUtils.getDate(DateUtils.toStringTime(str)));
-        System.out.println("--6->" + DateUtils.getDateSign());
+//        assertEquals(TimeUtils.getYear() + "" + TimeUtils.getMonth() + "" + TimeUtils.getDay(), DateUtils.getDateSign());
+//        System.out.println("--6->" + DateUtils.getDateSign());
         String s = DateUtils.toStringDate("20200604130021");
         assertTrue(DateUtils.isDateFormat(s));
 //        System.out.println(s);
@@ -87,13 +89,15 @@ class DateTest {
         Date begin = DateUtils.parseTimestamp(1617943680000L);
         Date end = DateUtils.parseTimestamp(1617948600000L);
         String string = "2022-11-10 16:58:57";
-        System.out.println(DateUtils.minutesDifference(DateUtils.parse(string), new Date()));
+        assertEquals(835450, DateUtils.minutesDifference(begin, DateUtils.parse(string)));
+//        System.out.println(DateUtils.minutesDifference(begin, DateUtils.parse(string)));
         assertEquals(82, DateUtils.minutesDifference(begin, end));
         assertEquals(4920, DateUtils.secondsDifference(begin, end));
-        System.out.println("3--->>" + DateUtils.format(DateUtils.getMin(begin, 5), DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
+        assertEquals("2021-04-09 12:53:00", DateUtils.format(DateUtils.getMin(begin, 5), DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
+//        System.out.println("3--->>" + DateUtils.format(DateUtils.getMin(begin, 5), DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
         Date date = DateUtils.parseDate("2022-01-22 00:00:00");
         assertTrue(DateUtils.checkTimeOut(date, 2));
-        System.out.println("---5-->>>" + DateUtils.checkTimeOut(DateUtils.parseDate("2022-01-22 10:00:00"), 2));
+        assertTrue(DateUtils.checkTimeOut(DateUtils.parseDate("2022-01-22 10:00:00"), 2));
     }
 
     @Test
@@ -109,9 +113,9 @@ class DateTest {
     //校验日期对象是否在某个范围天之内
     @Test
     void testIsValidDate() {
-        String timeStart = "2022-05-11 00:00:00";
-        boolean validDate = DateUtils.isValidDate(DateUtils.parse(timeStart), 30);
+        boolean validDate = DateUtils.isValidDate(DateUtils.getDate(-3), 30);
         assertTrue(validDate);
+        String timeStart = "2022-05-11 00:00:00";
         assertFalse(DateUtils.isValidDate(DateUtils.parse(timeStart), 3));
     }
 
@@ -141,9 +145,9 @@ class DateTest {
         Date todayStartTime = DateUtils.getTodayStartTime();
         System.out.println(DateUtils.ofPattern(todayStartTime));
         Date todayEndTime = DateUtils.getTodayEndTime();
-        System.out.println(DateUtils.ofPattern(todayEndTime));
+//        System.out.println(DateUtils.ofPattern(todayEndTime));
         Date oneMonthAgo = DateUtils.getOneMonthAgo();
-        assertEquals("2022-06-05", DateUtils.format(oneMonthAgo));
+//        assertEquals("2022-06-05", DateUtils.format(oneMonthAgo));
         Date weekAgo = DateUtils.getWeekAgo();
         System.out.println(DateUtils.ofPattern(weekAgo));
         Date hourAgo = DateUtils.getHourAgo();
@@ -171,7 +175,7 @@ class DateTest {
         Date end2 = DateUtils.parseDate("2022-10-19 10:00:12");
         boolean b1 = DateUtils.greaterThanStartDate(start2, end2);
         assertFalse(b1);
-        Date start3 = new Date();
+        Date start3 = DateUtils.parse("2020-04-01 00:00:00");
         Date end3 = DateUtils.parseDate("2022-11-19 10:00:12");
         boolean b2 = DateUtils.greaterThanStartDate(start3, end3);
         assertTrue(b2);

@@ -9,5 +9,7 @@ jdk:
 env:
   global:
     - CODECOV_TOKEN=8aa94f39-8dbc-4ee0-9517-617e02ff49fb
+script:
+  - export TZ='Asia/Shanghai'
 after_success:
   - bash <(curl -s https://codecov.io/bash)

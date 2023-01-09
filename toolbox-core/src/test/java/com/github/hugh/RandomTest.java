@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,21 +32,24 @@ class RandomTest {
     }
 
     @Test
-    void test02() {
-        for (int i = 0; i < 100; i++) {
-            System.out.println("---->" + RandomUtils.number(4));
+    void testRandomNumber() {
+        for (int i = 0; i < 200; i++) {
+            int number = RandomUtils.number(4);
+            assertTrue(number >= 1000 && number <= 9999);
         }
     }
 
     @Test
     void testRandomList() {
-        var list = new ArrayList<>();
-        list.add("1");
+        String s1 = "a";
+        List<String> list = new ArrayList<>();
+        list.add(s1);
         list.add("2");
         list.add("3");
-        list.add("4");
-        list.add("5");
-        System.out.println(RandomUtils.random(list));
+//        list.add("4");
+//        list.add("5");
+        String random = RandomUtils.random(list);
+        assertTrue(s1.equals(random) || "2".equals(random) || "3".equals(random) );
     }
 
 //    public static int number(int length) {

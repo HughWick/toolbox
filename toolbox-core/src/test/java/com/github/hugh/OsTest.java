@@ -15,8 +15,12 @@ class OsTest {
 
     @Test
     void testSystem() {
-        assertTrue(OsUtils.isWindows());
-        assertFalse(OsUtils.isLinux());
+        boolean windows = OsUtils.isWindows();
+        if (windows) {
+            assertFalse(OsUtils.isLinux());
+        } else {
+            assertTrue(OsUtils.isLinux());
+        }
         assertTrue(OsUtils.is64());
         assertFalse(OsUtils.isAarch64());
     }

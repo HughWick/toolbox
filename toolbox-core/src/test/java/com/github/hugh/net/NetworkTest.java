@@ -37,10 +37,10 @@ class NetworkTest {
             StopWatch stopWatch = new StopWatch();
             stopWatch.start("开始");
             while (count < 3) {
-                System.out.println("=====开始=======");
+//                System.out.println("=====开始=======");
                 InetAddress byName = InetAddress.getByName(ip);
                 boolean reachable = byName.isReachable(timeout);
-                System.out.println("==结果=>>>" + reachable);
+//                System.out.println("==结果=>>>" + reachable);
                 if (reachable) {
                     return;
                 }
@@ -56,7 +56,7 @@ class NetworkTest {
 
     @Test
     void testSocket() {
-        boolean connect = NetworkUtils.isConnect("192.168.1.87", 9567);
+        boolean connect = NetworkUtils.isConnect("222.244.144.131", 10010);
         assertTrue(connect);
         boolean connect2 = NetworkUtils.isConnect("192.168.1.86", 9567);
         assertFalse(connect2);
