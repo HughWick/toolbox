@@ -49,6 +49,7 @@
         <slf4j-simple.version>1.7.36</slf4j-simple.version>
         <ip2region.version>2.6.6</ip2region.version>
         <UserAgentUtils.version>1.21</UserAgentUtils.version>
+        <mybatis-plus.version>3.5.2</mybatis-plus.version>
     </properties>
 
     <dependencies>
@@ -133,6 +134,17 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
+            </dependency>
+            <!-- mybatis plus-->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter-test</artifactId>
+                <version>${mybatis-plus.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

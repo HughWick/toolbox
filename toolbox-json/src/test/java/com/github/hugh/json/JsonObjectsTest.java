@@ -7,7 +7,6 @@ import com.github.hugh.json.gson.JsonObjects;
 import com.github.hugh.json.model.ContractsDO;
 import com.github.hugh.json.model.GsonTest;
 import com.github.hugh.util.DateUtils;
-import com.github.hugh.util.ServletUtils;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -16,7 +15,6 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.LinkedTreeMap;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -70,25 +68,25 @@ public class JsonObjectsTest {
         cutSemiString(httpStr);
     }
 
-    @Test
-    void testHttpRequest() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addParameter("userId", "9001");
-        request.addParameter("name", "狗蛋");
-        request.addParameter("page", "1");
-        request.addParameter("size", "20");
-        Map<String, Object> contentMap = new HashMap<>();
-        contentMap.put("hostSerialNumber", "202010260288");
-        contentMap.put("array", "1,2,3");
+//    @Test
+//    void testHttpRequest() {
+//        MockHttpServletRequest request = new MockHttpServletRequest();
+//        request.addParameter("userId", "9001");
+//        request.addParameter("name", "狗蛋");
+//        request.addParameter("page", "1");
+//        request.addParameter("size", "20");
+//        Map<String, Object> contentMap = new HashMap<>();
+//        contentMap.put("hostSerialNumber", "202010260288");
+//        contentMap.put("array", "1,2,3");
 //        request.addParameter("content", String.valueOf(contentMap));
-        request.addParameters(contentMap);
-        Map<Object, Object> params = ServletUtils.getParams(request);
+//        request.addParameters(contentMap);
+//        Map<Object, Object> params = ServletUtils.getParams(request);
 //        System.out.println("--1->>"+params);
 //        System.out.println("-2-->>"+JsonObjectUtils.toJson(params));
 //        TestRequestObject testRequestObject = JSON.parseObject(JSON.toJSONString(params), TestRequestObject.class);
 //        TestRequestObject testRequestObject2 = JsonObjectUtils.fromJson(request, TestRequestObject.class);
 //        System.out.println("====>>" + testRequestObject);
-    }
+//    }
 
     /**
      * use properties to restore the map

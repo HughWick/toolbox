@@ -2,6 +2,7 @@ package com.github.hugh.json.gson;
 
 import com.alibaba.fastjson.JSON;
 import com.github.hugh.constant.DateCode;
+import com.github.hugh.constant.StrPool;
 import com.github.hugh.json.exception.ToolboxJsonException;
 import com.github.hugh.json.gson.adapter.CustomDateTypeAdapter;
 import com.github.hugh.json.gson.adapter.MapTypeAdapter;
@@ -21,6 +22,9 @@ import java.util.function.Supplier;
 
 /**
  * 针对Gson进行二次封装处理工具类
+ * <p>
+ * 由2.4.10开始，使用简化命名版本的{@link GsonUtils}工具类
+ * </p>
  *
  * @author hugh
  * @version 1.3.0
@@ -31,15 +35,6 @@ public class JsonObjectUtils {
      * [年-月-日 时:分:秒]完整的日期格式
      */
     protected static final String YEAR_MONTH_DAY_HOUR_MIN_SEC = "yyyy-MM-dd HH:mm:ss";
-
-    /**
-     * json 头
-     */
-    public static final String JSON_HEAD = "{";
-    /**
-     * json 尾
-     */
-    public static final String JSON_TAIL = "}";
 
     /**
      * 单例模式
@@ -794,8 +789,8 @@ public class JsonObjectUtils {
         // json 右括号出现的次数
         int countTail = 0;
         int tailIndex = 0;
-        char charAtJsonHead = JSON_HEAD.charAt(0);
-        char charAtJsonTail = JSON_TAIL.charAt(0);
+        char charAtJsonHead = StrPool.CURLY_BRACKETS_START.charAt(0);
+        char charAtJsonTail = StrPool.CURLY_BRACKETS_END.charAt(0);
         for (int i = 0; i < str.length(); i++) {
             char charAt = str.charAt(i);
             // 计算第一个左括号出现的下标与次数

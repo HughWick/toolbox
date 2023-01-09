@@ -12,9 +12,7 @@
     <artifactId>toolbox-db</artifactId>
     <packaging>jar</packaging>
     <description>toolbox 数据库操作工具包</description>
-    <properties>
-        <mybatis-plus.version>3.5.2</mybatis-plus.version>
-    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.github.hughwick</groupId>
@@ -25,12 +23,10 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>${mybatis-plus.version}</version>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter-test</artifactId>
-            <version>${mybatis-plus.version}</version>
         </dependency>
     </dependencies>
 </project>

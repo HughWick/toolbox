@@ -12,9 +12,6 @@
     <artifactId>toolbox-http</artifactId>
     <packaging>jar</packaging>
     <description>toolbox工具类HTTP包</description>
-    <properties>
-        <okhttp.version>4.9.3</okhttp.version>
-    </properties>
 
     <dependencies>
         <dependency>
