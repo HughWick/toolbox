@@ -10,13 +10,17 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 /**
  * redis 工具类测试
@@ -77,41 +81,53 @@ class EasyRedisTest {
      */
     Supplier<EasyRedis> supplier2 = Suppliers.memoizeWithExpiration(easyRedisSupplier::get, 5, TimeUnit.SECONDS);
 
+    /**
+     * 线程安全的int
+     */
+    static AtomicInteger hashcode = new AtomicInteger(0);
+    static AtomicInteger hashcode2 = new AtomicInteger(0);
+
+    static ThreadPoolExecutor fixedThreadPool1 = new ThreadPoolExecutor(10, 10, 20, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+    static ThreadPoolExecutor fixedThreadPool2 = new ThreadPoolExecutor(10, 10, 20, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+
     @Test
-    void testRedis() {
+    void testSingleInstance() {
+        List<Integer> integerList = new ArrayList<>();
         JedisPool jedisPool = redisPoolFactory();
 //        new Thread(() -> {
 //            EasyRedis easyRedis = EasyRedis.getInstance(redisPoolFactory());
-//            System.out.println("---1->>" + easyRedis);
+//            if (hashcode2.get() == 0) {
+//                hashcode2.set(easyRedis.hashCode());
+//            }
+//            assertTrue(hashcode2.get() == easyRedis.hashCode());
 //        }).start();
 //        new Thread(() -> {
 //            EasyRedis easyRedis = EasyRedis.getInstance(redisPoolFactory());
-//            System.out.println("---2->>" + easyRedis);
+//            if (hashcode2.get() == 0) {
+//                hashcode2.set(easyRedis.hashCode());
+//            }
+//            assertTrue(hashcode2.get() == easyRedis.hashCode());
 //        }).start();
-//        new Thread(() -> {
+//        fixedThreadPool.execute(() -> {
 //            EasyRedis easyRedis = EasyRedis.getInstance(redisPoolFactory());
-//            System.out.println("---3->>" + easyRedis);
-//        }).start();
-        new Thread(() -> {
-            System.out.println("---4---");
+//            integerList.add(easyRedis.hashCode());
+//        });
+        fixedThreadPool1.execute(() -> {
             EasyRedis easyRedis = EasyRedis.getInstance(jedisPool, 1);
-            System.out.println("---4->>" + easyRedis);
-        }).start();
-        new Thread(() -> {
-            System.out.println("---5---");
-            EasyRedis easyRedis = EasyRedis.getInstance(jedisPool, 2, true);
-            System.out.println("---5->>" + easyRedis);
-        }).start();
-        new Thread(() -> {
-            System.out.println("---6---");
+            integerList.add(easyRedis.hashCode());
+        });
+        fixedThreadPool1.execute(() -> {
             EasyRedis easyRedis = EasyRedis.getInstance(jedisPool, 2);
-            System.out.println("---6->>" + easyRedis);
-        }).start();
-        new Thread(() -> {
-            System.out.println("---7---");
-            EasyRedis easyRedis = EasyRedis.getInstance(jedisPool, 2);
-            System.out.println("---7->>" + easyRedis);
-        }).start();
+            integerList.add(easyRedis.hashCode());
+        });
+        fixedThreadPool1.execute(() -> {
+            EasyRedis easyRedis = EasyRedis.getInstance(jedisPool, 3);
+            integerList.add(easyRedis.hashCode());
+        });
+        fixedThreadPool1.execute(() -> {
+            EasyRedis easyRedis = EasyRedis.getInstance(jedisPool, 4);
+            integerList.add(easyRedis.hashCode());
+        });
 //        System.out.println("===1>>" + supplier.get());
 //        System.out.println("=2==>>" + supplier.get());
 //        EasyRedis instance = EasyRedis.getInstance(redisPoolFactory());
@@ -121,10 +137,41 @@ class EasyRedisTest {
 //        EasyRedis easyRedis = new EasyRedis(redisPoolFactory());
 //        System.out.println(easyRedis);
 //        System.out.println(new EasyRedis(redisPoolFactory()));
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException ignored) {
+        if (!fixedThreadPool1.isShutdown()) {
+            fixedThreadPool1.shutdown();
         }
+        try {
+            fixedThreadPool1.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+        }
+        for (int hashCode : integerList) {
+//            System.out.println("---->>"+ hashCode);
+            if (hashcode.get() == 0) {
+                hashcode.set(hashCode);
+            }
+            assertTrue(hashcode.get() == hashCode);
+        }
+        // 刷新单例
+        fixedThreadPool2.execute(() -> {
+            EasyRedis easyRedis = EasyRedis.getInstance(jedisPool, 2, true);
+//            if (hashcode2.get() == 0) {
+            hashcode2.set(easyRedis.hashCode());
+//            }
+        });
+        if (!fixedThreadPool2.isShutdown()) {
+            fixedThreadPool2.shutdown();
+        }
+        try {
+            fixedThreadPool2.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+        }
+        for (int hashCode : integerList) {
+//            System.out.println("---->>"+ hashCode);
+
+            assertTrue(hashcode2.get() != hashCode);
+        }
+
+
     }
 
     @Test
@@ -201,16 +248,19 @@ class EasyRedisTest {
         String value = "sdjfhkj";
         easyRedis.set(key, value, 100);
         Long expire = easyRedis.expire(key, 1999);
-        System.out.println(expire);
+        assertEquals(1, (long) expire);
+//        System.out.println(expire);
     }
 
     @Test
     void tllTest() {
         EasyRedis easyRedis = supplier.get();
-        String key = "expire_test_01";
+        String key = "ttl_test_key_01";
         Long ttl = easyRedis.ttl(key);
-        System.out.println("tll=1==>>" + ttl);
-        System.out.println("tll===2>>" + easyRedis.ttl(1, key));
+        assertEquals(-2, (long) ttl);
+        assertEquals(-2, (long) easyRedis.ttl(1, key));
+//        System.out.println("tll=1==>>" + ttl);
+//        System.out.println("tll===2>>" + easyRedis.ttl(1, key));
     }
 
     @Test
@@ -238,7 +288,8 @@ class EasyRedisTest {
     @Test
     void dbsizeTest() {
         EasyRedis easyRedis = supplier.get();
-        System.out.println("-->" + easyRedis.dbSize());
-        System.out.println("-->" + easyRedis.dbSize(4));
+//        System.out.println("-->" + easyRedis.dbSize());
+        assertTrue(easyRedis.dbSize(4) == 0);
+//        System.out.println("-->" + );
     }
 }
