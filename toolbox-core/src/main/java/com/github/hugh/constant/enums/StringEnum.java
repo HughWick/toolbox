@@ -13,6 +13,7 @@ import lombok.ToString;
 @ToString
 @Getter
 @AllArgsConstructor
+@Deprecated
 public enum StringEnum {
     /**
      * 字符串的null

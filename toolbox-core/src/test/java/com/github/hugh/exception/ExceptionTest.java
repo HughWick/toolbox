@@ -22,6 +22,5 @@ class ExceptionTest {
             final String rootCauseMessage = ExceptionUtils.getRootCauseMessage(arithmeticException);
             Assertions.assertEquals("ArithmeticException: / by zero", rootCauseMessage);
         }
-
     }
 }

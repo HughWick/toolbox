@@ -12,10 +12,6 @@
     <artifactId>toolbox-json</artifactId>
     <packaging>jar</packaging>
     <description>toolbox 工具类JSON包</description>
-    <properties>
-        <google-gson.version>2.10</google-gson.version>
-        <fastjson.version>1.2.83</fastjson.version>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -26,12 +22,10 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>${google-gson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
         </dependency>
     </dependencies>
 
