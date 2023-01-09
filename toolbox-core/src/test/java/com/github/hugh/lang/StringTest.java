@@ -141,11 +141,14 @@ class StringTest {
         assertEquals("1,401,231,485.12", s2);
     }
 
+    // 测试不显示的非法字符
     @Test
     void test002() {
+        String str1 = "WC-TX65望城一中新校门门口-(五期)";
         String str2 = "WC-TX65 望城一中新校门门口-(五期)";
-
-        System.out.println("--->>" + str2.length());
-        System.out.println("--->>" + "WC-TX65望城一中新校门门口-(五期)".length());
+        assertEquals(21, str1.length());
+        assertEquals(22, str2.length());
+//        System.out.println("--->>" + str2.length());
+//        System.out.println("--->>" + "WC-TX65望城一中新校门门口-(五期)".length());
     }
 }
