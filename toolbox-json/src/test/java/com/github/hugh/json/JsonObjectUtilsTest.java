@@ -239,7 +239,7 @@ class JsonObjectUtilsTest {
         assertEquals(students.size(), objects1.size());
         objects1.forEach(e -> {
             assertInstanceOf(JsonObjects.class, new JsonObjects(e));
-            assertEquals(new JsonObjects(e).getString("name"), "张三");
+            assertEquals("张三", new JsonObjects(e).getString("name"));
         });
     }
 
@@ -372,10 +372,10 @@ class JsonObjectUtilsTest {
                 "}";
         List<Command> commands = JsonObjectUtils.parseMultipleJson(str, Command.class);
 //        commands.forEach(System.out::println);
-        assertEquals(JsonObjectUtils.parseMultipleJson(str).size(), 2);
+        assertEquals(2, JsonObjectUtils.parseMultipleJson(str).size());
 //        System.out.println("-list-->>" + JsonObjectUtils.parseMultipleJson(str));
 //        System.out.println("-list-null->>" + JsonObjectUtils.parseMultipleJson(str, null));
-        assertEquals(JsonObjectUtils.countJson(str), 2);
+        assertEquals(2, JsonObjectUtils.countJson(str));
         assertEquals(JsonObjectUtils.parseMultipleJson(str, null).toString(), JsonObjectUtils.parseMultipleJson(str).toString());
     }
 

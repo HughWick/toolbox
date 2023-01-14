@@ -19,7 +19,9 @@ import java.util.Set;
  *
  * @author hugh
  * @since 1.5.2
+ * @deprecated 因明名方式过长，为了简化，2.4.11后使用{@link Jsons}
  */
+@Deprecated
 public class JsonObjects extends JsonObjectUtils {
 
     private JsonObject jsonObject;

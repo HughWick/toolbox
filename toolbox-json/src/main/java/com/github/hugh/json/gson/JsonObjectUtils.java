@@ -29,6 +29,7 @@ import java.util.function.Supplier;
  * @author hugh
  * @version 1.3.0
  */
+@Deprecated
 public class JsonObjectUtils {
 
     /**
