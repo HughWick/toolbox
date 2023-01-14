@@ -5,6 +5,7 @@ import com.github.hugh.bean.dto.coordinates.GgaDTO;
 import com.github.hugh.bean.dto.coordinates.GpsDTO;
 import com.github.hugh.bean.dto.coordinates.RmcDTO;
 import com.github.hugh.constant.DateCode;
+import com.github.hugh.constant.StrPool;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.regex.RegexUtils;
 import org.springframework.util.StringUtils;
@@ -19,10 +20,7 @@ import java.text.DecimalFormat;
  * @since 1.6.3
  */
 public class CoordinatesUtils {
-    /**
-     * 分隔符
-     */
-    private static final String comma = ",";
+
     /**
      * 圆周率
      */
@@ -163,7 +161,7 @@ public class CoordinatesUtils {
             throw new ToolboxException("string is null");
         }
         GgaDTO ggaDTO = new GgaDTO();
-        String[] arr = gga.split(comma); // 用,分割
+        String[] arr = gga.split(StrPool.COMMA); // 用,分割
         ggaDTO.setName(arr[0]);
         ggaDTO.setDate(arr[1]);
         ggaDTO.setLatitude(arr[2]);
@@ -216,7 +214,7 @@ public class CoordinatesUtils {
         if (EmptyUtils.isEmpty(rmcStr)) {
             throw new ToolboxException("string is null");
         }
-        String[] arr = rmcStr.split(comma); // 用,分割
+        String[] arr = rmcStr.split(StrPool.COMMA); // 用,分割
         RmcDTO rmcDTO = new RmcDTO();
         rmcDTO.setName(arr[0]);
         rmcDTO.setTime(arr[1]);
@@ -246,13 +244,13 @@ public class CoordinatesUtils {
      * @since 2.4.8
      */
     public static double getDistance(String longitudeCommaLatitude1, String longitudeCommaLatitude2) {
-        if (!longitudeCommaLatitude1.contains(comma) || !longitudeCommaLatitude2.contains(comma)) {
+        if (!longitudeCommaLatitude1.contains(StrPool.COMMA) || !longitudeCommaLatitude2.contains(StrPool.COMMA)) {
             throw new ToolboxException("latitude and longitude separator does not exist");
-        } else if (StringUtils.countOccurrencesOf(longitudeCommaLatitude1, comma) > 1 || StringUtils.countOccurrencesOf(longitudeCommaLatitude2, comma) > 1) {
+        } else if (StringUtils.countOccurrencesOf(longitudeCommaLatitude1, StrPool.COMMA) > 1 || StringUtils.countOccurrencesOf(longitudeCommaLatitude2, StrPool.COMMA) > 1) {
             throw new ToolboxException("multiple latitude and longitude separators");
         }
-        final String[] split1 = longitudeCommaLatitude1.split(comma);
-        final String[] split2 = longitudeCommaLatitude2.split(comma);
+        final String[] split1 = longitudeCommaLatitude1.split(StrPool.COMMA);
+        final String[] split2 = longitudeCommaLatitude2.split(StrPool.COMMA);
         return getDistance(split1[0], split1[1], split2[0], split2[1]);
     }
 
