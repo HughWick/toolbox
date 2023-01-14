@@ -33,7 +33,7 @@ public class GzipUtils {
         GZIPOutputStream gzip = new GZIPOutputStream(out);
         gzip.write(str.getBytes());
         gzip.close();
-        return out.toString(StandardCharsets.ISO_8859_1.toString());
+        return out.toString(StandardCharsets.ISO_8859_1);
     }
 
     /**
@@ -55,6 +55,6 @@ public class GzipUtils {
         while ((n = gunzip.read(buffer)) >= 0) {
             out.write(buffer, 0, n);
         }
-        return out.toString(StandardCharsets.UTF_8.toString());
+        return out.toString(StandardCharsets.UTF_8);
     }
 }

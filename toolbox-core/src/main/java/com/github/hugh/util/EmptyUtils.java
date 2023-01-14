@@ -41,9 +41,9 @@ public class EmptyUtils {
             String str = obj.toString().strip().trim();
             return str.length() == 0 || "null".equals(str);// 长度等于0 或者 为字符串的null 返回true
         } else if (obj instanceof Collection) {
-            return ((Collection) obj).isEmpty();
+            return ((Collection<?>) obj).isEmpty();
         } else if (obj instanceof Map) {
-            return ((Map) obj).isEmpty();
+            return ((Map<?, ?>) obj).isEmpty();
         }
         return false;
     }
