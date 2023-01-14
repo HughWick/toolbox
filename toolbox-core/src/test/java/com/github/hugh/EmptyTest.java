@@ -16,7 +16,7 @@ class EmptyTest {
     @Test
     void isEmpty() {
         String[] arr = {};
-//        List<String> list = new ArrayList<>();
+        int[] intArray = {};
         assertTrue(EmptyUtils.isEmpty("  "));
         assertTrue(EmptyUtils.isEmpty("null"));
         assertTrue(EmptyUtils.isEmpty(new ArrayList<>()));
@@ -24,6 +24,7 @@ class EmptyTest {
         assertTrue(EmptyUtils.isEmpty(new HashMap<>()));
         assertFalse(EmptyUtils.isEmpty(12));
         assertFalse(EmptyUtils.isEmpty("[]"));
+        assertTrue(EmptyUtils.isEmpty(intArray));
     }
 
     // 不为空
@@ -39,6 +40,6 @@ class EmptyTest {
         String[] strArr = {"1"};
         assertTrue(EmptyUtils.isNotEmpty(strArr));
         assertFalse(EmptyUtils.isEmpty(strArr));
-        assertEquals(strArr.length, 1);
+        assertEquals(1, strArr.length);
     }
 }
