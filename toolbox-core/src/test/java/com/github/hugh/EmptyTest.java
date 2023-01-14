@@ -36,7 +36,7 @@ class EmptyTest {
     }
 
     @Test
-    void test03() {
+    void testStringArrayEmpty() {
         String[] strArr = {"1"};
         assertTrue(EmptyUtils.isNotEmpty(strArr));
         assertFalse(EmptyUtils.isEmpty(strArr));
