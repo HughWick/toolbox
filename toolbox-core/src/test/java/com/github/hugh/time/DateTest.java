@@ -2,7 +2,6 @@ package com.github.hugh.time;
 
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.util.DateUtils;
-import com.github.hugh.util.TimeUtils;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
@@ -39,7 +38,7 @@ class DateTest {
         final boolean dateFormat = DateUtils.isDateFormat(DateUtils.getDate(DateCode.YEAR_MONTH_DAY), DateCode.YEAR_MONTH_DAY);
         assertTrue(dateFormat);
 //        System.out.println("--3->" + );
-        System.out.println("--4->" + DateUtils.getDate(1));
+//        System.out.println("--4->" + DateUtils.getDate(1));
         assertEquals("20200604130021", DateUtils.toStringTime(str));
 //        System.out.println("--5->" + DateUtils.getDate(DateUtils.toStringTime(str)));
 //        assertEquals(TimeUtils.getYear() + "" + TimeUtils.getMonth() + "" + TimeUtils.getDay(), DateUtils.getDateSign());
@@ -59,9 +58,9 @@ class DateTest {
 //        assertEquals(DateUtils.parseDate() + " 23:59:59", DateUtils.setMonthLastDay(null));
 //        System.out.println("-1-->" + DateUtils.setMonthFirstDay(parse));
 //        System.out.println("-2-->" + DateUtils.setMonthLastDay(new Date()));
-        System.out.println("-2-null->" + DateUtils.setMonthLastDay(null));
-        System.out.println("-3-->" + DateUtils.getMonthBeforeStartTime());
-        System.out.println("-4-->" + DateUtils.getMonthBeforeEndTime());
+//        System.out.println("-2-null->" + DateUtils.setMonthLastDay(null));
+//        System.out.println("-3-->" + DateUtils.getMonthBeforeStartTime());
+//        System.out.println("-4-->" + DateUtils.getMonthBeforeEndTime());
         assertEquals(str, DateUtils.ofPattern(parse));
         assertEquals("2020-06-04", DateUtils.format(parse));
     }
@@ -73,7 +72,7 @@ class DateTest {
         assertTrue(DateUtils.isToday(date1));
         assertTrue(DateUtils.isToday(DateUtils.ofPattern(date1)));
         assertFalse(DateUtils.isToday(DateUtils.parse("2022-01-03 22:11:22")));
-        System.out.println("-3-->>" + DateUtils.dateStrToDate(date1.toString()));
+        assertInstanceOf(Date.class , DateUtils.dateStrToDate(date1.toString()));
     }
 
 
