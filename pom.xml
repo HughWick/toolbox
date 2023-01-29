@@ -50,6 +50,9 @@
         <ip2region.version>2.6.6</ip2region.version>
         <UserAgentUtils.version>1.21</UserAgentUtils.version>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
+        <redis.version>3.6.3</redis.version>
+        <caffeine.version>3.1.2</caffeine.version>
+        <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
     </properties>
 
     <dependencies>
@@ -141,6 +144,22 @@
                 <artifactId>mybatis-plus-boot-starter-test</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${redis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.validation</groupId>
+                <artifactId>jakarta.validation-api</artifactId>
+                <version>${jakarta.validation-api.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>
@@ -215,7 +234,7 @@
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo,manual</distribution>
         </license>
     </licenses>

@@ -12,9 +12,6 @@
     <artifactId>toolbox-aop</artifactId>
     <packaging>jar</packaging>
     <description>toolbox-aop工具包</description>
-    <properties>
-        <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>com.github.hughwick</groupId>
@@ -24,7 +21,6 @@
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
-            <version>${jakarta.validation-api.version}</version>
         </dependency>
     </dependencies>
 </project>
