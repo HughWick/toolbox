@@ -1,5 +1,6 @@
 package com.github.hugh.util;
 
+import com.github.hugh.constant.StrPool;
 import com.github.hugh.exception.ToolboxException;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
@@ -27,11 +28,6 @@ public class ListUtils {
      * 替换字符串中的[]、"、 "、符号表达式
      */
     private static final CharMatcher LIST_CHAR_MATCHER = CharMatcher.anyOf("[]\" \"");
-
-    /**
-     * list默认分隔符 {@code ,}
-     */
-    private static final String LIST_SEPARATOR = ",";
 
     /**
      * 判断集合是否为null或者集合内元素空
@@ -134,7 +130,7 @@ public class ListUtils {
      * @since 2.1.11
      */
     public static <T> String listToString(List<T> list) {
-        return listToString(list, LIST_SEPARATOR);
+        return listToString(list, StrPool.COMMA);
     }
 
     /**
@@ -161,7 +157,7 @@ public class ListUtils {
      * @since 2.4.4
      */
     public static String strArrayToInSql(String strArray) {
-        return strArrayToInSql(strArray, LIST_SEPARATOR);
+        return strArrayToInSql(strArray, StrPool.COMMA);
     }
 
     /**
@@ -215,7 +211,7 @@ public class ListUtils {
      * @since 2.3.7
      */
     public static <T> String listObjectToString(List<T> list, String name) {
-        return listObjectToString(list, name, LIST_SEPARATOR);
+        return listObjectToString(list, name, StrPool.COMMA);
     }
 
     /**
@@ -263,7 +259,7 @@ public class ListUtils {
                     continue;
                 }
                 if (inSql) {
-                    stringBuilder.append("'").append(value).append("'").append(LIST_SEPARATOR);
+                    stringBuilder.append("'").append(value).append("'").append(StrPool.COMMA);
                 } else {
                     stringBuilder.append(value).append(separator);
                 }
