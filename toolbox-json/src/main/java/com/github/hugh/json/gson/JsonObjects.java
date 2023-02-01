@@ -85,7 +85,8 @@ public class JsonObjects extends Jsons {
      * @since 1.7.4
      */
     public JsonObjects getThis(String key) {
-        return new JsonObjects(super.getThis(key));
+        final Jsons aThis = super.getThis(key);
+        return new JsonObjects(aThis.toJson());
     }
 //
 //    /**
