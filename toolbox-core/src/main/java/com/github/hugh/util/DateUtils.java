@@ -134,6 +134,7 @@ public class DateUtils extends DateCode {
      * 转换日期
      *
      * @param value 字符串日期 or 日期对象
+     * @param <T>   入参数据类型
      * @return Date 默认日期对象格式:yyyy-MM-dd HH:mm:ss
      */
     public static <T> Date parse(T value) {
@@ -143,6 +144,7 @@ public class DateUtils extends DateCode {
     /**
      * 根据不同日期格式，转换成对应的日期格式对象
      *
+     * @param <T>    入参数据类型
      * @param value  日期
      * @param format 日期格式
      * @return Date

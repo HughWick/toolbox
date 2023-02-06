@@ -106,10 +106,11 @@ public class IpUtils {
 
     /**
      * 功能：判断一个IP是不是在一个网段下的
+     * <p>
      * 格式：isInRange("192.168.8.3", "192.168.9.10/22");
      *
      * @param ip   IP
-     * @param cidr
+     * @param cidr 网段地址
      * @return boolean
      * @since 1.7.2
      */

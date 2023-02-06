@@ -169,6 +169,7 @@ public class MapUtils {
      * @param <T>    实体对象
      * @param <K>    KEY
      * @param <V>    value
+     * @return T 返回实体
      * @throws IntrospectionException    实体方法异常
      * @throws InvocationTargetException 目标调用异常
      * @throws IllegalAccessException    非法访问异常，注意它是检查(checked)异常，也就是需要显示捕获，此异常会在修饰符禁用访问的时候抛出，可以通过setAccessible(true)抑制修饰符检查来避免抛出此异常
