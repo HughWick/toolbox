@@ -41,8 +41,8 @@ public class PingTest {
         PingDTO ping1 = PingUtils.ping(ip2,3,500);
         assertEquals(-1, ping1.getStatus());
         try {
-            String ip3 = "8.8.8.8";
-            int connectedCount = PingUtils.getConnectedCount(ip3, 5, 500);
+            String ip3 = "114.114.114.114";
+            int connectedCount = PingUtils.getConnectedCount(ip3, 5, 200);
             assertTrue(5 == connectedCount);
         } catch (IOException ioException) {
             ioException.printStackTrace();
