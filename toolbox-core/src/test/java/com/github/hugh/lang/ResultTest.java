@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 返回数据实体接口来
@@ -22,6 +21,15 @@ public class ResultTest {
         ResultDTO dto1 = new ResultDTO("0000", "ssss");
         assertTrue(dto1.equalCode("0000"));
         assertFalse(dto1.notEqualCode("0000"));
+    }
+
+    // 测试无参构造
+    @Test
+    void test02() {
+        ResultDTO dto2 = new ResultDTO<>();
+        assertNull(dto2.getMessage());
+        assertNull(dto2.getCode());
+        assertNull(dto2.getData());
     }
 
     public static void main(String[] args) {
