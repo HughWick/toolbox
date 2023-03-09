@@ -38,7 +38,12 @@ public class OkHttpsResponse {
     public String getMessage() {
         return this.message;
     }
-
+    
+    /**
+     * 将 message 字符串转换为 Jsons 对象。
+     *
+     * @return Jsons 对象
+     */
     public Jsons reJsons() {
         return new Jsons(this.message);
     }

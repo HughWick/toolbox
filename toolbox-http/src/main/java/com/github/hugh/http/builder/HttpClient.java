@@ -1,16 +1,14 @@
 package com.github.hugh.http.builder;
 
-/**
- * @author hugh
- * @since 2.5.1
- */
-
 import okhttp3.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
 
 /**
  * HttpClient 类封装了 OkHttp 的单例实现，提供 HTTP 请求相关功能。
+ *
+ * @author hugh
+ * @since 2.5.1
  */
 public class HttpClient {
     private OkHttpClient okHttpClient;

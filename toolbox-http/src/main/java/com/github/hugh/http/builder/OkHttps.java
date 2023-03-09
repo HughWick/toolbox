@@ -1,12 +1,10 @@
 package com.github.hugh.http.builder;
 
 import com.github.hugh.constant.StrPool;
-import com.github.hugh.http.OkHttpUtils;
 import com.github.hugh.http.UrlUtils;
 import com.github.hugh.http.constant.OkHttpCode;
 import com.github.hugh.http.exception.ToolboxHttpException;
 import com.github.hugh.json.gson.GsonUtils;
-import com.github.hugh.json.gson.Jsons;
 import com.github.hugh.util.EmptyUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +14,6 @@ import okhttp3.*;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 封装OkHttp 工具类
