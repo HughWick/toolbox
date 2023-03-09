@@ -3,6 +3,7 @@ package com.github.hugh.http;
 import com.github.hugh.http.exception.ToolboxHttpException;
 import com.github.hugh.json.gson.JsonObjectUtils;
 import com.github.hugh.json.gson.JsonObjects;
+import com.github.hugh.json.gson.Jsons;
 import com.github.hugh.util.MapUtils;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
  * @author hugh
  * @since 1.0.2
  */
+@Deprecated
 @Slf4j
 public class OkHttpUtils {
     private OkHttpUtils() {
@@ -212,7 +214,7 @@ public class OkHttpUtils {
      * @param json 参数
      * @param <P>  参数类型
      * @return String
-     * @throws IOException IO流错误
+     * @throws IOException 如果请求失败或响应无法解析为指定的数据类型，则抛出 IOException 异常
      * @since 1.2.4
      */
     public static <P> String postFormCookie(String url, P json) throws IOException {
@@ -227,7 +229,7 @@ public class OkHttpUtils {
      * @param params 参数
      * @param <T>    请求参数类型
      * @return String
-     * @throws IOException IO流错误
+     * @throws IOException 如果请求失败或响应无法解析为指定的数据类型，则抛出 IOException 异常
      */
     public static <T> String postJson(String url, T params) throws IOException {
         if (params instanceof String) {
@@ -236,7 +238,7 @@ public class OkHttpUtils {
         if (params == null) {
             return post(url, "", JSON_TYPE);
         }
-        return post(url, new JsonObjects(params).toJson(), JSON_TYPE);
+        return post(url, new Jsons(params).toJson(), JSON_TYPE);
     }
 
     /**
@@ -247,7 +249,7 @@ public class OkHttpUtils {
      * @param params 参数
      * @param <T>    请求参数类型
      * @return {@link JsonObject}
-     * @throws IOException IO流错误
+     * @throws IOException 如果请求失败或响应无法解析为指定的数据类型，则抛出 IOException 异常
      * @since 1.3.0
      */
     @Deprecated
@@ -265,9 +267,10 @@ public class OkHttpUtils {
      *
      * @param url URL
      * @return JsonObjects
-     * @throws IOException
+     * @throws IOException 如果请求失败或响应无法解析为指定的数据类型，则抛出 IOException 异常
      * @since 2.0.6
      */
+    @Deprecated
     public static JsonObjects postJsonReJsonObjects(String url) throws IOException {
         return postJsonReJsonObjects(url, null);
     }
@@ -279,9 +282,10 @@ public class OkHttpUtils {
      * @param params 参数
      * @param <T>    类型
      * @return JsonObjects
-     * @throws IOException
+     * @throws IOException 如果请求失败或响应无法解析为指定的数据类型，则抛出 IOException 异常
      * @since 2.0.6
      */
+    @Deprecated
     public static <T> JsonObjects postJsonReJsonObjects(String url, T params) throws IOException {
         String result = postJson(url, params);
         try {
@@ -299,6 +303,7 @@ public class OkHttpUtils {
      * @throws IOException
      * @since 2.0.6
      */
+    @Deprecated
     public static JsonObjects postFormReJsonObjects(String url) throws IOException {
         return postFormReJsonObjects(url, null);
     }
@@ -310,9 +315,10 @@ public class OkHttpUtils {
      * @param params 参数
      * @param <T>    类型
      * @return JsonObjects
-     * @throws IOException
+     * @throws IOException 如果请求失败或响应无法解析为指定的数据类型，则抛出 IOException 异常
      * @since 2.0.6
      */
+    @Deprecated
     public static <T> JsonObjects postFormReJsonObjects(String url, T params) throws IOException {
         String result = postForm(url, params);
         try {
@@ -329,6 +335,7 @@ public class OkHttpUtils {
      * @return JsonObjects
      * @since 2.0.6
      */
+    @Deprecated
     public static JsonObjects getReJsonObjects(String url) throws IOException {
         return getReJsonObjects(url, null);
     }
@@ -342,6 +349,7 @@ public class OkHttpUtils {
      * @return JsonObjects
      * @since 2.0.6
      */
+    @Deprecated
     public static <T> JsonObjects getReJsonObjects(String url, T params) throws IOException {
         String result = get(url, params, 10);
         try {
@@ -361,6 +369,7 @@ public class OkHttpUtils {
      * @return JsonObjects
      * @since 2.4.2.
      */
+    @Deprecated
     public static <T> JsonObjects getReJsonObjects(String url, T params, int timeout) throws IOException {
         String result = get(url, params, timeout);
         try {
@@ -518,7 +527,7 @@ public class OkHttpUtils {
      * @return String 返回结果
      * @throws IOException IO异常
      */
-    private static String send(Request request, OkHttpClient okHttpClient) throws IOException {
+    public static String send(Request request, OkHttpClient okHttpClient) throws IOException {
         try (Response response = okHttpClient.newCall(request).execute()) {
             ResponseBody body1 = response.body();
             if (body1 == null) {

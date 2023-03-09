@@ -1,6 +1,7 @@
 package com.github.hugh.http;
 
 import com.github.hugh.json.gson.JsonObjects;
+import com.github.hugh.json.gson.Jsons;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import org.junit.jupiter.api.Assertions;
@@ -73,8 +74,8 @@ class OkHttpPostTest {
         map.put("userAccount", "mushi");
         map.put("userPassword", "8566889");
         String s = OkHttpUtils.postFormCookie(url, map);
-        assertEquals("0000" , new JsonObjects(s).getString("code"));
+        assertEquals("0000", new JsonObjects(s).getString("code"));
         JsonObjects byCookieReJsonObjects = OkHttpUtils.getByCookieReJsonObjects(url2);
-        assertEquals("0000" , byCookieReJsonObjects.getString("code"));
+        assertEquals("0000", byCookieReJsonObjects.getString("code"));
     }
 }

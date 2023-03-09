@@ -25,36 +25,23 @@ class ListTest {
     // 测试字符串转list集合
     @Test
     void testGuavaStringToList() {
-//        String[] array = {"1", "2", "3", "4", "5", "6", "7"};
-//        ListUtils.guavaStringToList(strings).forEach(System.out::println);
         String single = "1db";
-//        System.out.println("--1->>" + ListUtils.guavaStringToList(single));
         assertEquals(Lists.newArrayList(single), ListUtils.guavaStringToList(single));
         String strings = "[\"Saab\", \"Volvo\", \"BMW\" ,\"   \"]";
         assertEquals("[Saab, Volvo, BMW]", ListUtils.guavaStringToList(strings).toString());
-//        System.out.println("-2-->>" + ListUtils.guavaStringToList(strings));
         String str = "{\"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\"}";
         assertEquals(Lists.newArrayList("{\"1", "2", "3", "4", "5", "6", "7\"}"), ListUtils.guavaStringToList(str));
-//        ListUtils.guavaStringToList(str).forEach(System.out::println);
         String str2 = "1,2 , 3, 4 ,5,6,";
-//        System.out.println("-------3333333333----------");
-//        ListUtils.guavaStringToList(str2).forEach(System.out::println);
         assertEquals(Lists.newArrayList("1", "2", "3", "4", "5", "6"), ListUtils.guavaStringToList(str2));
         String str3 = "[1,2,3,4,5,]";
         assertEquals(Lists.newArrayList("1", "2", "3", "4", "5"), ListUtils.guavaStringToList(str3));
-//        System.out.println("----444444444444----------");
-//        ListUtils.guavaStringToList(str3).forEach(System.out::println);
         String str4 = "[1,2,3,4,5,6, \"7\"]";
         assertEquals(Lists.newArrayList("1", "2", "3", "4", "5", "6", "7"), ListUtils.guavaStringToList(str4));
-//        System.out.println("======5555555555555555========");
-//        ListUtils.guavaStringToList(str4).forEach(System.out::println);
+        // 数据内包含子级数组
         String str5 = "[[a,b,c],1,2,3,4,5,6, \"7\",89]";
         assertEquals(Lists.newArrayList("a", "b", "c", "1", "2", "3", "4", "5", "6", "7", "89"), ListUtils.guavaStringToList(str5));
-//        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&");
-//        ListUtils.guavaStringToList(str5).;
         String str6 = "[\"Saab\", \"Volvo\", \"BMW\",[sub]]";
         assertEquals(Lists.newArrayList("Saab", "Volvo", "BMW", "sub"), ListUtils.guavaStringToList(str6));
-//        System.out.println("--3->>" + ListUtils.guavaStringToList(str2).size());
     }
 
     //无实体、针对字段排序排序
@@ -86,7 +73,7 @@ class ListTest {
         lists.sort(listComparator(colSortMaps));
         var str1 = "[[刘爱, 男, 22, 9000, T1, 北京大兴], [张三, 男, 22, 10000, T2, 贵州遵义], [王八, 女, 23, 12000, T2, 北京昌平], [王五, 女, 23, 12000, T3, 北京海淀], [张七, 男, 23, 12000, T3, 北京朝阳], [王六, 男, 23, 13000, T3, 北京昌平], [李四, 女, 23, 15000, T2, 贵州遵义], [黄三, 男, 24, 10000, T2, 北京大兴], [黄五, 女, 24, 11000, T2, 北京海淀], [郭艾琳, 男, 24, 12000, T3, 贵州贵阳], [王七, 男, 24, 14000, T3, 北京昌平], [胡三, 男, 26, 12000, T3, 北京朝阳], [胡四, 男, 26, 13000, T3, 北京朝阳], [张五, 女, 26, 14000, T3, 北京海淀], [张六, 男, 27, 17000, T4, 北京朝阳], [李根, 男, 28, 20000, T5, 贵州贵阳], [刘跟, 男, 39, 18000, T4, 贵州遵义]]";
 //        System.out.println("-2-->>" + lists.toString());
-        assertEquals(str1,lists.toString());
+        assertEquals(str1, lists.toString());
     }
 
     private static Comparator<List<Object>> listComparator(Map<Integer, Boolean> colSortMaps) {
