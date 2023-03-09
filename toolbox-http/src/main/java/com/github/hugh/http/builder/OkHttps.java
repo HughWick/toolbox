@@ -1,5 +1,6 @@
 package com.github.hugh.http.builder;
 
+import com.github.hugh.constant.StrPool;
 import com.github.hugh.http.OkHttpUtils;
 import com.github.hugh.http.UrlUtils;
 import com.github.hugh.http.constant.OkHttpCode;
@@ -133,22 +134,43 @@ public class OkHttps {
         return new OkHttpsResponse(send(request.build(), okHttpClient));
     }
 
+    /**
+     * 执行带有表单数据的 POST 请求。
+     *
+     * @return 服务器返回的响应结果
+     * @throws IOException 如果发生 I/O 错误
+     */
     public OkHttpsResponse doPostForm() throws IOException {
         verifyUrlEmpty();
-        return doPost(OkHttpCode.FORM_TYPE, UrlUtils.jsonParse(this.body));
+        final String params = UrlUtils.jsonParse(this.body);
+        return doPost(OkHttpCode.FORM_TYPE, params);
     }
 
+    /**
+     * 执行带有 JSON 数据的 POST 请求。
+     *
+     * @return 服务器返回的响应结果
+     * @throws IOException 如果发生 I/O 错误
+     */
     public OkHttpsResponse doPostJson() throws IOException {
         verifyUrlEmpty();
+        if (this.body == null) {
+            return doPost(OkHttpCode.JSON_TYPE, StrPool.EMPTY);
+        }
         if (this.body instanceof String) {
             return doPost(OkHttpCode.JSON_TYPE, String.valueOf(this.body));
-        }
-        if (this.body == null) {
-            return doPost(OkHttpCode.JSON_TYPE, "");
         }
         return doPost(OkHttpCode.JSON_TYPE, GsonUtils.toJson(this.body));
     }
 
+    /**
+     * 执行具有指定媒体类型和主体的 POST 请求。
+     *
+     * @param mediaType 请求体的媒体类型
+     * @param body      请求体
+     * @return 服务器返回的响应结果
+     * @throws IOException 如果发生 I/O 错误
+     */
     private OkHttpsResponse doPost(MediaType mediaType, String body) throws IOException {
         // 创建OkHttpClient实例并设置超时值
         final OkHttpClient okHttpClient = HttpClient.getInstance().getOkHttpClient();
