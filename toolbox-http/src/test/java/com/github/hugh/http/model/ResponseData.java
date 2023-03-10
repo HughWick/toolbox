@@ -75,6 +75,8 @@ public class ResponseData{
         private String acceptEncoding;
         @SerializedName("accept-language")
         private String acceptLanguage;
+        @SerializedName("Content-Length")
+        private String contentLength;
         private String cookie;
     }
 }

@@ -1,7 +1,14 @@
 package com.github.hugh.http.builder;
 
+import com.github.hugh.http.constant.OkHttpCode;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -22,6 +29,25 @@ public class HttpClient {
                 .retryOnConnectionFailure(true)
                 .build();
     }
+
+    /**
+     * OkHttp管理cookie
+     */
+    public static final OkHttpClient cookieClient = new OkHttpClient.Builder()
+            .cookieJar(new CookieJar() {
+                @Override
+                public void saveFromResponse(@NotNull HttpUrl httpUrl, @NotNull List<Cookie> list) {
+                    OkHttpCode.COOKIE_STORE.put(httpUrl.host(), list);
+                }
+
+                @Override
+                public List<Cookie> loadForRequest(@NotNull HttpUrl httpUrl) {
+                    List<Cookie> cookies = OkHttpCode.COOKIE_STORE.get(httpUrl.host());
+                    return cookies == null ? new ArrayList<>() : cookies;
+                }
+            }).connectTimeout(10, TimeUnit.SECONDS) // 设置连接超时
+            .readTimeout(10, TimeUnit.SECONDS)// 设置读超时
+            .build();
 
     /**
      * 获取 HttpClient 实例。

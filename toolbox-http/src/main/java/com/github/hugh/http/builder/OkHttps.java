@@ -2,17 +2,23 @@ package com.github.hugh.http.builder;
 
 import com.github.hugh.constant.StrPool;
 import com.github.hugh.http.UrlUtils;
-import com.github.hugh.http.constant.OkHttpCode;
+import com.github.hugh.http.constant.MediaTypes;
 import com.github.hugh.http.exception.ToolboxHttpException;
+import com.github.hugh.http.model.FileFrom;
 import com.github.hugh.json.gson.GsonUtils;
+import com.github.hugh.json.gson.Jsons;
 import com.github.hugh.util.EmptyUtils;
+import com.github.hugh.util.ListUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import okhttp3.*;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,10 +42,11 @@ public class OkHttps {
      * HTTP 请求的请求头信息。
      */
     private Map<String, String> header;
-    private String cookies; // Cookie 信息
     private int connectTimeout; // 连接超时时间，单位：秒
     private int readTimeout; // 读取超时时间，单位：秒
     private int writeTimeout; // 写入超时时间，单位：秒
+    private boolean isSendCookies = false; // 是否发送 Cookie 信息
+    private List<FileFrom> fileFrom;
 
     /**
      * 设置请求的 URL，用于发起 HTTPS 请求。
@@ -108,6 +115,39 @@ public class OkHttps {
     }
 
     /**
+     * 设置是否发送 cookie 的方法。
+     *
+     * @param flag 是否发送 cookie 的标志，true 表示发送，false 表示不发送。
+     * @return 返回一个 OkHttps 实例以支持方法链接调用。
+     */
+    public OkHttps isSendCookie(boolean flag) {
+        this.isSendCookies = flag;
+        return this;
+    }
+
+    /**
+     * 设置文件来源，使用单个 FileFrom 对象
+     *
+     * @param fileFrom 文件来源
+     * @return 当前 OkHttps 实例
+     */
+    public OkHttps setFileFrom(FileFrom fileFrom) {
+        this.fileFrom = Collections.singletonList(fileFrom);
+        return this;
+    }
+
+    /**
+     * 设置文件来源，使用一个包含多个 FileFrom 对象的列表
+     *
+     * @param fileNameList 文件来源列表
+     * @return 当前 OkHttps 实例
+     */
+    public OkHttps setFileFrom(List<FileFrom> fileNameList) {
+        this.fileFrom = fileNameList;
+        return this;
+    }
+
+    /**
      * 发送 GET 请求，并获取 HTTP 响应消息。
      *
      * @return 返回 OkHttps 实例，以支持链式调用其他方法。
@@ -127,8 +167,14 @@ public class OkHttps {
             Headers headers = Headers.of(this.header);
             request.headers(headers);
         }
+        String result;
+        if (this.isSendCookies) {
+            result = send(request.build(), HttpClient.cookieClient);
+        } else {
+            result = send(request.build(), okHttpClient);
+        }
         // 发送请求并返回响应
-        return new OkHttpsResponse(send(request.build(), okHttpClient));
+        return new OkHttpsResponse(result);
     }
 
     /**
@@ -140,7 +186,13 @@ public class OkHttps {
     public OkHttpsResponse doPostForm() throws IOException {
         verifyUrlEmpty();
         final String params = UrlUtils.jsonParse(this.body);
-        return doPost(OkHttpCode.FORM_TYPE, params);
+        if (this.isSendCookies) {
+            return doPost(MediaTypes.APPLICATION_FORM_URLENCODED, params, HttpClient.cookieClient);
+        } else {
+            // 创建OkHttpClient实例并设置超时值
+            final OkHttpClient okHttpClient = HttpClient.getInstance().getOkHttpClient();
+            return doPost(MediaTypes.APPLICATION_FORM_URLENCODED, params, okHttpClient);
+        }
     }
 
     /**
@@ -151,34 +203,74 @@ public class OkHttps {
      */
     public OkHttpsResponse doPostJson() throws IOException {
         verifyUrlEmpty();
+        // 创建OkHttpClient实例并设置超时值
+        OkHttpClient okHttpClient;
+        if (this.isSendCookies) {
+            okHttpClient = HttpClient.cookieClient;
+        } else {
+            okHttpClient = HttpClient.getInstance().getOkHttpClient();
+        }
         if (this.body == null) {
-            return doPost(OkHttpCode.JSON_TYPE, StrPool.EMPTY);
+            return doPost(MediaTypes.APPLICATION_JSON_UTF8, StrPool.EMPTY, okHttpClient);
         }
         if (this.body instanceof String) {
-            return doPost(OkHttpCode.JSON_TYPE, String.valueOf(this.body));
+            return doPost(MediaTypes.APPLICATION_JSON_UTF8, String.valueOf(this.body), okHttpClient);
         }
-        return doPost(OkHttpCode.JSON_TYPE, GsonUtils.toJson(this.body));
+        return doPost(MediaTypes.APPLICATION_JSON_UTF8, GsonUtils.toJson(this.body), okHttpClient);
     }
 
     /**
-     * 执行具有指定媒体类型和主体的 POST 请求。
+     * 发送 HTTP POST 请求的方法。
      *
-     * @param mediaType 请求体的媒体类型
-     * @param body      请求体
-     * @return 服务器返回的响应结果
-     * @throws IOException 如果发生 I/O 错误
+     * @param mediaType    发送请求主体内容的媒体类型。
+     * @param body         发送请求的主体内容。
+     * @param okHttpClient 用于发送请求的 OkHttpClient 实例。
+     * @return 返回一个 OkHttpsResponse 对象，包含服务器返回的响应信息。
+     * @throws IOException 如果请求发送失败，则抛出 IOException 异常。
      */
-    private OkHttpsResponse doPost(MediaType mediaType, String body) throws IOException {
-        // 创建OkHttpClient实例并设置超时值
-        final OkHttpClient okHttpClient = HttpClient.getInstance().getOkHttpClient();
+    private OkHttpsResponse doPost(MediaType mediaType, String body, OkHttpClient okHttpClient) throws IOException {
         RequestBody requestBody = RequestBody.create(mediaType, body);
         final Request.Builder request = new Request.Builder().url(url).post(requestBody);
         if (this.header != null) {
-            // 如果提供了请求头，将其添加到请求中
             Headers headers = Headers.of(this.header);
             request.headers(headers);
         }
         return new OkHttpsResponse(send(request.build(), okHttpClient));
+    }
+
+    /**
+     * 上传文件的方法
+     *
+     * @return OkHttpsResponse
+     * @throws IOException
+     */
+    public <K, V> OkHttpsResponse uploadFile() throws IOException {
+        MultipartBody.Builder requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM);
+        // 如果请求体不为空，则将其转换为 Map 对象，并遍历 Map 中的每一项，添加到请求体中
+        if (EmptyUtils.isNotEmpty(this.body)) {
+            final Map<K, V> params = new Jsons(this.body).toMap();
+            for (Map.Entry<K, V> entry : params.entrySet()) {
+                requestBody.addFormDataPart(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
+            }
+        }
+        if (ListUtils.isEmpty(this.fileFrom)) {
+            throw new ToolboxHttpException("file is null");
+        }
+        // 遍历文件列表，将每个文件添加到请求体中
+        for (FileFrom file : this.fileFrom) {
+            if (EmptyUtils.isEmpty(file.getKey())) {
+                throw new ToolboxHttpException("upload file key is null");
+            }
+            RequestBody fileBody = RequestBody.create(file.getFileMediaType(), new File(file.getPath()));
+            requestBody.addFormDataPart(file.getKey(), file.getName(), fileBody);
+        }
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody.build())
+                .build();
+        final String result = send(request, HttpClient.getInstance().getOkHttpClient());
+        return new OkHttpsResponse(result);
     }
 
     /**

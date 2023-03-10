@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -72,7 +73,7 @@ class DateTest {
         assertTrue(DateUtils.isToday(date1));
         assertTrue(DateUtils.isToday(DateUtils.ofPattern(date1)));
         assertFalse(DateUtils.isToday(DateUtils.parse("2022-01-03 22:11:22")));
-        assertInstanceOf(Date.class , DateUtils.dateStrToDate(date1.toString()));
+        assertInstanceOf(Date.class, DateUtils.dateStrToDate(date1.toString()));
     }
 
 
@@ -151,6 +152,25 @@ class DateTest {
         System.out.println(DateUtils.ofPattern(weekAgo));
         Date hourAgo = DateUtils.getHourAgo();
         System.out.println(DateUtils.ofPattern(hourAgo));
+    }
+
+    @Test
+    void testGetWeekAgo() {
+        // 创建一个Calendar实例，并将其设置为当前时间
+        Calendar calendar = Calendar.getInstance();
+        // 获取当前时间
+        Date now = new Date();
+        calendar.setTime(now);
+
+        // 调用getWeekAgo方法，获取过去七天的日期
+        Date weekAgo = DateUtils.getWeekAgo(now);
+
+        // 将Calendar实例的时间设置为一周前
+        calendar.add(Calendar.DATE, -7);
+        Date expected = calendar.getTime();
+
+        // 验证getWeekAgo方法返回的日期是否等于预期结果
+        assertEquals(expected, weekAgo);
     }
 
     // 测试UTC 转北京时间
