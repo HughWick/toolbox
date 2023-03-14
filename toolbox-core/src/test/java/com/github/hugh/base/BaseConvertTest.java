@@ -1,6 +1,7 @@
 package com.github.hugh.base;
 
 import com.github.hugh.constant.StrPool;
+import com.github.hugh.util.ListUtils;
 import com.github.hugh.util.base.BaseConvertUtils;
 import org.junit.jupiter.api.Test;
 
@@ -171,5 +172,12 @@ class BaseConvertTest {
         int length = 100;
         byte[] bytes = BaseConvertUtils.decToHexBytes(length);
         assertArrayEquals(new byte[]{100}, bytes);
+    }
+
+    @Test
+    void testHexToDecReInt2() {
+        String str1 = "[15, -103, 0, -16, -55, -3, 13, -80, 93, -8, 20, -5, -75, -25, 0, 8, -45, -25, 0, 8, 45, -23, -1, 79]";
+        final Object[] objects = ListUtils.guavaStringToList(str1).toArray();
+        assertEquals( str1, Arrays.toString(objects));
     }
 }

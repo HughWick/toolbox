@@ -5,14 +5,20 @@ import com.github.hugh.http.constant.MediaTypes;
 import com.github.hugh.http.exception.ToolboxHttpException;
 import com.github.hugh.http.model.FileFrom;
 import com.github.hugh.http.model.ResponseData;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Okhttp builder test
@@ -146,37 +152,50 @@ class OkHttpsTest {
         return OkHttpUpdateFileTest.class.getResource(fileName).getPath();
     }
 
-//    @Test
-//    void testTimeout() throws IOException {
-//        MockWebServer server = new MockWebServer();
-//
-//        // 模拟服务器延迟5秒钟响应
-//        server.enqueue(new MockResponse().setBody("response").throttleBody(1024, 5, TimeUnit.SECONDS));
-//
-//        // 创建 OkHttpClient 实例
-//        OkHttpClient client = new OkHttpClient.Builder()
-//                .connectTimeout(1, TimeUnit.SECONDS) // 设置连接超时时间为3秒
-//                .readTimeout(1, TimeUnit.SECONDS) // 设置读取超时时间为3秒
-//                .writeTimeout(1, TimeUnit.SECONDS) // 设置写入超时时间为3秒
-//                .build();
-////        HttpClient httpClient = HttpClient.getInstance();
-////        httpClient.setConnectTimeout(2);
-////        httpClient.setWriteTimeout(2);
-////        httpClient.setReadTimeout(2);
-//        // 创建请求
-//        Request request = new Request.Builder()
-//                .url(server.url("/"))
-//                .build();
-//        // 发送请求，此处应该会抛出 java.net.SocketTimeoutException 异常
-//        try {
-////            Response response = httpClient.getOkHttpClient().newCall(request).execute();
-//            Response response = client.newCall(request).execute();
-//            fail("Expected a SocketTimeoutException to be thrown");
-//        } catch (SocketTimeoutException expected) {
-//            // 预期异常
-//        }
-//
-//        // 关闭 MockWebServer
-//        server.shutdown();
-//    }
+    @Test
+    void testTimeout() throws IOException {
+        MockWebServer server = new MockWebServer();
+        // 模拟服务器延迟5秒钟响应
+        server.enqueue(new MockResponse()
+                .setBody("response"));
+//        server.enqueue(new MockResponse()
+//                .setBody("response")
+//                .throttleBody(1024, 2, TimeUnit.SECONDS));
+        // 启动 MockWebServer
+        server.start();
+        // 创建 OkHttpClient 实例
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(3, TimeUnit.SECONDS) // 设置连接超时时间为3秒
+                .addInterceptor(chain -> {
+                    // 模拟请求超时
+                    try {
+                        Thread.sleep(4000); // 5 秒钟的休眠，模拟超时
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    throw new SocketTimeoutException("Simulated timeout"); // 抛出超时异常
+                })
+                .readTimeout(1, TimeUnit.SECONDS) // 设置读取超时时间为3秒
+                .writeTimeout(1, TimeUnit.SECONDS) // 设置写入超时时间为3秒
+                .build();
+//        HttpClient httpClient = HttpClient.getInstance();
+//        httpClient.setConnectTimeout(2);
+//        httpClient.setWriteTimeout(2);
+//        httpClient.setReadTimeout(2);
+        // 创建请求
+        Request request = new Request.Builder()
+                .url(server.url("/"))
+                .build();
+        // 发送请求，此处应该会抛出 java.net.SocketTimeoutException 异常
+        try {
+//            Response response = httpClient.getOkHttpClient().newCall(request).execute();
+            Response response = client.newCall(request).execute();
+            fail("Expected a SocketTimeoutException to be thrown");
+        } catch (SocketTimeoutException expected) {
+            // 预期异常
+        }
+
+        // 关闭 MockWebServer
+        server.shutdown();
+    }
 }
