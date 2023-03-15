@@ -12,6 +12,6 @@ env:
 script:
   - export TZ='Asia/Shanghai'
 install:
-  - mvn install -Dmaven.javadoc.skip=true -Dmaven.test.failure.ignore=true -B -V
+  - mvn install -Dmaven.test.failure.ignore=true -B -V
 after_success:
   - bash <(curl -s https://codecov.io/bash)

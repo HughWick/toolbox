@@ -40,4 +40,13 @@ class Md5Test {
         assertEquals(md5Result, Md5Utils.encryptFile(file));
         assertEquals(md5Result, Md5Utils.encryptFile(ip2DbPath));
     }
+
+    @Test
+    void testFileBin() {
+        String ip2DbPath = Md5Test.class.getResource("/host_display_gd32.bin").getFile();
+        Assertions.assertNotNull(ip2DbPath);
+        File file = new File(ip2DbPath);
+        String md5Result = "018f36293f3c4ed46674e19e87f731f4";
+        assertEquals(md5Result, Md5Utils.encryptFile(file));
+    }
 }

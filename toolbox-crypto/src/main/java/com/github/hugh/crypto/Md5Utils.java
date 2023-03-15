@@ -8,7 +8,6 @@ import com.github.hugh.util.base.BaseConvertUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -74,18 +73,18 @@ public class Md5Utils {
      */
     public static String encryptFile(File file) {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
-            MessageDigest digest = MessageDigest.getInstance(EncryptCode.MD5);
-            byte[] buffer = new byte[1024 * 1024 * 10];
-            int len;
-            while ((len = fileInputStream.read(buffer)) > 0) {
-                digest.update(buffer, 0, len);
+            byte[] buffer = new byte[1024];
+            MessageDigest md5 = MessageDigest.getInstance(EncryptCode.MD5);
+            int numRead;
+            while ((numRead = fileInputStream.read(buffer)) > 0) {
+                md5.update(buffer, 0, numRead);
             }
-            StringBuilder md5 = new StringBuilder(new BigInteger(1, digest.digest()).toString(16));
-            int length = 32 - md5.length();
-            if (length > 0) {
-                md5.append(("0" + md5.toString()).repeat(length));
+            byte[] digest = md5.digest();
+            StringBuilder result = new StringBuilder();
+            for (byte b : digest) {
+                result.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
             }
-            return md5.toString();
+            return result.toString();
         } catch (NoSuchAlgorithmException | IOException e) {
             throw new ToolboxException(e);
         }
