@@ -54,7 +54,7 @@ public class Md5Utils {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance(encryptType);
             byte[] output = messageDigest.digest(string.getBytes());
-            String result = BaseConvertUtils.hexToString(output);
+            String result = BaseConvertUtils.hexBytesToString(output);
             if (lowerCase) {
                 return result.toLowerCase();
             }
