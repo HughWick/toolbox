@@ -1,5 +1,6 @@
 package com.github.hugh.http.builder;
 
+import com.github.hugh.bean.dto.ResultDTO;
 import com.github.hugh.http.OkHttpUpdateFileTest;
 import com.github.hugh.http.constant.MediaTypes;
 import com.github.hugh.http.exception.ToolboxHttpException;
@@ -39,8 +40,8 @@ class OkHttpsTest {
     // 定义了两个测试用的 HTTP URL 常量，分别用于测试 GET 和 POST 请求功能
     private static final String http_bin_get_url = "https://httpbin.org/get";
     private static final String http_bin_post_url = "https://httpbin.org/post";
-    // 定义了一个测试用的 HTTP URL 常量，用于测试 Cookie 功能
-    private static final String http_bin_cookie_url = "https://httpbin.org/cookies";
+
+    private static final String https_login_url = "https://dev.hnlot.com.cn";
 
     @Test
     void testGet() throws IOException {
@@ -97,11 +98,23 @@ class OkHttpsTest {
         params.put("userAccount", "fengtao");
         params.put("userPassword", "88888888");
         params.put("loginType", "password");
-        final String responseData = new OkHttps().setUrl("https://csga.hnlot.com.cn/v2/user/userLogin/login").isSendCookie(true).setBody(params).doPostForm().getMessage();
-        System.out.println(responseData);
-        final String responseData2 = new OkHttps().setUrl("https://csga.hnlot.com.cn/v2/business/serverRoomInspection/find").doGet().getMessage();
-        System.out.println(responseData2);
-//        assertEquals(value, responseData.getHeaders().getUserAgent());
+        final String responseData = new OkHttps().setUrl(https_login_url + "/v2/user/userLogin/login")
+                .isSendCookie(true)
+                .setBody(params)
+                .doPostForm()
+                .getMessage();
+        final Jsons jsons = new Jsons(responseData);
+        assertEquals("0000", jsons.getString("code"));
+        final ResultDTO responseData2 = new OkHttps().setUrl(https_login_url + "/v2/business/serverRoomInspection/find")
+                .doGet()
+                .fromJson(ResultDTO.class);
+        assertTrue(responseData2.equalCode("100"));
+        final ResultDTO responseData3 = new OkHttps().setUrl(https_login_url + "/v2/business/serverRoomInspection/find")
+                .isSendCookie(true)
+                .setBody(params)
+                .doGet()
+                .fromJson(ResultDTO.class);
+        assertTrue(responseData3.equalCode("0000"));
     }
 
     // 测试上传单张图片
