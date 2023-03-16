@@ -28,7 +28,7 @@ public class ResponseData{
     private HeadersBean headers;
 
     private FormBean form;
-
+    private String  json;
     @NoArgsConstructor
     @Data
     public static class ArgsBean {
@@ -77,6 +77,8 @@ public class ResponseData{
         private String acceptLanguage;
         @SerializedName("Content-Length")
         private String contentLength;
+        @SerializedName("Content-Type")
+        private String contentType;
         private String cookie;
     }
 }

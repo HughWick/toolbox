@@ -5,6 +5,7 @@ import com.github.hugh.http.constant.MediaTypes;
 import com.github.hugh.http.exception.ToolboxHttpException;
 import com.github.hugh.http.model.FileFrom;
 import com.github.hugh.http.model.ResponseData;
+import com.github.hugh.json.gson.Jsons;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -69,18 +70,23 @@ class OkHttpsTest {
         String params1 = "bar1";
         map.put("foo1", params1);
         map.put("foo2", "bar3");
-        System.out.println(new OkHttps().setUrl(http_bin_post_url).setBody(map).doPostForm().getMessage());
         final ResponseData responseData1 = new OkHttps().setUrl(http_bin_post_url).setBody(map).doPostForm().fromJson(ResponseData.class);
         assertEquals(params1, responseData1.getForm().getFoo1());
+        assertEquals("application/x-www-form-urlencoded; charset=utf-8", responseData1.getHeaders().getContentType());
     }
 
+    // 测试post 请求，参数json格式
     @Test
     void testPostJson() throws Exception {
         Map<String, Object> map = new HashMap<>();
         String params1 = "bar1";
         map.put("foo1", params1);
         map.put("foo2", "bar3");
-        System.out.println(new OkHttps().setUrl(http_bin_post_url).setBody(map).doPostJson().getMessage());
+        final Jsons jsons = new OkHttps().setUrl(http_bin_post_url).setBody(map).doPostJson().reJsons();
+        assert MediaTypes.APPLICATION_JSON_UTF8 != null;
+        assertEquals(MediaTypes.APPLICATION_JSON_UTF8.toString(), jsons.getThis("headers").getString("Content-Type"));
+        final ResponseData response1 = new OkHttps().setUrl(http_bin_post_url).doPostJson().fromJson(ResponseData.class);
+        assertEquals("null", response1.getJson() + "");
 //        final ResponseData responseData1 = new OkHttps().setUrl(http_bin_post_url).setBody(map).doPostForm().fromJson(ResponseData.class);
 //        assertEquals(params1, responseData1.getForm().getFoo1());
     }

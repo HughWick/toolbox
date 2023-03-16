@@ -80,7 +80,11 @@ public class Jsons extends GsonUtils {
      * @since 1.7.4
      */
     public Jsons getThis(String key) {
-        return new Jsons(getJsonObject(jsonObject, key));
+        final JsonObject object = getJsonObject(this.jsonObject, key);
+        if (object == null) {
+            return null;
+        }
+        return new Jsons(object);
     }
 
     /**

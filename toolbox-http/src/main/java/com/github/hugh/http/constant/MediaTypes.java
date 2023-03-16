@@ -18,6 +18,11 @@ public class MediaTypes {
     public static final MediaType APPLICATION_FORM_URLENCODED = MediaType.parse("application/x-www-form-urlencoded");
 
     /**
+     * 表单 URL 编码类型。字符集为utf-8。
+     */
+    public static final MediaType APPLICATION_FORM_URLENCODED_UTF8 = MediaType.parse("application/x-www-form-urlencoded;charset=UTF-8");
+
+    /**
      * JSON 类型，采用 UTF-8 字符集编码。
      */
     public static final MediaType APPLICATION_JSON_UTF8 = MediaType.parse("application/json;charset=UTF-8");
@@ -30,7 +35,7 @@ public class MediaTypes {
     /**
      * PDF 类型。
      */
-    public static final MediaType APPLICATION_PDF =MediaType.parse( "application/pdf");
+    public static final MediaType APPLICATION_PDF = MediaType.parse("application/pdf");
 
     /**
      * RSS XML 类型。
@@ -40,7 +45,7 @@ public class MediaTypes {
     /**
      * XHTML XML 类型。
      */
-    public static final MediaType APPLICATION_XHTML_XML =MediaType.parse( "application/xhtml+xml");
+    public static final MediaType APPLICATION_XHTML_XML = MediaType.parse("application/xhtml+xml");
 
     /**
      * XML 类型。
@@ -70,7 +75,7 @@ public class MediaTypes {
     /**
      * HTML 类型。
      */
-    public static final MediaType TEXT_HTML =MediaType.parse("text/html");
+    public static final MediaType TEXT_HTML = MediaType.parse("text/html");
 
     /**
      * Markdown 类型。
@@ -80,7 +85,7 @@ public class MediaTypes {
     /**
      * 纯文本类型。
      */
-    public static final MediaType TEXT_PLAIN =MediaType.parse( "text/plain");
+    public static final MediaType TEXT_PLAIN = MediaType.parse("text/plain");
 
     /**
      * XML 类型。
