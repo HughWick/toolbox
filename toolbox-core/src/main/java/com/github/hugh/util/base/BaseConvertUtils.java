@@ -433,7 +433,7 @@ public class BaseConvertUtils {
      * @since 2.3.9
      */
     public static String hexToAscii(byte[] hexBytes, String charset) {
-        return hexToAscii(hexToString(hexBytes), charset);
+        return hexToAscii(hexBytesToString(hexBytes), charset);
     }
 
     /**

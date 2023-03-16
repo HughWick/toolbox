@@ -1,5 +1,7 @@
 package com.github.hugh.crypto;
 
+import com.github.hugh.constant.StrPool;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +23,7 @@ public class AppkeyUtils {
      */
     public static String generate() {
         UUID uuid = UUID.randomUUID();
-        String appKey = uuid.toString().replace("-", "");
+        String appKey = uuid.toString().replace("-", StrPool.EMPTY);
         return appKey.strip();
     }
 
@@ -37,12 +39,15 @@ public class AppkeyUtils {
             int rand = (int) (Math.random() * a.length());
             rands[i] = a.charAt(rand);
         }
-        List<String> l = new ArrayList<>();
+        List<String> stringList = new ArrayList<>();
         for (char rand : rands) {
-            l.add(String.valueOf(rand));
+            stringList.add(String.valueOf(rand));
         }
-        String ss = l.toString();
-        String appSecret = ss.replace("[", "").replace("]", "").replace(",", "").replace(" ", "");
+        String str = stringList.toString();
+        String appSecret = str.replace("[", StrPool.EMPTY)
+                .replace("]", StrPool.EMPTY)
+                .replace(StrPool.COMMA, StrPool.EMPTY)
+                .replace(StrPool.SPACE, StrPool.EMPTY);
         return appSecret.strip();
     }
 }
