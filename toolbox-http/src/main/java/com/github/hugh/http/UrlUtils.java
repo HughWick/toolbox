@@ -31,6 +31,9 @@ public class UrlUtils {
         if (EmptyUtils.isEmpty(url)) {
             return "";
         }
+        if (EmptyUtils.isEmpty(data)) {
+            return url;
+        }
         String last = url.substring(url.length() - 1);
         if (!"?".equals(last)) {// 当最后一个字符不为"?"时进行拼接
             url += "?";

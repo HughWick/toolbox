@@ -7,6 +7,7 @@ import com.github.hugh.http.exception.ToolboxHttpException;
 import com.github.hugh.http.model.FileFrom;
 import com.github.hugh.http.model.ResponseData;
 import com.github.hugh.json.gson.Jsons;
+import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -216,5 +217,23 @@ class OkHttpsTest {
 
         // 关闭 MockWebServer
         server.shutdown();
+    }
+
+    @Test
+    void testGet02() throws Exception {
+        String account = "ec19c00317131f08";
+        String password = "Y8i7KZwlDF9BzlxOJbB849Axj2mxqBQ7u9B2i9C6fPdwX4P";
+        String credential = Credentials.basic(account, password);
+        Map<String, String> headerContent = new HashMap<>();
+        headerContent.put("Authorization", credential);
+        String url = "http://175.6.24.171:10121/api/v5/subscriptions";
+        Map<String, Object> map = new HashMap<>();
+        map.put("page", 3);
+        String message = new OkHttps().setUrl(url).setBody(map).setHeader(headerContent).doGet().getMessage();
+        System.out.println("--->"+message);
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("page", 3);
+        String message2 = new OkHttps().setUrl(url+"?page=3").setHeader(headerContent).doGet().getMessage();
+        System.out.println("--22--->"+message2);
     }
 }
