@@ -1,5 +1,6 @@
 package com.github.hugh.http;
 
+import com.github.hugh.json.gson.GsonUtils;
 import com.github.hugh.json.gson.JsonObjectUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,11 +25,12 @@ class UrlTest {
         map.put("array", Arrays.toString(array));
         map.put("array_ori", array);
 //        System.out.println(JSONObject.fromObject(map));
-        String toJson = JsonObjectUtils.toJson(map);
-        assertEquals(toJson, JsonObjectUtils.parse(toJson).toString());
+        String toJson = GsonUtils.toJson(map);
+        assertEquals(toJson, GsonUtils.parse(toJson).toString());
         String result1 = "localhost:8020?a=1&array=%5Ba%5D&array_ori=%5B%22a%22%5D";
         assertEquals(result1, UrlUtils.urlParam("localhost:8020", map));
         assertEquals("", UrlUtils.urlParam("", map));
+        assertEquals(result1, UrlUtils.urlParam(result1, null));
     }
 
     @Test

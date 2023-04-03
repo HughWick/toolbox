@@ -1,7 +1,10 @@
 package com.github.hugh.http;
 
+import com.github.hugh.constant.StrPool;
+import com.github.hugh.json.gson.GsonUtils;
 import com.github.hugh.json.gson.JsonObjectUtils;
 import com.github.hugh.json.gson.JsonObjects;
+import com.github.hugh.json.gson.Jsons;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.StringUtils;
 import com.google.gson.JsonElement;
@@ -29,7 +32,7 @@ public class UrlUtils {
      */
     public static <T> String urlParam(String url, T data) {
         if (EmptyUtils.isEmpty(url)) {
-            return "";
+            return StrPool.EMPTY;
         }
         if (EmptyUtils.isEmpty(data)) {
             return url;
@@ -52,17 +55,17 @@ public class UrlUtils {
      */
     public static <T> String jsonParse(T json) {
         if (json == null) {
-            return "";
+            return StrPool.EMPTY;
         }
-        JsonObjects jsonObjects = new JsonObjects(json);
+        Jsons jsonObjects = new Jsons(json);
         if (jsonObjects.isNull()) {
-            return "";
+            return StrPool.EMPTY;
         }
         StringBuilder stringBuilder = new StringBuilder();
         for (Map.Entry<String, JsonElement> entrySet : jsonObjects.entrySet()) {
-            String asString = JsonObjectUtils.getAsString(entrySet.getValue());
+            String asString = GsonUtils.getAsString(entrySet.getValue());
             if (asString == null) {
-                asString = "";
+                asString = StrPool.EMPTY;
             }
             String value = URLEncoder.encode(asString, StandardCharsets.UTF_8);//将参数转换为urlEncoder码
             stringBuilder.append(entrySet.getKey()).append("=").append(value).append("&");
