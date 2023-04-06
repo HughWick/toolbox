@@ -7,10 +7,7 @@ import com.github.hugh.http.exception.ToolboxHttpException;
 import com.github.hugh.http.model.FileFrom;
 import com.github.hugh.http.model.ResponseData;
 import com.github.hugh.json.gson.Jsons;
-import okhttp3.Credentials;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.Assertions;
@@ -235,5 +232,37 @@ class OkHttpsTest {
 //        map.put("page", 3);
         String message2 = new OkHttps().setUrl(url+"?page=3").setHeader(headerContent).doGet().getMessage();
         System.out.println("--22--->"+message2);
+    }
+
+    @Test
+    void testClient() throws Exception {
+        ConnectionPool connectionPool = new ConnectionPool(10, 1, TimeUnit.MINUTES);
+        final OkHttpClient build = new OkHttpClient.Builder()
+                .connectionPool(connectionPool)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+        final String s2 = new OkHttps().setUrl(http_bin_get_url).setOkHttpClient(build).doGet().getMessage();
+        assertNotNull(s2);
+    }
+
+    @Test
+    void testClientTimeout() throws Exception {
+//        ConnectionPool connectionPool = new ConnectionPool(10, 1, TimeUnit.MINUTES);
+//        final OkHttpClient build = new OkHttpClient.Builder()
+//                .connectionPool(connectionPool)
+//                .connectTimeout(10, TimeUnit.SECONDS)
+//                .readTimeout(10, TimeUnit.SECONDS)
+//                .writeTimeout(10, TimeUnit.SECONDS)
+//                .retryOnConnectionFailure(true)
+//                .build();
+        final String s2 = new OkHttps().setUrl(http_bin_get_url)
+                .setConnectTimeout(20)
+                .setReadTimeout(3)
+                .setWriteTimeout(76)
+                .doGet().getMessage();
+        assertNotNull(s2);
     }
 }

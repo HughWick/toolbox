@@ -230,13 +230,6 @@ public class Crc16Utils {
      * @return String 验证码
      */
     private static String getVerCode(String data, int verifyLength) {
-// 如果是私有方法可以去掉验证，已达到提速的目的
-//        if (data == null) {
-//            return null;
-//        }
-//        if (RegexUtils.isNotEvenNumber(verifyLength)) {
-//            throw new CryptoException("verify length error");
-//        }
         int length = data.length() / 2;
         byte[] byteArray = new byte[length];
         for (int i = 0; i < length; i++) {

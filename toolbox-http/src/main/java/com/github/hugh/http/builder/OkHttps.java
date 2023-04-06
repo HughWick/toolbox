@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 封装OkHttp 工具类
@@ -32,6 +33,10 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OkHttps {
+    /**
+     * 默认超时时间，单位：秒
+     */
+    private static final int timeout = 10;
     private String url;// 接口地址
     /**
      * HTTP 请求的请求体信息。
@@ -46,7 +51,20 @@ public class OkHttps {
     private int readTimeout; // 读取超时时间，单位：秒
     private int writeTimeout; // 写入超时时间，单位：秒
     private boolean isSendCookies = false; // 是否发送 Cookie 信息
+    /**
+     * 用于存储多个文件来源信息的列表，其中每个 FileFrom 对象包括文件的路径、大小、类型等属性。
+     */
     private List<FileFrom> fileFrom;
+
+    /**
+     * 用于进行 HTTP/HTTPS 请求的客户端对象。该对象封装了连接池、超时设置、请求拦截器、响应拦截器等功能，可以根据实际情况进行配置。
+     */
+    private OkHttpClient okHttpClient;
+
+    /**
+     * 用于管理 TCP 连接的连接池对象，用于复用并限制 TCP 连接数量。通过使用连接池，可以在多个请求之间共享连接，避免建立和关闭连接的开销。ConnectionPool 对象包括最大连接数、保持时间等属性，可以根据实际情况进行配置。
+     */
+    private ConnectionPool connectionPool;
 
     /**
      * 设置请求的 URL，用于发起 HTTPS 请求。
@@ -148,6 +166,28 @@ public class OkHttps {
     }
 
     /**
+     * 设置 OkHttpClient 对象。
+     *
+     * @param okHttpClient OkHttpClient 对象
+     * @return 返回当前对象，便于链式调用
+     */
+    public OkHttps setOkHttpClient(OkHttpClient okHttpClient) {
+        this.okHttpClient = okHttpClient;
+        return this;
+    }
+
+    /**
+     * 设置连接池对象。
+     *
+     * @param connectionPool 连接池对象
+     * @return 当前 OkHttps 对象
+     */
+    public OkHttps setConnectionPool(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
+        return this;
+    }
+
+    /**
      * 发送 GET 请求，并获取 HTTP 响应消息。
      *
      * @return 返回 OkHttps 实例，以支持链式调用其他方法。
@@ -158,8 +198,7 @@ public class OkHttps {
         verifyUrlEmpty();
         // 如果提供了查询参数，则将其添加到URL中
         url = UrlUtils.urlParam(url, this.body);
-        // 创建OkHttpClient实例并设置超时值
-        final OkHttpClient okHttpClient = HttpClient.getInstance().getOkHttpClient();
+        newOkhttpClient();
         // 构建请求对象
         final Request.Builder request = new Request.Builder().url(url);
         if (this.header != null) {
@@ -178,6 +217,35 @@ public class OkHttps {
     }
 
     /**
+     * 创建 OkHttpClient 对象，并在 okHttpClient 为 null 时使用默认的 OkHttpClient。
+     * 注意：该方法会直接覆盖属性 okHttpClient 的值。
+     */
+    private void newOkhttpClient() {
+        if (okHttpClient == null) {
+            OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+            if (connectTimeout > 0) {
+                okHttpClientBuilder.connectTimeout(connectTimeout, TimeUnit.SECONDS);
+            } else {
+                okHttpClientBuilder.connectTimeout(timeout, TimeUnit.SECONDS);
+            }
+            if (readTimeout > 0) {
+                okHttpClientBuilder.readTimeout(readTimeout, TimeUnit.SECONDS);
+            } else {
+                okHttpClientBuilder.readTimeout(timeout, TimeUnit.SECONDS);
+            }
+            if (writeTimeout > 0) {
+                okHttpClientBuilder.writeTimeout(writeTimeout, TimeUnit.SECONDS);
+            } else {
+                okHttpClientBuilder.writeTimeout(timeout, TimeUnit.SECONDS);
+            }
+            if (connectionPool != null) {
+                okHttpClientBuilder.connectionPool(connectionPool);
+            }
+            okHttpClient = okHttpClientBuilder.build();
+        }
+    }
+
+    /**
      * 执行带有表单数据的 POST 请求。
      *
      * @return 服务器返回的响应结果
@@ -189,8 +257,7 @@ public class OkHttps {
         if (this.isSendCookies) {
             return doPost(MediaTypes.APPLICATION_FORM_URLENCODED, params, HttpClient.cookieClient);
         } else {
-            // 创建OkHttpClient实例并设置超时值
-            final OkHttpClient okHttpClient = HttpClient.getInstance().getOkHttpClient();
+            newOkhttpClient();
             return doPost(MediaTypes.APPLICATION_FORM_URLENCODED, params, okHttpClient);
         }
     }
@@ -204,11 +271,10 @@ public class OkHttps {
     public OkHttpsResponse doPostJson() throws IOException {
         verifyUrlEmpty();
         // 创建OkHttpClient实例并设置超时值
-        OkHttpClient okHttpClient;
         if (this.isSendCookies) {
             okHttpClient = HttpClient.cookieClient;
         } else {
-            okHttpClient = HttpClient.getInstance().getOkHttpClient();
+            newOkhttpClient();
         }
         if (this.body == null) {
             return doPost(MediaTypes.APPLICATION_JSON_UTF8, StrPool.EMPTY, okHttpClient);
@@ -269,7 +335,12 @@ public class OkHttps {
                 .url(url)
                 .post(requestBody.build())
                 .build();
-        final String result = send(request, HttpClient.getInstance().getOkHttpClient());
+        if (this.isSendCookies) {
+            okHttpClient = HttpClient.cookieClient;
+        } else {
+            newOkhttpClient();
+        }
+        final String result = send(request, okHttpClient);
         return new OkHttpsResponse(result);
     }
 

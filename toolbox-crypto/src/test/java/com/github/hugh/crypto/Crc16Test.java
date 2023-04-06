@@ -50,6 +50,11 @@ class Crc16Test {
         String code1 = Crc16Utils.generate(8);
         assertEquals(10, code1.length());
         assertTrue(Crc16Utils.checkCode(code1));
+        assertTrue(Crc16Utils.verifyCode("202210110592"));
+        assertTrue(Crc16Utils.verifyCode("202210111272"));
+        assertFalse(Crc16Utils.verifyCode("2022101105"));
+        assertFalse(Crc16Utils.verifyCode("202110270097"));
+        assertFalse(Crc16Utils.verifyCode("202210111386"));
     }
 
     @Test
