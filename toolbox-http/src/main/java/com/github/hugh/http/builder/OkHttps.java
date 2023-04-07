@@ -36,7 +36,7 @@ public class OkHttps {
     /**
      * 默认超时时间，单位：秒
      */
-    private static final int timeout = 10;
+    private static final int TIME_OUT = 10;
     private String url;// 接口地址
     /**
      * HTTP 请求的请求体信息。
@@ -65,6 +65,12 @@ public class OkHttps {
      * 用于管理 TCP 连接的连接池对象，用于复用并限制 TCP 连接数量。通过使用连接池，可以在多个请求之间共享连接，避免建立和关闭连接的开销。ConnectionPool 对象包括最大连接数、保持时间等属性，可以根据实际情况进行配置。
      */
     private ConnectionPool connectionPool;
+
+    /**
+     * 默认的数据库连接池，最小连接数为 5 个，最大连接数为无限制。
+     * 在连接闲置时间达到 60 秒后，连接池会将该连接关闭以释放资源。
+     */
+    private static final ConnectionPool defaultConnectionPool = new ConnectionPool(5, 60, TimeUnit.SECONDS);
 
     /**
      * 设置请求的 URL，用于发起 HTTPS 请求。
@@ -198,7 +204,6 @@ public class OkHttps {
         verifyUrlEmpty();
         // 如果提供了查询参数，则将其添加到URL中
         url = UrlUtils.urlParam(url, this.body);
-        newOkhttpClient();
         // 构建请求对象
         final Request.Builder request = new Request.Builder().url(url);
         if (this.header != null) {
@@ -210,6 +215,7 @@ public class OkHttps {
         if (this.isSendCookies) {
             result = send(request.build(), HttpClient.cookieClient);
         } else {
+            initOkHttpClient();
             result = send(request.build(), okHttpClient);
         }
         // 发送请求并返回响应
@@ -220,26 +226,19 @@ public class OkHttps {
      * 创建 OkHttpClient 对象，并在 okHttpClient 为 null 时使用默认的 OkHttpClient。
      * 注意：该方法会直接覆盖属性 okHttpClient 的值。
      */
-    private void newOkhttpClient() {
+    private void initOkHttpClient() {
         if (okHttpClient == null) {
             OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
-            if (connectTimeout > 0) {
-                okHttpClientBuilder.connectTimeout(connectTimeout, TimeUnit.SECONDS);
-            } else {
-                okHttpClientBuilder.connectTimeout(timeout, TimeUnit.SECONDS);
-            }
-            if (readTimeout > 0) {
-                okHttpClientBuilder.readTimeout(readTimeout, TimeUnit.SECONDS);
-            } else {
-                okHttpClientBuilder.readTimeout(timeout, TimeUnit.SECONDS);
-            }
-            if (writeTimeout > 0) {
-                okHttpClientBuilder.writeTimeout(writeTimeout, TimeUnit.SECONDS);
-            } else {
-                okHttpClientBuilder.writeTimeout(timeout, TimeUnit.SECONDS);
-            }
-            if (connectionPool != null) {
-                okHttpClientBuilder.connectionPool(connectionPool);
+            // 设置连接超时时间，若用户自定义了连接超时，则使用用户定义的，否则使用默认值
+            okHttpClientBuilder.connectTimeout(connectTimeout > 0 ? connectTimeout : TIME_OUT, TimeUnit.SECONDS);
+            // 设置读取超时时间，若用户自定义了读取超时，则使用用户定义的，否则使用默认值
+            okHttpClientBuilder.readTimeout(readTimeout > 0 ? readTimeout : TIME_OUT, TimeUnit.SECONDS);
+            // 设置写入超时时间，若用户自定义了写入超时，则使用用户定义的，否则使用默认值
+            okHttpClientBuilder.writeTimeout(writeTimeout > 0 ? writeTimeout : TIME_OUT, TimeUnit.SECONDS);
+            // 设置连接池，若用户自定义了连接池，则使用用户定义的，否则使用默认连接池
+            if (connectionPool == null) {
+                okHttpClientBuilder.connectionPool(defaultConnectionPool);
+
             }
             okHttpClient = okHttpClientBuilder.build();
         }
@@ -257,7 +256,7 @@ public class OkHttps {
         if (this.isSendCookies) {
             return doPost(MediaTypes.APPLICATION_FORM_URLENCODED, params, HttpClient.cookieClient);
         } else {
-            newOkhttpClient();
+            initOkHttpClient();
             return doPost(MediaTypes.APPLICATION_FORM_URLENCODED, params, okHttpClient);
         }
     }
@@ -274,7 +273,7 @@ public class OkHttps {
         if (this.isSendCookies) {
             okHttpClient = HttpClient.cookieClient;
         } else {
-            newOkhttpClient();
+            initOkHttpClient();
         }
         if (this.body == null) {
             return doPost(MediaTypes.APPLICATION_JSON_UTF8, StrPool.EMPTY, okHttpClient);
@@ -338,7 +337,7 @@ public class OkHttps {
         if (this.isSendCookies) {
             okHttpClient = HttpClient.cookieClient;
         } else {
-            newOkhttpClient();
+            initOkHttpClient();
         }
         final String result = send(request, okHttpClient);
         return new OkHttpsResponse(result);

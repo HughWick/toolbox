@@ -227,11 +227,11 @@ class OkHttpsTest {
         Map<String, Object> map = new HashMap<>();
         map.put("page", 3);
         String message = new OkHttps().setUrl(url).setBody(map).setHeader(headerContent).doGet().getMessage();
-        System.out.println("--->"+message);
+        System.out.println("--->" + message);
 //        Map<String, Object> map = new HashMap<>();
 //        map.put("page", 3);
-        String message2 = new OkHttps().setUrl(url+"?page=3").setHeader(headerContent).doGet().getMessage();
-        System.out.println("--22--->"+message2);
+        String message2 = new OkHttps().setUrl(url + "?page=3").setHeader(headerContent).doGet().getMessage();
+        System.out.println("--22--->" + message2);
     }
 
     @Test
@@ -250,14 +250,6 @@ class OkHttpsTest {
 
     @Test
     void testClientTimeout() throws Exception {
-//        ConnectionPool connectionPool = new ConnectionPool(10, 1, TimeUnit.MINUTES);
-//        final OkHttpClient build = new OkHttpClient.Builder()
-//                .connectionPool(connectionPool)
-//                .connectTimeout(10, TimeUnit.SECONDS)
-//                .readTimeout(10, TimeUnit.SECONDS)
-//                .writeTimeout(10, TimeUnit.SECONDS)
-//                .retryOnConnectionFailure(true)
-//                .build();
         final String s2 = new OkHttps().setUrl(http_bin_get_url)
                 .setConnectTimeout(20)
                 .setReadTimeout(3)
@@ -265,4 +257,20 @@ class OkHttpsTest {
                 .doGet().getMessage();
         assertNotNull(s2);
     }
+
+    @Test
+    void testClientConnectionPool() throws IOException {
+        ConnectionPool defaultConnectionPool = new ConnectionPool(5, 1234, TimeUnit.SECONDS);
+        final OkHttps okHttps = new OkHttps();
+
+        final String message = okHttps.setUrl(http_bin_get_url)
+                .setConnectionPool(defaultConnectionPool)
+                .doGet().getMessage();
+        assertNotNull(message);
+        final String message2 = OkHttps.builder().url(http_bin_get_url)
+                .build().doGet().getMessage();
+        assertNotNull(message2);
+
+    }
+
 }
