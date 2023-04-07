@@ -238,7 +238,6 @@ public class OkHttps {
             // 设置连接池，若用户自定义了连接池，则使用用户定义的，否则使用默认连接池
             if (connectionPool == null) {
                 okHttpClientBuilder.connectionPool(defaultConnectionPool);
-
             }
             okHttpClient = okHttpClientBuilder.build();
         }
