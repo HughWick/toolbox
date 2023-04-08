@@ -12,7 +12,6 @@ import okhttp3.MediaType;
  * @author hugh
  * @since 2.5.1
  */
-
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

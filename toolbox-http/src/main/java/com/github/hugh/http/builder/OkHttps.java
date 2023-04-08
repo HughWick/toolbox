@@ -3,6 +3,7 @@ package com.github.hugh.http.builder;
 import com.github.hugh.constant.StrPool;
 import com.github.hugh.http.UrlUtils;
 import com.github.hugh.http.constant.MediaTypes;
+import com.github.hugh.http.constant.OkHttpCode;
 import com.github.hugh.http.exception.ToolboxHttpException;
 import com.github.hugh.http.model.FileFrom;
 import com.github.hugh.json.gson.GsonUtils;
@@ -14,9 +15,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +74,33 @@ public class OkHttps {
      * 在连接闲置时间达到 60 秒后，连接池会将该连接关闭以释放资源。
      */
     private static final ConnectionPool defaultConnectionPool = new ConnectionPool(5, 60, TimeUnit.SECONDS);
+
+    /**
+     * 创建一个 OkHttpClient 实例，该实例支持 cookie 操作
+     *
+     */
+    public static final OkHttpClient cookieClient = new OkHttpClient.Builder()
+            .cookieJar(new CookieJar() {
+                // 保存从响应中获取的 Cookie
+                @Override
+                public void saveFromResponse(@NotNull HttpUrl httpUrl, @NotNull List<Cookie> list) {
+                    OkHttpCode.COOKIE_STORE.put(httpUrl.host(), list);
+                }
+
+                // 加载发送请求时需要包含的 Cookie
+                @NotNull
+                @Override
+                public List<Cookie> loadForRequest(@NotNull HttpUrl httpUrl) {
+                    List<Cookie> cookies = OkHttpCode.COOKIE_STORE.get(httpUrl.host());
+                    return cookies == null ? new ArrayList<>() : cookies;
+                }
+            })
+            // 设置连接超时时间
+            .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
+            // 设置读取超时时间
+            .readTimeout(TIME_OUT, TimeUnit.SECONDS)
+            // 构建 OkHttpClient 实例
+            .build();
 
     /**
      * 设置请求的 URL，用于发起 HTTPS 请求。
@@ -213,7 +243,7 @@ public class OkHttps {
         }
         String result;
         if (this.isSendCookies) {
-            result = send(request.build(), HttpClient.cookieClient);
+            result = send(request.build(), cookieClient);
         } else {
             initOkHttpClient();
             result = send(request.build(), okHttpClient);
@@ -253,7 +283,7 @@ public class OkHttps {
         verifyUrlEmpty();
         final String params = UrlUtils.jsonParse(this.body);
         if (this.isSendCookies) {
-            return doPost(MediaTypes.APPLICATION_FORM_URLENCODED, params, HttpClient.cookieClient);
+            return doPost(MediaTypes.APPLICATION_FORM_URLENCODED, params, cookieClient);
         } else {
             initOkHttpClient();
             return doPost(MediaTypes.APPLICATION_FORM_URLENCODED, params, okHttpClient);
@@ -270,7 +300,7 @@ public class OkHttps {
         verifyUrlEmpty();
         // 创建OkHttpClient实例并设置超时值
         if (this.isSendCookies) {
-            okHttpClient = HttpClient.cookieClient;
+            okHttpClient = cookieClient;
         } else {
             initOkHttpClient();
         }
@@ -293,7 +323,7 @@ public class OkHttps {
      * @throws IOException 如果请求发送失败，则抛出 IOException 异常。
      */
     private OkHttpsResponse doPost(MediaType mediaType, String body, OkHttpClient okHttpClient) throws IOException {
-        RequestBody requestBody = RequestBody.create(mediaType, body);
+        RequestBody requestBody = RequestBody.create(body, mediaType);
         final Request.Builder request = new Request.Builder().url(url).post(requestBody);
         if (this.header != null) {
             Headers headers = Headers.of(this.header);
@@ -305,8 +335,10 @@ public class OkHttps {
     /**
      * 上传文件的方法
      *
-     * @return OkHttpsResponse
-     * @throws IOException
+     * @param <K> 上传参数键类型
+     * @param <V> 上传参数值类型
+     * @return OkHttpsResponse 响应结果对象
+     * @throws IOException 文件上传失败抛出该异常
      */
     public <K, V> OkHttpsResponse uploadFile() throws IOException {
         MultipartBody.Builder requestBody = new MultipartBody.Builder()
@@ -326,7 +358,7 @@ public class OkHttps {
             if (EmptyUtils.isEmpty(file.getKey())) {
                 throw new ToolboxHttpException("upload file key is null");
             }
-            RequestBody fileBody = RequestBody.create(file.getFileMediaType(), new File(file.getPath()));
+            RequestBody fileBody = RequestBody.create(new File(file.getPath()), file.getFileMediaType());
             requestBody.addFormDataPart(file.getKey(), file.getName(), fileBody);
         }
         Request request = new Request.Builder()
@@ -334,7 +366,7 @@ public class OkHttps {
                 .post(requestBody.build())
                 .build();
         if (this.isSendCookies) {
-            okHttpClient = HttpClient.cookieClient;
+            okHttpClient = cookieClient;
         } else {
             initOkHttpClient();
         }

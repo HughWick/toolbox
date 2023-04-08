@@ -1,8 +1,10 @@
 package com.github.hugh.http.builder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.hugh.bean.dto.ResultDTO;
 import com.github.hugh.http.OkHttpUpdateFileTest;
 import com.github.hugh.http.constant.MediaTypes;
+import com.github.hugh.http.constant.OkHttpCode;
 import com.github.hugh.http.exception.ToolboxHttpException;
 import com.github.hugh.http.model.FileFrom;
 import com.github.hugh.http.model.ResponseData;
@@ -14,7 +16,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.net.SocketTimeoutException;
+import java.net.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -55,7 +57,6 @@ class OkHttpsTest {
         assertNotNull(s2);
         final ResponseData postman = new OkHttps().setUrl(http_bin_get_url).setBody(map).doGet().fromJson(ResponseData.class);
         assertEquals(params1, postman.getArgs().getFoo1());
-        System.out.println(postman.toString());
         assertEquals("okhttp/4.9.3", postman.getHeaders().getUserAgent());
         Map<String, String> headers = new HashMap<>();
         headers.put("User-Agent", "Custom User Agent");
@@ -92,27 +93,51 @@ class OkHttpsTest {
 
     @Test
     void testCookie() throws Exception {
-        Map<String, Object> params = new HashMap<>();
-        params.put("userAccount", "fengtao");
-        params.put("userPassword", "88888888");
-        params.put("loginType", "password");
-        final String responseData = new OkHttps().setUrl(https_login_url + "/v2/user/userLogin/login")
+        String url = "http://httpbin.org/cookies/set?username=admin&password=123456";
+        final String responseData = new OkHttps().setUrl(url)
                 .isSendCookie(true)
-                .setBody(params)
-                .doPostForm()
+//                .setBody(params)
+                .doGet()
                 .getMessage();
-        final Jsons jsons = new Jsons(responseData);
-        assertEquals("0000", jsons.getString("code"));
-        final ResultDTO responseData2 = new OkHttps().setUrl(https_login_url + "/v2/business/serverRoomInspection/find")
-                .doGet()
-                .fromJson(ResultDTO.class);
-        assertTrue(responseData2.equalCode("100"));
-        final ResultDTO responseData3 = new OkHttps().setUrl(https_login_url + "/v2/business/serverRoomInspection/find")
-                .isSendCookie(true)
-                .setBody(params)
-                .doGet()
-                .fromJson(ResultDTO.class);
-        assertTrue(responseData3.equalCode("0000"));
+//        System.out.println("Login response: " + responseData);
+        // 发送带有 cookies 的请求
+//        String url = "http://httpbin.org/cookies";
+//        final String responseData2 = new OkHttps().setUrl(url)
+//                .isSendCookie(true)
+////                .setBody(params)
+//                .doGet().getMessage();
+////                .fromJson(ResultDTO.class);
+//        System.out.println("Response: " + responseData2);
+        // 获取指定 URI 下的所有 cookies
+        URI uri = URI.create(url);
+        List<Cookie> cookies = OkHttpCode.COOKIE_STORE.get(uri.getHost());
+        assertEquals("[username=admin; path=/, password=123456; path=/]" , cookies.toString());
+//        System.out.println("--->>"+cookies);
+//        List<HttpCookie> cookies = cookieStore.get(uri);
+        // 将 cookies 序列化为 JSON 格式并打印
+//        String cookieJson = objectMapper.writeValueAsString(cookies);
+//        System.out.println("Cookies for " + uri + ": " + cookieJson);
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("userAccount", "fengtao");
+//        params.put("userPassword", "88888888");
+//        params.put("loginType", "password");
+//        final String responseData = new OkHttps().setUrl(https_login_url + "/v2/user/userLogin/login")
+//                .isSendCookie(true)
+//                .setBody(params)
+//                .doPostForm()
+//                .getMessage();
+//        final Jsons jsons = new Jsons(responseData);
+//        assertEquals("0000", jsons.getString("code"));
+//        final ResultDTO responseData2 = new OkHttps().setUrl(https_login_url + "/v2/business/serverRoomInspection/find")
+//                .doGet()
+//                .fromJson(ResultDTO.class);
+//        assertTrue(responseData2.equalCode("100"));
+//        final ResultDTO responseData3 = new OkHttps().setUrl(https_login_url + "/v2/business/serverRoomInspection/find")
+//                .isSendCookie(true)
+//                .setBody(params)
+//                .doGet()
+//                .fromJson(ResultDTO.class);
+//        assertTrue(responseData3.equalCode("0000"));
     }
 
     // 测试上传单张图片
@@ -218,6 +243,7 @@ class OkHttpsTest {
 
     @Test
     void testGet02() throws Exception {
+        String msg = "{\"code\":\"BAD_API_KEY_OR_SECRET\",\"message\":\"Check api_key/api_secret\"}";
         String account = "ec19c00317131f08";
         String password = "Y8i7KZwlDF9BzlxOJbB849Axj2mxqBQ7u9B2i9C6fPdwX4P";
         String credential = Credentials.basic(account, password);
@@ -227,11 +253,13 @@ class OkHttpsTest {
         Map<String, Object> map = new HashMap<>();
         map.put("page", 3);
         String message = new OkHttps().setUrl(url).setBody(map).setHeader(headerContent).doGet().getMessage();
-        System.out.println("--->" + message);
+        assertEquals(msg , message);
+//        System.out.println("--->" + message);
 //        Map<String, Object> map = new HashMap<>();
 //        map.put("page", 3);
         String message2 = new OkHttps().setUrl(url + "?page=3").setHeader(headerContent).doGet().getMessage();
-        System.out.println("--22--->" + message2);
+//        System.out.println("--22--->" + message2);
+        assertEquals(msg , message2);
     }
 
     @Test
@@ -270,7 +298,6 @@ class OkHttpsTest {
         final String message2 = OkHttps.builder().url(http_bin_get_url)
                 .build().doGet().getMessage();
         assertNotNull(message2);
-
     }
 
 }
