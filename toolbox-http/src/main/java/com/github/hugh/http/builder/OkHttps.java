@@ -77,7 +77,6 @@ public class OkHttps {
 
     /**
      * 创建一个 OkHttpClient 实例，该实例支持 cookie 操作
-     *
      */
     public static final OkHttpClient cookieClient = new OkHttpClient.Builder()
             .cookieJar(new CookieJar() {
@@ -305,6 +304,7 @@ public class OkHttps {
             initOkHttpClient();
         }
         if (this.body == null) {
+            // TODO MediaType应该修改为可以自定义
             return doPost(MediaTypes.APPLICATION_JSON_UTF8, StrPool.EMPTY, okHttpClient);
         }
         if (this.body instanceof String) {
