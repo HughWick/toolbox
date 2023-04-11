@@ -44,6 +44,21 @@ class ListTest {
         assertEquals(Lists.newArrayList("Saab", "Volvo", "BMW", "sub"), ListUtils.guavaStringToList(str6));
     }
 
+    // 测试字符串转list int类型集合
+    @Test
+    void testGuavaStringToListInt() {
+        String string = "1, 4, 7, 10";
+        List<Integer> expected = Arrays.asList(1, 4, 7, 10);
+        List<Integer> actual = ListUtils.guavaStringToListInt(string);
+        assertEquals(expected, actual);
+        String string2 = "3-6-9-12";
+
+        List<Integer> expected2 = Arrays.asList(3, 6, 9, 12);
+        List<Integer> actual2 = ListUtils.guavaStringToListInt(string2, "-");
+
+        assertEquals(expected2, actual2);
+    }
+
     //无实体、针对字段排序排序
     @Test
     void testListObjectSort() {

@@ -84,6 +84,8 @@ class StringTest {
         String filePath = "C:\\Users\\Lenovo\\Desktop\\" + fileName;
         assertEquals(fileName, StringUtils.after(filePath, "\\"));
 
+
+
     }
 
     @Test
@@ -93,6 +95,10 @@ class StringTest {
         String fileName = path1 + "\\0e9f4beeb6a5423585c6eabda21a63ee.jpg";
 //        String string2 = "https://www.hnlot.com.cn/DaHua" + path2;
         assertEquals(path1, StringUtils.before(fileName, "\\"));
+
+        String str1 = "abc.sql";
+        System.out.println("--->"+ StringUtils.before(str1, "."));
+
     }
 
 
