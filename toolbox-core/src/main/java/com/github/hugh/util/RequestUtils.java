@@ -1,11 +1,15 @@
 package com.github.hugh.util;
 
+import com.github.hugh.constant.StrPool;
 import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.OperatingSystem;
 import eu.bitwalker.useragentutils.UserAgent;
 import eu.bitwalker.useragentutils.Version;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 设备工具类
@@ -99,7 +103,7 @@ public class RequestUtils {
         String userAgent = getUserAgent(request);
         UserAgent ua = UserAgent.parseUserAgentString(userAgent);
         Browser browser = ua.getBrowser();
-        return browser.getName() + "/" + browser.getVersion(userAgent);
+        return browser.getName() + StrPool.SLASH + browser.getVersion(userAgent);
     }
 
     /**
@@ -142,5 +146,23 @@ public class RequestUtils {
             return null;
         }
         return request.getHeader(USER_AGENT);
+    }
+
+    /**
+     * 获取请求头部信息
+     *
+     * @param request HTTPServletRequest 请求对象
+     * @return 包含所有 HTTP 请求头部信息的 Map 对象
+     * @since 2.5.5
+     */
+    public static Map<String, String> getHeaders(HttpServletRequest request) {
+        Map<String, String> map = new HashMap<>();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            String headerValue = request.getHeader(headerName);
+            map.put(headerName, headerValue);
+        }
+        return map;
     }
 }

@@ -5,8 +5,9 @@ import eu.bitwalker.useragentutils.Version;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Request 请求测试类
@@ -60,5 +61,22 @@ class RequestUtilsTest {
         MockHttpServletRequest request3 = new MockHttpServletRequest();
         request3.addHeader("user-agent", str3);
         assertTrue(RequestUtils.isAndroid(request3));
+    }
+
+    @Test
+    void getHeaders() {
+        // 准备数据，构建一个 MockHttpServletRequest 对象
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("Content-T", "application/json");
+        request.addHeader("Accept", "application/xml");
+
+        // 调用被测试方法
+        Map<String, String> headers = RequestUtils.getHeaders(request);
+
+        // 验证返回结果
+        assertNotNull(headers);
+        assertEquals(2, headers.size());
+        assertEquals("application/json", headers.get("Content-T"));
+        assertEquals("application/xml", headers.get("Accept"));
     }
 }
