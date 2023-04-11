@@ -1,48 +1,54 @@
 package com.github.hugh.support.instance;
 
-import com.github.hugh.util.common.AssertUtils;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * 实例工具类
+ * 单例工厂，使用 CacheLoader 来缓存已经创建的实例，并且保证同一个类在程序中只有一个实例。
  *
  * @author hugh
  * @since 1.2.1
  */
 public class Instance {
 
-    private static volatile Instance instance;
+    /**
+     * 使用 AtomicReference 来保证线程安全的 INSTANCE 对象。
+     */
+    private static final AtomicReference<Instance> INSTANCE = new AtomicReference<>();
 
     /**
-     * 懒汉式获取单例对象
+     * 获取单例对象的方法。
      *
-     * @return Instance 实例
+     * @return 单例对象
      */
     public static Instance getInstance() {
-        if (instance == null) {//懒汉式
-            synchronized (Instance.class) {
-                if (instance == null) {//二次检查
-                    instance = new Instance();
-                }
+        Instance instance = INSTANCE.get();
+        if (instance == null) {
+            // 如果当前实例为 null，则创建新的实例
+            instance = new Instance();
+            if (!INSTANCE.compareAndSet(null, instance)) {
+                // 如果设置失败，则表示其他线程已经设置了值，直接返回即可
+                instance = INSTANCE.get();
             }
         }
         return instance;
     }
 
-    //实例加载缓存
-    private static CacheLoader<String, Object> INSTANCE_CACHE_LOADER = CacheLoader
-            .from(key -> {
-                try {
-                    return Class.forName(key).newInstance();//根据 key(包名)创建实体
-                } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            });
+
+    /**
+     * 缓存已经创建的实例的 CacheLoader 对象，保证同一个类在程序中只有一个实例。
+     */
+    private static final CacheLoader<String, Object> INSTANCE_CACHE_LOADER = CacheLoader.from(key -> {
+        try {
+            return Class.forName(key).getDeclaredConstructor().newInstance();//根据 key(包名)创建实体
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e);
+        }
+    });
 
     /**
      * Guava 缓存策略
