@@ -13,6 +13,8 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
+ * map 工具测试了类
+ *
  * @author AS
  * @date 2020/8/31 9:18
  */
@@ -139,8 +141,8 @@ class MapTest {
         stringMap.put("6", "w");
         stringMap.put("4", "n");
         // 排序前
-        assertEquals("{1=z, 111=csa, 2=a, 3=c, 4=n, 5=i, 6=w}" , stringMap.toString());
-        assertEquals("{6=w, 5=i, 4=n, 3=c, 2=a, 111=csa, 1=z}" , MapUtils.sortByKeyDesc(stringMap).toString());
+        assertEquals("{1=z, 111=csa, 2=a, 3=c, 4=n, 5=i, 6=w}", stringMap.toString());
+        assertEquals("{6=w, 5=i, 4=n, 3=c, 2=a, 111=csa, 1=z}", MapUtils.sortByKeyDesc(stringMap).toString());
 //        System.out.println("--4->>!>>>>" + MapUtils.sortByValueDesc(stringMap));
 //        System.out.println("--5->>!>>>>" + MapUtils.sortByValueAsc(stringMap));
 //        System.out.println("--6->>!>>>>" + MapUtils.sortByKeyDesc(stringMap));

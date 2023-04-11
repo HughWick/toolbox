@@ -1,5 +1,6 @@
 package com.github.hugh.util;
 
+import com.github.hugh.constant.StrPool;
 import com.github.hugh.exception.ToolboxException;
 import org.springframework.util.Assert;
 
@@ -542,9 +543,9 @@ public class MapUtils {
      */
     public static Map<String, String> cookieToMap(String value) {
         if (EmptyUtils.isEmpty(value)) {
-            return new HashMap<>();
+            return new HashMap<>(0);
         }
-        value = value.replace(" ", "");
+        value = value.replace(StrPool.SPACE, StrPool.EMPTY);
         Map<String, String> map = new HashMap<>();
         if (value.contains(";")) {
             String[] values = value.split(";");
