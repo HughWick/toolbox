@@ -112,12 +112,11 @@ public class ListUtils {
      * @since 1.1.0
      */
     public static List<String> guavaStringToList(String string, String separator, CharMatcher charMatcher) {
-        List<String> strings = Splitter.on(separator)
-                .trimResults()//去除前后空格
-                .trimResults(charMatcher)
-                .omitEmptyStrings()//用于去除为空格的分割结果
-                .splitToList(string);
-        return new ArrayList<>(strings);
+        return Splitter.on(separator)
+                .trimResults() // 去除前后空白字符
+                .trimResults(charMatcher) // 去除指定字符集合
+                .omitEmptyStrings() // 去除空字符串
+                .splitToList(string); // 将字符串转换为List
     }
 
     /**
@@ -169,11 +168,7 @@ public class ListUtils {
      */
     public static <T> List<T> splitToList(String string, String separator, CharMatcher charMatcher, Function<String, T> mapper) {
         // 使用Google Guava库中的Splitter类进行字符串分割
-        return Splitter.on(separator)
-                .trimResults() // 去除前后空白字符
-                .trimResults(charMatcher) // 去除指定字符集合
-                .omitEmptyStrings() // 去除空字符串
-                .splitToList(string) // 将字符串转换为List
+        return guavaStringToList(string, separator, charMatcher)
                 .stream()
                 .map(mapper) // 将List中的每个元素转换为指定类型
                 .collect(Collectors.toList()); // 将转换后的元素构成新的List并返回
