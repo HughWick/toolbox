@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -152,15 +153,31 @@ public class ListUtils {
      * @since 2.5.5
      */
     public static List<Integer> guavaStringToListInt(String string, String separator, CharMatcher charMatcher) {
-        return guavaStringToList(string, separator, charMatcher)
-                .stream()
-                // 使用 mapToInt() 方法将字符串流转换为整数流
-                .mapToInt(Integer::parseInt)
-                // 使用 boxed() 方法将整数基础类型流转换为整数流
-                .boxed()
-                .collect(Collectors.toList());
+        return splitToList(string, separator, charMatcher, Integer::parseInt);
     }
 
+    /**
+     * 将输入字符串按照指定的分隔符进行分割，并将每个分割结果转换为指定类型的列表返回。
+     *
+     * @param string      待分割的输入字符串
+     * @param separator   分隔符字符串
+     * @param charMatcher 字符匹配器，用于指定需要去除的字符集合
+     * @param mapper      字符串到目标类型的映射函数
+     * @param <T>         列表中元素的类型
+     * @return 分割后的元素构成的列表
+     * @since 2.5.6
+     */
+    public static <T> List<T> splitToList(String string, String separator, CharMatcher charMatcher, Function<String, T> mapper) {
+        // 使用Google Guava库中的Splitter类进行字符串分割
+        return Splitter.on(separator)
+                .trimResults() // 去除前后空白字符
+                .trimResults(charMatcher) // 去除指定字符集合
+                .omitEmptyStrings() // 去除空字符串
+                .splitToList(string) // 将字符串转换为List
+                .stream()
+                .map(mapper) // 将List中的每个元素转换为指定类型
+                .collect(Collectors.toList()); // 将转换后的元素构成新的List并返回
+    }
 
     /**
      * list转字符串
