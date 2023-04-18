@@ -112,11 +112,12 @@ public class ListUtils {
      * @since 1.1.0
      */
     public static List<String> guavaStringToList(String string, String separator, CharMatcher charMatcher) {
-        return Splitter.on(separator)
+        final List<String> stringList = Splitter.on(separator)
                 .trimResults() // 去除前后空白字符
                 .trimResults(charMatcher) // 去除指定字符集合
                 .omitEmptyStrings() // 去除空字符串
-                .splitToList(string); // 将字符串转换为List
+                .splitToList(string);// 将字符串转换为List
+        return new ArrayList<>(stringList);
     }
 
     /**
