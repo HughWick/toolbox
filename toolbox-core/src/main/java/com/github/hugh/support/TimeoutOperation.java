@@ -3,7 +3,7 @@ package com.github.hugh.support;
 /**
  * 超时回调
  *
- * @author AS
+ * @author hugh
  * @since 2.5.6
  */
 @FunctionalInterface
