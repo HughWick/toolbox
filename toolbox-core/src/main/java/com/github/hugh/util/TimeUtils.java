@@ -447,76 +447,19 @@ public class TimeUtils extends DateCode {
     }
 
     /**
-     * 在纳秒级别比较时间戳与阈值是否超时，并执行相关操作
-     *
-     * @param timestamp        时间戳（毫秒）
-     * @param timeoutNanos     超时阈值（纳秒）
-     * @param timeoutOperation 超时执行的操作
-     * @since 2.5.6
-     */
-    public static void executeTimeoutNanos(long timestamp, long timeoutNanos, TimeoutOperation timeoutOperation) {
-        checkAndDoTimeoutOperation(timestamp, timeoutNanos, timeoutOperation);
-    }
-
-    /**
-     * 在毫秒级别比较时间戳与阈值是否超时，并执行相关操作
-     *
-     * @param timestamp        时间戳（毫秒）
-     * @param timeoutMillis    超时阈值（毫秒）
-     * @param timeoutOperation 超时执行的操作
-     * @since 2.5.6
-     */
-    public static void executeTimeoutMillis(long timestamp, long timeoutMillis, TimeoutOperation timeoutOperation) {
-        checkAndDoTimeoutOperation(timestamp, timeoutMillis, timeoutOperation);
-    }
-
-    /**
-     * 在秒级别比较时间戳与阈值是否超时，并执行相关操作
-     *
-     * @param timestamp        时间戳（毫秒）
-     * @param timeoutSeconds   超时阈值（秒）
-     * @param timeoutOperation 超时执行的操作
-     * @since 2.5.6
-     */
-    public static void executeTimeoutSeconds(long timestamp, long timeoutSeconds, TimeoutOperation timeoutOperation) {
-        checkAndDoTimeoutOperation(timestamp, timeoutSeconds, timeoutOperation);
-    }
-
-    /**
-     * 在分钟级别比较时间戳与阈值是否超时，并执行相关操作
-     *
-     * @param timestamp        时间戳（毫秒）
-     * @param timeoutMinutes   超时阈值（分钟）
-     * @param timeoutOperation 超时执行的操作
-     */
-    public static void executeTimeoutMinutes(long timestamp, long timeoutMinutes, TimeoutOperation timeoutOperation) {
-        checkAndDoTimeoutOperation(timestamp, timeoutMinutes, timeoutOperation);
-    }
-
-    /**
-     * 在小时级别比较时间戳与阈值是否超时，并执行相关操作
-     *
-     * @param timestamp        时间戳（毫秒）
-     * @param timeoutHours     超时阈值（小时）
-     * @param timeoutOperation 超时执行的操作
-     * @since 2.5.6
-     */
-    public static void executeTimeoutHours(long timestamp, long timeoutHours, TimeoutOperation timeoutOperation) {
-        checkAndDoTimeoutOperation(timestamp, timeoutHours, timeoutOperation);
-    }
-
-    /**
      * 比较时间戳与阈值是否超时，并执行相关操作
      *
      * @param timestamp        时间戳（毫秒）
      * @param timeout          超时阈值（毫秒）
      * @param timeoutOperation 超时执行的操作
-     * @since 2.5.6
+     * @since 2.5.7
      */
-    public static void checkAndDoTimeoutOperation(long timestamp, long timeout, TimeoutOperation timeoutOperation) {
+    public static void executeTimeout(long timestamp, long timeout, TimeoutOperation timeoutOperation) {
         // 如果时间戳比超时阈值晚，则执行超时操作
         if (timestamp > timeout) {
-            timeoutOperation.doOperation();
+            if (timeoutOperation != null) {
+                timeoutOperation.doOperation();
+            }
         }
     }
 }

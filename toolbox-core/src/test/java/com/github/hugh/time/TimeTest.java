@@ -97,7 +97,7 @@ class TimeTest {
     void testExecuteTimeoutSeconds() {
         AtomicBoolean executed1 = new AtomicBoolean(false); // 用于记录是否执行了超时操作
         TimeoutOperation logOperation1 = () -> executed1.set(true); // 定义超时操作
-        TimeUtils.executeTimeoutSeconds(2, 4, logOperation1); // 执行被测方法
+        TimeUtils.executeTimeout(2, 4, logOperation1); // 执行被测方法
         assertFalse(executed1.get()); // 时间戳早于等于超时阈值，不应该执行超时操作
     }
 
@@ -105,7 +105,7 @@ class TimeTest {
     void logExecuteTimeoutNanos() {
         AtomicBoolean executed1 = new AtomicBoolean(false); // 用于记录是否执行了超时操作
         TimeoutOperation logOperation1 = () -> executed1.set(true); // 定义超时操作
-        TimeUtils.executeTimeoutNanos(2000, 200, logOperation1); // 执行被测方法
+        TimeUtils.executeTimeout(2000, 200, logOperation1); // 执行被测方法
         assertTrue(executed1.get()); // 时间戳早于等于超时阈值，不应该执行超时操作
     }
 
@@ -113,7 +113,7 @@ class TimeTest {
     void testExecuteTimeoutMillis() {
         AtomicBoolean executed1 = new AtomicBoolean(false); // 用于记录是否执行了超时操作
         TimeoutOperation logOperation1 = () -> executed1.set(true); // 定义超时操作
-        TimeUtils.executeTimeoutMillis(400, 200, logOperation1); // 执行被测方法
+        TimeUtils.executeTimeout(400, 200, logOperation1); // 执行被测方法
         assertTrue(executed1.get()); // 时间戳早于等于超时阈值，不应该执行超时操作
     }
 }
