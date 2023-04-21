@@ -1,15 +1,15 @@
 package com.github.hugh.time;
 
+import com.github.hugh.support.TimeoutOperation;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.TimeUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * java 1.8 后时间对象
@@ -26,12 +26,6 @@ class TimeTest {
         assertFalse(TimeUtils.checkTimestamp(start + "1528858736043", 1800000));
         assertFalse(TimeUtils.checkTimestamp("1528858736043", 1800000));
         assertTrue(DateUtils.isDateFormat(TimeUtils.now()));
-//        System.out.println("-1-->>" + );
-//        System.out.println("-2-->>" + TimeUtils.checkTimestamp(start + "1528858736043", 1800000));
-//        System.out.println("-3-->>" + TimeUtils.checkTimestamp(start + "1528858736043", 1800000));
-//        System.out.println("-4-->>" + TimeUtils.checkTimestamp("1528858736043", 1800000));
-//        System.out.println("--->>" + TimeUtils.getTime());
-//        System.out.println("--->>" + TimeUtils.endOfLastMonth());
     }
 
     // 校验开始日期与结束日期是否跨天
@@ -97,5 +91,29 @@ class TimeTest {
         String format = "HHmmss.SSS";
         LocalTime localTime = TimeUtils.toCstTime(strDate, format);
         assertEquals("10:09:38", localTime.toString());
+    }
+
+    @Test
+    void testExecuteTimeoutSeconds() {
+        AtomicBoolean executed1 = new AtomicBoolean(false); // 用于记录是否执行了超时操作
+        TimeoutOperation logOperation1 = () -> executed1.set(true); // 定义超时操作
+        TimeUtils.executeTimeoutSeconds(2, 4, logOperation1); // 执行被测方法
+        assertFalse(executed1.get()); // 时间戳早于等于超时阈值，不应该执行超时操作
+    }
+
+    @Test
+    void logExecuteTimeoutNanos() {
+        AtomicBoolean executed1 = new AtomicBoolean(false); // 用于记录是否执行了超时操作
+        TimeoutOperation logOperation1 = () -> executed1.set(true); // 定义超时操作
+        TimeUtils.executeTimeoutNanos(2000, 200, logOperation1); // 执行被测方法
+        assertTrue(executed1.get()); // 时间戳早于等于超时阈值，不应该执行超时操作
+    }
+
+    @Test
+    void testExecuteTimeoutMillis() {
+        AtomicBoolean executed1 = new AtomicBoolean(false); // 用于记录是否执行了超时操作
+        TimeoutOperation logOperation1 = () -> executed1.set(true); // 定义超时操作
+        TimeUtils.executeTimeoutMillis(400, 200, logOperation1); // 执行被测方法
+        assertTrue(executed1.get()); // 时间戳早于等于超时阈值，不应该执行超时操作
     }
 }

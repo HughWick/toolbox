@@ -11,8 +11,8 @@ import org.springframework.util.StopWatch;
 
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * 测试实体工具类
