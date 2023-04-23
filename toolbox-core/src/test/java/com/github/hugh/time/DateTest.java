@@ -79,9 +79,23 @@ class DateTest {
 
     @Test
     void test04() {
-        System.out.println("-距离凌晨还剩余多少毫秒-->>" + DateUtils.getEarlyMorningSec());
-        System.out.println("--获取小时整点时间->>" + DateUtils.getIniHour());
-        System.out.println("--获取当前小时的结束时间点->>" + DateUtils.getEndHour());
+//        @Test
+//        void test04() {
+        long remainingMilliSec = DateUtils.getEarlyMorningSec();
+        assertNotNull(remainingMilliSec);
+        assertTrue(remainingMilliSec > 0);
+
+        Date iniHour = DateUtils.getIniHour();
+        assertNotNull(iniHour);
+
+        Date endHour = DateUtils.getEndHour();
+        assertNotNull(endHour);
+
+//        assertTrue(endHour.isAfter(iniHour));
+//        }
+//        System.out.println("-距离凌晨还剩余多少毫秒-->>" + DateUtils.getEarlyMorningSec());
+//        System.out.println("--获取小时整点时间->>" + DateUtils.getIniHour());
+//        System.out.println("--获取当前小时的结束时间点->>" + DateUtils.getEndHour());
     }
 
     @Test
@@ -146,12 +160,19 @@ class DateTest {
         System.out.println(DateUtils.ofPattern(todayStartTime));
         Date todayEndTime = DateUtils.getTodayEndTime();
 //        System.out.println(DateUtils.ofPattern(todayEndTime));
-        Date oneMonthAgo = DateUtils.getOneMonthAgo();
-//        assertEquals("2022-06-05", DateUtils.format(oneMonthAgo));
-        Date weekAgo = DateUtils.getWeekAgo();
-        System.out.println(DateUtils.ofPattern(weekAgo));
         Date hourAgo = DateUtils.getHourAgo();
         System.out.println(DateUtils.ofPattern(hourAgo));
+    }
+
+    @Test
+    void testGetOneMonthAgo() {
+        // 获取一个月前的日期
+        Date oneMonthAgo = DateUtils.getOneMonthAgo();
+        // 验证返回的日期是否是一个月前的日期
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        Date expectedDate = cal.getTime();
+        assertEquals(expectedDate, oneMonthAgo);
     }
 
     @Test
@@ -161,14 +182,11 @@ class DateTest {
         // 获取当前时间
         Date now = new Date();
         calendar.setTime(now);
-
         // 调用getWeekAgo方法，获取过去七天的日期
         Date weekAgo = DateUtils.getWeekAgo(now);
-
         // 将Calendar实例的时间设置为一周前
         calendar.add(Calendar.DATE, -7);
         Date expected = calendar.getTime();
-
         // 验证getWeekAgo方法返回的日期是否等于预期结果
         assertEquals(expected, weekAgo);
     }
