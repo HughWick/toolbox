@@ -200,4 +200,39 @@ class DateTest {
         assertTrue(b2);
     }
 
+    @Test
+    void testExceedSystem() {
+        // 测试日期在当前系统时间之后的情况，应该返回 true
+        Date futureDate = new Date(System.currentTimeMillis() + 86400000); // 一天后
+        assertTrue(DateUtils.exceedSystem(futureDate));
+
+        // 测试日期等于当前系统时间的情况，应该返回 false
+        Date currentDate = new Date();
+        assertFalse(DateUtils.exceedSystem(currentDate));
+
+        // 测试日期在当前系统时间之前的情况，应该返回 false
+        Date pastDate = new Date(System.currentTimeMillis() - 86400000); // 一天前
+        assertFalse(DateUtils.exceedSystem(pastDate));
+
+        // 测试空日期的情况，应该返回 true
+        assertTrue(DateUtils.exceedSystem(null));
+    }
+
+    @Test
+    void testBelowSystem() {
+        // 测试日期在当前系统时间之后的情况，应该返回 false
+        Date futureDate = new Date(System.currentTimeMillis() + 86400000); // 一天后
+        assertFalse(DateUtils.belowSystem(futureDate));
+
+        // 测试日期等于当前系统时间的情况，应该返回 false
+        Date currentDate = new Date();
+        assertFalse(DateUtils.belowSystem(currentDate));
+
+        // 测试日期在当前系统时间之前的情况，应该返回 true
+        Date pastDate = new Date(System.currentTimeMillis() - 86400000); // 一天前
+        assertTrue(DateUtils.belowSystem(pastDate));
+
+        // 测试空日期的情况，应该返回 true
+        assertTrue(DateUtils.belowSystem(null));
+    }
 }

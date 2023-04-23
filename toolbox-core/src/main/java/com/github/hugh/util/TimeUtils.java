@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -444,6 +445,20 @@ public class TimeUtils extends DateCode {
                 .atZone(ZoneOffset.ofHours(0))
                 .withZoneSameInstant(ZoneOffset.ofHours(8))
                 .toLocalTime();
+    }
+
+    /**
+     * 判断在给定的时间戳和超时时间内是否执行了超时操作。
+     *
+     * @param timestamp 被测方法开始执行的时间戳，单位为毫秒
+     * @param timeout   超时时间，单位为毫秒
+     * @return 如果在超时时间内执行了超时操作，则返回 true；否则返回 false。
+     * @since 2.5.8
+     */
+    public static boolean isExecuteTimeout(long timestamp, long timeout) {
+        AtomicBoolean executed1 = new AtomicBoolean(false); // 用于记录是否执行了超时操作
+        executeTimeout(timestamp, timeout, () -> executed1.set(true)); // 执行被测方法
+        return executed1.get();
     }
 
     /**

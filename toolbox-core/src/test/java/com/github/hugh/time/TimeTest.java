@@ -116,4 +116,10 @@ class TimeTest {
         TimeUtils.executeTimeout(400, 200, logOperation1); // 执行被测方法
         assertTrue(executed1.get()); // 时间戳早于等于超时阈值，不应该执行超时操作
     }
+
+    @Test
+    void testIsExecuteTimeout() {
+        assertTrue(TimeUtils.isExecuteTimeout(400, 200 ));
+        assertFalse(TimeUtils.isExecuteTimeout(200, 400));
+    }
 }
