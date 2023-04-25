@@ -126,6 +126,7 @@ public class ListUtils {
      *
      * @param string 待处理的字符串
      * @return 返回包含整数的 List 对象
+     * @since 2.5.5
      */
     public static List<Integer> guavaStringToListInt(String string) {
         return guavaStringToListInt(string, StrPool.COMMA);

@@ -51,6 +51,8 @@ class ListTest {
         List<Integer> expected = Arrays.asList(1, 4, 7, 10);
         List<Integer> actual = ListUtils.guavaStringToListInt(string);
         assertEquals(expected, actual);
+        actual.add(15);
+        assertEquals(5,actual.size());
         String string2 = "3-6-9-12";
 
         List<Integer> expected2 = Arrays.asList(3, 6, 9, 12);
