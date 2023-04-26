@@ -1,15 +1,12 @@
 package com.github.hugh;
 
-import com.github.hugh.bean.dto.Ip2regionDTO;
 import com.github.hugh.util.io.StreamUtils;
 import com.github.hugh.util.ip.Ip2regionUtils;
 import org.junit.jupiter.api.Test;
-import org.springframework.util.StopWatch;
 
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * IP 解析测试工具
@@ -23,13 +20,16 @@ class Ip2regeinTest {
      */
     private static final String XDB_PATH = "/ip2region/ip2region.xdb";
 
+    private static final Supplier<byte[]> easyRedisSupplier = () -> StreamUtils.resourceToByteArray(Ip2regionUtils.class.getResource(XDB_PATH).getPath());
+
     @Test
     void parseStringTest() {
         String ip = "222.244.144.131";
-        Supplier<byte[]> easyRedisSupplier = () -> StreamUtils.resourceToByteArray(Ip2regionUtils.class.getResource(XDB_PATH).getPath());
         final String cityInfo = Ip2regionUtils.getCityInfo(ip, easyRedisSupplier.get());
         assertEquals("中国|0|湖南省|长沙市|电信", cityInfo);
-
+        String ip2 = "223.153.137.189";
+        final String cityInfo2 = Ip2regionUtils.getCityInfo(ip2, easyRedisSupplier.get());
+        assertEquals("中国|0|湖南省|张家界市|电信", cityInfo2);
     }
 
     @Test

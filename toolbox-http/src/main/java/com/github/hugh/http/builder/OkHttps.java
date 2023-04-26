@@ -223,6 +223,17 @@ public class OkHttps {
     }
 
     /**
+     * 创建并返回一个新的 OkHttps 对象，设置请求的 URL。
+     *
+     * @param url 请求的 URL
+     * @return 新的 OkHttps 对象，其 URL 属性被设置为指定的 URL
+     * @since 2.5.8
+     */
+    public static OkHttps url(String url) {
+        return new OkHttps().setUrl(url);
+    }
+
+    /**
      * 发送 GET 请求，并获取 HTTP 响应消息。
      *
      * @return 返回 OkHttps 实例，以支持链式调用其他方法。

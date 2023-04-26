@@ -1,7 +1,5 @@
 package com.github.hugh.http.builder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.hugh.bean.dto.ResultDTO;
 import com.github.hugh.http.OkHttpUpdateFileTest;
 import com.github.hugh.http.constant.MediaTypes;
 import com.github.hugh.http.constant.OkHttpCode;
@@ -16,7 +14,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.SocketTimeoutException;
+import java.net.URI;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -41,7 +40,7 @@ class OkHttpsTest {
     private static final String http_bin_get_url = "https://httpbin.org/get";
     private static final String http_bin_post_url = "https://httpbin.org/post";
 
-    private static final String https_login_url = "https://dev.hnlot.com.cn";
+//    private static final String https_login_url = "https://dev.hnlot.com.cn";
 
     @Test
     void testGet() throws IOException {
@@ -111,7 +110,7 @@ class OkHttpsTest {
         // 获取指定 URI 下的所有 cookies
         URI uri = URI.create(url);
         List<Cookie> cookies = OkHttpCode.COOKIE_STORE.get(uri.getHost());
-        assertEquals("[username=admin; path=/, password=123456; path=/]" , cookies.toString());
+        assertEquals("[username=admin; path=/, password=123456; path=/]", cookies.toString());
 //        System.out.println("--->>"+cookies);
 //        List<HttpCookie> cookies = cookieStore.get(uri);
         // 将 cookies 序列化为 JSON 格式并打印
@@ -253,13 +252,13 @@ class OkHttpsTest {
         Map<String, Object> map = new HashMap<>();
         map.put("page", 3);
         String message = new OkHttps().setUrl(url).setBody(map).setHeader(headerContent).doGet().getMessage();
-        assertEquals(msg , message);
+        assertEquals(msg, message);
 //        System.out.println("--->" + message);
 //        Map<String, Object> map = new HashMap<>();
 //        map.put("page", 3);
         String message2 = new OkHttps().setUrl(url + "?page=3").setHeader(headerContent).doGet().getMessage();
 //        System.out.println("--22--->" + message2);
-        assertEquals(msg , message2);
+        assertEquals(msg, message2);
     }
 
     @Test
@@ -300,4 +299,17 @@ class OkHttpsTest {
         assertNotNull(message2);
     }
 
+    //    -------------------------------以下都为静态测试工具类-------------------------------
+    @Test
+    void testStaticGet() throws IOException {
+        final String message = OkHttps.url(http_bin_get_url).doGet().getMessage();
+        assertNotNull(message);
+        Map<String, Object> map = new HashMap<>();
+        String params1 = "bar1";
+        map.put("foo1", params1);
+        map.put("foo2", "bar3");
+        final ResponseData postman = OkHttps.url(http_bin_get_url).setBody(map).doGet().fromJson(ResponseData.class);
+        assertEquals(params1, postman.getArgs().getFoo1());
+        assertEquals("okhttp/4.9.3", postman.getHeaders().getUserAgent());
+    }
 }

@@ -1,4 +1,4 @@
-package com.github.hugh.time;
+package com.github.hugh;
 
 import com.github.hugh.support.TimeoutOperation;
 import com.github.hugh.util.DateUtils;
