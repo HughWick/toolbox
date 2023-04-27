@@ -83,7 +83,7 @@ public class ListSplit<R> {
     }
 
     /**
-     * 将经过拆分和转换后的元素列表以 List<R> 的形式返回。
+     * 将经过拆分和转换后的元素列表以 List{@code <R>} 的形式返回。
      *
      * @return 经过拆分和转换后的元素列表
      */
