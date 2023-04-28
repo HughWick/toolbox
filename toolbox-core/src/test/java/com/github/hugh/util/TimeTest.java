@@ -1,8 +1,6 @@
-package com.github.hugh;
+package com.github.hugh.util;
 
 import com.github.hugh.support.TimeoutOperation;
-import com.github.hugh.util.DateUtils;
-import com.github.hugh.util.TimeUtils;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalTime;

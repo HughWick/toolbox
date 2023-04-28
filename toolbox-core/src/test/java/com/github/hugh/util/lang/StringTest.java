@@ -1,4 +1,4 @@
-package com.github.hugh.lang;
+package com.github.hugh.util.lang;
 
 import com.github.hugh.util.StringUtils;
 import org.junit.jupiter.api.Test;

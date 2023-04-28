@@ -1,6 +1,5 @@
-package com.github.hugh;
+package com.github.hugh.util.lang;
 
-import com.github.hugh.util.lang.ListSplit;
 import com.google.common.base.CharMatcher;
 import org.junit.jupiter.api.Test;
 

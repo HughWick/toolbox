@@ -1,9 +1,8 @@
-package com.github.hugh;
+package com.github.hugh.util;
 
 import com.github.hugh.bean.dto.EntityCompare;
 import com.github.hugh.model.Student;
 import com.github.hugh.model.Student1;
-import com.github.hugh.util.EntityCompareUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

@@ -1,7 +1,6 @@
-package com.github.hugh;
+package com.github.hugh.util.ip;
 
 import com.github.hugh.util.io.StreamUtils;
-import com.github.hugh.util.ip.Ip2regionUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.Supplier;
@@ -30,6 +29,10 @@ class Ip2regeinTest {
         String ip2 = "223.153.137.189";
         final String cityInfo2 = Ip2regionUtils.getCityInfo(ip2, easyRedisSupplier.get());
         assertEquals("中国|0|湖南省|张家界市|电信", cityInfo2);
+//        Ip2regionDTO parse = Ip2regionUtils.parse(ip);
+//        assert parse != null;
+//        assertEquals("长沙市", parse.getCity());
+//        assertEquals("湖南省", parse.getProvince());
     }
 
     @Test

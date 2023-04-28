@@ -1,6 +1,5 @@
-package com.github.hugh;
+package com.github.hugh.util.ip;
 
-import com.github.hugh.util.ip.IpUtils;
 import com.github.hugh.util.regex.RegexUtils;
 import org.junit.jupiter.api.Test;
 

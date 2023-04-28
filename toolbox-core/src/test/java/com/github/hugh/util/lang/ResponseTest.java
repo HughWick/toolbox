@@ -1,8 +1,7 @@
-package com.github.hugh.lang;
+package com.github.hugh.util.lang;
 
 import com.github.hugh.bean.dto.ResponseDTO;
 import com.github.hugh.util.TimeUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;

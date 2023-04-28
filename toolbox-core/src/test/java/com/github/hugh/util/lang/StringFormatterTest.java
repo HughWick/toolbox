@@ -1,6 +1,5 @@
-package com.github.hugh.lang;
+package com.github.hugh.util.lang;
 
-import com.github.hugh.util.lang.StringFormatter;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

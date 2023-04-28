@@ -93,7 +93,7 @@ public class CaffeineCache {
      * 创建本地缓存、自定义设置超时时间单位
      * <p>在最后一次访问或者写入后开始计时，在指定的时间后过期。假如一直有请求访问该key，那么这个缓存将一直不会过期</p>
      *
-     * @param expireAfterAccess 设置缓存n秒后没有读写就会被回收、单位：秒
+     * @param expireAfterAccess 设置缓存n秒后没有读写就会被回收
      * @param timeUnit          时间单位 {@link TimeUnit}
      * @param cacheLoader       build方法中可以指定CacheLoader，在缓存不存在时通过CacheLoader的实现自动加载缓存
      * @param <K>               key
@@ -109,7 +109,7 @@ public class CaffeineCache {
      * <p>在每次get key的时候指定一个同步的函数，如果key不存在就调用这个函数生成一个值。</p>
      * <p>在最后一次写入缓存后开始计时，在指定的时间后过期</p>
      *
-     * @param expireAfterWrite 设置缓存n秒后没有创建/覆盖时会被回收、第一参数:时间长度,第二参数：时间单位
+     * @param expireAfterWrite 设置缓存n秒后没有创建/覆盖时会被回收、第一参数:时间长度
      * @param <K>              key
      * @param <V>              value
      * @return Cache

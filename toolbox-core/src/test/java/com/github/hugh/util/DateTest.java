@@ -1,7 +1,6 @@
-package com.github.hugh.time;
+package com.github.hugh.util;
 
 import com.github.hugh.constant.DateCode;
-import com.github.hugh.util.DateUtils;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;

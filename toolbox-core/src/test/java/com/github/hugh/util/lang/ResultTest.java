@@ -1,4 +1,4 @@
-package com.github.hugh.lang;
+package com.github.hugh.util.lang;
 
 import com.github.hugh.bean.dto.ResultDTO;
 import lombok.val;
