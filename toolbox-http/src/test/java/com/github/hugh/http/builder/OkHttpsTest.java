@@ -13,6 +13,7 @@ import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.URI;
@@ -95,48 +96,11 @@ class OkHttpsTest {
         String url = "http://httpbin.org/cookies/set?username=admin&password=123456";
         final String responseData = new OkHttps().setUrl(url)
                 .isSendCookie(true)
-//                .setBody(params)
                 .doGet()
                 .getMessage();
-//        System.out.println("Login response: " + responseData);
-        // 发送带有 cookies 的请求
-//        String url = "http://httpbin.org/cookies";
-//        final String responseData2 = new OkHttps().setUrl(url)
-//                .isSendCookie(true)
-////                .setBody(params)
-//                .doGet().getMessage();
-////                .fromJson(ResultDTO.class);
-//        System.out.println("Response: " + responseData2);
-        // 获取指定 URI 下的所有 cookies
         URI uri = URI.create(url);
         List<Cookie> cookies = OkHttpCode.COOKIE_STORE.get(uri.getHost());
         assertEquals("[username=admin; path=/, password=123456; path=/]", cookies.toString());
-//        System.out.println("--->>"+cookies);
-//        List<HttpCookie> cookies = cookieStore.get(uri);
-        // 将 cookies 序列化为 JSON 格式并打印
-//        String cookieJson = objectMapper.writeValueAsString(cookies);
-//        System.out.println("Cookies for " + uri + ": " + cookieJson);
-//        Map<String, Object> params = new HashMap<>();
-//        params.put("userAccount", "fengtao");
-//        params.put("userPassword", "88888888");
-//        params.put("loginType", "password");
-//        final String responseData = new OkHttps().setUrl(https_login_url + "/v2/user/userLogin/login")
-//                .isSendCookie(true)
-//                .setBody(params)
-//                .doPostForm()
-//                .getMessage();
-//        final Jsons jsons = new Jsons(responseData);
-//        assertEquals("0000", jsons.getString("code"));
-//        final ResultDTO responseData2 = new OkHttps().setUrl(https_login_url + "/v2/business/serverRoomInspection/find")
-//                .doGet()
-//                .fromJson(ResultDTO.class);
-//        assertTrue(responseData2.equalCode("100"));
-//        final ResultDTO responseData3 = new OkHttps().setUrl(https_login_url + "/v2/business/serverRoomInspection/find")
-//                .isSendCookie(true)
-//                .setBody(params)
-//                .doGet()
-//                .fromJson(ResultDTO.class);
-//        assertTrue(responseData3.equalCode("0000"));
     }
 
     // 测试上传单张图片
@@ -145,15 +109,6 @@ class OkHttpsTest {
         // 附加参数
         var params = new HashMap<>();
         params.put("type", "0");
-        // 文件参数
-//        Map fileMap = new HashMap<>();
-//        fileMap.put("84630805_p0.png",  getPath(path1));
-//        fileMap.put("share_0a3835617ff336a3004dbf9115dac414.png", path2);
-//        fileMap.put("69956256_p1.jpg", getPath(path3));
-//        fileMap.put("20200718234953_grmzy.jpeg", getPath(path4));
-//        fileMap.put("share_a4b448c4f972858f42640e36ffc3a8e6.png", getPath(path5));
-//        fileMap.put("share_572031b53d646c2c8a8191bdd93a95b2.png", getPath(path6));
-//        fileMap.put("vant_log_150x150.png", getPath(path7));
         final ToolboxHttpException toolboxHttpException = Assertions.assertThrowsExactly(ToolboxHttpException.class, () -> {
             new OkHttps().setUrl(http_bin_post_url).setBody(params).uploadFile().getMessage();
         });
@@ -162,13 +117,22 @@ class OkHttpsTest {
         final ToolboxHttpException toolboxHttpException2 = Assertions.assertThrowsExactly(ToolboxHttpException.class, () -> {
             // 测试单个
             List<FileFrom> mediaList1 = Collections.singletonList(
-                    new FileFrom("", "84630805_p0.jpg", getPath(path1), MediaTypes.IMAGE_JPEG)
+                    new FileFrom("", "84630805_p0.jpg", getPath(path1), null, MediaTypes.IMAGE_JPEG)
             );
             new OkHttps().setUrl(http_bin_post_url).setFileFrom(mediaList1).uploadFile().getMessage();
         });
         assertEquals("upload file key is null", toolboxHttpException2.getMessage());
+        // 测试上传文件路径为空
+        final ToolboxHttpException toolboxHttpException3 = Assertions.assertThrowsExactly(ToolboxHttpException.class, () -> {
+            // 测试单个
+            List<FileFrom> mediaList1 = Collections.singletonList(
+                    new FileFrom("", "84630805_p0.jpg", null, null, MediaTypes.IMAGE_JPEG)
+            );
+            new OkHttps().setUrl(http_bin_post_url).setFileFrom(mediaList1).uploadFile().getMessage();
+        });
+        assertEquals("upload file key is null", toolboxHttpException3.getMessage());
         // 测试单个
-        FileFrom media1 = new FileFrom("file", "vant_log_150x150.png", getPath(path7), MediaTypes.IMAGE_PNG);
+        FileFrom media1 = new FileFrom("file", "vant_log_150x150.png", getPath(path7), null, MediaTypes.IMAGE_PNG);
         // 测试图片
         final ResponseData responseData2 = new OkHttps().setUrl(http_bin_post_url).setBody(params).setFileFrom(media1).uploadFile().fromJson(ResponseData.class);
         // 验证数据长度
@@ -180,11 +144,13 @@ class OkHttpsTest {
     void testUploadFile() throws Exception {
         // 创建多个文件媒体信息对象
         List<FileFrom> mediaList = Arrays.asList(
-                new FileFrom("file", "69956256_p1.jpg", getPath(path3), MediaTypes.TEXT_PLAIN),
-                new FileFrom("file", "20200718234953_grmzy.jpeg", getPath(path4), MediaTypes.IMAGE_JPEG)
+                new FileFrom("file", "69956256_p1.jpg", getPath(path3), null, MediaTypes.TEXT_PLAIN),
+                new FileFrom("file", "20200718234953_grmzy.jpeg", null, new File(getPath(path4)), MediaTypes.IMAGE_JPEG)
         );
+        final var okHttpsResponse = new OkHttps().setUrl(http_bin_post_url).setFileFrom(mediaList)
+                .uploadFile();
         // 测试图片
-        final ResponseData responseData3 = new OkHttps().setUrl(http_bin_post_url).setFileFrom(mediaList).uploadFile().fromJson(ResponseData.class);
+        final ResponseData responseData3 = okHttpsResponse.fromJson(ResponseData.class);
         // 验证数据长度
         assertEquals("610771", responseData3.getHeaders().getContentLength());
     }

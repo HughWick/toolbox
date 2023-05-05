@@ -366,11 +366,7 @@ public class OkHttps {
         }
         // 遍历文件列表，将每个文件添加到请求体中
         for (FileFrom file : this.fileFrom) {
-            if (EmptyUtils.isEmpty(file.getKey())) {
-                throw new ToolboxHttpException("upload file key is null");
-            }
-            RequestBody fileBody = RequestBody.create(new File(file.getPath()), file.getFileMediaType());
-            requestBody.addFormDataPart(file.getKey(), file.getName(), fileBody);
+            requestBody.addFormDataPart(file.getKey(), file.getName(), setFileParam(file));
         }
         Request request = new Request.Builder()
                 .url(url)
@@ -386,6 +382,27 @@ public class OkHttps {
     }
 
     /**
+     * 设置 HTTP 请求中需要上传的文件参数。
+     *
+     * @param file 包含要上传的文件信息的 FileFrom 对象。
+     * @return 表示要上传的文件的 RequestBody 对象。
+     * @throws ToolboxHttpException 如果文件键为空或文件路径为空。
+     */
+    private RequestBody setFileParam(FileFrom file) {
+        if (EmptyUtils.isEmpty(file.getKey())) {
+            throw new ToolboxHttpException("upload file key is null");
+        }
+        File uploadFile;
+        if (file.getFile() == null) {
+            isFilePathEmpty(file.getPath());
+            uploadFile = new File(file.getPath());
+        } else {
+            uploadFile = file.getFile();
+        }
+        return RequestBody.create(uploadFile, file.getFileMediaType());
+    }
+
+    /**
      * 检查URL是否为空，如果为空，则抛出异常。
      *
      * @throws ToolboxHttpException 如果URL为空，则抛出ToolboxHttpException异常。
@@ -393,6 +410,18 @@ public class OkHttps {
     private void verifyUrlEmpty() {
         if (EmptyUtils.isEmpty(this.url)) {// 检查 URL 是否为空
             throw new ToolboxHttpException("url is null");
+        }
+    }
+
+    /**
+     * 检查文件路径是否为空。
+     *
+     * @param path 文件路径。
+     * @throws ToolboxHttpException 如果文件路径为空。
+     */
+    private void isFilePathEmpty(String path) {
+        if (EmptyUtils.isEmpty(path)) {// 检查 文件 是否为空
+            throw new ToolboxHttpException("file path is null");
         }
     }
 

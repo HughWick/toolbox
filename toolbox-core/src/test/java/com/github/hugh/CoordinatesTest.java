@@ -5,11 +5,9 @@ import com.github.hugh.bean.dto.coordinates.GpsDTO;
 import com.github.hugh.bean.dto.coordinates.RmcDTO;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.CoordinatesUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 定位测试了
@@ -90,7 +88,13 @@ class CoordinatesTest {
         assertEquals("11256.4649", rmcDTO.getLongitude());
         assertEquals("2813.3615", rmcDTO.getLatitude());
         // 空
-        Assertions.assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.parseRmc(""));
+        assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.parseRmc(""));
+
+        String rmc2 = "$GNRMC,024926.00,A,2813.3480,N,11256.4691,E,0.237,,050523,,,A,V*14\\r\\n\\r\\nOK\\r\\n";
+        RmcDTO rmcDTO2 = CoordinatesUtils.parseRmc(rmc2);
+        assertEquals("2023-05-05 10:49:26", rmcDTO2.getReadingDate());
+        assertEquals("A", rmcDTO2.getStatus());
+//        assertEquals("V*14", rmcDTO2.getCalibrationValue());
     }
 
     // 测试两点间距离
@@ -125,33 +129,33 @@ class CoordinatesTest {
         //=========================================
         String lngAndLat3 = "112.944468,28.218373";
         String lngAndLat4 = "112.933732，28.280851";
-        final ToolboxException toolboxException = Assertions.assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.getDistance(lngAndLat3, lngAndLat4));
+        final ToolboxException toolboxException = assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.getDistance(lngAndLat3, lngAndLat4));
         assertEquals("latitude and longitude separator does not exist", toolboxException.getMessage());
         String lngAndLat5 = "112.944468，28.218373";
         String lngAndLat6 = "112.933732,28.280851";
-        final ToolboxException toolboxException2 = Assertions.assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.getDistance(lngAndLat5, lngAndLat6));
+        final ToolboxException toolboxException2 = assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.getDistance(lngAndLat5, lngAndLat6));
         assertEquals("latitude and longitude separator does not exist", toolboxException2.getMessage());
         String lngAndLat7 = "112.944468,28.218373,";
         String lngAndLat8 = "112.933732,28.280851";
-        final ToolboxException toolboxException3 = Assertions.assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.getDistance(lngAndLat7, lngAndLat8));
+        final ToolboxException toolboxException3 = assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.getDistance(lngAndLat7, lngAndLat8));
         assertEquals("multiple latitude and longitude separators", toolboxException3.getMessage());
         String lngAndLat9 = "112.944468,28.218373";
         String lngAndLat10 = "112.933732,28.280851,";
-        final ToolboxException toolboxException4 = Assertions.assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.getDistance(lngAndLat9, lngAndLat10));
+        final ToolboxException toolboxException4 = assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.getDistance(lngAndLat9, lngAndLat10));
         assertEquals("multiple latitude and longitude separators", toolboxException4.getMessage());
         String lngAndLat11 = "1128.218373,112.944468";
         String lngAndLat12 = "112.933732,28.280851";
-        final ToolboxException toolboxException5 = Assertions.assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.getDistance(lngAndLat11, lngAndLat12));
+        final ToolboxException toolboxException5 = assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.getDistance(lngAndLat11, lngAndLat12));
         assertEquals("first longitude error : " + lngAndLat11.split(",")[0], toolboxException5.getMessage());
         String lngAndLat13 = "112.218373,112.944468";
         String lngAndLat14 = "1112.933732,28.280851";
-        final ToolboxException toolboxException6 = Assertions.assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.getDistance(lngAndLat13, lngAndLat14));
+        final ToolboxException toolboxException6 = assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.getDistance(lngAndLat13, lngAndLat14));
         assertEquals("second longitude error : " + lngAndLat14.split(",")[0], toolboxException6.getMessage());
         String lngAndLat15 = "112.218373,112.944468";
-        final ToolboxException toolboxException7 = Assertions.assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.getDistance(lngAndLat15, lngAndLat1));
+        final ToolboxException toolboxException7 = assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.getDistance(lngAndLat15, lngAndLat1));
         assertEquals("first latitude error : " + lngAndLat15.split(",")[1], toolboxException7.getMessage());
         String lngAndLat16 = "112.218373,112.944468";
-        final ToolboxException toolboxException8 = Assertions.assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.getDistance(lngAndLat1, lngAndLat16));
+        final ToolboxException toolboxException8 = assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.getDistance(lngAndLat1, lngAndLat16));
         assertEquals("second latitude error : " + lngAndLat16.split(",")[1], toolboxException8.getMessage());
 
     }
