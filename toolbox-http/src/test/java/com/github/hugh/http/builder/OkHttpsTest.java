@@ -5,6 +5,7 @@ import com.github.hugh.http.constant.MediaTypes;
 import com.github.hugh.http.constant.OkHttpCode;
 import com.github.hugh.http.exception.ToolboxHttpException;
 import com.github.hugh.http.model.FileFrom;
+import com.github.hugh.http.model.JsonPlaceholderResult;
 import com.github.hugh.http.model.ResponseData;
 import com.github.hugh.json.gson.Jsons;
 import okhttp3.*;
@@ -41,7 +42,9 @@ class OkHttpsTest {
     private static final String http_bin_get_url = "https://httpbin.org/get";
     private static final String http_bin_post_url = "https://httpbin.org/post";
 
-//    private static final String https_login_url = "https://dev.hnlot.com.cn";
+    // get请求
+    private static final String http_json_placeholder_get_url = "http://jsonplaceholder.typicode.com/posts";
+
 
     @Test
     void testGet() throws IOException {
@@ -82,7 +85,7 @@ class OkHttpsTest {
         String params1 = "bar1";
         map.put("foo1", params1);
         map.put("foo2", "bar3");
-        final Jsons jsons = new OkHttps().setUrl(http_bin_post_url).setBody(map).doPostJson().reJsons();
+        final Jsons jsons = new OkHttps().setUrl(http_bin_post_url).setBody(map).doPostJson().toJsons();
         assert MediaTypes.APPLICATION_JSON_UTF8 != null;
         assertEquals(MediaTypes.APPLICATION_JSON_UTF8.toString(), jsons.getThis("headers").getString("Content-Type"));
         final ResponseData response1 = new OkHttps().setUrl(http_bin_post_url).doPostJson().fromJson(ResponseData.class);
@@ -134,7 +137,11 @@ class OkHttpsTest {
         // 测试单个
         FileFrom media1 = new FileFrom("file", "vant_log_150x150.png", getPath(path7), null, MediaTypes.IMAGE_PNG);
         // 测试图片
-        final ResponseData responseData2 = new OkHttps().setUrl(http_bin_post_url).setBody(params).setFileFrom(media1).uploadFile().fromJson(ResponseData.class);
+        final ResponseData responseData2 = new OkHttps().setUrl(http_bin_post_url)
+                .setBody(params)
+                .setFileFrom(media1)
+                .uploadFile()
+                .fromJson(ResponseData.class);
         // 验证数据长度
         assertEquals("4366", responseData2.getHeaders().getContentLength());
     }
@@ -241,6 +248,7 @@ class OkHttpsTest {
         assertNotNull(s2);
     }
 
+    // 测试客户端连接超时
     @Test
     void testClientTimeout() throws Exception {
         final String s2 = new OkHttps().setUrl(http_bin_get_url)
@@ -268,14 +276,21 @@ class OkHttpsTest {
     //    -------------------------------以下都为静态测试工具类-------------------------------
     @Test
     void testStaticGet() throws IOException {
-        final String message = OkHttps.url(http_bin_get_url).doGet().getMessage();
+
+//        Map<String, Object> map = new HashMap<>();
+//        String params1 = "bar1";
+//        map.put("foo1", params1);
+//        map.put("foo2", "bar3");
+//        final ResponseData postman = OkHttps.url(http_bin_get_url).setBody(map).doGet().fromJson(ResponseData.class);
+//        assertEquals(params1, postman.getArgs().getFoo1());
+//        assertEquals("okhttp/4.9.3", postman.getHeaders().getUserAgent());
+
+        final String message = OkHttps.url(http_json_placeholder_get_url).doGet().getMessage();
         assertNotNull(message);
-        Map<String, Object> map = new HashMap<>();
-        String params1 = "bar1";
-        map.put("foo1", params1);
-        map.put("foo2", "bar3");
-        final ResponseData postman = OkHttps.url(http_bin_get_url).setBody(map).doGet().fromJson(ResponseData.class);
-        assertEquals(params1, postman.getArgs().getFoo1());
-        assertEquals("okhttp/4.9.3", postman.getHeaders().getUserAgent());
+        final List<JsonPlaceholderResult> postman2 = OkHttps.url(http_json_placeholder_get_url).doGet().toList(JsonPlaceholderResult.class);
+        assertEquals(100, postman2.size());
+        final List<Jsons> postman3 = OkHttps.url(http_json_placeholder_get_url).doGet().toList();
+        System.out.println("====>>" + postman3);
+        assertEquals(1, postman3.get(0).getInt("id"));
     }
 }

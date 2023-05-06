@@ -231,10 +231,10 @@ class JsonObjectUtilsTest {
         String str2 = "[{\"serialNo\":\"1339497989051277312\",\"createBy\":1,\"createDate\":1608196182000,\"updateBy\":\"xxxx\",\"updateDate\":1615444156000,\"name\":\"张三\"}]";
         JsonArray jsonElements = JsonObjectUtils.parseArray(str2);
 //        System.out.println("-=4==>>>" + objects);
-        List<Student> students = JsonObjectUtils.toArrayList(jsonElements, Student.class);
 //        System.out.println("-1->"+students);
 //        List<JsonObject> objects = JsonObjectUtils.toArrayList(jsonElements);
 //        System.out.println("-1->"+objects);
+        List<Student> students = JsonObjectUtils.toArrayList(jsonElements, Student.class);
         List<Object> objects1 = JsonObjectUtils.toArrayList(str2);
         assertEquals(students.size(), objects1.size());
         objects1.forEach(e -> {

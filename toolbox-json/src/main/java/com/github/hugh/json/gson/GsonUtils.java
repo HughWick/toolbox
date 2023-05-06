@@ -311,8 +311,13 @@ public class GsonUtils {
     public static <T> List<T> toArrayList(JsonArray jsonArray, Class<T> clazz) {
         List<T> resultList = new ArrayList<>();
         for (JsonElement jsonElement : jsonArray) {
-            T e = JSON.parseObject(jsonElement.toString(), clazz);
-            resultList.add(e);
+            T result;
+//            if (clazz == null) {
+//                result = (T) new Jsons(jsonElement);
+//            } else {
+                result = JSON.parseObject(jsonElement.toString(), clazz);
+//            }
+            resultList.add(result);
         }
         return resultList;
     }

@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 代表 OkHttp 客户端接收到的 HTTP 响应消息。
  *
@@ -38,13 +40,25 @@ public class OkHttpsResponse {
     public String getMessage() {
         return this.message;
     }
-    
+
     /**
      * 将 message 字符串转换为 Jsons 对象。
      *
      * @return Jsons 对象
      */
-    public Jsons reJsons() {
+    public Jsons toJsons() {
         return new Jsons(this.message);
+    }
+
+    /**
+     * 使用Gson库将JSON字符串转换为给定类别的对象列表。
+     *
+     * @param clazz 对象列表中的对象类型
+     * @param <T>   对象列表中的对象类型
+     * @return 给定类别的对象列表
+     * @since 2.5.9
+     */
+    public <T> List<T> toList(Class<T> clazz) {
+        return GsonUtils.toArrayList(this.message, clazz);
     }
 }
