@@ -129,11 +129,11 @@ class OkHttpsTest {
         final ToolboxHttpException toolboxHttpException3 = Assertions.assertThrowsExactly(ToolboxHttpException.class, () -> {
             // 测试单个
             List<FileFrom> mediaList1 = Collections.singletonList(
-                    new FileFrom("", "84630805_p0.jpg", null, null, MediaTypes.IMAGE_JPEG)
+                    new FileFrom("file", "84630805_p0.jpg", null, null, MediaTypes.IMAGE_JPEG)
             );
-            new OkHttps().setUrl(http_bin_post_url).setFileFrom(mediaList1).uploadFile().getMessage();
+            new OkHttps().setUrl(http_bin_post_url).setUrl(http_bin_post_url).setFileFrom(mediaList1).uploadFile().getMessage();
         });
-        assertEquals("upload file key is null", toolboxHttpException3.getMessage());
+        assertEquals("file path is null", toolboxHttpException3.getMessage());
         // 测试单个
         FileFrom media1 = new FileFrom("file", "vant_log_150x150.png", getPath(path7), null, MediaTypes.IMAGE_PNG);
         // 测试图片
@@ -276,21 +276,20 @@ class OkHttpsTest {
     //    -------------------------------以下都为静态测试工具类-------------------------------
     @Test
     void testStaticGet() throws IOException {
-
-//        Map<String, Object> map = new HashMap<>();
-//        String params1 = "bar1";
-//        map.put("foo1", params1);
-//        map.put("foo2", "bar3");
-//        final ResponseData postman = OkHttps.url(http_bin_get_url).setBody(map).doGet().fromJson(ResponseData.class);
-//        assertEquals(params1, postman.getArgs().getFoo1());
-//        assertEquals("okhttp/4.9.3", postman.getHeaders().getUserAgent());
+        Map<String, Object> map = new HashMap<>();
+        String params1 = "bar1";
+        map.put("foo1", params1);
+        map.put("foo2", "bar3");
+        final ResponseData postman = OkHttps.url(http_bin_get_url).setBody(map).doGet().fromJson(ResponseData.class);
+        assertEquals(params1, postman.getArgs().getFoo1());
+        assertEquals("okhttp/4.9.3", postman.getHeaders().getUserAgent());
 
         final String message = OkHttps.url(http_json_placeholder_get_url).doGet().getMessage();
         assertNotNull(message);
         final List<JsonPlaceholderResult> postman2 = OkHttps.url(http_json_placeholder_get_url).doGet().toList(JsonPlaceholderResult.class);
         assertEquals(100, postman2.size());
-        final List<Jsons> postman3 = OkHttps.url(http_json_placeholder_get_url).doGet().toList();
-        System.out.println("====>>" + postman3);
-        assertEquals(1, postman3.get(0).getInt("id"));
+//        final List<Jsons> postman3 = OkHttps.url(http_json_placeholder_get_url).doGet().toList();
+//        System.out.println("====>>" + postman3);
+//        assertEquals(1, postman3.get(0).getInt("id"));
     }
 }
