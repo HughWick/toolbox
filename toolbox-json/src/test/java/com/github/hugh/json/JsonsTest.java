@@ -58,6 +58,14 @@ public class JsonsTest {
     }
 
     @Test
+    void testOn() {
+        String str = "{\"name\":\"John Doe\",\"age\":30,\"email\":\"johndoe@example.com\",\"address\":{\"street\":\"123 Main St\",\"city\":\"Anytown\",\"country\":\"USA\"},\"phone_numbers\":[{\"type\":\"home\",\"number\":\"555-1234\"},{\"type\":\"work\",\"number\":\"555-5678\"}]}";
+        final Jsons jsons = Jsons.on(str);
+        assertNotNull(jsons);
+        assertEquals("John Doe" , jsons.getString("name"));
+    }
+
+    @Test
     void testStrToMap() {
         String str = "{timestamp=1493114544899, bo/dy={\"name\":\"\u6d4b\u8bd5\u5546\u6237\",\"shop_id\":\"123456\"}, cmd=order.list, source=65504, ticket=C34A0D20-45EC-9C26-CAB8-3DA309213671, encrypt=des.v1, secret=123131243245454534, fields=a|b, version=3.0}";
 //        String str = "{birthday=1666145184398, testList=1,2,3, woman={name=dc, age=1}, name=账上的, create=2022-01-10 22:33:10, sex_in=a,b,d}";

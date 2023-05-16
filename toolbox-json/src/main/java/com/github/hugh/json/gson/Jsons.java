@@ -54,6 +54,17 @@ public class Jsons extends GsonUtils {
     }
 
     /**
+     * 将字符串解析为 Jsons 对象，方便进行 JSON 数据处理
+     *
+     * @param string 待解析的 JSON 格式字符串
+     * @return Jsons 对象
+     * @since 2.5.10
+     */
+    public static Jsons on(String string) {
+        return new Jsons(string);
+    }
+
+    /**
      * jsonObject对象为null、或者对象长度为0
      *
      * @return boolean {@code true} jsonObject为空
