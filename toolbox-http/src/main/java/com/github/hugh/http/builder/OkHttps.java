@@ -315,7 +315,6 @@ public class OkHttps {
             initOkHttpClient();
         }
         if (this.body == null) {
-            // TODO MediaType应该修改为可以自定义
             return doPost(MediaTypes.APPLICATION_JSON_UTF8, StrPool.EMPTY, okHttpClient);
         }
         if (this.body instanceof String) {
@@ -334,7 +333,7 @@ public class OkHttps {
      * @throws IOException 如果请求发送失败，则抛出 IOException 异常。
      */
     private OkHttpsResponse doPost(MediaType mediaType, String body, OkHttpClient okHttpClient) throws IOException {
-        RequestBody requestBody = RequestBody.create(body, mediaType);
+        RequestBody requestBody = RequestBody.create(mediaType, body);
         final Request.Builder request = new Request.Builder().url(url).post(requestBody);
         if (this.header != null) {
             Headers headers = Headers.of(this.header);
@@ -399,7 +398,7 @@ public class OkHttps {
         } else {
             uploadFile = file.getFile();
         }
-        return RequestBody.create(uploadFile, file.getFileMediaType());
+        return RequestBody.create(file.getFileMediaType(), uploadFile);
     }
 
     /**
