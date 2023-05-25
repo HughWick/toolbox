@@ -524,7 +524,7 @@ public class GsonUtils {
      * @since 1.3.12
      */
     public static <T> String toJson(T entity, String dateFormat) {
-        Gson gson = new GsonBuilder().setDateFormat(dateFormat).create();
+        Gson gson = new GsonBuilder().setDateFormat(dateFormat).disableHtmlEscaping().create();
         return gson.toJson(entity);
     }
 

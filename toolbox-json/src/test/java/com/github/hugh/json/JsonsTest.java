@@ -62,7 +62,7 @@ public class JsonsTest {
         String str = "{\"name\":\"John Doe\",\"age\":30,\"email\":\"johndoe@example.com\",\"address\":{\"street\":\"123 Main St\",\"city\":\"Anytown\",\"country\":\"USA\"},\"phone_numbers\":[{\"type\":\"home\",\"number\":\"555-1234\"},{\"type\":\"work\",\"number\":\"555-5678\"}]}";
         final Jsons jsons = Jsons.on(str);
         assertNotNull(jsons);
-        assertEquals("John Doe" , jsons.getString("name"));
+        assertEquals("John Doe", jsons.getString("name"));
     }
 
     @Test
@@ -403,5 +403,23 @@ public class JsonsTest {
         for (Map.Entry<String, JsonElement> entries : jsonObjects.entrySet()) {
 //            System.out.println(entries.getKey() + "=--------" + JsonObjectUtils.getAsString(entries.getValue()));
         }
+    }
+
+    // 测试编码解码
+    @Test
+    void testEncoder() {
+        String str = "{\"act\":\"pushStream\",\"code\":\"0000\",\"data\":{\"appId\":1307638920," +
+                "\"token\":\"04AAAAAGRuvEoAEHZ++XcEWByGHRpI1oqDZNQAoMkuWwwMpcv9yVsE1ZQ3LtPIcrubgXV6GMtFKMp4rD8bcpYUmz6Avq2z6NpF2qBOmfs6pM7xGDNjh96XPfNJVuLstpl3p6j9rkk8y3UskTrwJ7PhmkES" +
+                "/IYUA5BxZXSM6GMn2/RCK9RJxkp3Kadi06BS21tw4nyWGHNdbxorDWJinMFzvdRIhFeoN2qGj+pMd88pek4XFQd3nXbDI6KrNBo\\u003d\"," +
+                "\"roomId\":\"1661546216586170368\",\"userId\":\"1661546216586170369\",\"streamId\":\"1661546216586170370\"},\"deviceId\":\"123\",\"timestamp\":1684978462727}";
+        final Jsons jsons = Jsons.on(str);
+        final Jsons data = jsons.getThis("data");
+        String expected = "04AAAAAGRuvEoAEHZ++XcEWByGHRpI1oqDZNQAoMkuWwwMpcv9yVsE1ZQ3LtPIcrubgXV6GMtFKMp4rD8bcpYUmz6Avq2z6NpF2qBOmfs6pM7xGDNjh96XPfNJVuLstpl3p6j9rkk8y3UskTrwJ7PhmkES" +
+                "/IYUA5BxZXSM6GMn2/RCK9RJxkp3Kadi06BS21tw4nyWGHNdbxorDWJinMFzvdRIhFeoN2qGj+pMd88pek4XFQd3nXbDI6KrNBo=";
+        assertEquals(expected, data.getString("token"));
+        String urlEncoder = "{token:\"\\u0068\\u0074\\u0074\\u0070\\u0073\\u003a\\u002f\\u002f\\u0074\\u006f\\u006f\\u006c\\u002e\\u0063\\u0068\\u0069\\u006e\\u0061\\u007a\\u002e\\u0063\\u006f\\u006d\\u002f\\u0074\\u006f\\u006f\\u006c\\u0073\\u002f\\u0075\\u0072\\u006c\\u0065\\u006e\\u0063\\u006f\\u0064\\u0065\\u002e\\u0061\\u0073\\u0070\\u0078\\u003f\\u0073\\u003d\\u738b\\u5fb7\\u6cd5\"}";
+        final Jsons jsons2 = Jsons.on(urlEncoder);
+        String expected2 = "{\"token\":\"https://tool.chinaz.com/tools/urlencode.aspx?s=王德法\"}";
+        assertEquals(expected2, jsons2.toJson());
     }
 }
