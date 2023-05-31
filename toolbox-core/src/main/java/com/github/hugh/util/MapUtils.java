@@ -32,14 +32,9 @@ public class MapUtils {
      * @param <V>  value 类型
      * @return boolean {@code true} 一致
      */
+    @Deprecated
     public static <K, V> boolean isSuccess(Map<K, V> map, K key, String code) {
-        if (map == null) {
-            return false;
-        }
-        if (EmptyUtils.isEmpty(code)) {
-            return false;
-        }
-        return code.equals(String.valueOf(map.get(key)));
+        return isEquals(map, key, code);
     }
 
     /**
@@ -52,8 +47,45 @@ public class MapUtils {
      * @param <V>  value 类型
      * @return boolean {@code true} 不一致
      */
+    @Deprecated
     public static <K, V> boolean isFailure(Map<K, V> map, K key, String code) {
-        return !isSuccess(map, key, code);
+        return !isEquals(map, key, code);
+    }
+
+    /**
+     * 判断指定的Map中，key对应的value是否与所传入的code参数相等。
+     *
+     * @param map  要进行判断的 Map 对象
+     * @param key  需要判断的键值 key
+     * @param code 要比较的值
+     * @return 如果 Map 中 key 对应的 value 与 code 相等则返回 true，否则返回 false
+     * @since 2.5.11
+     */
+    public static <K, V> boolean isEquals(Map<K, V> map, K key, String code) {
+        // 如果 map 为空，则返回 false
+        if (map == null) {
+            return false;
+        }
+        // 如果 code 为空，则返回 false
+        if (EmptyUtils.isEmpty(code)) {
+            return false;
+        }
+        // 获取 Map 中 key 对应的 value，并将其转换成字符串进行比较
+        return code.equals(String.valueOf(map.get(key)));
+    }
+
+    /**
+     * 判断指定的Map中，key对应的value是否与所传入的code参数不相等。
+     *
+     * @param map  要进行判断的 Map 对象
+     * @param key  需要判断的键值 key
+     * @param code 要比较的值
+     * @return 如果 Map 中 key 对应的 value 与 code 不相等则返回 true，否则返回 false
+     * @since 2.5.11
+     */
+    public static <K, V> boolean isNotEquals(Map<K, V> map, K key, String code) {
+        // 调用 isEquals 方法进行比较，然后取反结果
+        return !isEquals(map, key, code);
     }
 
     /**
