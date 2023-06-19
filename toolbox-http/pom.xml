@@ -21,11 +21,6 @@
         </dependency>
         <dependency>
             <groupId>com.github.hughwick</groupId>
-            <artifactId>toolbox-core</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.hughwick</groupId>
             <artifactId>toolbox-json</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
