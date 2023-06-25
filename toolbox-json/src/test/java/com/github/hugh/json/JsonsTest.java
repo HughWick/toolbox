@@ -421,5 +421,12 @@ public class JsonsTest {
         final Jsons jsons2 = Jsons.on(urlEncoder);
         String expected2 = "{\"token\":\"https://tool.chinaz.com/tools/urlencode.aspx?s=王德法\"}";
         assertEquals(expected2, jsons2.toJson());
+        final GsonTest gsonTest = new GsonTest();
+        gsonTest.setAge(18);
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setData(gsonTest);
+        final Jsons jsons1 = Jsons.on(resultDTO.getData());
+        String result2 = "{\"age\":18,\"amount\":0.0,\"switchs\":false}";
+        assertEquals(result2, jsons1.toJson());
     }
 }
