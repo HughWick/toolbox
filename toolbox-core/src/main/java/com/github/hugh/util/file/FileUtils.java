@@ -330,8 +330,9 @@ public class FileUtils {
     /**
      * 获取文件真实类型
      * <p>
-     *     该方法不会关闭{@link InputStream}，请自行关闭
+     * 该方法不会关闭{@link InputStream}，请自行关闭
      * </p>
+     *
      * @param inputStream 文件流
      * @return String 文件类型
      * @since 2.4.6
@@ -347,8 +348,6 @@ public class FileUtils {
                 return type.name().toLowerCase();
             }
         }
-//        System.out.println("Unknown file header code : " + fileHead);
-//        throw new ToolboxException("Unknown file header code : " + fileHead);
         return null;
     }
 
@@ -367,5 +366,36 @@ public class FileUtils {
             throw new ToolboxException(ioException);
         }
         return BaseConvertUtils.hexBytesToString(bytes);
+    }
+
+    /**
+     * 读取文件内容并返回字符串形式的文件内容。
+     *
+     * @param filePath 文件路径
+     * @return 字符串形式的文件内容
+     * @since 2.5.11
+     */
+    public static String readContent(String filePath) {
+        StringBuilder contentBuilder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                contentBuilder.append(line).append("\n");
+            }
+        } catch (IOException ioException) {
+            throw new ToolboxException(ioException);
+        }
+        return contentBuilder.toString();
+    }
+
+    /**
+     * 读取文件内容并返回字符串形式的文件内容。
+     *
+     * @param file 文件
+     * @return 字符串形式的文件内容
+     * @since 2.5.11
+     */
+    public static String readContent(File file) {
+        return readContent(file.getPath());
     }
 }
