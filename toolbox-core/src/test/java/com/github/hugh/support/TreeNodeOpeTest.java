@@ -2,10 +2,11 @@ package com.github.hugh.support;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.github.hugh.bean.expand.ElementTree;
 import com.github.hugh.bean.expand.TreeNode;
+import com.github.hugh.util.file.FileUtils;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.StopWatch;
 
@@ -14,14 +15,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * 树形结构测试类
  *
- * @author AS
+ * @author hugh
  * Date 2023/6/25 17:40
  */
 public class TreeNodeOpeTest {
-
 
     public static String json = "[{\"id\":0,\"provinceCode\":\"510000\",\"provinceName\":\"四川省\",\"cityCode\":\"513400\",\"cityName\":\"凉山彝族自治州\",\"areaCode\":\"513427\",\"areaName\":\"宁南县\",\"streetCode\":\"513427\",\"streetName\":\"披砂镇\",\"streetCodeEx\":\"51342705\"}" +
             ",{\"id\":0,\"provinceCode\":\"220000\",\"provinceName\":\"吉林省\",\"cityCode\":\"220800\",\"cityName\":\"白城市\",\"areaCode\":\"220881\",\"areaName\":\"洮南市\",\"streetCode\":\"220881\",\"streetName\":\"万宝镇\",\"streetCodeEx\":\"22088127\"}" +
@@ -34,31 +36,106 @@ public class TreeNodeOpeTest {
             ",{\"id\":0,\"provinceCode\":\"430000\",\"provinceName\":\"湖南省\",\"cityCode\":\"430900\",\"cityName\":\"益阳市\",\"areaCode\":\"430922\",\"areaName\":\"桃江县\",\"streetCode\":\"430922\",\"streetName\":\"灰山港镇\",\"streetCodeEx\":\"43092201\"}]";
 
     @Test
-    void testChild() {
+    void testChild01() {
         StopWatch stopWatch = new StopWatch("处理省市区街道数据");
-        String filePath = "D:\\public\\新建文件夹\\data.txt";
         stopWatch.start("读取文件耗时");
-//        String content = readFileContent(filePath);
+        String data1 = "/file/json/data.txt";
+        String path = TreeNodeOpeTest.class.getResource(data1).getPath();
         stopWatch.stop();
         stopWatch.start("解析字符串");
-        final List<TreeNodeObject> objects = JSONArray.parseArray(json, TreeNodeObject.class);
+        final String fileData = FileUtils.readContent(path);
+        final List<TreeNodeObject> objects = JSONArray.parseArray(fileData, TreeNodeObject.class);
         stopWatch.stop();
-        stopWatch.start("第一次处理");
+        System.out.println("---->>" + objects.size());
         //创建节点容器
         List<TreeNode> rootList = new ArrayList<>();
         List<TreeNode> childList = new ArrayList<>();
+        stopWatch.start("处理方法所需结构信息");
         process(objects, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装结构树");
-        System.out.println("==rootList=封装结构树=" + rootList.size());
-        final List<TreeNode> process = TreeNodeOpe.on(rootList, childList).process();
-        String s1 = JSON.toJSONString(process);
-        Assertions.assertEquals(13247 , s1.length());
+        final TreeNodeOpe treeNodeOpe = TreeNodeOpe.on(rootList, childList);
+        final List<TreeNode> process = treeNodeOpe.process();
         stopWatch.stop();
-
+        String s1 = JSON.toJSONString(process);
+        System.out.println("---->" + s1.length());
         System.out.println(stopWatch.prettyPrint());
     }
 
+    @Test
+    void testChild() {
+        StopWatch stopWatch = new StopWatch("处理省市区街道数据");
+        stopWatch.start("解析字符串");
+        final List<TreeNodeObject> objects = JSONArray.parseArray(json, TreeNodeObject.class);
+        stopWatch.stop();
+        //创建节点容器
+        List<TreeNode> rootList = new ArrayList<>();
+        List<TreeNode> childList = new ArrayList<>();
+        stopWatch.start("处理方法所需结构信息");
+        process(objects, rootList, childList);
+        stopWatch.stop();
+        stopWatch.start("封装结构树");
+        final TreeNodeOpe treeNodeOpe = TreeNodeOpe.on(rootList, childList);
+        final List<TreeNode> process = treeNodeOpe.process();
+        stopWatch.stop();
+        String s1 = JSON.toJSONString(process);
+        assertEquals(13247, s1.length());
+        stopWatch.start("封装element结构树");
+        final List<ElementTree> elementTrees = treeNodeOpe.processElement();
+        stopWatch.stop();
+        System.out.println(stopWatch.prettyPrint());
+        String s2 = JSON.toJSONString(elementTrees);
+        assertEquals(6815, s2.length());
+//        System.out.println("---->" + s2);
+    }
+
+    // 测试排序排序
+    @Test
+    void testChildAscend() {
+        StopWatch stopWatch = new StopWatch("处理省市区街道数据");
+        stopWatch.start("解析字符串");
+        final List<TreeNodeObject> objects = JSONArray.parseArray(json, TreeNodeObject.class);
+        stopWatch.stop();
+        //创建节点容器
+        List<TreeNode> rootList = new ArrayList<>();
+        List<TreeNode> childList = new ArrayList<>();
+        stopWatch.start("处理方法所需结构信息");
+        process(objects, rootList, childList);
+        stopWatch.stop();
+        stopWatch.start("封装element结构树");
+        final TreeNodeOpe treeNodeOpe = TreeNodeOpe.on(rootList, childList);
+        treeNodeOpe.setAscending(false);
+        final List<ElementTree> elementTrees = treeNodeOpe.processElement();
+        stopWatch.stop();
+        System.out.println(stopWatch.prettyPrint());
+        String s2 = JSON.toJSONString(elementTrees);
+        System.out.println("---->" + s2);
+        // 验证排序是否成功
+    }
+
+    // 测试是否多一个父级ID属性
+    @Test
+    void testChildSetParenId() {
+        StopWatch stopWatch = new StopWatch("处理省市区街道数据");
+        stopWatch.start("解析字符串");
+        final List<TreeNodeObject> objects = JSONArray.parseArray(json, TreeNodeObject.class);
+        stopWatch.stop();
+        //创建节点容器
+        List<TreeNode> rootList = new ArrayList<>();
+        List<TreeNode> childList = new ArrayList<>();
+        stopWatch.start("处理方法所需结构信息");
+        process(objects, rootList, childList);
+        stopWatch.stop();
+        stopWatch.start("封装element结构树");
+        final TreeNodeOpe treeNodeOpe = TreeNodeOpe.on(rootList, childList);
+        treeNodeOpe.setParentId(true);
+        final List<ElementTree> elementTrees = treeNodeOpe.processElement();
+        stopWatch.stop();
+        System.out.println(stopWatch.prettyPrint());
+        String s2 = JSON.toJSONString(elementTrees);
+//        System.out.println("---->" + s2);
+        assertEquals(10755, s2.length());
+    }
 
     public static void process(List<TreeNodeObject> objects, List<TreeNode> rootList, List<TreeNode> childList) {
         Map<String, Object> nodeMap = new HashMap<>();
