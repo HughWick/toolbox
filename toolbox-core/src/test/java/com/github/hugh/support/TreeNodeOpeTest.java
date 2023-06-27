@@ -46,7 +46,7 @@ public class TreeNodeOpeTest {
         final String fileData = FileUtils.readContent(path);
         final List<TreeNodeObject> objects = JSONArray.parseArray(fileData, TreeNodeObject.class);
         stopWatch.stop();
-        System.out.println("---->>" + objects.size());
+//        System.out.println("---->>" + objects.size());
         //创建节点容器
         List<TreeNode> rootList = new ArrayList<>();
         List<TreeNode> childList = new ArrayList<>();
@@ -58,7 +58,7 @@ public class TreeNodeOpeTest {
         final List<TreeNode> process = treeNodeOpe.process();
         stopWatch.stop();
         String s1 = JSON.toJSONString(process);
-        System.out.println("---->" + s1.length());
+        System.out.println("---->" + s1);
         System.out.println(stopWatch.prettyPrint());
     }
 
@@ -86,7 +86,7 @@ public class TreeNodeOpeTest {
         System.out.println(stopWatch.prettyPrint());
         String s2 = JSON.toJSONString(elementTrees);
         assertEquals(6815, s2.length());
-//        System.out.println("---->" + s2);
+        System.out.println("---->" + s2);
     }
 
     // 测试排序排序

@@ -32,13 +32,6 @@ public class TreeNodeOpe {
     private boolean isSetParentId = false;
 
     /**
-     * 使用固定数量的线程池创建 ExecutorService 实例。
-     * 线程池的大小由可用处理器数量决定。
-     * ExecutorService 用于管理和调度线程池中的任务执行。
-     */
-    ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-
-    /**
      * 设置是否设置父节点的 ID。
      *
      * @param setParentId 如果为 true，则在转换过程中设置 elementTree 的 parentId 属性；如果为 false，则不设置 parentId 属性。
@@ -94,6 +87,12 @@ public class TreeNodeOpe {
      * @return 处理后的根节点列表
      */
     public List<TreeNode> process() {
+        /**
+         * 使用固定数量的线程池创建 ExecutorService 实例。
+         * 线程池的大小由可用处理器数量决定。
+         * ExecutorService 用于管理和调度线程池中的任务执行。
+         */
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         //创建一个map用于保存已经处理过的childNodesList中的TreeObject的id（去重）
         Map<String, String> childNodesHashMap = new ConcurrentHashMap<>(childNodesList.size());
         rootNodesList.forEach(rootNode -> {
@@ -113,7 +112,9 @@ public class TreeNodeOpe {
             executorService.shutdownNow();
             Thread.currentThread().interrupt();
         }
-        return rootNodesList;
+        return rootNodesList.stream()
+                .sorted(ascending ? Comparator.comparing(TreeNode::getId) : Comparator.comparing(TreeNode::getId).reversed()) // 根据id进行升序或降序排序;
+                .collect(Collectors.toList());
     }
 
     /**
