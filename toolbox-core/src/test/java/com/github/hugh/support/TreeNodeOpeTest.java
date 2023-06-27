@@ -56,6 +56,7 @@ public class TreeNodeOpeTest {
         stopWatch.start("封装结构树");
         final TreeNodeOpe treeNodeOpe = TreeNodeOpe.on(rootList, childList);
         final List<TreeNode> process = treeNodeOpe.process();
+//        final List<ElementTree> elementTreeList = treeNodeOpe.processElement();
         stopWatch.stop();
         String s1 = JSON.toJSONString(process);
         System.out.println("---->" + s1);
@@ -199,7 +200,7 @@ public class TreeNodeOpeTest {
 
 @Data
 class TreeNodeObject {
-    private String serialNo;//
+//    private String serialNo;//
     @ApiModelProperty(value = "省份编码")
     private String provinceCode;//省份编码
     @ApiModelProperty(value = "省份名称")

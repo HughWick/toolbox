@@ -167,10 +167,12 @@ public class TreeNodeOpe {
         //创建一个list来保存每个根节点中对应的子节点
         List<TreeNode> childList = new ArrayList<>();
         childNodesList.stream()
-                .filter(childNode -> !childNodesHashMap.containsKey(childNode.getId()))//过滤处理过的childNode
                 .filter(childNode -> childNode.getParentId().equals(node.getId()))//判断是否根节点的子节点
                 .sorted(ascending ? Comparator.comparing(TreeNode::getId) : Comparator.comparing(TreeNode::getId).reversed()) // 根据id进行升序或降序排序
                 .forEach(childNode -> {
+                    if (childNodesHashMap.containsKey(childNode.getId())) { // 排除重复的
+                        return;
+                    }
                     childNodesHashMap.put(childNode.getId(), childNode.getParentId());//添加处理子节点信息
                     assignChildNodes(childNodesList, childNode, childNodesHashMap);//递归设置该子节点的子节点列表
                     childList.add(childNode);//添加该子节点到对应的根节点列表
