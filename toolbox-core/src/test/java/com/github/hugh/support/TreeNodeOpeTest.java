@@ -59,7 +59,7 @@ public class TreeNodeOpeTest {
 //        final List<ElementTree> elementTreeList = treeNodeOpe.processElement();
         stopWatch.stop();
         String s1 = JSON.toJSONString(process);
-        System.out.println("---->" + s1);
+//        System.out.println("---->" + s1);
         System.out.println(stopWatch.prettyPrint());
     }
 
