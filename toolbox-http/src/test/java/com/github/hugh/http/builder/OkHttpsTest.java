@@ -292,4 +292,11 @@ class OkHttpsTest {
 //        System.out.println("====>>" + postman3);
 //        assertEquals(1, postman3.get(0).getInt("id"));
     }
+
+    @Test
+    void testHttps() throws IOException {
+        String url = "http://factory.hnlot.com.cn/v2/host/queryList";
+//        final Jsons jsons = OkHttps.url(url).doGet().toJsons();
+        System.out.println(OkHttps.url(url).doGet().getMessage());
+    }
 }

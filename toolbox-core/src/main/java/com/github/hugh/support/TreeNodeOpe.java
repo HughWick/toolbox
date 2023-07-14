@@ -113,7 +113,7 @@ public class TreeNodeOpe {
             Thread.currentThread().interrupt();
         }
         return rootNodesList.stream()
-                .sorted(ascending ? Comparator.comparing(TreeNode::getId) : Comparator.comparing(TreeNode::getId).reversed()) // 根据id进行升序或降序排序;
+                .sorted(ascending ? Comparator.comparing(TreeNode::getId) : Comparator.comparing(TreeNode::getId).reversed())
                 .collect(Collectors.toList());
     }
 
