@@ -2,6 +2,7 @@ package com.github.hugh.util;
 
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.exception.ToolboxException;
+import com.github.hugh.support.date.TimeCalc;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -1098,12 +1099,14 @@ public class DateUtils extends DateCode {
 
     /**
      * 计算两个时间之间相差多少分钟
+     * <p>2.5.13 后,使用{@link TimeCalc#minutesDiff()}</p>
      *
      * @param begin 开始时间
      * @param end   结束日期
      * @return long 相差分钟
      * @since 1.6.1
      */
+    @Deprecated
     public static long minutesDifference(Date begin, Date end) {
         if (begin == null) {
             throw new ToolboxException(" start date is null ");
@@ -1132,13 +1135,18 @@ public class DateUtils extends DateCode {
 
     /**
      * 计算开始与结束时间相差秒数
+     * <p>2.5.13 后,使用{@link TimeCalc#secondsDiff()}</p>
      *
      * @param begin 开始日期
      * @param end   结束日期
      * @return int 相差秒数
      * @since 1.7.0
      */
+    @Deprecated
     public static int secondsDifference(Date begin, Date end) {
+        if (end.before(begin)) {
+            throw new IllegalArgumentException("结束日期不能小于开始日期");
+        }
         long a = end.getTime();
         long b = begin.getTime();
         return (int) ((a - b) / 1000);
