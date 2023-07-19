@@ -251,7 +251,7 @@ public class TimeCalc {
      */
     public int secondsDiff() {
         if (this.end.before(this.begin)) {
-            throw new IllegalArgumentException("结束日期不能小于开始日期");
+            throw new IllegalArgumentException("结束日期不能早于开始日期");
         }
         long a = this.end.getTime();
         long b = this.begin.getTime();
