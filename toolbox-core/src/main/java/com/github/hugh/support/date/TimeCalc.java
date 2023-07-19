@@ -71,16 +71,8 @@ public class TimeCalc {
      * @param <E>       结束时间的类型
      */
     public <S, E> TimeCalc(S startTime, E endTime, String format) {
-        if (startTime instanceof Date) {
-            this.begin = (Date) startTime;
-        } else {
-            this.begin = DateUtils.parse(startTime, format);
-        }
-        if (endTime instanceof Date) {
-            this.end = (Date) endTime;
-        } else {
-            this.end = DateUtils.parse(endTime, format);
-        }
+        this.begin = DateUtils.parse(startTime, format);
+        this.end = DateUtils.parse(endTime, format);
     }
 
     /**
