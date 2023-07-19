@@ -24,7 +24,7 @@ class TimeCalcTest {
         final String message = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             TimeCalc.on(start1, end1, DateCode.YEAR_MONTH_DAY).toHours();
         }).getMessage();
-        assertEquals("结束日期不能小于开始日期", message);
+        assertEquals("结束日期不能早于开始日期", message);
         String start2 = "2023-07-11";
         String end2 = "2023-07-17";
         final String s1 = TimeCalc.on(start2, end2, DateCode.YEAR_MONTH_DAY).setEnablePrecision(false).toHours();
