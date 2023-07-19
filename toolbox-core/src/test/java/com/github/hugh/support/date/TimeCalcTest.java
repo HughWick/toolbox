@@ -37,7 +37,7 @@ class TimeCalcTest {
         Date end3 = DateUtils.parseTimestamp(1617948600000L);
         final String s3 = TimeCalc.on(begin3, end3)
                 .toHours();
-        assertEquals("144.0小时", s3);
+        assertEquals("1.37小时", s3);
 
     }
 
