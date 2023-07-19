@@ -16,10 +16,8 @@ import java.util.Date;
  */
 public class TimeCalc {
 
-    private final String startTime; // 开始时间，用于表示一个时间段的起始点
-    private final String endTime; // 结束时间，用于表示一个时间段的结束点
-    private String format = DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC; // 时间格式，用于指定输出时间的显示格式
-
+    private final Date begin; // 开始时间，用于表示一个时间段的起始点
+    private final Date end; // 结束时间，用于表示一个时间段的结束点
     boolean chineseFormat = true; // 是否使用中文格式，如果为true，则时间格式将以中文形式显示
     boolean isEnablePrecision = true; // 是否启用精确显示，如果为true，则输出的时间可以包含更详细的信息（如小时、分钟、秒）
 
@@ -52,49 +50,63 @@ public class TimeCalc {
     }
 
     /**
-     * 使用指定的开始时间和结束时间创建一个TimeCalc对象。
+     * 使用默认日期时间格式构造一个时间计算器实例
      *
      * @param startTime 开始时间
      * @param endTime   结束时间
+     * @param <S>       开始时间的类型
+     * @param <E>       结束时间的类型
      */
-    public TimeCalc(String startTime, String endTime) {
-        this.startTime = startTime;
-        this.endTime = endTime;
+    public <S, E> TimeCalc(S startTime, E endTime) {
+        this(startTime, endTime, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
     }
 
     /**
-     * 使用指定的开始时间、结束时间和格式创建一个TimeCalc对象。
+     * 使用默认日期时间格式构造一个时间计算器实例
      *
      * @param startTime 开始时间
      * @param endTime   结束时间
-     * @param format    时间格式
+     * @param format    日期时间格式
+     * @param <S>       开始时间的类型
+     * @param <E>       结束时间的类型
      */
-    public TimeCalc(String startTime, String endTime, String format) {
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.format = format;
+    public <S, E> TimeCalc(S startTime, E endTime, String format) {
+        if (startTime instanceof Date) {
+            this.begin = (Date) startTime;
+        } else {
+            this.begin = DateUtils.parse(startTime, format);
+        }
+        if (endTime instanceof Date) {
+            this.end = (Date) endTime;
+        } else {
+            this.end = DateUtils.parse(endTime, format);
+        }
     }
 
     /**
-     * 在给定的开始时间和结束时间上创建一个TimeCalc对象。
+     * 创建一个时间计算器实例
      *
      * @param startTime 开始时间
      * @param endTime   结束时间
-     * @return TimeCalc对象
+     * @param <S>       开始时间的类型
+     * @param <E>       结束时间的类型
+     * @return 时间计算器实例
      */
-    public static TimeCalc on(String startTime, String endTime) {
+    public static <S, E> TimeCalc on(S startTime, E endTime) {
         return new TimeCalc(startTime, endTime);
     }
 
     /**
-     * 在给定的开始时间、结束时间和格式上创建一个TimeCalc对象。
+     * 创建一个时间计算器实例
      *
      * @param startTime 开始时间
      * @param endTime   结束时间
-     * @param format    时间格式
-     * @return TimeCalc对象
+     * @param format    日期时间格式
+     * @param <S>       开始时间的类型
+     * @param <E>       结束时间的类型
+     * @return 时间计算器实例
      */
-    public static TimeCalc on(String startTime, String endTime, String format) {
+    public static <S, E> TimeCalc on(S startTime, E endTime, String format) {
         return new TimeCalc(startTime, endTime, format);
     }
 
@@ -127,10 +139,8 @@ public class TimeCalc {
     public String toHours() {
         // 计算时间差，单位为秒
         final long seconds = secondsDiff();
-
         // 将秒数转换为 Duration 对象
         Duration duration = Duration.ofSeconds(seconds);
-
         double hours;
         if (isEnablePrecision) { // 开启精准计算
             int secondsPerHour = 60 * 60;
@@ -138,7 +148,6 @@ public class TimeCalc {
         } else {
             hours = duration.toHours();
         }
-
         if (chineseFormat) {
             // 中文格式
             return isEnablePrecision ? hours + HOURS_CHINESE : ((int) hours) + HOURS_CHINESE;
@@ -241,16 +250,14 @@ public class TimeCalc {
      * @throws IllegalArgumentException 如果结束日期早于开始日期
      */
     public int secondsDiff() {
-        final Date startDate = DateUtils.parse(this.startTime, format);
-        final Date endDate = DateUtils.parse(this.endTime, format);
-        if (endDate.before(startDate)) {
+        if (this.end.before(this.begin)) {
             throw new IllegalArgumentException("结束日期不能小于开始日期");
         }
-        long a = endDate.getTime();
-        long b = startDate.getTime();
+        long a = this.end.getTime();
+        long b = this.begin.getTime();
         return (int) DoubleMathUtils.div((a - b), 1000);
     }
-    
+
     /**
      * 计算开始日期和结束日期之间的分钟差异
      *
@@ -258,15 +265,13 @@ public class TimeCalc {
      * @throws ToolboxException 如果开始日期或结束日期为空
      */
     public long minutesDiff() {
-        final Date startDate = DateUtils.parse(this.startTime, format);
-        final Date endDate = DateUtils.parse(this.endTime, format);
-        if (startDate == null) {
+        if (this.begin == null) {
             throw new ToolboxException(" start date is null ");
         }
-        if (endDate == null) {
+        if (this.end == null) {
             throw new ToolboxException(" end date is null ");
         }
-        long between = (endDate.getTime() - startDate.getTime()) / 1000;
+        long between = (this.end.getTime() - this.begin.getTime()) / 1000;
         return (long) DoubleMathUtils.div(between, 60);
     }
 }

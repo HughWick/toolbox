@@ -2,8 +2,11 @@ package com.github.hugh.support.date;
 
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.exception.ToolboxException;
+import com.github.hugh.util.DateUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -29,6 +32,13 @@ class TimeCalcTest {
         final String s2 = TimeCalc.on(start2, end2, DateCode.YEAR_MONTH_DAY)
                 .toHours();
         assertEquals("144.0小时", s2);
+
+        Date begin3 = DateUtils.parseTimestamp(1617943680000L);
+        Date end3 = DateUtils.parseTimestamp(1617948600000L);
+        final String s3 = TimeCalc.on(begin3, end3)
+                .toHours();
+        assertEquals("144.0小时", s3);
+
     }
 
     @Test
