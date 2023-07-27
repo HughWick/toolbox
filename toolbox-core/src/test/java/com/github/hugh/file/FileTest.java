@@ -229,4 +229,16 @@ class FileTest {
         assertEquals(s1.length(), s2.length());
     }
 
+    @Test
+    void testImageToBase64Str() throws IOException {
+        String imageJpg = "/file/image/69956256_p1.jpg";
+        final String path1 = getPath(imageJpg);
+        String s1 = FileUtils.imageToBase64Str(path1);
+        String storePath = "D:\\Program Files\\Desktop\\错误图片\\69956256_p1.jpg";
+//        System.out.println("--->" + s1);
+        FileUtils.base64StrToImage(s1, storePath);
+        boolean image = ImageUtils.isImage(storePath);
+        assertTrue(image);
+        FileUtils.delFile(storePath);
+    }
 }

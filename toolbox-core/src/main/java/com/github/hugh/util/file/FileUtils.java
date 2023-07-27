@@ -16,6 +16,7 @@ import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.text.DecimalFormat;
+import java.util.Base64;
 
 /**
  * 文件工具类
@@ -397,5 +398,64 @@ public class FileUtils {
      */
     public static String readContent(File file) {
         return readContent(file.getPath());
+    }
+
+    /**
+     * 将图像文件转换为Base64字符串表示。
+     *
+     * @param image 图像文件对象
+     * @return 转换后的Base64字符串
+     * @since 2.5.14
+     */
+    public static String imageToBase64Str(File image) {
+        byte[] data;
+        try (InputStream inputStream = new FileInputStream(image)) {
+            // 读取图片数据流
+            data = new byte[inputStream.available()];
+            inputStream.read(data);
+        } catch (IOException ioException) {
+            throw new ToolboxException(ioException.getMessage());
+        }
+        // 对数据进行加密操作
+        return Base64.getEncoder().encodeToString(data);
+    }
+
+    /**
+     * 将图像文件转换为Base64字符串表示。
+     *
+     * @param imagePath 图像文件路径
+     * @return 转换后的Base64字符串
+     * @since 2.5.14
+     */
+    public static String imageToBase64Str(String imagePath) {
+        return imageToBase64Str(new File(imagePath));
+    }
+
+    /**
+     * 将Base64字符串表示的图像数据解码并保存为图像文件。
+     *
+     * @param base64Str Base64字符串表示的图像数据
+     * @param path      要保存图像文件的路径
+     * @since 2.5.14
+     */
+    public static void base64StrToImage(String base64Str, String path) {
+        // 解密
+        byte[] b = Base64.getDecoder().decode(base64Str);
+        for (int i = 0; i < b.length; ++i) {
+            if (b[i] < 0) {
+                b[i] += 256;
+            }
+        }
+        // 文件夹不存在则自动创建
+        File tempFile = new File(path);
+        if (!tempFile.getParentFile().exists()) {
+            tempFile.getParentFile().mkdirs();
+        }
+        try (OutputStream out = new FileOutputStream(tempFile)) {
+            out.write(b);
+            out.flush();
+        } catch (Exception exception) {
+            throw new ToolboxException(exception.getMessage());
+        }
     }
 }
