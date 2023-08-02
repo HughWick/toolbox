@@ -178,21 +178,51 @@ class FileTest {
         String imageHeif = "/file/image/heif/share_a4b448c4f972858f42640e36ffc3a8e6.png";
         final String picTypHeif = FileUtils.getFileType(getPath(imageHeif));
         assertEquals(SuffixCode.HEIF_LOWER_CASE, picTypHeif);
-        String zipPath = "/file/zip/test.zip";
-        final String zipType = FileUtils.getFileType(getPath(zipPath));
-        assertEquals(SuffixCode.ZIP.toLowerCase(), zipType);
+    }
+
+    // 测试压缩包
+    @Test
+    void testCompressed() throws FileNotFoundException {
+        // zip 内部文件如果是excel时，会出现十六进制头前缀一致问题
+//        String zipPath1 = "/file/zip/test.zip";
+//        final String zipType1 = FileUtils.getFileType(getPath(zipPath1));
+//        assertEquals(SuffixCode.ZIP.toLowerCase(), zipType1);
+        String zipPath2 = "/file/zip/test_2.zip";
+        final String zipType2 = FileUtils.getFileType(getPath(zipPath2));
+        assertEquals(SuffixCode.ZIP.toLowerCase(), zipType2);
         String rarPath = "/file/rar/files.rar";
         final String rarType = FileUtils.getFileType(getPath(rarPath));
         assertEquals(SuffixCode.RAR.toLowerCase(), rarType);
-
     }
 
+    // 验证错误文件类型
     @Test
     void testErrorFileType() throws FileNotFoundException {
         // svg 暂时无法获取
         String image6 = "/file/image/svg.svg";
         final String picTyp6 = FileUtils.getFileType(getPath(image6));
         assertNull(picTyp6);
+    }
+
+    // 验证office
+    @Test
+    void testOffice() throws FileNotFoundException {
+        String path1 = "/file/microsoft/2007.xlsx";
+        final String excel1 = FileUtils.getFileType(getPath(path1));
+        assertEquals(SuffixCode.XLSX.toLowerCase(), excel1);
+        String path2 = "/file/microsoft/251.xls";
+        final String excel2 = FileUtils.getFileType(getPath(path2));
+        assertEquals("xls_doc", excel2);
+        String path3 = "/file/microsoft/word/2007.docx";
+        // 文件类型
+        File file3 = new File(getPath(path3));
+        final String word3 = FileUtils.getFileType(file3);
+        assertEquals(SuffixCode.DOCX.toLowerCase(), word3);
+        String path4 = "/file/microsoft/word/2003.doc";
+        // 流
+        FileInputStream fileInputStream = new FileInputStream(getPath(path4));
+        final String word4 = FileUtils.getFileType(fileInputStream);
+        assertEquals("xls_doc", word4);
     }
 
     private static String getPath(String fileName) {

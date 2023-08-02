@@ -120,10 +120,19 @@ public enum FileTypeEnum {
     PST("2142444E"),
 
     /**
-     * MS Word/Excel.
+     * MS Word/Excel. 2003之前前缀都是一样的
      */
     XLS_DOC("D0CF11E0"),
-    XLSX_DOCX("504B030414000600080000002100"),
+
+    /**
+     * 2007 之后excel后缀
+     */
+    XLSX("504B03041400000008"),
+
+    /**
+     * 2007 之后word文档后缀
+     */
+    DOCX("504B0304140006"),
 
     /**
      * Visio
@@ -173,7 +182,7 @@ public enum FileTypeEnum {
     /**
      * ZIP Archive.
      */
-    ZIP("504B0304"),
+    ZIP("504B030414"),
 
     /**
      * RAR Archive.

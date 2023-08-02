@@ -6,6 +6,7 @@ import com.github.hugh.util.DoubleMathUtils;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.StringUtils;
 import com.github.hugh.util.base.BaseConvertUtils;
+import com.github.hugh.util.io.StreamUtils;
 import com.google.common.io.Files;
 import lombok.Cleanup;
 
@@ -313,11 +314,14 @@ public class FileUtils {
      * @since 2.4.6
      */
     public static String getFileType(String filePath) throws FileNotFoundException {
-        return getFileType(new FileInputStream(filePath));
+        return getFileType(new File(filePath));
     }
 
     /**
      * 获取文件真实类型
+     * <p>
+     *
+     * </p>
      *
      * @param file 文件
      * @return String 文件类型
@@ -325,31 +329,52 @@ public class FileUtils {
      * @since 2.4.6
      */
     public static String getFileType(File file) throws FileNotFoundException {
-        return getFileType(new FileInputStream(file));
+        return getFileType(new FileInputStream(file), true);
+    }
+
+    /**
+     * 根据输入流获取文件类型。
+     * <p>
+     * 该方法不会关闭{@link InputStream}，如需获取完后关闭流则调用{@link  #getFileType(InputStream, boolean)}
+     * </p>
+     *
+     * @param inputStream 输入流
+     * @return 文件类型，如果无法确定类型则返回null
+     * @since 2.5.15
+     */
+    public static String getFileType(InputStream inputStream) {
+        return getFileType(inputStream, false);
     }
 
     /**
      * 获取文件真实类型
-     * <p>
-     * 该方法不会关闭{@link InputStream}，请自行关闭
-     * </p>
+     * <p>zip文件头与xlsx近似，无法准确判断</p>
      *
-     * @param inputStream 文件流
-     * @return String 文件类型
+     * @param inputStream 输入流
+     * @param closeStream 是否关闭输入流，true表示关闭，false表示不关闭
+     * @return String 文件类型，如果无法确定类型则返回null
      * @since 2.4.6
      */
-    public static String getFileType(InputStream inputStream) {
-        String fileHead = getFileHead(inputStream);
-        if (EmptyUtils.isEmpty(fileHead)) {
+    public static String getFileType(InputStream inputStream, boolean closeStream) {
+        try (BufferedInputStream bis = new BufferedInputStream(inputStream)) {
+            String fileHead = getFileHead(bis);
+            if (EmptyUtils.isEmpty(fileHead)) {
+                return null;
+            }
+            FileTypeEnum[] fileTypes = FileTypeEnum.values();
+            for (FileTypeEnum type : fileTypes) {
+                if (fileHead.startsWith(type.getValue())) {
+                    return type.name().toLowerCase();
+                }
+            }
             return null;
-        }
-        FileTypeEnum[] fileTypes = FileTypeEnum.values();
-        for (FileTypeEnum type : fileTypes) {
-            if (fileHead.startsWith(type.getValue())) {
-                return type.name().toLowerCase();
+        } catch (IOException ioException) {
+            throw new ToolboxException(ioException.getMessage());
+        } finally {
+            if (closeStream) {
+                StreamUtils.close(inputStream);
             }
         }
-        return null;
     }
 
     /**
