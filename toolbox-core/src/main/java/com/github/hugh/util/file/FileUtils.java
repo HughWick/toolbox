@@ -154,11 +154,9 @@ public class FileUtils {
             return;
         }
         File file = new File(path);
-        if (file.exists()) {
-            if (file.delete()) {//删除文件
-                String directory = StringUtils.before(file.getCanonicalPath(), File.separator);
-                delEmptyDir(directory);//删除目录
-            }
+        if (file.exists() && file.delete()) { // 文件存在，并且删除成功
+            String directory = StringUtils.before(file.getCanonicalPath(), File.separator);
+            delEmptyDir(directory);//删除目录
         }
     }
 
