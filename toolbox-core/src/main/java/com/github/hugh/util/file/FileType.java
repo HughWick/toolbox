@@ -2,7 +2,6 @@ package com.github.hugh.util.file;
 
 import com.github.hugh.constant.SuffixCode;
 import com.github.hugh.constant.enums.FileTypeEnum;
-import com.github.hugh.util.io.StreamUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,6 +17,7 @@ import java.io.InputStream;
 public class FileType {
 
     private final InputStream inputStream;
+    private final boolean closeStream;
 
     /**
      * 使用给定的文件路径创建一个FileType对象。
@@ -36,7 +36,7 @@ public class FileType {
      * @throws FileNotFoundException 如果文件不存在或不可读取，则抛出该异常。
      */
     public FileType(File file) throws FileNotFoundException {
-        this(new FileInputStream(file));
+        this(new FileInputStream(file), true);
     }
 
     /**
@@ -44,8 +44,9 @@ public class FileType {
      *
      * @param inputStream 输入流对象
      */
-    public FileType(InputStream inputStream) {
+    public FileType(InputStream inputStream, boolean closeStream) {
         this.inputStream = inputStream;
+        this.closeStream = closeStream;
     }
 
     /**
@@ -72,13 +73,26 @@ public class FileType {
 
     /**
      * 创建一个使用给定InputStream对象的FileType对象。
+     * <p>该方法调用方式默认会关闭流</p>
      *
      * @param inputStream 输入流对象
      * @return FileType对象
      */
     public static FileType on(InputStream inputStream) {
-        return new FileType(inputStream);
+        return new FileType(inputStream, true);
     }
+
+    /**
+     * 根据输入流判断文件类型的工具方法。
+     *
+     * @param inputStream 输入流
+     * @param closeStream 是否关闭输入流。如果为 true，在判断文件类型后将关闭输入流；如果为 false，需要手动关闭输入流。
+     * @return 文件类型对象
+     */
+    public static FileType on(InputStream inputStream, boolean closeStream) {
+        return new FileType(inputStream, closeStream);
+    }
+
 
     /**
      * 判断文件是否为JPEG格式（后缀名为.jpg）
@@ -171,18 +185,29 @@ public class FileType {
     }
 
     /**
+     * 检查当前文件类型是否为 ZIP 文件。
+     *
+     * @return 如果当前文件类型是 ZIP，则返回 true；否则返回 false。
+     */
+    public boolean isZip() {
+        return SuffixCode.ZIP.equalsIgnoreCase(getType());
+    }
+
+    /**
+     * 检查当前文件类型是否为 RAR 文件。
+     *
+     * @return 如果当前文件类型是 RAR，则返回 true；否则返回 false。
+     */
+    public boolean isRar() {
+        return SuffixCode.RAR.equalsIgnoreCase(getType());
+    }
+
+    /**
      * 获取文件的类型
      *
      * @return 文件类型，如"jpg"、"png"等
      */
     public String getType() {
-        return FileTypeUtils.getType(this.inputStream);
-    }
-
-    /**
-     * 关闭输入流
-     */
-    public void closeStream() {
-        StreamUtils.close(this.inputStream);
+        return FileTypeUtils.getType(this.inputStream, this.closeStream);
     }
 }

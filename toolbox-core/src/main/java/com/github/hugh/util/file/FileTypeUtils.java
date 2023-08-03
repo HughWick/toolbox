@@ -16,6 +16,9 @@ import java.io.*;
  */
 public class FileTypeUtils {
 
+    private FileTypeUtils() {
+        throw new IllegalStateException("Utility class");
+    }
 
     /**
      * 获取文件真实类型

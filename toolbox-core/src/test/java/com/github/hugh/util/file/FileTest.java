@@ -1,8 +1,6 @@
-package com.github.hugh.file;
+package com.github.hugh.util.file;
 
 import com.github.hugh.exception.ToolboxException;
-import com.github.hugh.util.file.FileUtils;
-import com.github.hugh.util.file.ImageUtils;
 import com.github.hugh.util.io.StreamUtils;
 import org.junit.jupiter.api.Test;
 

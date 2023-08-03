@@ -1,7 +1,5 @@
-package com.github.hugh.file;
+package com.github.hugh.util.file;
 
-import com.github.hugh.util.file.SuffixUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;

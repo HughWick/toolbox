@@ -1,6 +1,5 @@
-package com.github.hugh.file;
+package com.github.hugh.util.file;
 
-import com.github.hugh.util.file.ImageUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;

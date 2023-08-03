@@ -1,9 +1,6 @@
-package com.github.hugh.file;
+package com.github.hugh.util.file;
 
 import com.github.hugh.constant.SuffixCode;
-import com.github.hugh.util.file.FileType;
-import com.github.hugh.util.file.FileTypeUtils;
-import com.github.hugh.util.file.ImageUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -64,15 +61,22 @@ class FileTypeTest {
     @Test
     void testCompressed() throws FileNotFoundException {
         // zip 内部文件如果是excel时，会出现十六进制头前缀一致问题
-//        String zipPath1 = "/file/zip/test.zip";
+//        String zipPath1 = "/file/zip/excel.zip";
 //        final String zipType1 = FileUtils.getFileType(getPath(zipPath1));
 //        assertEquals(SuffixCode.ZIP.toLowerCase(), zipType1);
-        String zipPath2 = "/file/zip/test_2.zip";
+        String zipPath2 = "/file/zip/file.zip";
         final String zipType2 = FileTypeUtils.getType(getPath(zipPath2));
+        FileType on = FileType.on(getPath(zipPath2));
+        assertTrue(on.isZip());
         assertEquals(SuffixCode.ZIP.toLowerCase(), zipType2);
         String rarPath = "/file/rar/files.rar";
         final String rarType = FileTypeUtils.getType(getPath(rarPath));
         assertEquals(SuffixCode.RAR.toLowerCase(), rarType);
+
+        FileInputStream fileInputStream = new FileInputStream(getPath(rarPath));
+        FileType on2 = FileType.on(fileInputStream);
+        assertTrue(on2.isRar());
+
     }
 
     // 验证错误文件类型
@@ -89,10 +93,10 @@ class FileTypeTest {
     void testOffice() throws FileNotFoundException {
         String path1 = "/file/microsoft/2007.xlsx";
         String excelPath1 = getPath(path1);
-        FileType on1 = FileType.on(excelPath1);
+//        FileType on1 = FileType.on(excelPath1);
         assertTrue(FileType.on(excelPath1).isOffice2007());
         assertTrue(FileType.on(excelPath1).isXlsx());
-        on1.closeStream();
+//        on1.closeStream();
         String path2 = "/file/microsoft/251.xls";
         String excelPath2 = getPath(path2);
         FileType on2 = FileType.on(excelPath2);
@@ -155,7 +159,7 @@ class FileTypeTest {
         FileType on1 = FileType.on(path1);
         assertFalse(on1.isPng());
         assertTrue(FileType.on(path1).isWebp());
-        on1.closeStream();
+//        on1.closeStream();
     }
 
     @Test
