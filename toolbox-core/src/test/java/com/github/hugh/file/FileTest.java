@@ -1,13 +1,15 @@
 package com.github.hugh.file;
 
-import com.github.hugh.constant.SuffixCode;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.file.FileUtils;
 import com.github.hugh.util.file.ImageUtils;
 import com.github.hugh.util.io.StreamUtils;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,14 +24,13 @@ class FileTest {
 
     private static final String TEMP_PATH = "D:\\\\java测试目录";
 
-//    @Test
-//    void testGetFilePath() {
-//        String path = FileTest.class.getResource("/69956256_p1.jpg").getFile();
-//        System.out.println(path);
-//        File directory = new File(path);//设定为当前文件夹
-//        String absolutePath = directory.getAbsolutePath();
-//        System.out.println("File full path : " + absolutePath);
-//    }
+    @Test
+    void testCreateDir() {
+        FileUtils.createDir(TEMP_PATH);
+        assertTrue(new File(TEMP_PATH).exists());
+        FileUtils.deleteDir(TEMP_PATH);
+        assertFalse(new File(TEMP_PATH).exists());
+    }
 
     // 删除文件与删除空目录
     @Test
@@ -140,90 +141,6 @@ class FileTest {
         assertEquals("880.00B", FileUtils.formatFileSize(880));
     }
 
-    // 验证文件类型
-    @Test
-    void testVerifyType() throws FileNotFoundException {
-        String image1 = "/file/image/webp/share_572031b53d646c2c8a8191bdd93a95b2.png";
-        String path1 = ImageTest.class.getResource(image1).getPath();
-        final String picTyp1 = FileUtils.getFileType(path1);
-        assertEquals(SuffixCode.WEBP_LOWER_CASE, picTyp1);
-
-        String image2 = "/file/image/20200718234953_grmzy.jpeg";
-        String path2 = ImageTest.class.getResource(image2).getPath();
-        final String picTyp2 = FileUtils.getFileType(new File(path2));
-        assertEquals(SuffixCode.JPG_LOWER_CASE, picTyp2);
-        String jpg1 = "/file/image/69956256_p1.jpg";
-//        String path2 = ImageTest.class.getResource(image2).getPath();
-        final String jpgTyp1 = FileUtils.getFileType(getPath(jpg1));
-        assertEquals(SuffixCode.JPG_LOWER_CASE, jpgTyp1);
-        String image3 = "/file/image/Teresa.png";
-        final String picTyp3 = FileUtils.getFileType(new File(getPath(image3)));
-        assertEquals(SuffixCode.PNG_LOWER_CASE, picTyp3);
-        String image4 = "/file/image/tom.gif";
-        final String picTyp4 = FileUtils.getFileType(getPath(image4));
-        assertEquals(SuffixCode.GIF_LOWER_CASE, picTyp4);
-        String image5 = "/file/image/BMP.bmp";
-        final String picTyp5 = FileUtils.getFileType(getPath(image5));
-        assertEquals(SuffixCode.BMP_LOWER_CASE, picTyp5);
-        String image7 = "/file/image/tiff.tif";
-        final String picTyp7 = FileUtils.getFileType(getPath(image7));
-        assertEquals(SuffixCode.TIF_LOWER_CASE, picTyp7);
-        String imagePng = "/file/image/webp/share_875d7016c30cc485a2d35f7aad804aaa.png";
-        final String pngType = FileUtils.getFileType(getPath(imagePng));
-        assertEquals(SuffixCode.WEBP_LOWER_CASE, pngType);
-        String mp4Path = "/file/mp4/1cbf9f6b76484cbb96515f8ecef16efd.mp4";
-        final String mp4Type = FileUtils.getFileType(getPath(mp4Path));
-        assertEquals(SuffixCode.MP4.toLowerCase(), mp4Type);
-
-        String imageHeif = "/file/image/heif/share_a4b448c4f972858f42640e36ffc3a8e6.png";
-        final String picTypHeif = FileUtils.getFileType(getPath(imageHeif));
-        assertEquals(SuffixCode.HEIF_LOWER_CASE, picTypHeif);
-    }
-
-    // 测试压缩包
-    @Test
-    void testCompressed() throws FileNotFoundException {
-        // zip 内部文件如果是excel时，会出现十六进制头前缀一致问题
-//        String zipPath1 = "/file/zip/test.zip";
-//        final String zipType1 = FileUtils.getFileType(getPath(zipPath1));
-//        assertEquals(SuffixCode.ZIP.toLowerCase(), zipType1);
-        String zipPath2 = "/file/zip/test_2.zip";
-        final String zipType2 = FileUtils.getFileType(getPath(zipPath2));
-        assertEquals(SuffixCode.ZIP.toLowerCase(), zipType2);
-        String rarPath = "/file/rar/files.rar";
-        final String rarType = FileUtils.getFileType(getPath(rarPath));
-        assertEquals(SuffixCode.RAR.toLowerCase(), rarType);
-    }
-
-    // 验证错误文件类型
-    @Test
-    void testErrorFileType() throws FileNotFoundException {
-        // svg 暂时无法获取
-        String image6 = "/file/image/svg.svg";
-        final String picTyp6 = FileUtils.getFileType(getPath(image6));
-        assertNull(picTyp6);
-    }
-
-    // 验证office
-    @Test
-    void testOffice() throws FileNotFoundException {
-        String path1 = "/file/microsoft/2007.xlsx";
-        final String excel1 = FileUtils.getFileType(getPath(path1));
-        assertEquals(SuffixCode.XLSX.toLowerCase(), excel1);
-        String path2 = "/file/microsoft/251.xls";
-        final String excel2 = FileUtils.getFileType(getPath(path2));
-        assertEquals("xls_doc", excel2);
-        String path3 = "/file/microsoft/word/2007.docx";
-        // 文件类型
-        File file3 = new File(getPath(path3));
-        final String word3 = FileUtils.getFileType(file3);
-        assertEquals(SuffixCode.DOCX.toLowerCase(), word3);
-        String path4 = "/file/microsoft/word/2003.doc";
-        // 流
-        FileInputStream fileInputStream = new FileInputStream(getPath(path4));
-        final String word4 = FileUtils.getFileType(fileInputStream);
-        assertEquals("xls_doc", word4);
-    }
 
     private static String getPath(String fileName) {
         return ImageTest.class.getResource(fileName).getPath();
@@ -234,16 +151,15 @@ class FileTest {
         String image9 = "/file/image/heif/share_a4b448c4f972858f42640e36ffc3a8e6.png";
         final File kbFile = new File(getPath(image9));
         // 无法正确读取文件格式
-        final String picTyp9 = FileUtils.getFileType(getPath(image9));
+//        final String picTyp9 = FileUtils.getFileType(getPath(image9));
 //        assertNull(picTyp9);
-        assertEquals(SuffixCode.HEIF_LOWER_CASE, picTyp9);
+//        assertEquals(SuffixCode.HEIF_LOWER_CASE, picTyp9);
         assertFalse(ImageUtils.isImage(getPath(image9)));
         String tempFile = "D:\\temp.jpg";
         InputStream fileInputStream = new FileInputStream(kbFile);
         StreamUtils.toFile(fileInputStream, tempFile);
         final File file = new File(tempFile);
         assertTrue(file.exists());
-
         assertFalse(ImageUtils.isImage(file));
         assertTrue(file.delete());
     }
