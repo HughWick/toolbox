@@ -23,8 +23,7 @@ class FileTypeTest {
     void testVerifyType() throws FileNotFoundException {
         String image1 = "/file/image/webp/share_572031b53d646c2c8a8191bdd93a95b2.png";
         String path1 = getPath(image1);
-        final String picTyp1 = FileTypeUtils.getType(path1);
-        assertEquals(SuffixCode.WEBP_LOWER_CASE, picTyp1);
+        assertEquals(SuffixCode.WEBP_LOWER_CASE, FileType.on(path1).getType());
 
         String image2 = "/file/image/20200718234953_grmzy.jpeg";
         String path2 = getPath(image2);
