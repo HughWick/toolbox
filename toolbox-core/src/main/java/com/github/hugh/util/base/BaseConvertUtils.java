@@ -611,4 +611,42 @@ public class BaseConvertUtils {
         String s = hexBytesToString(hexBytes);
         return (int) hexToDec(s);
     }
+
+    /**
+     * 将字符串转换为十六进制表示形式
+     *
+     * @param input 要转换的字符串
+     * @return 转换后的十六进制字符串
+     * @since 2.6.1
+     */
+    public static String strToHex(String input) {
+        StringBuilder hexString = new StringBuilder();
+        for (char c : input.toCharArray()) {
+            hexString.append(Integer.toHexString(c));
+        }
+        return hexString.toString();
+    }
+
+    /**
+     * 将十六进制字符串转换为 Base64 编码的字符串。
+     *
+     * @param hexStr 十六进制字符串
+     * @return Base64 编码的字符串
+     * @since 2.6.1
+     */
+    public static String hexToBase64(String hexStr) {
+        return new String(hexToBase64Bytes(hexStr));
+    }
+
+    /**
+     * 将十六进制字符串转换为 Base64 编码的字节数组。
+     *
+     * @param hexStr 十六进制字符串
+     * @return Base64 编码的字节数组
+     * @since 2.6.1
+     */
+    public static byte[] hexToBase64Bytes(String hexStr) {
+        byte[] bytes = BaseConvertUtils.hexToBytes(hexStr);
+        return Base64.encode(bytes);
+    }
 }

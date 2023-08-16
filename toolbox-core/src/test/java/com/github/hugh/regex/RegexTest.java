@@ -1,5 +1,6 @@
 package com.github.hugh.regex;
 
+import com.github.hugh.util.base.Base64;
 import com.github.hugh.util.regex.RegexUtils;
 import org.junit.jupiter.api.Test;
 
@@ -175,6 +176,21 @@ class RegexTest {
         assertTrue(RegexUtils.isNotUpperCaseAndNumber(string1));
         String string2 = "F80C5366D9";
         assertTrue(RegexUtils.isUpperCaseAndNumber(string2));
+    }
 
+    @Test
+    void testIsBase64() {
+        String str = "123zvb@!";
+        String s1 = Base64.encode(str);
+        assertTrue(RegexUtils.isBase64(s1));
+        String str2 = "MTIzenZiQCE=2";
+        assertFalse(RegexUtils.isBase64(str2));
+        assertTrue(RegexUtils.isNotBase64(str2));
+        String base64_1 = "thQzWr3jHdta+0RvIYpdNFoMrtOrdJB8upC+qX20nOmUArfFXUZEqvnkX6HWYP5WSR9NQk9VrzfbWCHOpJa4AQ==";
+        assertTrue(RegexUtils.isBase64(base64_1));
+        String base64_2 = "rcPTxbQ4HK38+Lwu5duH6ZboGexw3tWW5xgqNJYO90mn2ELuW6slLkpNBTi1kAbQ ";
+        assertFalse(RegexUtils.isBase64(base64_2));
+        String base64_3 = "rcPTxbQ4HK38+Lwu5duH6ZboGexw3tWW5xgqNJYO90mn2ELuW6slLkpNBTi1kAbQ";
+        assertTrue(RegexUtils.isBase64(base64_3));
     }
 }

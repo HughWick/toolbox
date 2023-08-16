@@ -349,7 +349,7 @@ public class StringUtils {
      * 将字符串按照指定的字符与次数进行切割
      * <ul>
      * <li>注：返回结果中首字符为指定切割的字符</li>
-     * <li>例：源字符串 http://hyga.hnlot.com.cn:8000/capture/DaHua/capture/6G0BEB9GA12F70A/2021/1/17/9946090cb09b4986af8615174e862b9e.jpg</li>
+     * <li>例：源字符串 http://www.baidu.com/capture/DaHua/capture/6G0BEB9GA12F70A/2021/1/17/9946090cb09b4986af8615174e862b9e.jpg</li>
      * <li>获取"/"出现的第4次后的所有字符，结果为：/DaHua/capture/6G0BEB9GA12F70A/2021/1/17/9946090cb09b4986af8615174e862b9e.jpg</li>
      * </ul>
      *

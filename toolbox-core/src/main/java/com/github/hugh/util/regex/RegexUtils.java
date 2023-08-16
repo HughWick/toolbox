@@ -163,6 +163,11 @@ public class RegexUtils {
     private static final Pattern SPECIAL_CHAR_PATTERN = Pattern.compile("[ _`~!@#$%^&*()+=|{}':;,\\[\\].<>/?！￥…（）—【】‘；：”“’。，、？]|\n|\r|\t");
 
     /**
+     * base64 - 正则
+     */
+    private static final Pattern BASE64_PATTERN = Pattern.compile("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$");
+
+    /**
      * 对特殊字符转译
      *
      * @param keyword 特殊字符
@@ -636,5 +641,27 @@ public class RegexUtils {
      */
     public static boolean isNotUpperCaseAndNumber(String string) {
         return !isUpperCaseAndNumber(string);
+    }
+
+    /**
+     * 检查给定的字符串是否是合法的 Base64 编码字符串。
+     *
+     * @param str 要验证的字符串。
+     * @return 如果字符串是合法的 Base64 编码字符串，则返回 {@code true}，否则返回 {@code false}。
+     * @since 2.6.1
+     */
+    public static boolean isBase64(String str) {
+        return BASE64_PATTERN.matcher(str).matches();
+    }
+
+    /**
+     * 判断给定的字符串是否不是 Base64 编码。
+     *
+     * @param str 待判断的字符串
+     * @return 如果给定的字符串不是 Base64 编码，则返回 true；否则返回 false。
+     * @since 2.6.1
+     */
+    public static boolean isNotBase64(String str) {
+        return !isBase64(str);
     }
 }

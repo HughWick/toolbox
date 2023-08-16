@@ -1,5 +1,6 @@
 package com.github.hugh.crypto;
 
+import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.base.BaseConvertUtils;
 
 import javax.crypto.*;
@@ -48,7 +49,7 @@ public class DesEncDecUtils {
             ENCRYPT_CIPHER.init(Cipher.ENCRYPT_MODE, desKey);
             DECRYPT_CIPHER.init(Cipher.DECRYPT_MODE, desKey);
         } catch (InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException e) {
-            e.printStackTrace();
+            throw new ToolboxException(e.getMessage());
         }
         return ourInstance;
     }

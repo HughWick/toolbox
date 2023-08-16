@@ -83,4 +83,15 @@ public class Base64 {
         }
         return new String(decode(text.getBytes()));
     }
+
+    /**
+     * 将Base64编码的字符串解码为字节数组
+     *
+     * @param text Base64编码的字符串
+     * @return 解码后的字节数组
+     * @since 2.6.1
+     */
+    public static byte[] decodeToByte(String text) {
+        return decode(text.getBytes());
+    }
 }

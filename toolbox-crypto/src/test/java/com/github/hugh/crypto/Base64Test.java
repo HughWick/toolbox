@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.UnsupportedEncodingException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * base 64 加密工具
@@ -26,6 +26,5 @@ class Base64Test {
         assertEquals(decode, Base64.decodeToString(s1.getBytes()));
         String str3 = "中";
         assertEquals(2, str3.getBytes("gb2312").length);
-//        System.out.println("--2->>" + Base64.decode(str.getBytes()));
     }
 }
