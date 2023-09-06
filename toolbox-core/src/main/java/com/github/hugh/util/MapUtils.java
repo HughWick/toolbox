@@ -448,8 +448,30 @@ public class MapUtils {
     }
 
     /**
+     * 为map put不为空的值
+     * <p>如果key或value为空时则不put</p>
+     *
+     * @param map   map
+     * @param key   key
+     * @param value value
+     * @param <K>   the key type
+     * @param <V>   the value type
+     * @since 2.6.2
+     */
+    public static <K, V> void putNotEmpty(final Map<? super K, V> map, final K key, final V value) {
+        if (map == null) {
+            return;
+        }
+        if (EmptyUtils.isEmpty(key) || EmptyUtils.isEmpty(value)) {
+            return;
+        }
+        map.put(key, value);
+    }
+
+    /**
      * 为map put值
      * <p>如果key或value为空时则不put</p>
+     * <p>2.6.2 之后修正命名规范，直接使用{@link #putNotEmpty(Map, Object, Object)}</p>
      *
      * @param map   map
      * @param key   key
@@ -458,14 +480,9 @@ public class MapUtils {
      * @param <V>   the value type
      * @since 1.7.3
      */
+    @Deprecated
     public static <K, V> void setValue(final Map<? super K, V> map, final K key, final V value) {
-        if (map == null) {
-            return;
-        }
-        if (EmptyUtils.isEmpty(key) || EmptyUtils.isEmpty(value)) {
-            return;
-        }
-        map.put(key, value);
+        putNotEmpty(map, key, value);
     }
 
     /**

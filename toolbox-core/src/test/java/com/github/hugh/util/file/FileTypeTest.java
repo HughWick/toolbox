@@ -140,6 +140,14 @@ class FileTypeTest {
         String mp3_1 = "/file/mp3/MainMenu.mp3";
         FileType on1 = FileType.on(getPath(mp3_1));
         assertTrue(on1.isMp3());
+        String path = getPath(mp3_1);
+        File file = new File(path);
+        FileType on2 = FileType.on(file);
+        assertTrue(on2.isMp3());
+        // 流
+        FileInputStream fileInputStream = new FileInputStream(getPath(mp3_1));
+        FileType on3 = FileType.on(fileInputStream);
+        assertTrue(on3.isMp3());
     }
 
     @Test
