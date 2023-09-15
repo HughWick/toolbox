@@ -138,6 +138,7 @@ class DateTest {
         String timeStart1 = "2022-05-11 00:00:00";
         String timeStart2 = "2022-05-11";
         String timeStart3 = "2022-11";
+//        String timeStart3 = "Sep 13 2023 09:02:23";
         String timeStart4 = "Thu Aug 27 18:05:49 CST 2015";
 //        String timeStart5 = "2022-05-11 00:00:00";
         assertTrue(DateUtils.isDateFormat(timeStart1, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
@@ -251,5 +252,27 @@ class DateTest {
 
         // 测试空日期的情况，应该返回 true
         assertTrue(DateUtils.belowSystem(null));
+    }
+
+    // 特定日期格式转换
+    @Test
+    void testDateUs() {
+        String inputDateStr = "Jul 11 2020";
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.US);
+
+        // 将输入字符串解析为Date对象
+        Date inputDate = null;
+        try {
+            inputDate = inputDateFormat.parse(inputDateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        // 使用另一个SimpleDateFormat对象将Date对象格式化为目标日期格式的字符串
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String outputDateStr = outputDateFormat.format(inputDate);
+
+        System.out.println("Input date string: " + inputDateStr);
+        System.out.println("Output date string: " + outputDateStr);
     }
 }
