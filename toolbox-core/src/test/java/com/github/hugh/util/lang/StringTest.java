@@ -85,7 +85,6 @@ class StringTest {
         assertEquals(fileName, StringUtils.after(filePath, "\\"));
 
 
-
     }
 
     @Test
@@ -97,7 +96,7 @@ class StringTest {
         assertEquals(path1, StringUtils.before(fileName, "\\"));
 
         String str1 = "abc.sql";
-        System.out.println("--->"+ StringUtils.before(str1, "."));
+        System.out.println("--->" + StringUtils.before(str1, "."));
 
     }
 
@@ -156,5 +155,11 @@ class StringTest {
         assertEquals(22, str2.length());
 //        System.out.println("--->>" + str2.length());
 //        System.out.println("--->>" + "WC-TX65望城一中新校门门口-(五期)".length());
+    }
+
+    @Test
+    void testCalcStr() {
+        String str = "WC-TX65望";
+        assertEquals(9, StringUtils.calcGb2312Length(str));
     }
 }

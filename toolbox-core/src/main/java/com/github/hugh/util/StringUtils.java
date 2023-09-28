@@ -1,8 +1,11 @@
 package com.github.hugh.util;
 
+import com.github.hugh.constant.CharsetCode;
 import com.github.hugh.constant.guava.CharMatchers;
+import com.github.hugh.exception.ToolboxException;
 import com.google.common.base.CaseFormat;
 
+import java.io.UnsupportedEncodingException;
 import java.math.RoundingMode;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -546,5 +549,33 @@ public class StringUtils {
         DoubleMathUtils.numberFormat.setGroupingUsed(groupingUsed);
         DoubleMathUtils.numberFormat.setRoundingMode(roundingMode);
         return DoubleMathUtils.numberFormat.format(value);
+    }
+
+    /**
+     * 计算字符串在 GB2312 编码下的字节长度
+     *
+     * @param str 待计算字符串
+     * @return 字节长度
+     * @since 2.6.2
+     */
+    public static int calcGb2312Length(String str) {
+        return getStringLength(str, CharsetCode.GB_2312);
+    }
+
+    /**
+     * 计算字符串在指定字符集下的字节长度
+     *
+     * @param str         待计算字符串
+     * @param charsetName 字符集名称
+     * @return 字节长度
+     * @since 2.6.2
+     */
+    public static int getStringLength(String str, String charsetName) {
+        try {
+            byte[] bytes = str.getBytes(charsetName);
+            return bytes.length;
+        } catch (UnsupportedEncodingException unsupportedEncodingException) {
+            throw new ToolboxException(unsupportedEncodingException);
+        }
     }
 }
