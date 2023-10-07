@@ -553,6 +553,7 @@ public class StringUtils {
 
     /**
      * 计算字符串在 GB2312 编码下的字节长度
+     * <p>一个中文占2个字节</p>
      *
      * @param str 待计算字符串
      * @return 字节长度
@@ -560,6 +561,39 @@ public class StringUtils {
      */
     public static int calcGb2312Length(String str) {
         return getStringLength(str, CharsetCode.GB_2312);
+    }
+
+    /**
+     * 计算使用UTF-8字符集编码的字符串的字节长度
+     * <p>一个中文占3个字节</p>
+     *
+     * @param str 输入的字符串
+     * @return 字节长度
+     */
+    public static int calcUtf8Length(String str) {
+        return getStringLength(str, CharsetCode.UTF_8);
+    }
+
+    /**
+     * 计算使用UTF-16字符集编码的字符串的字节长度
+     * <p>一个中文占2个字节</p>
+     *
+     * @param str 输入的字符串
+     * @return 字节长度
+     */
+    public static int calcUtf16Length(String str) {
+        return getStringLength(str, CharsetCode.UTF_16);
+    }
+
+    /**
+     * 计算使用GBK字符集编码的字符串的字节长度
+     * <p>一个中文占2个字节</p>
+     *
+     * @param str 输入的字符串
+     * @return 字节长度
+     */
+    public static int calcGbkLength(String str) {
+        return getStringLength(str, CharsetCode.GBK);
     }
 
     /**

@@ -159,7 +159,12 @@ class StringTest {
 
     @Test
     void testCalcStr() {
-        String str = "WC-TX65望";
-        assertEquals(9, StringUtils.calcGb2312Length(str));
+        String str1 = "WC-TX65望";
+        assertEquals(8, str1.length());
+        assertEquals(9, StringUtils.calcGb2312Length(str1));
+        assertEquals(10, StringUtils.calcUtf8Length(str1));
+        assertEquals(18, StringUtils.calcUtf16Length(str1));
+        assertEquals(9, StringUtils.calcGbkLength(str1));
+        String str2 = "WC-TX65望&s、";
     }
 }
