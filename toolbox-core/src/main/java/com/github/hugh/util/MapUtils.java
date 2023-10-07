@@ -469,6 +469,33 @@ public class MapUtils {
     }
 
     /**
+     * 如果键和值都不为空，则将键值对存储到指定的Map中。如果值为空但有默认值，则使用默认值替代空值进行存储。
+     *
+     * @param map          目标Map
+     * @param key          键
+     * @param value        值
+     * @param defaultValue 默认值
+     * @param <K>          键类型
+     * @param <V>          值类型
+     * @since 2.6.2
+     */
+    public static <K, V> void putNotEmpty(final Map<? super K, V> map, final K key, final V value, final V defaultValue) {
+        if (map == null) {
+            return;
+        }
+        if (EmptyUtils.isEmpty(key)) {
+            return;
+        }
+        if (EmptyUtils.isEmpty(value)) {
+            if (EmptyUtils.isNotEmpty(defaultValue)) {
+                map.put(key, defaultValue);
+            }
+        } else {
+            map.put(key, value);
+        }
+    }
+
+    /**
      * 为map put值
      * <p>如果key或value为空时则不put</p>
      * <p>2.6.2 之后修正命名规范，直接使用{@link #putNotEmpty(Map, Object, Object)}</p>

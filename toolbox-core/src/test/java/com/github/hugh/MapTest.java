@@ -92,6 +92,19 @@ class MapTest {
     }
 
     @Test
+    void testPutNotEmpty() {
+        String defaultValue1 = "str";
+        Map<String, Object> map = new HashMap<>();
+        MapUtils.putNotEmpty(map, "a", null, defaultValue1);
+        assertEquals(defaultValue1, map.get("a"));
+        String key2 = "b";
+        String value1 = "value1";
+        MapUtils.putNotEmpty(map, key2, value1, defaultValue1);
+        assertEquals(value1, map.get(key2));
+    }
+
+
+    @Test
     void testRemoveKey() {
         Map<String, Object> map = new HashMap<>();
         map.put("page", 1);
