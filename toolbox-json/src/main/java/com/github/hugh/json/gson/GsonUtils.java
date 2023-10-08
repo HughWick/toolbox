@@ -27,7 +27,9 @@ import java.util.function.Supplier;
  * @since 2.4.10
  */
 public class GsonUtils {
-    public GsonUtils(){}
+    public GsonUtils() {
+    }
+
     /**
      * [年-月-日 时:分:秒]完整的日期格式
      */
@@ -315,7 +317,7 @@ public class GsonUtils {
 //            if (clazz == null) {
 //                result = (T) new Jsons(jsonElement);
 //            } else {
-                result = JSON.parseObject(jsonElement.toString(), clazz);
+            result = JSON.parseObject(jsonElement.toString(), clazz);
 //            }
             resultList.add(result);
         }
@@ -475,7 +477,8 @@ public class GsonUtils {
      * @param classOfT 实体class
      * @param <E>      入参json类型
      * @param <T>      实体类型
-     * @return 1.4.10
+     * @return 实体对象
+     * @since 1.4.10
      */
     public static <E, T> T fromJson(E json, Class<T> classOfT) {
         GsonBuilder gsonBuilder = new GsonBuilder();
