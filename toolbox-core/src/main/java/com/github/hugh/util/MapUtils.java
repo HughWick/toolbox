@@ -21,36 +21,7 @@ import java.util.*;
  * @since 1.0.2
  */
 public class MapUtils {
-
-    /**
-     * 校验map中code状态是否为0000(成功状态)
-     *
-     * @param map  Map
-     * @param key  map中的key
-     * @param code 需要验证的code码
-     * @param <K>  key 类型
-     * @param <V>  value 类型
-     * @return boolean {@code true} 一致
-     */
-    @Deprecated
-    public static <K, V> boolean isSuccess(Map<K, V> map, K key, String code) {
-        return isEquals(map, key, code);
-    }
-
-    /**
-     * 根据key与code码、校验与map中一致
-     *
-     * @param map  参数
-     * @param key  键
-     * @param code 值
-     * @param <K>  key 类型
-     * @param <V>  value 类型
-     * @return boolean {@code true} 不一致
-     */
-    @Deprecated
-    public static <K, V> boolean isFailure(Map<K, V> map, K key, String code) {
-        return !isEquals(map, key, code);
-    }
+    private MapUtils(){}
 
     /**
      * 判断指定的Map中，key对应的value是否与所传入的code参数相等。
