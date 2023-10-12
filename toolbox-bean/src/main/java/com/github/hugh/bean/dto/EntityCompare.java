@@ -1,6 +1,8 @@
 package com.github.hugh.bean.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 实体比较结果类
@@ -9,6 +11,8 @@ import lombok.Data;
  * @since 2.5.6
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class EntityCompare {
 
     private String fieldName; // 属性名

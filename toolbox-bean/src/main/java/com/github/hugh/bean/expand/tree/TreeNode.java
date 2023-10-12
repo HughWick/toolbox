@@ -1,4 +1,4 @@
-package com.github.hugh.bean.expand;
+package com.github.hugh.bean.expand.tree;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

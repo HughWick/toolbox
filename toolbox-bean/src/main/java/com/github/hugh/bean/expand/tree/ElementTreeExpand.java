@@ -1,6 +1,8 @@
-package com.github.hugh.bean.expand;
+package com.github.hugh.bean.expand.tree;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -11,13 +13,13 @@ import java.util.List;
  * @since 2.5.11
  */
 @Data
-public class ElementTree {
+@NoArgsConstructor
+@AllArgsConstructor
+public class ElementTreeExpand<T> {
 
     private String id;//节点位移标识
-
     private String parentId;//父节点id
-
     private String label;//节点属性，按需求可定义多个属性
-
-    private List<ElementTree> children;//该节点的子节点对象
+    private List<ElementTreeExpand<T>> children;//该节点的子节点对象
+    private T expand;//
 }

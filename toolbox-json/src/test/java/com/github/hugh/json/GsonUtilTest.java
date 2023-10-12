@@ -1,6 +1,6 @@
 package com.github.hugh.json;
 
-import com.github.hugh.bean.expand.ElementTree;
+import com.github.hugh.bean.expand.tree.ElementTree;
 import com.github.hugh.json.gson.GsonUtils;
 import com.github.hugh.json.gson.JsonObjectUtils;
 import com.github.hugh.json.model.Student;
