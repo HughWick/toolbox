@@ -57,7 +57,7 @@ public class TreeNodeOpeTest {
         stopWatch.stop();
         stopWatch.start("封装结构树");
 //        final TreeNodeOpe treeNodeOpe = TreeNodeOpe.on(rootList, childList);
-        TreeNodeOpe<TreeNode, ElementTree> treeNodeOpe = new TreeNodeOpeImpl(rootList, childList);
+        TreeNodeOpe<TreeNode, ElementTree> treeNodeOpe = new TreeNodeOpes(rootList, childList);
         final List<TreeNode> process = treeNodeOpe.process();
 //        final List<ElementTree> elementTreeList = treeNodeOpe.processElement();
         stopWatch.stop();
@@ -80,7 +80,7 @@ public class TreeNodeOpeTest {
         ProcessTreeData.process(objects, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装结构树");
-        TreeNodeOpe<TreeNode, ElementTree> treeNodeOpe1 = new TreeNodeOpeImpl(rootList, childList);
+        TreeNodeOpe<TreeNode, ElementTree> treeNodeOpe1 = new TreeNodeOpes(rootList, childList);
         final List<TreeNode> process = treeNodeOpe1.process();
         stopWatch.stop();
         String s1 = JSON.toJSONString(process);
@@ -110,7 +110,7 @@ public class TreeNodeOpeTest {
         ProcessTreeData.process(objects, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装element结构树");
-        TreeNodeOpe<TreeNode, ElementTree> treeNodeOpe1 = new TreeNodeOpeImpl(rootList, childList);
+        TreeNodeOpe<TreeNode, ElementTree> treeNodeOpe1 = new TreeNodeOpes(rootList, childList);
 //        final TreeNodeOpe treeNodeOpe = TreeNodeOpe.on(rootList, childList);
         treeNodeOpe1.setAscending(false);
         final List<ElementTree> elementTrees = treeNodeOpe1.processElement();
@@ -137,7 +137,7 @@ public class TreeNodeOpeTest {
         ProcessTreeData.process(objects, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装element结构树");
-        TreeNodeOpe<?, ElementTree> treeNodeOpe1 = new TreeNodeOpeImpl(rootList, childList);
+        TreeNodeOpe<?, ElementTree> treeNodeOpe1 = new TreeNodeOpes(rootList, childList);
         treeNodeOpe1.setParentId(true);
         final List<ElementTree> elementTrees = treeNodeOpe1.processElement();
         stopWatch.stop();
@@ -161,7 +161,7 @@ public class TreeNodeOpeTest {
         ProcessTreeData.processExpandStr(objects, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装element结构树-升序");
-        TreeNodeOpe<TreeNodeExpand<String>, ElementTreeExpand<String>> treeNodeOpe1 = new TreeNodeOpeExpandImpl<>(rootList, childList);
+        TreeNodeOpe<TreeNodeExpand<String>, ElementTreeExpand<String>> treeNodeOpe1 = new TreeNodeOpeExpand<>(rootList, childList);
         final List<ElementTreeExpand<String>> elementTrees = treeNodeOpe1.processElement();
         stopWatch.stop();
         String s2 = JSON.toJSONString(elementTrees);
@@ -194,7 +194,7 @@ public class TreeNodeOpeTest {
         ProcessTreeData.processExpandObj(objects, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装element结构树-升序");
-        TreeNodeOpe<TreeNodeExpand<EntityCompare>, ElementTreeExpand<EntityCompare>> treeNodeOpe1 = new TreeNodeOpeExpandImpl<>(rootList, childList);
+        TreeNodeOpe<TreeNodeExpand<EntityCompare>, ElementTreeExpand<EntityCompare>> treeNodeOpe1 = new TreeNodeOpeExpand<>(rootList, childList);
         // 升序
         final List<ElementTreeExpand<EntityCompare>> elementTrees = treeNodeOpe1.processElement();
         stopWatch.stop();
