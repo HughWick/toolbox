@@ -45,7 +45,7 @@ public class CaffeineCache {
      * 在每次get key的时候指定一个同步的函数，如果key不存在就调用这个函数生成一个值。
      * </p>
      *
-     * @param expireAfterAccess 设置缓存n秒后没有读写就会被回收、单位：秒
+     * @param expireAfterAccess 设置缓存n秒后没访问就会被回收、单位：秒
      * @param <K>               key
      * @param <V>               value
      * @return Cache
@@ -61,7 +61,7 @@ public class CaffeineCache {
      * 在每次get key的时候指定一个同步的函数，如果key不存在就调用这个函数生成一个值。
      * </p>
      *
-     * @param expireAfterAccess 设置缓存n秒后没有读写就会被回收、单位：秒
+     * @param expireAfterAccess 设置缓存n秒后没有访问就会被回收、单位：秒
      * @param timeUnit          时间单位 {@link TimeUnit}
      * @param <K>               key
      * @param <V>               value
@@ -77,7 +77,7 @@ public class CaffeineCache {
      * <p>
      * 构造Cache时候，build方法传入一个CacheLoader实现类。实现load方法，通过key加载value。
      * </p>
-     * <p>在最后一次访问或者写入后开始计时，在指定的时间后过期。假如一直有请求访问该key，那么这个缓存将一直不会过期</p>
+     * <p>在最后一次访问后开始计时，在指定的时间后过期。假如一直有请求访问该key，那么这个缓存将一直不会过期</p>
      *
      * @param <K>               key
      * @param <V>               value
@@ -93,7 +93,7 @@ public class CaffeineCache {
      * 创建本地缓存、自定义设置超时时间单位
      * <p>在最后一次访问或者写入后开始计时，在指定的时间后过期。假如一直有请求访问该key，那么这个缓存将一直不会过期</p>
      *
-     * @param expireAfterAccess 设置缓存n秒后没有读写就会被回收
+     * @param expireAfterAccess 设置缓存n秒后没有访问就会被回收
      * @param timeUnit          时间单位 {@link TimeUnit}
      * @param cacheLoader       build方法中可以指定CacheLoader，在缓存不存在时通过CacheLoader的实现自动加载缓存
      * @param <K>               key
