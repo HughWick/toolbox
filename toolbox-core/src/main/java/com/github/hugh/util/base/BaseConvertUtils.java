@@ -124,6 +124,33 @@ public class BaseConvertUtils {
     }
 
     /**
+     * 将十进制整数转换为左起根据用户需求补0的十六进制字符串。
+     *
+     * @param decimal 十进制整数。
+     * @param digits     转换后的十六进制字符串位数。
+     * @return 左起根据用户需求补0的十六进制字符串。
+     * @since 2.6.4
+     */
+    public static String decToHex(int decimal, int digits) {
+        // 将十进制整数转换为十六进制字符串
+        String hexStr = decToHex(decimal);
+        // 基于用户需求，在左侧补0，生成指定位数的十六进制字符串
+        return complement(hexStr, digits);
+    }
+
+    /**
+     * 将十进制整数转换为左起根据用户需求补0的十六进制字符串。
+     *
+     * @param decimalStr 十进制整数字符串。
+     * @param digits     转换后的十六进制字符串位数。
+     * @return 左起根据用户需求补0的十六进制字符串。
+     * @since 2.6.4
+     */
+    public static String decToHex(String decimalStr, int digits) {
+        return decToHex(Integer.parseInt(decimalStr), digits);
+    }
+
+    /**
      * 10进制字节数组转换为16进制字节数组
      * <p>
      * byte用二进制表示占用8位，16进制的每个字符需要用4位二进制位来表示，则可以把每个byte

@@ -26,6 +26,18 @@ class BaseConvertTest {
         String str2 = "255";
         String hexStr = BaseConvertUtils.decToHex(str2);
         assertEquals("FF", hexStr.toUpperCase());
+        String str3 = "83951617";
+        String hex1 = "05010001";
+        String result1 = BaseConvertUtils.decToHex(str3, 8);
+        assertEquals(hex1, result1);
+        String str4 = "85000193";
+        String hex2 = "05110001";
+        String result2 = BaseConvertUtils.decToHex(str4, 8);
+        assertEquals(hex2, result2);
+        int str5 = 85000193;
+        String hex3 = "0005110001";
+        String result3 = BaseConvertUtils.decToHex(str5, 10);
+        assertEquals(hex3, result3);
     }
 
     // 十进制转十六进制数组
@@ -178,6 +190,6 @@ class BaseConvertTest {
     void testHexToDecReInt2() {
         String str1 = "[15, -103, 0, -16, -55, -3, 13, -80, 93, -8, 20, -5, -75, -25, 0, 8, -45, -25, 0, 8, 45, -23, -1, 79]";
         final Object[] objects = ListUtils.guavaStringToList(str1).toArray();
-        assertEquals( str1, Arrays.toString(objects));
+        assertEquals(str1, Arrays.toString(objects));
     }
 }
