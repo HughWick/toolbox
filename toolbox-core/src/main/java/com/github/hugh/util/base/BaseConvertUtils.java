@@ -113,6 +113,17 @@ public class BaseConvertUtils {
     }
 
     /**
+     * 将十进制整数转换为十六进制字符串
+     *
+     * @param decimal 十进制整数
+     * @return 十六进制字符串
+     * @since 2.6.7
+     */
+    public static String decToHex(long decimal) {
+        return Long.toHexString(decimal);
+    }
+
+    /**
      * 十进制转16进制
      *
      * @param decimal 十进制
@@ -127,15 +138,37 @@ public class BaseConvertUtils {
      * 将十进制整数转换为左起根据用户需求补0的十六进制字符串。
      *
      * @param decimal 十进制整数。
-     * @param digits     转换后的十六进制字符串位数。
+     * @param digits  转换后的十六进制字符串位数。
      * @return 左起根据用户需求补0的十六进制字符串。
      * @since 2.6.4
      */
     public static String decToHex(int decimal, int digits) {
-        // 将十进制整数转换为十六进制字符串
-        String hexStr = decToHex(decimal);
-        // 基于用户需求，在左侧补0，生成指定位数的十六进制字符串
-        return complement(hexStr, digits);
+        return convertDecToHex(decimal, digits);
+    }
+
+    /**
+     * 将十进制整数转换为十六进制字符串，并在左侧补0以生成指定位数的十六进制字符串
+     *
+     * @param decimal 十进制整数
+     * @param digits  期望的十六进制字符串位数
+     * @return 补0后的十六进制字符串
+     * @since 2.6.7
+     */
+    public static String decToHex(long decimal, int digits) {
+        return convertDecToHex(decimal, digits);
+    }
+
+    /**
+     * 将十进制整数转换为十六进制字符串，并在左侧补0以生成指定位数的十六进制字符串
+     *
+     * @param decimal 十进制整数
+     * @param digits  期望的十六进制字符串位数
+     * @return 补0后的十六进制字符串
+     * @since 2.6.7
+     */
+    private static String convertDecToHex(long decimal, int digits) {
+        String hexStr = Long.toHexString(decimal); // 将十进制整数转换为十六进制字符串
+        return complement(hexStr, digits); // 在左侧补0，生成指定位数的十六进制字符串
     }
 
     /**
@@ -147,7 +180,7 @@ public class BaseConvertUtils {
      * @since 2.6.4
      */
     public static String decToHex(String decimalStr, int digits) {
-        return decToHex(Integer.parseInt(decimalStr), digits);
+        return decToHex(Long.parseLong(decimalStr), digits);
     }
 
     /**
