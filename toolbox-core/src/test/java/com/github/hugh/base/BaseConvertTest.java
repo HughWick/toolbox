@@ -38,6 +38,10 @@ class BaseConvertTest {
         String hex3 = "0005110001";
         String result3 = BaseConvertUtils.decToHex(str5, 10);
         assertEquals(hex3, result3);
+        long str6 = 85000193L;
+        String hex4 = "0005110001";
+        String result4 = BaseConvertUtils.decToHex(str6, 10);
+        assertEquals(hex4, result4);
     }
 
     // 十进制转十六进制数组

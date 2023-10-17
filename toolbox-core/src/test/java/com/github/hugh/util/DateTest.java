@@ -259,7 +259,6 @@ class DateTest {
     void testDateUs() {
         String inputDateStr = "Jul 11 2020";
         SimpleDateFormat inputDateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.US);
-
         // 将输入字符串解析为Date对象
         Date inputDate = null;
         try {
@@ -267,12 +266,36 @@ class DateTest {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
         // 使用另一个SimpleDateFormat对象将Date对象格式化为目标日期格式的字符串
         SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String outputDateStr = outputDateFormat.format(inputDate);
+//        System.out.println("Input date string: " + inputDateStr);
+        assertEquals("Jul 11 2020", inputDateStr);
+        assertEquals("2020-07-11", outputDateStr);
+//        System.out.println("Output date string: " + outputDateStr);
+    }
 
-        System.out.println("Input date string: " + inputDateStr);
-        System.out.println("Output date string: " + outputDateStr);
+    @Test
+    void testFormatTimestamp() {
+        // 秒
+        String str1 = "1697513319";
+        String s1 = DateUtils.formatTimestampSecond(str1);
+        assertEquals("2023-10-17 11:28:39", s1);
+        long str2 = 1697511216L;
+        String s2 = DateUtils.formatTimestampSecond(str2);
+        assertEquals("2023-10-17 10:53:36", s2);
+        String s3 = DateUtils.formatTimestampSecond(str1, DateCode.YEAR_MONTH_DAY);
+        assertEquals("2023-10-17", s3);
+        long str4 = 1697511216L;
+        String s4 = DateUtils.formatTimestampSecond(str4, DateCode.YEAR_MONTH_DAY_SIMPLE);
+        assertEquals("20231017", s4);
+        // 毫秒
+        String timeStr1 = "1697514229199";
+        String timestamp1 = DateUtils.formatTimestamp(timeStr1);
+        assertEquals("2023-10-17 11:43:49", timestamp1);
+        long timeStr2 = 1697514508199L;
+        String timestamp2 = DateUtils.formatTimestamp(timeStr2);
+        assertEquals("2023-10-17 11:48:28", timestamp2);
+
     }
 }

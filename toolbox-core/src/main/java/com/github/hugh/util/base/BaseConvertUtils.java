@@ -621,7 +621,7 @@ public class BaseConvertUtils {
      * 十六进制字符串转byte数组
      *
      * <p>
-     * 2022-7-23 就不该用这个方法，直接调用{@link  #hexToAscii}
+     * 2022-7-23 就不该用这个方法，直接调用{@link  #hexToBytes}
      * </p>
      * <p>
      * 如果有存在空格，则线{@link String#replace(char, char)}掉所有空格，再调用{@link  #hexToBytes}

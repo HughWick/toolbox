@@ -205,6 +205,63 @@ public class DateUtils extends DateCode {
     }
 
     /**
+     * 格式化时间戳，默认格式为年月日时分秒
+     *
+     * @param timestamp 时间戳字符串
+     * @return 格式化后的时间字符串
+     * @since 2.6.7
+     */
+    public static String formatTimestamp(String timestamp) {
+        return formatTimestamp(Long.parseLong(timestamp));
+    }
+
+    /**
+     * 格式化秒级时间戳，默认格式为年月日时分秒
+     *
+     * @param timestamp 秒级时间戳字符串
+     * @return 格式化后的时间字符串
+     * @since 2.6.7
+     */
+    public static String formatTimestampSecond(String timestamp) {
+        return formatTimestampSecond(Long.parseLong(timestamp));
+    }
+
+    /**
+     * 格式化秒级时间戳，默认格式为年月日时分秒
+     *
+     * @param timestamp 秒级时间戳字符串
+     * @param format    自定义日期时间格式
+     * @return 格式化后的时间字符串
+     * @since 2.6.7
+     */
+    public static String formatTimestampSecond(String timestamp, String format) {
+        return formatTimestampSecond(Long.parseLong(timestamp), format);
+    }
+
+    /**
+     * 格式化秒级时间戳，默认格式为年月日时分秒
+     *
+     * @param timestamp 秒级时间戳
+     * @return 格式化后的时间字符串
+     * @since 2.6.7
+     */
+    public static String formatTimestampSecond(long timestamp) {
+        return formatTimestampSecond(timestamp, YEAR_MONTH_DAY_HOUR_MIN_SEC);
+    }
+
+    /**
+     * 格式化秒级时间戳，默认格式为年月日时分秒
+     *
+     * @param timestamp 秒级时间戳
+     * @param format    自定义日期时间格式
+     * @return 格式化后的时间字符串
+     * @since 2.6.7
+     */
+    public static String formatTimestampSecond(long timestamp, String format) {
+        return formatTimestamp(timestamp * 1000, format);
+    }
+
+    /**
      * 将时间戳转换成日期格式的字符串
      *
      * @param timestamp 时间戳
@@ -213,9 +270,6 @@ public class DateUtils extends DateCode {
      * @since 1.3.12
      */
     public static String formatTimestamp(long timestamp, String format) {
-        if (timestamp < 0) {
-            return null;
-        }
         return new SimpleDateFormat(format).format(timestamp);
     }
 
