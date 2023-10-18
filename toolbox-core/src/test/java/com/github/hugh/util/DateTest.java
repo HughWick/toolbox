@@ -16,17 +16,22 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class DateTest {
 
-    // 测速 cst时间格式转换
+    // 测试 cst时间格式转换
     @Test
     void testParse() throws ParseException {
-        String strDateObj = "Mon Mar 21 18:02:11 CST 2022";
-        assertEquals(28, strDateObj.length());
+        String cstFormDate = "Mon Mar 21 18:02:11 CST 2022";
+        assertEquals(28, cstFormDate.length());
         SimpleDateFormat sdf = new SimpleDateFormat(DateCode.CST_FORM, Locale.US);
-        Date d = sdf.parse(strDateObj);
-        assertEquals(1647856931000L, d.getTime());
-        Date parse = DateUtils.parseDate(strDateObj, DateCode.CST_FORM);
-        assertNotNull(parse);
-        assertEquals(parse.getTime(), d.getTime());
+        Date date1 = sdf.parse(cstFormDate);
+        assertEquals(1647856931000L, date1.getTime());
+        Date parse2 = DateUtils.parseDate(cstFormDate, DateCode.CST_FORM);
+        assertNotNull(parse2);
+        assertEquals(parse2.getTime(), date1.getTime());
+//        String str2 = "2016-06-04 13:00:21";
+        String inputDateStr = "Jul 11 2020";
+        String date2 = DateUtils.parseDateFormatStr(inputDateStr, "MMM dd yyyy", Locale.US, DateCode.YEAR_MONTH_DAY);
+        assertEquals("Jul 11 2020", inputDateStr);
+        assertEquals("2020-07-11", date2);
     }
 
     @Test
@@ -78,8 +83,7 @@ class DateTest {
 
     @Test
     void test04() {
-//        @Test
-//        void test04() {
+
         long remainingMilliSec = DateUtils.getEarlyMorningSec();
         assertNotNull(remainingMilliSec);
         assertTrue(remainingMilliSec > 0);
@@ -91,7 +95,6 @@ class DateTest {
         assertNotNull(endHour);
 
 //        assertTrue(endHour.isAfter(iniHour));
-//        }
 //        System.out.println("-距离凌晨还剩余多少毫秒-->>" + DateUtils.getEarlyMorningSec());
 //        System.out.println("--获取小时整点时间->>" + DateUtils.getIniHour());
 //        System.out.println("--获取当前小时的结束时间点->>" + DateUtils.getEndHour());
@@ -137,16 +140,16 @@ class DateTest {
     void testIsDateFormat() {
         String timeStart1 = "2022-05-11 00:00:00";
         String timeStart2 = "2022-05-11";
-        String timeStart3 = "2022-11";
 //        String timeStart3 = "Sep 13 2023 09:02:23";
-        String timeStart4 = "Thu Aug 27 18:05:49 CST 2015";
 //        String timeStart5 = "2022-05-11 00:00:00";
         assertTrue(DateUtils.isDateFormat(timeStart1, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
         assertFalse(DateUtils.isDateFormat(timeStart1 + "a", DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
         assertTrue(DateUtils.isDateFormat(timeStart2, DateCode.YEAR_MONTH_DAY));
         assertFalse(DateUtils.isDateFormat(timeStart2 + "b", DateCode.YEAR_MONTH_DAY));
+        String timeStart3 = "2022-11";
         assertTrue(DateUtils.isDateFormat(timeStart3, DateCode.YEAR_MONTH));
         assertFalse(DateUtils.isDateFormat(timeStart3 + "b", DateCode.YEAR_MONTH));
+        String timeStart4 = "Thu Aug 27 18:05:49 CST 2015";
         assertTrue(DateUtils.isDateFormat(timeStart4, DateCode.CST_FORM));
         assertFalse(DateUtils.isDateFormat("Thu Aug 27 18:05:49 _ST 2015", DateCode.CST_FORM));
         assertFalse(DateUtils.isDateFormat("Thu Aug 27 18:05:49 _ST A015", DateCode.CST_FORM));
@@ -252,27 +255,6 @@ class DateTest {
 
         // 测试空日期的情况，应该返回 true
         assertTrue(DateUtils.belowSystem(null));
-    }
-
-    // 特定日期格式转换
-    @Test
-    void testDateUs() {
-        String inputDateStr = "Jul 11 2020";
-        SimpleDateFormat inputDateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.US);
-        // 将输入字符串解析为Date对象
-        Date inputDate = null;
-        try {
-            inputDate = inputDateFormat.parse(inputDateStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        // 使用另一个SimpleDateFormat对象将Date对象格式化为目标日期格式的字符串
-        SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String outputDateStr = outputDateFormat.format(inputDate);
-//        System.out.println("Input date string: " + inputDateStr);
-        assertEquals("Jul 11 2020", inputDateStr);
-        assertEquals("2020-07-11", outputDateStr);
-//        System.out.println("Output date string: " + outputDateStr);
     }
 
     @Test

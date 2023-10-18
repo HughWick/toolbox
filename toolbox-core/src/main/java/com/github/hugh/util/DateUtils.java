@@ -160,6 +160,7 @@ public class DateUtils extends DateCode {
 
     /**
      * 将字符串（yyyy-MM-dd）解析成日期
+     * <p>命名不规范，应直接调用{@link #parse(Object)}</p>
      *
      * @param dateStr 日期格式的字符串
      * @return Date 日期类型对象
@@ -170,27 +171,59 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 按照指定的格式，将字符串解析成日期类型对象，例如：yyyy-MM-dd,yyyy/MM/dd,yyyy/MM/dd hh:mm:ss
+     * 将给定的日期字符串按指定格式转换为Date对象。
      *
-     * @param dateStr 日期格式的字符串
-     * @param format  字符串的格式
-     * @return Date 日期类型对象
+     * @param dateStr 待转换的日期字符串
+     * @param format  日期格式
+     * @return 转换后的Date对象
      */
     public static Date parseDate(String dateStr, String format) {
+        Locale locale;
+        if (CST_FORM.equals(format)) {
+            locale = Locale.US;
+        } else {
+            locale = Locale.getDefault(Locale.Category.FORMAT);
+        }
+        return parseDate(dateStr, format, locale);
+    }
+
+    /**
+     * 将给定的日期字符串按指定格式和Locale转换为Date对象。
+     *
+     * @param dateStr 待转换的日期字符串
+     * @param format  日期格式
+     * @param locale  解析日期时使用的Locale
+     * @return 转换后的Date对象
+     * @since 2.6.7
+     */
+    public static Date parseDate(String dateStr, String format, Locale locale) {
+        // 判断待转换的日期字符串是否为空
         if (EmptyUtils.isEmpty(dateStr)) {
             return null;
         }
-        SimpleDateFormat simpleDateFormat;
-        if (CST_FORM.equals(format)) {
-            simpleDateFormat = new SimpleDateFormat(format, Locale.US);
-        } else {
-            simpleDateFormat = new SimpleDateFormat(format);
-        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, locale);
         try {
+            // 解析日期字符串，并返回解析得到的Date对象
             return simpleDateFormat.parse(dateStr);
-        } catch (ParseException e) {
-            throw new ToolboxException(e);
+        } catch (ParseException parseException) {
+            // 如果解析日期时出现异常，则封装为ToolboxException异常并抛出
+            throw new ToolboxException(parseException);
         }
+    }
+
+    /**
+     * 将给定的日期字符串按指定的输入格式和Locale解析为Date对象，然后将其转换为指定的输出格式的日期字符串。
+     *
+     * @param dateStr      待转换的日期字符串
+     * @param inputFormat  输入日期格式
+     * @param locale       解析日期时使用的Locale
+     * @param resultFormat 输出日期格式
+     * @return 转换后的日期字符串
+     * @since 2.6.7
+     */
+    public static String parseDateFormatStr(String dateStr, String inputFormat, Locale locale, String resultFormat) {
+        Date date = parseDate(dateStr, inputFormat, locale);
+        return DateUtils.format(date, resultFormat);
     }
 
     /**
