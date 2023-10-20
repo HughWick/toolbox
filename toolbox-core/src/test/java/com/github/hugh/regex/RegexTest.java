@@ -193,4 +193,14 @@ class RegexTest {
         String base64_3 = "rcPTxbQ4HK38+Lwu5duH6ZboGexw3tWW5xgqNJYO90mn2ELuW6slLkpNBTi1kAbQ";
         assertTrue(RegexUtils.isBase64(base64_3));
     }
+
+    @Test
+    void testIsHexadecimal(){
+        String str1 = "7e 00 4a 20 22 08 05 00 75 84 01 03 00 01 00 00 5d 48 00 00 00 17 00 00 00 ae 00 00 48 2c 00 00 01 c2 01 9b 04 5d 04 5e 04 5f 04 5d 00 18 00 18 01 4d 01 b8 01 9d 00 00 00 00 00 00 00 3f 00 00 00 00 00 00 00 00 00 00 00 00 6f 7e";
+        assertTrue(RegexUtils.isHexadecimal(str1.replace(" " , "")));
+        String str2 = "7e 00 4a 20 22 08 05 00 75 84 mm";
+        assertFalse(RegexUtils.isHexadecimal(str2.replace(" " , "")));
+        assertTrue(RegexUtils.isNotHexadecimal(str2.replace(" " , "")));
+
+    }
 }

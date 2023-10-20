@@ -664,4 +664,32 @@ public class RegexUtils {
     public static boolean isNotBase64(String str) {
         return !isBase64(str);
     }
+
+    /**
+     * 验证给定的字符串是否都为十六进制字符。
+     *
+     * @param str 待验证的字符串
+     * @return 如果字符串都为十六进制字符，则返回true；否则返回false
+     * @since 2.6.7
+     */
+    public static boolean isHexadecimal(String str) {
+        // 判断字符串是否为空
+        if (str == null || str.isEmpty()) {
+            return false;
+        }
+        // 使用正则表达式匹配判断字符串是否都为十六进制字符
+        String hexadecimalPattern = "^[0-9a-fA-F]+$";
+        return Pattern.matches(hexadecimalPattern, str);
+    }
+
+    /**
+     * 验证给定的字符串是否不都为十六进制字符。
+     *
+     * @param str 待验证的字符串
+     * @return 如果字符串不都为十六进制字符，则返回true；否则返回false
+     * @since 2.6.7
+     */
+    public static boolean isNotHexadecimal(String str) {
+        return !isHexadecimal(str);
+    }
 }
