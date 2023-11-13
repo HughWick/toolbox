@@ -24,6 +24,14 @@ public interface TreeNodeOpe<T , E> {
     void setAscending(boolean ascending);
 
     /**
+     * 设置是否启用排序功能。
+     *
+     * @since 2.6.7
+     * @param sortEnable true表示启用排序，false表示禁用排序
+     */
+    void setSortEnable(boolean sortEnable);
+
+    /**
      * 处理树节点操作，并返回排序结果列表
      *
      * @return 排序后的树节点列表

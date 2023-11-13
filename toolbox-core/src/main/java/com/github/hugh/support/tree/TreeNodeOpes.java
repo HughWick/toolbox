@@ -29,6 +29,12 @@ public class TreeNodeOpes implements TreeNodeOpe<TreeNode, ElementTree> {
      * 表示是否进行升序排序
      */
     private boolean ascending = true;
+
+    /**
+     * 是否开启排序
+     */
+    private boolean sortEnable = true;
+
     /**
      * 表示是否设置了父级ID的标志。
      */
@@ -52,6 +58,17 @@ public class TreeNodeOpes implements TreeNodeOpe<TreeNode, ElementTree> {
     @Override
     public void setAscending(boolean ascending) {
         this.ascending = ascending;
+    }
+
+    /**
+     * 设置是否启用排序功能。
+     *
+     * @since 2.6.7
+     * @param sortEnable true表示启用排序，false表示禁用排序
+     */
+    @Override
+    public void setSortEnable(boolean sortEnable) {
+        this.sortEnable = sortEnable;
     }
 
     /**
@@ -107,9 +124,13 @@ public class TreeNodeOpes implements TreeNodeOpe<TreeNode, ElementTree> {
             executorService.shutdownNow();
             Thread.currentThread().interrupt();
         }
-        return rootNodesList.stream()
-                .sorted(ascending ? Comparator.comparing(TreeNode::getId) : Comparator.comparing(TreeNode::getId).reversed())
-                .collect(Collectors.toList());
+        if (sortEnable) {
+            return rootNodesList.stream()
+                    .sorted(ascending ? Comparator.comparing(TreeNode::getId) : Comparator.comparing(TreeNode::getId).reversed())
+                    .collect(Collectors.toList());
+        } else {
+            return rootNodesList;
+        }
     }
 
     /**
@@ -162,17 +183,30 @@ public class TreeNodeOpes implements TreeNodeOpe<TreeNode, ElementTree> {
     private void assignChildNodes(List<TreeNode> childNodesList, TreeNode node, Map<String, String> childNodesHashMap) {
         //创建一个list来保存每个根节点中对应的子节点
         List<TreeNode> childList = new ArrayList<>();
-        childNodesList.stream()
-                .filter(childNode -> childNode.getParentId().equals(node.getId()))//判断是否根节点的子节点
-                .sorted(ascending ? Comparator.comparing(TreeNode::getId) : Comparator.comparing(TreeNode::getId).reversed()) // 根据id进行升序或降序排序
-                .forEach(childNode -> {
-                    if (childNodesHashMap.containsKey(childNode.getId())) { // 排除重复的
-                        return;
-                    }
-                    childNodesHashMap.put(childNode.getId(), childNode.getParentId());//添加处理子节点信息
-                    assignChildNodes(childNodesList, childNode, childNodesHashMap);//递归设置该子节点的子节点列表
-                    childList.add(childNode);//添加该子节点到对应的根节点列表
-                });
+        if (sortEnable) {
+            childNodesList.stream()
+                    .filter(childNode -> childNode.getParentId().equals(node.getId()))//判断是否根节点的子节点
+                    .sorted(ascending ? Comparator.comparing(TreeNode::getId) : Comparator.comparing(TreeNode::getId).reversed()) // 根据id进行升序或降序排序
+                    .forEach(childNode -> {
+                        if (childNodesHashMap.containsKey(childNode.getId())) { // 排除重复的
+                            return;
+                        }
+                        childNodesHashMap.put(childNode.getId(), childNode.getParentId());//添加处理子节点信息
+                        assignChildNodes(childNodesList, childNode, childNodesHashMap);//递归设置该子节点的子节点列表
+                        childList.add(childNode);//添加该子节点到对应的根节点列表
+                    });
+        } else { // 不需要排序
+            childNodesList.stream()
+                    .filter(childNode -> childNode.getParentId().equals(node.getId()))//判断是否根节点的子节点
+                    .forEach(childNode -> {
+                        if (childNodesHashMap.containsKey(childNode.getId())) { // 排除重复的
+                            return;
+                        }
+                        childNodesHashMap.put(childNode.getId(), childNode.getParentId());//添加处理子节点信息
+                        assignChildNodes(childNodesList, childNode, childNodesHashMap);//递归设置该子节点的子节点列表
+                        childList.add(childNode);//添加该子节点到对应的根节点列表
+                    });
+        }
         node.setChildren(childList);
     }
 }
