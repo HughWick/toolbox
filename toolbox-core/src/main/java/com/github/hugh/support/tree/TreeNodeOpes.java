@@ -63,13 +63,19 @@ public class TreeNodeOpes implements TreeNodeOpe<TreeNode, ElementTree> {
     /**
      * 设置是否启用排序功能。
      *
-     * @since 2.6.7
      * @param sortEnable true表示启用排序，false表示禁用排序
+     * @since 2.6.7
      */
     @Override
     public void setSortEnable(boolean sortEnable) {
         this.sortEnable = sortEnable;
     }
+
+    /**
+     * 根据节点的ID属性进行排序的比较器。
+     * 通过调用 TreeNodeExpand 对象的 getId 方法来获取 ID 属性。
+     */
+    private final Comparator<TreeNode> comparingById = Comparator.comparing(TreeNode::getId);
 
     /**
      * 创建 TreeNodeOpe 实例，并传入根节点列表和子节点列表。
@@ -186,27 +192,34 @@ public class TreeNodeOpes implements TreeNodeOpe<TreeNode, ElementTree> {
         if (sortEnable) {
             childNodesList.stream()
                     .filter(childNode -> childNode.getParentId().equals(node.getId()))//判断是否根节点的子节点
-                    .sorted(ascending ? Comparator.comparing(TreeNode::getId) : Comparator.comparing(TreeNode::getId).reversed()) // 根据id进行升序或降序排序
+                    .sorted(ascending ? comparingById : comparingById.reversed()) // 根据id进行升序或降序排序
                     .forEach(childNode -> {
-                        if (childNodesHashMap.containsKey(childNode.getId())) { // 排除重复的
-                            return;
-                        }
-                        childNodesHashMap.put(childNode.getId(), childNode.getParentId());//添加处理子节点信息
-                        assignChildNodes(childNodesList, childNode, childNodesHashMap);//递归设置该子节点的子节点列表
-                        childList.add(childNode);//添加该子节点到对应的根节点列表
+                        loop(childNodesList, childNode, childNodesHashMap, childList);
                     });
         } else { // 不需要排序
             childNodesList.stream()
                     .filter(childNode -> childNode.getParentId().equals(node.getId()))//判断是否根节点的子节点
                     .forEach(childNode -> {
-                        if (childNodesHashMap.containsKey(childNode.getId())) { // 排除重复的
-                            return;
-                        }
-                        childNodesHashMap.put(childNode.getId(), childNode.getParentId());//添加处理子节点信息
-                        assignChildNodes(childNodesList, childNode, childNodesHashMap);//递归设置该子节点的子节点列表
-                        childList.add(childNode);//添加该子节点到对应的根节点列表
+                        loop(childNodesList, childNode, childNodesHashMap, childList);
                     });
         }
         node.setChildren(childList);
+    }
+
+    /**
+     * 递归处理子节点，并将子节点添加到指定的列表中。
+     *
+     * @param childNodesList    子节点列表
+     * @param childNode         当前处理的子节点
+     * @param childNodesHashMap 子节点映射表
+     * @param childList         对应的根节点列表
+     */
+    private void loop(List<TreeNode> childNodesList, TreeNode childNode, Map<String, String> childNodesHashMap, List<TreeNode> childList) {
+        if (childNodesHashMap.containsKey(childNode.getId())) { // 排除重复的
+            return;
+        }
+        childNodesHashMap.put(childNode.getId(), childNode.getParentId());//添加处理子节点信息
+        assignChildNodes(childNodesList, childNode, childNodesHashMap);//递归设置该子节点的子节点列表
+        childList.add(childNode);//添加该子节点到对应的根节点列表
     }
 }
