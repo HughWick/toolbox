@@ -612,4 +612,28 @@ public class StringUtils {
             throw new ToolboxException(unsupportedEncodingException);
         }
     }
+
+    /**
+     * 去除重复字符串内容
+     *
+     * @param str 字符串
+     * @return String
+     * @since 2.6.8
+     */
+    public static String removeDuplicate(String str) {
+        StringBuilder stringBuffer = new StringBuilder();
+        int len = str.length();
+        for (int i = 0; i < len; i++) {
+            char c = str.charAt(i);
+            if (str.indexOf(c) == str.lastIndexOf(c)) {//此字符第一次位置和最后位置一致 即肯定没有重复的直接添加
+                stringBuffer.append(c);
+            } else {//同理 次字符出现过多次
+                int disposition = str.indexOf(c);//次字符第一次出现的位置
+                if (disposition == i) {//第一次出现的位置和当前位置一致 即第一次出现添加
+                    stringBuffer.append(c);
+                }
+            }
+        }
+        return stringBuffer.toString();
+    }
 }

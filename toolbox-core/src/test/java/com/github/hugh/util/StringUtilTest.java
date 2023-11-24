@@ -1,6 +1,5 @@
-package com.github.hugh.util.lang;
+package com.github.hugh.util;
 
-import com.github.hugh.util.StringUtils;
 import org.junit.jupiter.api.Test;
 
 import java.math.RoundingMode;
@@ -13,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author AS
  * @date 2020/9/11 16:05
  */
-class StringTest {
+class StringUtilTest {
 
     // 测试字符串长度
     @Test
@@ -166,5 +165,22 @@ class StringTest {
         assertEquals(18, StringUtils.calcUtf16Length(str1));
         assertEquals(9, StringUtils.calcGbkLength(str1));
         String str2 = "WC-TX65望&s、";
+    }
+
+
+    // 去重
+    @Test
+    void testRemoveDuplicate() {
+//        String str="aabbbccccdddddeeeeeeeeefff234tttdddfffbbbggg";
+        String result1 = "打开激光";
+        String str1 = "打开打开激光";
+        assertEquals(result1, StringUtils.removeDuplicate(str1));
+        String str2 = "打打开激光";
+        assertEquals(result1, StringUtils.removeDuplicate(str2));
+        String str3 = "呼叫刘呼叫刘晓晓";
+//        assertEquals("呼叫刘晓晓", StringUtils.removeDuplicate2(str3));
+        assertEquals("呼叫刘晓晓", StringUtils.removeDuplicate(str3));
+
+
     }
 }
