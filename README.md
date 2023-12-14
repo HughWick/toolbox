@@ -36,6 +36,6 @@ JDK 11+
 <dependency>
     <groupId>com.github.hughwick</groupId>
     <artifactId>toolbox-all</artifactId>
-    <version>2.6.8</version>
+    <version>2.7.0</version>
 </dependency>
 ```
