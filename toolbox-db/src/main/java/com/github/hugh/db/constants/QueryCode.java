@@ -58,4 +58,19 @@ public class QueryCode {
      */
     public static final String NAME = "NAME";
 
+    /**
+     * 小写
+     */
+    public static class Lowercase {
+        public static final String SERIAL_NO = QueryCode.SERIAL_NO.toLowerCase();
+        public static final String SERIAL_NUMBER = QueryCode.SERIAL_NUMBER.toLowerCase();
+        public static final String START_DATE = QueryCode.START_DATE.toLowerCase();
+        public static final String END_DATE = QueryCode.END_DATE.toLowerCase();
+        public static final String DELETE_FLAG = QueryCode.DELETE_FLAG.toLowerCase();
+        public static final String CREATE_DATE = QueryCode.CREATE_DATE.toLowerCase();
+        public static final String CREATE_BY = QueryCode.CREATE_BY.toLowerCase();
+        public static final String STATUS = QueryCode.STATUS.toLowerCase();
+        public static final String FLAG = QueryCode.FLAG.toLowerCase();
+        public static final String NAME = QueryCode.NAME.toLowerCase();
+    }
 }

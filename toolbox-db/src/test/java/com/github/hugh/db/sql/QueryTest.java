@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.hugh.db.constants.QueryCode;
 import com.github.hugh.db.util.MybatisPlusQueryUtils;
 import com.google.common.base.CaseFormat;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -26,10 +25,21 @@ class QueryTest {
     void testCode() {
         assertEquals("SERIAL_NO", QueryCode.SERIAL_NO);
         assertEquals("SERIAL_NUMBER", QueryCode.SERIAL_NUMBER);
-        assertEquals("STATUS" , QueryCode.STATUS);
-        assertEquals("FLAG" , QueryCode.FLAG);
-        assertEquals("CREATE_BY" , QueryCode.CREATE_BY);
-        assertEquals("NAME" , QueryCode.NAME);
+        assertEquals("STATUS", QueryCode.STATUS);
+        assertEquals("FLAG", QueryCode.FLAG);
+        assertEquals("CREATE_BY", QueryCode.CREATE_BY);
+        assertEquals("NAME", QueryCode.NAME);
+    }
+
+    // 测试小写
+    @Test
+    void testCodeLowercase() {
+        assertEquals("serial_no", QueryCode.Lowercase.SERIAL_NO);
+//        assertEquals("SERIAL_NUMBER", QueryCode.SERIAL_NUMBER);
+//        assertEquals("STATUS", QueryCode.STATUS);
+//        assertEquals("FLAG", QueryCode.FLAG);
+//        assertEquals("CREATE_BY", QueryCode.CREATE_BY);
+//        assertEquals("NAME", QueryCode.NAME);
     }
 
     @Test

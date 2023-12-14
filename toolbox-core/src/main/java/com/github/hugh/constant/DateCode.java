@@ -35,6 +35,12 @@ public class DateCode {
     public static final String YEAR_MONTH_DAY_HOUR_MIN_SEC = "yyyy-MM-dd HH:mm:ss";
 
     /**
+     * 完整的日期格式
+     * 年-月-日 时:分:秒.毫秒
+     */
+    public static final String YEAR_MONTH_DAY_HOUR_MIN_SEC_SSS = "yyyy-MM-dd HH:mm:ss.SSS";
+
+    /**
      * [年月日时分秒]去掉格式符号后的完整日期格式
      */
     public static final String YEAR_MONTH_DAY_HOUR_MIN_SEC_SIMPLE = "yyyyMMddHHmmss";
