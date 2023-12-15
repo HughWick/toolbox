@@ -12,16 +12,12 @@
     <artifactId>toolbox-bean</artifactId>
     <packaging>jar</packaging>
     <description>toolbox 工具类实体类包</description>
-    <properties>
-        <knife4j.version>3.0.3</knife4j.version>
-    </properties>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-spring-boot-starter -->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-boot-starter</artifactId>
-            <version>${knife4j.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>guava</artifactId>

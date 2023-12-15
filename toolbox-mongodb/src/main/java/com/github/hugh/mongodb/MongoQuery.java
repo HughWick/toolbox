@@ -1,6 +1,7 @@
 package com.github.hugh.mongodb;
 
-import com.github.hugh.mongodb.exception.MongoQueryException;
+import com.github.hugh.constant.StrPool;
+import com.github.hugh.mongodb.exception.ToolboxMongoException;
 import com.github.hugh.util.ListUtils;
 import com.google.common.collect.Lists;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +27,15 @@ public class MongoQuery {
      */
     public MongoQuery() {
         this.query = new Query();
+    }
+
+    /**
+     * 创建一个新的 MongoQuery 实例，用于构建 MongoDB 查询
+     *
+     * @return 返回 MongoQuery 对象，便于进行链式调用
+     */
+    public static MongoQuery on() {
+        return new MongoQuery();
     }
 
     /**
@@ -61,10 +71,10 @@ public class MongoQuery {
      */
     public MongoQuery or(List<String> keys, List<Object> values) {
         if (ListUtils.isEmpty(keys) || ListUtils.isEmpty(values)) {
-            throw new MongoQueryException("keys 和 values 不能为空");
+            throw new ToolboxMongoException("keys和values不能为空");
         }
         if (keys.size() != values.size()) {
-            throw new MongoQueryException("keys 和 values 的数量不匹配");
+            throw new ToolboxMongoException("keys和values的数量不匹配");
         }
         // 构造或查询条件
         List<Criteria> criterias = new ArrayList<>();
@@ -80,14 +90,26 @@ public class MongoQuery {
     }
 
     /**
-     * 添加模糊匹配查询条件
+     * 使用不区分大小写的正则表达式匹配方式查询指定字段值中包含给定字符串的文档
      *
-     * @param key   字段名
-     * @param value 匹配值
-     * @return 返回 MongoDB 查询对象
+     * @param key   要匹配的字段名
+     * @param value 要匹配的字符串
+     * @return 返回 MongoQuery 对象，便于进行链式调用
+     */
+    public MongoQuery likeIgnoreCase(String key, String value) {
+        query.addCriteria(Criteria.where(key).regex(".*" + value + ".*", "i"));
+        return this;
+    }
+
+    /**
+     * 使用区分大小写的正则表达式匹配方式查询指定字段值中包含给定字符串的文档
+     *
+     * @param key   要匹配的字段名
+     * @param value 要匹配的字符串
+     * @return 返回 MongoQuery 对象，便于进行链式调用
      */
     public MongoQuery like(String key, String value) {
-        query.addCriteria(Criteria.where(key).regex(".*" + value + ".*", "i"));
+        query.addCriteria(Criteria.where(key).regex(".*" + value + ".*"));
         return this;
     }
 
@@ -204,9 +226,9 @@ public class MongoQuery {
     /**
      * 使用同时满足大于等于和小于等于运算符的方式查询指定字段值在给定范围内的文档
      *
-     * @param key       要匹配的字段名
-     * @param gteValue  给定的比较下限值（包含）
-     * @param lteValue  给定的比较上限值（包含）
+     * @param key      要匹配的字段名
+     * @param gteValue 给定的比较下限值（包含）
+     * @param lteValue 给定的比较上限值（包含）
      * @return 返回 MongoQuery 对象，便于进行链式调用
      */
     public MongoQuery gteAndLte(String key, Object gteValue, Object lteValue) {
@@ -215,6 +237,46 @@ public class MongoQuery {
                 Criteria.where(key).gte(gteValue)
         );
         query.addCriteria(criteria);
+        return this;
+    }
+
+    /**
+     * 使用同时满足大于和小于运算符的方式查询指定字段值在给定范围内（不包含边界值）的文档
+     *
+     * @param key      要匹配的字段名
+     * @param gteValue 给定的比较下限值（不包含）
+     * @param lteValue 给定的比较上限值（不包含）
+     * @return 返回 MongoQuery 对象，便于进行链式调用
+     */
+    public MongoQuery gtAndLt(String key, Object gteValue, Object lteValue) {
+        Criteria criteria = new Criteria().andOperator(
+                Criteria.where(key).lt(lteValue),
+                Criteria.where(key).gt(gteValue)
+        );
+        query.addCriteria(criteria);
+        return this;
+    }
+
+    /**
+     * 添加一个条件，检查指定的键是否为空（包括空字符串或仅包含空格）。
+     * @param key 要检查的键
+     * @return 更新后的 MongoQuery 对象
+     */
+    public MongoQuery isBlank(String key) {
+        query.addCriteria(Criteria.where(key).is(StrPool.EMPTY));
+        return this;
+    }
+
+    /**
+     * 添加一个条件，检查指定的键是否为空（包括空字符串或 null）。
+     * @param key 要检查的键
+     * @return 更新后的 MongoQuery 对象
+     */
+    public MongoQuery isEmpty(String key) {
+        query.addCriteria(new Criteria().orOperator(
+                Criteria.where(key).is(StrPool.EMPTY),
+                Criteria.where(key).isNull()
+        ));
         return this;
     }
 }

@@ -20,6 +20,7 @@ public class CollectionDto {
     @Indexed
     @Field("serial_number")
     private String serialNumber;// 主机序列号
+
     @Field("flag")
     private int flag;// 交直流状态：0-交流异常、1-直流异常
     @Field("status")

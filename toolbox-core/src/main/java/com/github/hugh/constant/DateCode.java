@@ -37,6 +37,8 @@ public class DateCode {
     /**
      * 完整的日期格式
      * 年-月-日 时:分:秒.毫秒
+     *
+     * @since 2.7.0
      */
     public static final String YEAR_MONTH_DAY_HOUR_MIN_SEC_SSS = "yyyy-MM-dd HH:mm:ss.SSS";
 

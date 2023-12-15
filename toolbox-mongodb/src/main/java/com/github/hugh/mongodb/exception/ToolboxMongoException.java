@@ -6,12 +6,12 @@ package com.github.hugh.mongodb.exception;
  * @author hugh
  * @since 2.7.0
  */
-public class MongoQueryException extends RuntimeException {
+public class ToolboxMongoException extends RuntimeException {
 
     /**
      * 构造一个空的 MongoQueryException。
      */
-    public MongoQueryException() {
+    public ToolboxMongoException() {
     }
 
     /**
@@ -19,7 +19,7 @@ public class MongoQueryException extends RuntimeException {
      *
      * @param message 异常的详细信息
      */
-    public MongoQueryException(String message) {
+    public ToolboxMongoException(String message) {
         super(message);
     }
 
@@ -29,7 +29,7 @@ public class MongoQueryException extends RuntimeException {
      * @param message 异常的详细信息
      * @param cause   引起此异常的原因
      */
-    public MongoQueryException(String message, Throwable cause) {
+    public ToolboxMongoException(String message, Throwable cause) {
         super(message, cause);
     }
 
@@ -38,7 +38,7 @@ public class MongoQueryException extends RuntimeException {
      *
      * @param cause 引起此异常的原因
      */
-    public MongoQueryException(Throwable cause) {
+    public ToolboxMongoException(Throwable cause) {
         super(cause);
     }
 
@@ -50,7 +50,7 @@ public class MongoQueryException extends RuntimeException {
      * @param enableSuppression  是否启用抑制
      * @param writableStackTrace 是否可写堆栈跟踪
      */
-    public MongoQueryException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public ToolboxMongoException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

@@ -34,7 +34,7 @@ class QueryTest {
     // 测试小写
     @Test
     void testCodeLowercase() {
-        assertEquals("serial_no", QueryCode.Lowercase.SERIAL_NO);
+        assertEquals("serial_no", com.github.hugh.constant.QueryCode.Lowercase.SERIAL_NO);
 //        assertEquals("SERIAL_NUMBER", QueryCode.SERIAL_NUMBER);
 //        assertEquals("STATUS", QueryCode.STATUS);
 //        assertEquals("FLAG", QueryCode.FLAG);
