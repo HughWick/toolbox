@@ -55,13 +55,11 @@ public class StrPool {
      * 该常量表示一个下划线字符，在Java中通常用作标识符的一部分，而不是作为一个特殊的命名方式。
      * </p>
      *
-     * <p>
      * 示例用法：
      * <pre>
      * String name = "John" + StrPool.UNDERLINE + "Doe";
      * // 输出结果："John_Doe"
      * </pre>
-     * </p>
      *
      * @since 2.7.0
      */

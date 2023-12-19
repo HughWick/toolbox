@@ -81,6 +81,8 @@ public class RequestQuery {
      * 根据给定的参数创建一个Query对象。
      *
      * @param params 参数Map，包含查询条件和配置信息。
+     * @param <K>    KEY
+     * @param <V>    VALUE
      * @return 创建的Query对象。
      */
     public static <K, V> Query createQuery(Map<K, V> params) {
@@ -92,6 +94,8 @@ public class RequestQuery {
      * 根据给定的参数创建一个MongoQuery对象。
      *
      * @param params 参数Map，包含查询条件和配置信息。
+     * @param <K>    KEY
+     * @param <V>    VALUE
      * @return 创建的MongoQuery对象。
      */
     public static <K, V> MongoQuery create(Map<K, V> params) {
