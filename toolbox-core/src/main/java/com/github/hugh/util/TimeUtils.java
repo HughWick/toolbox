@@ -502,4 +502,15 @@ public class TimeUtils extends DateCode {
         Instant instant = date.toInstant();
         return LocalDateTime.ofInstant(instant, zoneId);
     }
+
+    /**
+     * 将 {@link Date} 对象转换为 {@link LocalDateTime} 对象，使用上海时区（Asia/Shanghai）。
+     *
+     * @param date 要转换的 {@link Date} 对象
+     * @return 转换后的 {@link LocalDateTime} 对象
+     * @since 2.7.0
+     */
+    public static LocalDateTime convertShanghai(Date date) {
+        return convert(date, ZoneId.of("Asia/Shanghai"));
+    }
 }

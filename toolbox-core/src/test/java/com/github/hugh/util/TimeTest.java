@@ -3,7 +3,9 @@ package com.github.hugh.util;
 import com.github.hugh.support.TimeoutOperation;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -117,7 +119,31 @@ class TimeTest {
 
     @Test
     void testIsExecuteTimeout() {
-        assertTrue(TimeUtils.isExecuteTimeout(400, 200 ));
+        assertTrue(TimeUtils.isExecuteTimeout(400, 200));
         assertFalse(TimeUtils.isExecuteTimeout(200, 400));
+    }
+
+    @Test
+    void testDateToLocalTime() {
+        // 创建一个Date对象
+        Date date = new Date(1639974073000L); // 2021-12-20 12:21:13  北京时间
+        // 调用convert方法，将Date对象转换为LocalDateTime对象
+        LocalDateTime localDateTime = TimeUtils.convert(date, ZoneId.of("Asia/Shanghai"));
+        // 验证转换后的LocalDateTime对象是否正确
+        assertEquals(2021, localDateTime.getYear());
+        assertEquals(12, localDateTime.getMonthValue());
+        assertEquals(20, localDateTime.getDayOfMonth());
+        assertEquals(12, localDateTime.getHour());
+        assertEquals(21, localDateTime.getMinute());
+        assertEquals(13, localDateTime.getSecond());
+        Date date2 = new Date(1702955655000L); // 2021-12-20 12:21:13  北京时间
+        LocalDateTime localDateTime2= TimeUtils.convertShanghai(date2);
+        // 验证转换后的LocalDateTime对象是否正确
+        assertEquals(2023, localDateTime2.getYear());
+        assertEquals(12, localDateTime2.getMonthValue());
+        assertEquals(19, localDateTime2.getDayOfMonth());
+        assertEquals(11, localDateTime2.getHour());
+        assertEquals(14, localDateTime2.getMinute());
+        assertEquals(15, localDateTime2.getSecond());
     }
 }
