@@ -114,9 +114,9 @@ public class MybatisPlusQueryUtils {
             if (EmptyUtils.isEmpty(value) || SORT.equals(key)) {
                 //空时不操作
             } else if (QueryCode.START_DATE.equals(tableField)) {
-                queryWrapper.ge(QueryCode.CREATE_DATE, value);//开始日期 小于等于
+                queryWrapper.ge(QueryCode.CREATE_DATE, value);
             } else if (QueryCode.END_DATE.equals(tableField)) {
-                queryWrapper.le(QueryCode.CREATE_DATE, value);//结束日期 大于等于
+                queryWrapper.le(QueryCode.CREATE_DATE, value);
             } else if (tableField.endsWith(LIKE)) {//判断结尾是否为模糊查询
                 tableField = tableField.replace(LIKE, EMPTY);//移除掉识别key
                 queryWrapper.like(tableField, value);

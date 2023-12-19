@@ -35,4 +35,6 @@ public class CollectionDto {
     public int deleteFlag;//删除标识：0-未删除、1-已删除
     @Field("data_version")
     public int dataVersion;// 数据类型：0-李工旧版主机、1-自研主机
+    @Field("vintage")
+    public int vintage;//年份
 }

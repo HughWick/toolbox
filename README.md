@@ -2,8 +2,7 @@
 
 收集日常工作中常用的工具类
 
-[![Build Status](https://app.travis-ci.com/HughWick/toolbox.svg?branch=2.4.X)](https://app.travis-ci.com/github/HughWick/toolbox)
-[![codecov](https://codecov.io/gh/HughWick/toolbox/branch/master/graph/badge.svg)](https://codecov.io/gh/HughWick/toolbox)
+[![Build Status](https://app.travis-ci.com/HughWick/toolbox.svg?branch=2.7.X)](https://app.travis-ci.com/github/HughWick/toolbox)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.hughwick/toolbox-all/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.hughwick/toolbox-all)
 [![](https://img.shields.io/badge/license-Apache2-FF0080.svg)](https://github.com/hughwick/toolbox/blob/master/LICENSE.txt)
 [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/hughwick/toolbox)
@@ -44,17 +43,17 @@ JDK >=11
 ```
 
 
-## Mybatis 查询工具类参数说明
+## Mybatis(Mongodb)查询工具类参数说明
 
 ##### 
-| key              | value      | 数据类型   | 说明                          |
-|------------------|------------|--------|-----------------------------|
-| serialNo_like    | 123        | Object | 模糊查询所有serialNo中包含123的数据     |
-| createBy_name_or | 张三         | Object | 返回createBy或name中的值包含“张三”的数据 |
-| serialNo_in      | a,b,c      | array  | 返回serialNo中的值等于a、b、c的三条数据   |
-| cerateDate_ge    | 2020-01-01 | Object | 大于等于                        |
-| cerateDate_le    | 2020-12-01 | Object | 小于等于                        |
-| order            | desc       | Object | 排序方式：     desc、asc                  |
-| sort             | id         | Object | 排序字段名称                        |
+| key              | value               | 数据类型  | 说明                               |
+|------------------|---------------------|----------|----------------------------------|
+| serialNo_like    | 123                 | Object   | 模糊查询所有serialNo中包含123的数据          |
+| createBy_name_or | 张三                 | Object   | 返回createBy或name中的值包含“张三”的数据      |
+| serialNo_in      | a,b,c               | array    | 返回serialNo中的值等于a、b、c的三条数据        |
+| cerateDate_ge    | yyyy-MM-dd HH:mm:ss | Date     | 大于等于                             |
+| cerateDate_le    | yyyy-MM-dd HH:mm:ss | Date     | 小于等于                             |
+| order            | desc                | Object   | 排序方式：     desc、asc               |
+| sort             | id                  | Object   | 排序字段名称                           |
 
 

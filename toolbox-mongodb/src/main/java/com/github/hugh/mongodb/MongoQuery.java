@@ -8,8 +8,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.schema.JsonSchemaObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -62,6 +65,18 @@ public class MongoQuery {
         return this;
     }
 
+    public MongoQuery or(List<String> keys, Object value) {
+        // 构造或查询条件
+        List<Criteria> criterias = new ArrayList<>();
+        for (String key : keys) {
+            criterias.add(Criteria.where(key).is(value));
+        }
+        Criteria orCriteria = new Criteria().orOperator(criterias.toArray(new Criteria[0]));
+        // 向查询对象中添加或查询条件
+        query.addCriteria(orCriteria.type(JsonSchemaObject.Type.objectType()));
+        return this;
+    }
+
     /**
      * 添加或查询条件，其中 keys 和 values 分别表示匹配字段和匹配值
      *
@@ -73,9 +88,9 @@ public class MongoQuery {
         if (ListUtils.isEmpty(keys) || ListUtils.isEmpty(values)) {
             throw new ToolboxMongoException("keys和values不能为空");
         }
-        if (keys.size() != values.size()) {
-            throw new ToolboxMongoException("keys和values的数量不匹配");
-        }
+//        if (keys.size() != values.size()) {
+//            throw new ToolboxMongoException("keys和values的数量不匹配");
+//        }
         // 构造或查询条件
         List<Criteria> criterias = new ArrayList<>();
         for (int i = 0; i < Math.min(keys.size(), values.size()); i++) {
@@ -171,6 +186,11 @@ public class MongoQuery {
      * @return 返回 MongoQuery 对象，便于进行链式调用
      */
     public MongoQuery in(String key, Object... values) {
+        in(key, Arrays.asList(values));
+        return this;
+    }
+
+    public MongoQuery in(String key, Collection<?> values) {
         query.addCriteria(Criteria.where(key).in(values));
         return this;
     }
@@ -259,6 +279,7 @@ public class MongoQuery {
 
     /**
      * 添加一个条件，检查指定的键是否为空（包括空字符串或仅包含空格）。
+     *
      * @param key 要检查的键
      * @return 更新后的 MongoQuery 对象
      */
@@ -269,6 +290,7 @@ public class MongoQuery {
 
     /**
      * 添加一个条件，检查指定的键是否为空（包括空字符串或 null）。
+     *
      * @param key 要检查的键
      * @return 更新后的 MongoQuery 对象
      */

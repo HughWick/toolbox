@@ -64,8 +64,9 @@ class MongoQueryTest {
         collectionTest.setStatus(0);
         collectionTest.setDeleteFlag(1);
         collectionTest.setDataVersion(0);
-        collectionTest.setCreateBy("周冬键");
+        collectionTest.setCreateBy("爱寺米");
         collectionTest.setCreateDate(new Date());
+        collectionTest.setVintage(2023);
         // when
         mongoTemplate.save(collectionTest, collection_name);
         // then

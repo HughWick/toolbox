@@ -58,6 +58,7 @@
         <commons-codec.version>1.15</commons-codec.version>
         <pdfbox.version>2.0.29</pdfbox.version>
         <knife4j.version>3.0.3</knife4j.version>
+        <bcprov-jdk15on.version>1.70</bcprov-jdk15on.version>
     </properties>
 
     <dependencies>
@@ -188,7 +189,7 @@
             <dependency>
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk15on</artifactId>
-                <version>1.70</version>
+                <version>${bcprov-jdk15on.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox -->
             <dependency>

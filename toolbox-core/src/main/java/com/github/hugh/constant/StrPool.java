@@ -49,6 +49,25 @@ public class StrPool {
     public static final String DASHED = "-";
 
     /**
+     * 常量：下划线字符 "_"
+     *
+     * <p>
+     * 该常量表示一个下划线字符，在Java中通常用作标识符的一部分，而不是作为一个特殊的命名方式。
+     * </p>
+     *
+     * <p>
+     * 示例用法：
+     * <pre>
+     * String name = "John" + StrPool.UNDERLINE + "Doe";
+     * // 输出结果："John_Doe"
+     * </pre>
+     * </p>
+     *
+     * @since 2.7.0
+     */
+    public static final String UNDERLINE = "_";
+
+    /**
      * 字符串常量：花括号（左） <code>"{"</code>
      */
     public static final String CURLY_BRACKETS_START = "{";
