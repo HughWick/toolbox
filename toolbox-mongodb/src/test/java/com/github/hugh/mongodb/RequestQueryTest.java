@@ -35,6 +35,8 @@ class RequestQueryTest {
     private static final String CREATE_DATE_GE_KEY = "createDate_ge";
     private static final String CREATE_DATE_LE_KEY = "createDate_le";
 
+    private static final String delete_flag = "deleteFlag";
+
     @AfterEach
     void clean() {
 //        mongodExecutable.stop();
@@ -44,9 +46,11 @@ class RequestQueryTest {
     void setup() {
 //        String ip = "localhost";
 //        int port = 27017;
+        if (mongoTemplate == null) {
         System.out.println("=======init====");
-        MongoClient mongoClient = MongoClients.create(CONNECTION_STRING);
-        mongoTemplate = new MongoTemplate(mongoClient, "cmmop");
+            MongoClient mongoClient = MongoClients.create(CONNECTION_STRING);
+            mongoTemplate = new MongoTemplate(mongoClient, "cmmop");
+        }
     }
 
     @Test
@@ -103,7 +107,7 @@ class RequestQueryTest {
         String queryStr1 = "Query: { \"$or\" : [{ \"deleteFlag\" : 1}, { \"dataVersion\" : 1}]}, Fields: {}, Sort: {}";
         assertEquals(queryStr1, query1.toString());
         List<CollectionDto> collectionTests = mongoTemplate.find(query1, CollectionDto.class);
-        assertEquals(9, collectionTests.size());
+        assertEquals(3, collectionTests.size());
     }
 
     @Test
@@ -112,12 +116,12 @@ class RequestQueryTest {
         Map<String, Object> map = new HashMap<>();
         map.put("order", "desc");// 降序
         map.put("sort", key1);
-        map.put("deleteFlag", 1);
+        map.put(delete_flag, 1);
         Query query1 = RequestQuery.create(map).query();
         String queryStr1 = "Query: { \"deleteFlag\" : 1}, Fields: {}, Sort: { \"createDate\" : -1}";
         assertEquals(queryStr1, query1.toString());
         List<CollectionDto> collectionTests = mongoTemplate.find(query1, CollectionDto.class);
-        assertEquals(9, collectionTests.size());
+        assertEquals(1, collectionTests.size());
         // 验证日期是否按降序排序
         LocalDateTime previousDate = null;
         for (CollectionDto collectionDto : collectionTests) {
@@ -135,12 +139,12 @@ class RequestQueryTest {
         Map<String, Object> map = new HashMap<>();
         map.put("order", "asc");// 降序
         map.put("sort", key1);
-        map.put("deleteFlag", 1);
+        map.put(delete_flag, 0);
         Query query1 = RequestQuery.create(map).query();
-        String queryStr1 = "Query: { \"deleteFlag\" : 1}, Fields: {}, Sort: { \"createDate\" : 1}";
+        String queryStr1 = "Query: { \"deleteFlag\" : 0}, Fields: {}, Sort: { \"createDate\" : 1}";
         assertEquals(queryStr1, query1.toString());
         List<CollectionDto> collectionTests = mongoTemplate.find(RequestQuery.createQuery(map), CollectionDto.class);
-        assertEquals(9, collectionTests.size());
+        assertEquals(12, collectionTests.size());
 // 验证日期是否按升序排序
         LocalDateTime previousDateTime = null;
         for (CollectionDto collectionDto : collectionTests) {
@@ -157,7 +161,7 @@ class RequestQueryTest {
         String start_key1 = "startDate";
         String end_key1 = "endDate";
         Map<String, Object> map = new LinkedHashMap<>();
-        map.put("deleteFlag", 1);
+        map.put(delete_flag, 0);
         map.put(start_key1, "2023-12-14 15:29:48.676");
         map.put(end_key1, "2023-12-15 10:51:24.108");
         Query query1 = RequestQuery.create(map).query();
@@ -165,7 +169,7 @@ class RequestQueryTest {
 //        assertEquals("", query1.toString());
 //        assertEquals(queryStr1, query1.getQueryObject().toJson());
         List<CollectionDto> collectionTests = mongoTemplate.find(query1, CollectionDto.class);
-        assertEquals(8, collectionTests.size());
+        assertEquals(7, collectionTests.size());
         collectionTests.forEach(System.out::println);
     }
 
@@ -214,22 +218,22 @@ class RequestQueryTest {
         String key_ge = CREATE_DATE_GE_KEY;
         String key_le = "createDate_le";
         Map<String, Object> map = new LinkedHashMap<>();
-        map.put("deleteFlag", 1);
+        map.put(delete_flag, 0);
         map.put(key_ge, "2023-12-14 15:29:48.676");
         map.put(key_le, "2023-12-15 10:51:24.108");
         Query query1 = RequestQuery.create(map).query();
 //        System.out.println("--->>" + query1.toString());
         List<CollectionDto> collectionTests = mongoTemplate.find(query1, CollectionDto.class);
-        assertEquals(8, collectionTests.size());
+        assertEquals(7, collectionTests.size());
         // 测试le在前
         Map<String, Object> map2 = new LinkedHashMap<>();
-        map2.put("deleteFlag", 1);
+        map2.put(delete_flag, 1);
         map2.put(key_le, "2023-12-15 10:51:24.108");
         map2.put(key_ge, "2023-12-14 15:29:48.676");
         Query query2 = RequestQuery.create(map2).query();
 //        System.out.println("--->>" + query1.toString());
         List<CollectionDto> collectionTest2 = mongoTemplate.find(query2, CollectionDto.class);
-        assertEquals(8, collectionTest2.size());
+        assertEquals(1, collectionTest2.size());
     }
 
     @Test
@@ -244,15 +248,35 @@ class RequestQueryTest {
         List<CollectionDto> collectionTest1 = mongoTemplate.find(query1, CollectionDto.class);
         assertEquals(7, collectionTest1.size());
         Map<String, Object> map2 = new LinkedHashMap<>();
-//        String key_ge_2 = "vintage_ge";
-//        String key_le_2 = "vintage_le";
         map2.put(key_ge_2, 2020);
         map2.put(key_le_2, 2023);
         System.out.println("--->" + map2);
         Query query2 = RequestQuery.create(map2).query();
         List<CollectionDto> collectionTest2 = mongoTemplate.find(query2, CollectionDto.class);
         assertEquals(4, collectionTest2.size());
+
     }
+
+    @Test
+    void testPage() {
+        Map<String, Object> map1 = new LinkedHashMap<>();
+        map1.put("page", 1);
+        map1.put("size", 2);
+        Query query1 = RequestQuery.create(map1).query();
+        List<CollectionDto> collectionTest1 = mongoTemplate.find(query1, CollectionDto.class);
+        assertEquals(2, collectionTest1.size());
+        for (CollectionDto collectionDto : collectionTest1) {
+            assertTrue(collectionDto.getSerialNumber().equals("123") || collectionDto.getSerialNumber().equals("test1"));
+        }
+        Map<String, Object> map2 = new LinkedHashMap<>();
+        map2.put("page", 1);
+        map2.put("size", 5);
+        map2.put(delete_flag, 0);
+        Query query2 = RequestQuery.create(map2).query();
+        List<CollectionDto> collectionTest2 = mongoTemplate.find(query2, CollectionDto.class);
+        assertEquals(5, collectionTest2.size());
+    }
+
 
     @Test
     void test02() {
@@ -261,28 +285,5 @@ class RequestQueryTest {
         System.out.println("--->" + key1);
         String before = StringUtils.before(key1, "_");
         System.out.println("--1---->" + before);
-//        String key_ge = "createDate_ge";
-//        String key_le = "createDate_le";
-        String start_key1 = "startDate";
-        String end_key1 = "endDate";
-        Map<String, Object> map = new LinkedHashMap<>();
-//        map.put("deleteFlag", 1);
-        map.put(start_key1, "2023-12-14 15:29:48.676");
-        map.put(end_key1, "2023-12-15 10:51:24.108");
-        // 使用Stream API遍历Map并修改key
-        Map<String, Object> modifiedMap = map.entrySet().stream()
-                .collect(Collectors.toMap(entry -> modifyKey(entry.getKey()), Map.Entry::getValue));
-        System.out.println(modifiedMap);
-    }
-
-    private static String modifyKey(String key) {
-        if ("startDate".equals(key)) {
-            return CREATE_DATE_GE_KEY;
-        } else if ("endDate".equals(key)) {
-            return CREATE_DATE_LE_KEY;
-        }
-        return null;
-//        // 这里可以根据需要对key进行修改
-//        return key.toUpperCase();
     }
 }

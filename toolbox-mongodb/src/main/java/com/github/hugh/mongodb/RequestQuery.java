@@ -1,10 +1,12 @@
 package com.github.hugh.mongodb;
 
+import com.github.hugh.bean.expand.tree.TreeNode;
 import com.github.hugh.constant.QueryCode;
 import com.github.hugh.constant.StrPool;
 import com.github.hugh.util.*;
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,12 +60,12 @@ public class RequestQuery {
     private static final String DATE = "date";
 
     /**
-     * 表示排序。
+     * 表示排序字段
      */
     private static final String SORT = "sort";
 
     /**
-     * 表示排序方式。
+     * 表示排序方式（asc-升序，desc-降序）
      */
     private static final String ORDER = "order";
 
@@ -102,11 +104,13 @@ public class RequestQuery {
         if (MapUtils.isEmpty(params)) {
             return new MongoQuery();
         }
-        // 使用Stream API遍历Map并修改key
+        MongoQuery mongoQuery = new MongoQuery();
+        // 使用Stream API遍历Map并修改，开始日期与结束日期，修改为大于等于（gte），与小于等于（lte）结尾
         Map<String, Object> modifiedMap = params.entrySet().stream()
                 .collect(Collectors.toMap(entry -> modifyKey(String.valueOf(entry.getKey())), Map.Entry::getValue));
         existMap = new HashMap<>();
-        MongoQuery mongoQuery = new MongoQuery();
+        // 移除page、size
+        page(modifiedMap.remove(QueryCode.Lowercase.PAGE), modifiedMap.remove(QueryCode.Lowercase.SIZE), mongoQuery);
         for (Map.Entry<String, Object> entry : modifiedMap.entrySet()) {
             String key = String.valueOf(entry.getKey());
             if (EmptyUtils.isEmpty(entry.getValue()) || SORT.equals(key)) {
@@ -132,6 +136,20 @@ public class RequestQuery {
             }
         }
         return mongoQuery;
+    }
+
+    /**
+     * 为查询数据设置分页参数。
+     *
+     * @param page       页码
+     * @param size       每页的数据量
+     * @param mongoQuery MongoDB 查询对象
+     * @since 2.7.1
+     */
+    public static void page(Object page, Object size, MongoQuery mongoQuery) {
+        if (EmptyUtils.isNotEmpty(page) && EmptyUtils.isNotEmpty(size)) {
+            mongoQuery.page(Integer.parseInt(String.valueOf(page)), Integer.parseInt(String.valueOf(size)));
+        }
     }
 
     /**
@@ -164,7 +182,7 @@ public class RequestQuery {
             return;
         }
         Object kye2Value = params.get(key2);
-        if (existAndIsNotEmpty(params, key2)) {
+        if (existAndIsNotEmpty(params.containsKey(key2), kye2Value)) {
             handleExistParams(key, entryValue, key2, kye2Value, mongoQuery);
         } else {
             handleNonExistParams(key, entryValue, mongoQuery, gteFlag);
@@ -185,15 +203,14 @@ public class RequestQuery {
         key = StringUtils.before(key, StrPool.UNDERLINE);
         // 判断key是否包含"date"，用于处理日期类型的参数
         if (key.toLowerCase().contains(DATE)) {
-            // 根据key2是否包含"le"进行不同操作
-            if (key2.contains(LE)) {
+            if (key2.contains(UNDERLINE_LE)) {
                 mongoQuery.gteAndLte(key, DateUtils.parse(keyValue), DateUtils.parse(key2Value));
             } else {
                 mongoQuery.gteAndLte(key, DateUtils.parse(key2Value), DateUtils.parse(keyValue));
             }
         } else {
-            // 根据key2是否包含"le"进行不同操作
-            if (key2.contains(LE)) {
+            if (key2.contains(UNDERLINE_LE)) {
+                // 这里实际并不会进入，map在默认排序情况下key2永远是ge结尾，当第一次进入并且判断key2有值时，直接放入缓存中，防止下次进入
                 mongoQuery.gteAndLte(key, keyValue, key2Value);
             } else {
                 mongoQuery.gteAndLte(key, key2Value, keyValue);
@@ -228,16 +245,15 @@ public class RequestQuery {
         }
     }
 
-
     /**
-     * 判断给定的params中是否存在指定的key，并且该key对应的值不为空
+     * 检查键是否存在且其值不为空。
      *
-     * @param params 给定的参数Map
-     * @param key    要判断的key
-     * @return 如果key存在且对应的值不为空，则返回true；否则返回false
+     * @param containsKey 键是否存在
+     * @param keyValue    键的值
+     * @return 如果键存在且其值不为空，则返回true，否则返回false
      */
-    public static boolean existAndIsNotEmpty(Map params, String key) {
-        return params.containsKey(key) && EmptyUtils.isNotEmpty(params.get(key));
+    public static boolean existAndIsNotEmpty(boolean containsKey, Object keyValue) {
+        return containsKey && EmptyUtils.isNotEmpty(keyValue);
     }
 }
 

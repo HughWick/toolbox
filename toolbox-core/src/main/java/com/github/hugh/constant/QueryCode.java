@@ -7,6 +7,7 @@ package com.github.hugh.constant;
  * @since 2.7.0
  */
 public class QueryCode {
+    private QueryCode(){}
 
     /**
      * 序列号
@@ -55,8 +56,22 @@ public class QueryCode {
 
     /**
      * 名称
+     *
+     * @since 2.7.1
      */
     public static final String NAME = "NAME";
+    /**
+     * 常量：页码。
+     *
+     * @since 2.7.1
+     */
+    public static final String PAGE = "PAGE";
+
+    /**
+     * 常量：每页的数据量。
+     */
+    public static final String SIZE = "SIZE";
+
 
     /**
      * 小写
@@ -101,5 +116,18 @@ public class QueryCode {
          * 名称
          */
         public static final String NAME = QueryCode.NAME.toLowerCase();
+        /**
+         * 常量：页码。
+         *
+         * @since 2.7.1
+         */
+        public static final String PAGE = QueryCode.PAGE.toLowerCase();
+        /**
+         * 常量：每页的数据量。
+         *
+         * @since 2.7.1
+         */
+        public static final String SIZE = QueryCode.SIZE.toLowerCase();
+
     }
 }
