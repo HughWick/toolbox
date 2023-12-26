@@ -156,6 +156,30 @@ public class MongoQuery {
     }
 
     /**
+     * 按照指定的key，对查询结果进行降序排序
+     *
+     * @param key 用于排序的字段名
+     * @return 返回当前的MongoQuery对象，以便支持链式调用
+     * @since 2.7.2
+     */
+    public MongoQuery orderByDesc(String key) {
+        orderBy(key, Sort.Direction.DESC.toString());
+        return this;
+    }
+
+    /**
+     * 按照指定的key，对查询结果进行升序排序
+     *
+     * @param key 用于排序的字段名
+     * @return 返回当前的MongoQuery对象，以便支持链式调用
+     * @since 2.7.2
+     */
+    public MongoQuery orderByAsc(String key) {
+        orderBy(key, Sort.Direction.ASC.toString());
+        return this;
+    }
+
+    /**
      * 获取当前的查询对象
      *
      * @return 返回当前的查询对象

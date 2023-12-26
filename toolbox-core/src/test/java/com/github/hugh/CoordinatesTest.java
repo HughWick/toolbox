@@ -76,6 +76,13 @@ class CoordinatesTest {
         String str4 = "$GNGGA,033652,2517.4725,N,11040.8766,E,1,3,37.16,-323.4,M,-19.8,M,,*7B";
         GgaDTO ggaDTO4 = CoordinatesUtils.parseGga(str4);
         assertEquals("11:36:52", ggaDTO4.getReadingDate());
+        // 定位失败，且卫星数量为0
+        String str5 = "$GNGGA,064603.00,2813.1906,N,11241.3959,E,0,00,99.99,-69.7,M,,M,,*78";
+        GgaDTO ggaDTO5 = CoordinatesUtils.parseGga(str5);
+        assertEquals("00",ggaDTO5.getNumberOfSatellites());
+        assertEquals("0",ggaDTO5.getGpsStatus());
+//        assertEquals("11:36:52", ggaDTO4.getReadingDate());
+
     }
 
     @Test
@@ -96,6 +103,7 @@ class CoordinatesTest {
         assertEquals("A", rmcDTO2.getStatus());
 //        assertEquals("V*14", rmcDTO2.getCalibrationValue());
     }
+
 
     // 测试两点间距离
     @Test

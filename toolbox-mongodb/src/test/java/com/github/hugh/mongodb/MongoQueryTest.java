@@ -128,7 +128,7 @@ class MongoQueryTest {
         MongoQuery mongoQuery1 = new MongoQuery();
         mongoQuery1.where("flag", 0)
                 .like(SERIAL_NUMBER, "test")
-                .orderBy("create_date", "desc");
+                .orderBy(CREATE_DATE, "desc");
         List<CollectionDto> collection = mongoTemplate.find(mongoQuery1.query(), CollectionDto.class);
         assertEquals(2, collection.size());
         // 验证集合不为空
@@ -140,13 +140,40 @@ class MongoQueryTest {
             assertTrue(currentDate.compareTo(nextDate) >= 0,
                     "集合中的元素未按照 create_date 属性降序排列");
         }
+        MongoQuery mongoQuery2 = new MongoQuery();
+        mongoQuery2.where("flag", 0)
+                .like(SERIAL_NUMBER, "test")
+                .orderByDesc(CREATE_DATE);
+        List<CollectionDto> collection2 = mongoTemplate.find(mongoQuery2.query(), CollectionDto.class);
+        assertEquals(2, collection2.size());
+        // 验证集合不为空
+        assertNotNull(collection2, "返回的集合不能为空");
+        // 验证集合按照指定属性降序排列
+        for (int i = 0; i < collection2.size() - 1; i++) {
+            Date currentDate = collection2.get(i).getCreateDate();
+            Date nextDate = collection2.get(i + 1).getCreateDate();
+            assertTrue(currentDate.compareTo(nextDate) >= 0,
+                    "集合中的元素未按照 create_date 属性降序排列");
+        }
     }
 
     // 升序
     @Test
     void testOrderByAsc() {
+        MongoQuery mongoQuery1 = new MongoQuery();
+        mongoQuery1.orderBy(CREATE_DATE, "asc");
+        List<CollectionDto> collection1 = mongoTemplate.find(mongoQuery1.query(), CollectionDto.class);
+        // 验证集合不为空
+        assertNotNull(collection1, "返回的集合不能为空");
+        // 验证集合按照指定属性升序排列
+        for (int i = 0; i < collection1.size() - 1; i++) {
+            Date currentDate = collection1.get(i).getCreateDate();
+            Date nextDate = collection1.get(i + 1).getCreateDate();
+            assertTrue(currentDate.compareTo(nextDate) <= 0,
+                    "集合中的元素未按照 create_date 属性升序排列");
+        }
         MongoQuery mongoQuery2 = new MongoQuery();
-        mongoQuery2.orderBy("create_date", "asc");
+        mongoQuery2.orderByAsc(CREATE_DATE);
         List<CollectionDto> collection2 = mongoTemplate.find(mongoQuery2.query(), CollectionDto.class);
         // 验证集合不为空
         assertNotNull(collection2, "返回的集合不能为空");
