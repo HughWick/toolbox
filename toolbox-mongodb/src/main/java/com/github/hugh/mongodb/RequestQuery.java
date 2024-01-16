@@ -93,6 +93,41 @@ public class RequestQuery {
     }
 
     /**
+     * 根据传入的参数生成MongoDB的分页查询条件，并返回相应的Query对象。
+     *
+     * @param params 查询参数
+     * @param <K>    参数键类型
+     * @param <V>    参数值类型
+     * @return 生成的Query对象
+     * @since 2.7.2
+     */
+    public static <K, V> Query createPageQuery(Map<K, V> params) {
+        // 调用createPage方法创建MongoQuery对象，并返回其中的query方法返回的Query对象
+        return createPage(params).query();
+    }
+
+    /**
+     * 创建MongoQuery对象并生成分页查询条件
+     *
+     * @param params 查询参数
+     * @param <K>    参数键类型
+     * @param <V>    参数值类型
+     * @return 生成的MongoQuery对象
+     * @since 2.7.2
+     */
+    public static <K, V> MongoQuery createPage(Map<K, V> params) {
+        if (params == null) {
+            throw new NullPointerException();
+        }
+        Map<K, V> kvMap = EntityUtils.deepClone(params);
+        Object page = kvMap.remove(QueryCode.Lowercase.PAGE);
+        Object size = kvMap.remove(QueryCode.Lowercase.SIZE);
+        MongoQuery mongoQuery = create(kvMap);
+        page(page, size, mongoQuery);
+        return mongoQuery;
+    }
+
+    /**
      * 根据给定的参数创建一个MongoQuery对象。
      *
      * @param params 参数Map，包含查询条件和配置信息。
@@ -100,7 +135,7 @@ public class RequestQuery {
      * @param <V>    VALUE
      * @return 创建的MongoQuery对象。
      */
-    public static <K, V> MongoQuery create(Map<K, V> params) {
+    private static <K, V> MongoQuery create(Map<K, V> params) {
         if (MapUtils.isEmpty(params)) {
             return new MongoQuery();
         }
@@ -109,8 +144,6 @@ public class RequestQuery {
         Map<String, Object> modifiedMap = params.entrySet().stream()
                 .collect(Collectors.toMap(entry -> modifyKey(String.valueOf(entry.getKey())), Map.Entry::getValue));
         existMap = new HashMap<>();
-        // 移除page、size
-        page(modifiedMap.remove(QueryCode.Lowercase.PAGE), modifiedMap.remove(QueryCode.Lowercase.SIZE), mongoQuery);
         for (Map.Entry<String, Object> entry : modifiedMap.entrySet()) {
             String key = String.valueOf(entry.getKey());
             if (EmptyUtils.isEmpty(entry.getValue()) || SORT.equals(key)) {

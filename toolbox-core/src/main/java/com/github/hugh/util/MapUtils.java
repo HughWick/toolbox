@@ -9,6 +9,7 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -21,7 +22,8 @@ import java.util.*;
  * @since 1.0.2
  */
 public class MapUtils {
-    private MapUtils(){}
+    private MapUtils() {
+    }
 
     /**
      * 判断指定的Map中，key对应的value是否与所传入的code参数相等。
@@ -605,5 +607,49 @@ public class MapUtils {
             map.put(values[0], values[1]);
         }
         return map;
+    }
+
+    /**
+     * 将一个 Java 对象转换为一个包含字段名和字段值的 Map。
+     *
+     * @param bean 要转换的对象
+     * @param <T>  对象的类型
+     * @return 包含字段名和字段值的 Map
+     * @throws ToolboxException 如果访问字段时发生异常
+     * @since 2.7.2
+     */
+    public static <T> Map<String, Object> entityToMap(T bean) throws ToolboxException {
+        return entityToMap(bean, false);
+    }
+
+    /**
+     * 将JavaBean对象转换为Map对象。
+     *
+     * @param bean       要转换的JavaBean对象
+     * @param isNotEmpty 是否只添加非空字段到Map中
+     * @param <T>        JavaBean对象类型
+     * @return 转换后的Map对象
+     * @since 2.7.2
+     */
+    public static <T> Map<String, Object> entityToMap(T bean, boolean isNotEmpty) {
+        Map<String, Object> item = new HashMap<>();
+        Class<?> clazz = bean.getClass();
+        for (Field field : clazz.getDeclaredFields()) {
+            try {
+                field.setAccessible(true);
+                // 将字段名和字段值添加到 Map 中
+                if (isNotEmpty) {
+                    if (EmptyUtils.isNotEmpty(field.get(bean))) {
+                        item.put(field.getName(), field.get(bean));
+                    }
+                } else {
+                    item.put(field.getName(), field.get(bean));
+                }
+            } catch (IllegalAccessException illegalAccessException) {
+                // 如果访问字段时发生异常，抛出自定义异常
+                throw new ToolboxException(illegalAccessException);
+            }
+        }
+        return item;
     }
 }

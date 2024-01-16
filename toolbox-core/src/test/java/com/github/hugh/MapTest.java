@@ -1,5 +1,6 @@
 package com.github.hugh;
 
+import com.github.hugh.model.GsonTest;
 import com.github.hugh.model.Student;
 import com.github.hugh.util.EntityUtils;
 import com.github.hugh.util.MapUtils;
@@ -229,6 +230,23 @@ class MapTest {
         assertEquals(userToken, stringStringMap.get("X-Cmmop-User-Token"));
     }
 
+    @Test
+    void testEntityToMap() {
+        GsonTest gsonTest = new GsonTest();
+        gsonTest.setCode("012");
+        gsonTest.setAge(18);
+        gsonTest.setAmount(998.9);
+        gsonTest.setSwitchs(false);
+        gsonTest.setCreated(new Date());
+        Map<String, Object> stringObjectMap = MapUtils.entityToMap(gsonTest);
+        System.out.println("==2==>>"+stringObjectMap);
+        // 校验stringObjectMap中的值类型是否与GsonTest中的一致
+        assertEquals(String.class, stringObjectMap.get("code").getClass());
+        assertEquals(Integer.class, stringObjectMap.get("age").getClass());
+        assertEquals(Double.class, stringObjectMap.get("amount").getClass());
+        assertEquals(Boolean.class, stringObjectMap.get("switchs").getClass());
+        assertEquals(Date.class, stringObjectMap.get("created").getClass());
+    }
 }
 
 

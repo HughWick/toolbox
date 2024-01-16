@@ -357,6 +357,8 @@ public class GsonUtils {
      * 对象转换为{@link HashMap}
      *
      * <p>使用的自定义的{@link MapTypeAdapter}解析器,重写了数值转换校验</p>
+     * <p>该方法转换出来的value数据类型都为{@link String}</p>
+     * <p>如需要将实体中的值转换为对应类型的值，使用{@link MapUtils#entityToMap(Object)}</p>
      *
      * @param object 对象
      * @param <E>    对象泛型
