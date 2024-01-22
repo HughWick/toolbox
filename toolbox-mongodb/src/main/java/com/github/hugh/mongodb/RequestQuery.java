@@ -1,12 +1,10 @@
 package com.github.hugh.mongodb;
 
-import com.github.hugh.bean.expand.tree.TreeNode;
 import com.github.hugh.constant.QueryCode;
 import com.github.hugh.constant.StrPool;
 import com.github.hugh.util.*;
 import org.springframework.data.mongodb.core.query.Query;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -135,7 +133,7 @@ public class RequestQuery {
      * @param <V>    VALUE
      * @return 创建的MongoQuery对象。
      */
-    private static <K, V> MongoQuery create(Map<K, V> params) {
+    public static <K, V> MongoQuery create(Map<K, V> params) {
         if (MapUtils.isEmpty(params)) {
             return new MongoQuery();
         }
