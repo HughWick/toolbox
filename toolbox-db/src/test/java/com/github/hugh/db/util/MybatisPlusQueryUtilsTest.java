@@ -60,7 +60,18 @@ class MybatisPlusQueryUtilsTest {
         map.put("serialNumber_powerCode_meteringBoardCode_boxBatch__or", "123");
         String targetSql = MybatisPlusQueryUtils.create(map).getTargetSql();
         assertEquals("((SERIAL_NUMBER LIKE ? OR POWER_CODE LIKE ? OR METERING_BOARD_CODE LIKE ? OR BOX_BATCH LIKE ?))", targetSql);
-//        System.out.println(targetSql);
+        Map<String, String> map2 = new HashMap<>();
+        map2.put("name_serialNo_sex_or", "332");
+        String targetSql2 = MybatisPlusQueryUtils.create(map2).getTargetSql();
+        assertEquals("((NAME LIKE ? OR SERIAL_NO LIKE ? OR SEX LIKE ?))", targetSql2);
+        Map<String, String> map3 = new HashMap<>();
+        map3.put("name_serialNo_sex__or", "332");
+        String targetSql3 = MybatisPlusQueryUtils.create(map3).getTargetSql();
+        assertEquals("((NAME LIKE ? OR SERIAL_NO LIKE ? OR SEX LIKE ?))", targetSql3);
+        Map<String, String> map4 = new HashMap<>();
+        map4.put("name_serialNo_socketChannelId__or", "332");
+        String targetSql4 = MybatisPlusQueryUtils.create(map4,false).getTargetSql();
+        assertEquals("((name LIKE ? OR serial_no LIKE ? OR socket_channel_id LIKE ?))", targetSql4);
     }
 
     // 测试in 语句
@@ -70,12 +81,22 @@ class MybatisPlusQueryUtilsTest {
         map.put("serialNumber_in", "123,abc,是,发");
         String key = "name_IN";
         map.put(key, "大写,ABC,@!#,{}");
+        //
         String to = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key);
         assertEquals("NAME__I_N", to);
-//        System.out.println("====LOWER_CAMEL===>>>" + to);
         String targetSql = MybatisPlusQueryUtils.create(map).getTargetSql();
         assertEquals("(SERIAL_NUMBER IN ('123','abc','是','发') AND NAME__I_N = ?)", targetSql);
-//        System.out.println(targetSql);
+        Map<String, String> map2 = new HashMap<>();
+        map2.put("NetworkFlag_in", "123,abc,是,发");
+        String targetSql2 = MybatisPlusQueryUtils.create(map2).getTargetSql();
+        assertEquals("(NETWORK_FLAG IN ('123','abc','是','发'))" , targetSql2);
+        Map<String, String> map3 = new HashMap<>();
+        map3.put("heartbeatFlag_in", "1,100,4");
+        map3.put("deleteFlag", "1");
+        String targetSql3 = MybatisPlusQueryUtils.create(map3).getTargetSql();
+        assertEquals("(DELETE_FLAG = ? AND HEARTBEAT_FLAG IN ('1','100','4'))" , targetSql3);
+        String targetSql4 = MybatisPlusQueryUtils.create(map3 , false).getTargetSql();
+        assertEquals("(delete_flag = ? AND heartbeat_flag IN ('1','100','4'))" , targetSql4);
     }
 
     // 测试大于、小于

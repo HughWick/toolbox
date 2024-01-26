@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.math.RoundingMode;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 字符串工具测试
@@ -93,10 +94,10 @@ class StringUtilTest {
         String fileName = path1 + "\\0e9f4beeb6a5423585c6eabda21a63ee.jpg";
 //        String string2 = "https://www.hnlot.com.cn/DaHua" + path2;
         assertEquals(path1, StringUtils.before(fileName, "\\"));
-
         String str1 = "abc.sql";
-        System.out.println("--->" + StringUtils.before(str1, "."));
-
+        assertEquals("abc", StringUtils.before(str1, "."));
+        String str2 = "create_date_le_le";
+        assertEquals("create_date_le", StringUtils.before(str2, "_"));
     }
 
 

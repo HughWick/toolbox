@@ -7,6 +7,7 @@ import com.github.hugh.db.constants.QueryCode;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.ListUtils;
 import com.github.hugh.util.ServletUtils;
+import com.github.hugh.util.StringUtils;
 import com.google.common.base.CaseFormat;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,9 +39,9 @@ public class MybatisPlusQueryUtils {
     private static final String LIKE = "_LIKE";
 
     /**
-     * 多个等于
+     * in 多个等于
      */
-    private static final String IN_FIELD_NAME = "_IN";
+    private static final String IN_FIELD_NAME = "_id";
 
     /**
      * 空字符串
@@ -142,10 +143,6 @@ public class MybatisPlusQueryUtils {
             String tableField = conversion(key, keyUpper);//将key转化为与数据库列一致的名称
             if (EmptyUtils.isEmpty(value) || SORT.equals(key)) {
                 //空时不操作
-//            } else if (QueryCode.START_DATE.equals(tableField)) {
-//                queryWrapper.ge(QueryCode.CREATE_DATE, value);
-//            } else if (QueryCode.END_DATE.equals(tableField)) {
-//                queryWrapper.le(QueryCode.CREATE_DATE, value);
             } else if (tableField.endsWith(LIKE)) {//判断结尾是否为模糊查询
                 tableField = tableField.replace(LIKE, StrPool.EMPTY);//移除掉识别key
                 queryWrapper.like(tableField, value);
@@ -153,8 +150,8 @@ public class MybatisPlusQueryUtils {
                 String sortValue = String.valueOf(params.get(SORT));
                 appendOrderSql(queryWrapper, value, sortValue);
             } else if (key.endsWith("_or")) { // 结尾是否为or
-                appendOrSql(queryWrapper, key, value);
-            } else if (tableField.endsWith(IN_FIELD_NAME)) {
+                appendOrSql(queryWrapper, key, value, keyUpper);
+            } else if (key.endsWith(IN_FIELD_NAME)) {
                 appendInSql(queryWrapper, tableField, value);
             } else if (tableField.endsWith(GE)) {
                 tableField = tableField.replace(GE, StrPool.EMPTY);
@@ -208,7 +205,7 @@ public class MybatisPlusQueryUtils {
      * @param <T>          类型
      */
     private static <T> void appendInSql(QueryWrapper<T> queryWrapper, String tableField, Object value) {
-        tableField = tableField.replace(IN_FIELD_NAME, StrPool.EMPTY);
+        tableField = StringUtils.before(tableField, StrPool.UNDERLINE);
         List<String> objects = ListUtils.guavaStringToList(String.valueOf(value));
         // 转换成 in语句
         StringBuilder stringBuilder = new StringBuilder();
@@ -227,13 +224,13 @@ public class MybatisPlusQueryUtils {
      * @param value        值
      * @param <T>          类型
      */
-    private static <T> void appendOrSql(QueryWrapper<T> queryWrapper, String tableField, Object value) {
-        tableField = tableField.replace("_or", StrPool.EMPTY);//移除掉标识or
+    private static <T> void appendOrSql(QueryWrapper<T> queryWrapper, String tableField, Object value, boolean keyUpper) {
+        tableField = StringUtils.before(tableField, StrPool.UNDERLINE);
         List<String> strings = ListUtils.guavaStringToList(tableField, StrPool.UNDERLINE);
         // 遍历所有or字段，放入like查询内
         queryWrapper.and(orQueryWrapper -> {
             for (String queryKey : strings) {
-                String conversion = conversion(queryKey, true);
+                String conversion = conversion(queryKey, keyUpper);
                 orQueryWrapper.like(conversion, value).or();
             }
         });
