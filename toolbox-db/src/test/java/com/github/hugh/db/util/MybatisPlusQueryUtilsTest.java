@@ -1,8 +1,7 @@
-package com.github.hugh.db.sql;
+package com.github.hugh.db.util;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.hugh.db.constants.QueryCode;
-import com.github.hugh.db.util.MybatisPlusQueryUtils;
 import com.google.common.base.CaseFormat;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -17,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * User: AS
  * Date: 2021/11/11 10:44
  */
-class QueryTest {
+class MybatisPlusQueryUtilsTest {
 
 //    private MockHttpServletRequest request;
 
@@ -91,7 +90,7 @@ class QueryTest {
     }
 
     @Test
-    void testCreate() {
+    void testRequestCreate() {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("userId", "9001"); //直接添加request参数，相当简单
         QueryWrapper<Object> objectQueryWrapper = MybatisPlusQueryUtils.create(request);
@@ -104,5 +103,14 @@ class QueryTest {
         QueryWrapper<Object> defQueryWrapper = MybatisPlusQueryUtils.createDef(map);
         assertEquals("(DELETE_FLAG = ?)", defQueryWrapper.getTargetSql());
 //        System.out.println("--->>" + defQueryWrapper.getTargetSql());
+    }
+
+    @Test
+    void testRequestCreateLowerCase() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("serialNo", "9001"); //直接添加request参数，相当简单
+        QueryWrapper<Object> objectQueryWrapper = MybatisPlusQueryUtils.createLowerCase(request);
+        System.out.println(objectQueryWrapper.getSqlSelect());
+        assertEquals("(serial_no = ?)", objectQueryWrapper.getTargetSql());
     }
 }
