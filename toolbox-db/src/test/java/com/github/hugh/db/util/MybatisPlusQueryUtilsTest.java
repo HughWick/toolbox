@@ -42,6 +42,14 @@ class MybatisPlusQueryUtilsTest {
     }
 
     @Test
+    void testCreateLowerCase() {
+        Map<String, String> map = new HashMap<>();
+        map.put("model", "12V".toLowerCase());
+        map.put("startDate", "2020-01-12 00:00:00");
+        assertEquals("(model = ? AND create_date >= ?)", MybatisPlusQueryUtils.createLowCase(map).getTargetSql());
+    }
+
+    @Test
     void testDate() {
         Map<String, String> map = new HashMap<>();
         map.put("model", "12V");
@@ -70,7 +78,7 @@ class MybatisPlusQueryUtilsTest {
         assertEquals("((NAME LIKE ? OR SERIAL_NO LIKE ? OR SEX LIKE ?))", targetSql3);
         Map<String, String> map4 = new HashMap<>();
         map4.put("name_serialNo_socketChannelId__or", "332");
-        String targetSql4 = MybatisPlusQueryUtils.create(map4,false).getTargetSql();
+        String targetSql4 = MybatisPlusQueryUtils.create(map4, false).getTargetSql();
         assertEquals("((name LIKE ? OR serial_no LIKE ? OR socket_channel_id LIKE ?))", targetSql4);
     }
 
@@ -89,14 +97,14 @@ class MybatisPlusQueryUtilsTest {
         Map<String, String> map2 = new HashMap<>();
         map2.put("NetworkFlag_in", "123,abc,是,发");
         String targetSql2 = MybatisPlusQueryUtils.create(map2).getTargetSql();
-        assertEquals("(NETWORK_FLAG IN ('123','abc','是','发'))" , targetSql2);
+        assertEquals("(NETWORK_FLAG IN ('123','abc','是','发'))", targetSql2);
         Map<String, String> map3 = new HashMap<>();
         map3.put("heartbeatFlag_in", "1,100,4");
         map3.put("deleteFlag", "1");
         String targetSql3 = MybatisPlusQueryUtils.create(map3).getTargetSql();
-        assertEquals("(DELETE_FLAG = ? AND HEARTBEAT_FLAG IN ('1','100','4'))" , targetSql3);
-        String targetSql4 = MybatisPlusQueryUtils.create(map3 , false).getTargetSql();
-        assertEquals("(delete_flag = ? AND heartbeat_flag IN ('1','100','4'))" , targetSql4);
+        assertEquals("(DELETE_FLAG = ? AND HEARTBEAT_FLAG IN ('1','100','4'))", targetSql3);
+        String targetSql4 = MybatisPlusQueryUtils.create(map3, false).getTargetSql();
+        assertEquals("(delete_flag = ? AND heartbeat_flag IN ('1','100','4'))", targetSql4);
     }
 
     // 测试大于、小于

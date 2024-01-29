@@ -102,8 +102,8 @@ public class StringUtils {
     /**
      * 截取字符最后一个之前的所有字符串
      * <ul>
-     * <li>例：字符串：https://github.com/HughWick/toolbox</li>
-     * <li>返回字符串：https://github.com/HughWick</li>
+     * <li>例：字符串：{@code https://github.com/HughWick/toolbox}</li>
+     * <li>返回字符串：{@code https://github.com/HughWick}</li>
      * </ul>
      *
      * @param value 字符串

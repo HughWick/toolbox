@@ -41,12 +41,7 @@ public class MybatisPlusQueryUtils {
     /**
      * in 多个等于
      */
-    private static final String IN_FIELD_NAME = "_id";
-
-    /**
-     * 空字符串
-     */
-//    private static final String EMPTY = "";
+    private static final String IN_FIELD_NAME = "_in";
 
     /**
      * 排序
@@ -94,6 +89,20 @@ public class MybatisPlusQueryUtils {
      */
     public static <T, K, V> QueryWrapper<T> create(Map<K, V> params) {
         return create(params, true);
+    }
+
+    /**
+     * 根据指定的参数Map创建一个使用小写键的QueryWrapper对象。
+     *
+     * @param params 参数Map，其中的key和value将用于创建QueryWrapper对象
+     * @param <T>    QueryWrapper对象的泛型类型
+     * @param <K>    Map中key的类型
+     * @param <V>    Map中value的类型
+     * @return 创建的QueryWrapper对象
+     * @since 2.7.4
+     */
+    public static <T, K, V> QueryWrapper<T> createLowCase(Map<K, V> params) {
+        return create(params, false);
     }
 
     /**
@@ -153,11 +162,11 @@ public class MybatisPlusQueryUtils {
                 appendOrSql(queryWrapper, key, value, keyUpper);
             } else if (key.endsWith(IN_FIELD_NAME)) {
                 appendInSql(queryWrapper, tableField, value);
-            } else if (tableField.endsWith(GE)) {
-                tableField = tableField.replace(GE, StrPool.EMPTY);
+            } else if (tableField.endsWith(GE) || tableField.endsWith("_ge")) {
+                tableField = StringUtils.before(tableField, StrPool.UNDERLINE);
                 queryWrapper.ge(tableField, value);
-            } else if (tableField.endsWith(LE)) {
-                tableField = tableField.replace(LE, StrPool.EMPTY);//移除掉识别key
+            } else if (tableField.endsWith(LE) || tableField.endsWith("_le")) {
+                tableField = StringUtils.before(tableField, StrPool.UNDERLINE);
                 queryWrapper.le(tableField, value);//小于等于
             } else {
                 queryWrapper.eq(tableField, value);
