@@ -7,8 +7,11 @@ import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.StringUtils;
 import com.google.gson.JsonElement;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -18,6 +21,8 @@ import java.util.Map;
  * @since 2.0.0
  **/
 public class UrlUtils {
+    private UrlUtils() {
+    }
 
     /**
      * 在url后拼接参数
@@ -69,5 +74,40 @@ public class UrlUtils {
             stringBuilder.append(entrySet.getKey()).append("=").append(value).append("&");
         }
         return StringUtils.trimLastPlace(stringBuilder);
+    }
+
+    /**
+     * 解析 URL 参数字符串为 Map 的方法
+     *
+     * @param urlParams 包含 URL 参数的字符串
+     * @return 解析后的参数 Map
+     * @since 2.7.4
+     */
+    public static Map<String, String> parseUrl(String urlParams) {
+        // 如果 URL 参数字符串为空，则返回一个空的 Map
+        if (EmptyUtils.isEmpty(urlParams)) {
+            return new HashMap<>();
+        }
+        Map<String, String> paramMap = new HashMap<>();
+        String[] params = urlParams.split("&");
+        for (String param : params) {
+            String[] keyValue = param.split("=");
+            // 对键和值进行解码，并放入 Map 中
+            String key = URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8);
+            String value = URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8);
+            paramMap.put(key, value);
+        }
+        return paramMap;
+    }
+
+    /**
+     * 将 URL 参数字符串解析为 Jsons 对象
+     *
+     * @param urlParams 包含 URL 参数的字符串
+     * @return 解析后的 Jsons 对象
+     * @since 2.7.4
+     */
+    public static Jsons parseUrlJson(String urlParams) {
+        return Jsons.on(parseUrl(urlParams));
     }
 }
