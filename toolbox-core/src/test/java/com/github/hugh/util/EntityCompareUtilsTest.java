@@ -1,6 +1,6 @@
 package com.github.hugh.util;
 
-import com.github.hugh.bean.dto.EntityCompare;
+import com.github.hugh.bean.dto.EntityCompareResult;
 import com.github.hugh.model.Student;
 import com.github.hugh.model.Student1;
 import org.junit.jupiter.api.Test;
@@ -31,9 +31,9 @@ class EntityCompareUtilsTest {
         p2.setAge(19);
         p2.setAccount("Male");
 //        p2.setList(new ArrayList<Student>());
-        assertEquals("[EntityCompare(fieldName=age, oldValue=18, newValue=19), EntityCompare(fieldName=name, oldValue=Tom, newValue=Jerry)]", EntityCompareUtils.compare(p1, p2, null).toString());
-        final List<EntityCompare> age = EntityCompareUtils.compare(p1, p2, "age");
-        assertEquals("[EntityCompare(fieldName=name, oldValue=Tom, newValue=Jerry)]", age.toString());
+        assertEquals("[EntityCompareResult(fieldName=age, oldValue=18, newValue=19), EntityCompareResult(fieldName=name, oldValue=Tom, newValue=Jerry)]", EntityCompareUtils.compare(p1, p2, null).toString());
+        final List<EntityCompareResult> age = EntityCompareUtils.compare(p1, p2, "age");
+        assertEquals("[EntityCompareResult(fieldName=name, oldValue=Tom, newValue=Jerry)]", age.toString());
     }
 
 
@@ -41,7 +41,7 @@ class EntityCompareUtilsTest {
     void testCompareNotClass() {
         Student p1 = new Student();
         Student1 p2 = new Student1();
-        final List<EntityCompare> compare = EntityCompareUtils.compare(p1, p2);
+        final List<EntityCompareResult> compare = EntityCompareUtils.compare(p1, p2);
         assertTrue(compare.isEmpty());
     }
 
@@ -57,8 +57,8 @@ class EntityCompareUtilsTest {
 //        p2.setAge(19);
         p2.setAccount("Male");
         p2.setList(new ArrayList<Student>());
-        final List<EntityCompare> entityCompareList = EntityCompareUtils.compare(p1, p2);
-        String str1 = "[EntityCompare(fieldName=list, oldValue=null, newValue=[]), EntityCompare(fieldName=name, oldValue=Tom, newValue=Jerry)]";
+        final List<EntityCompareResult> entityCompareList = EntityCompareUtils.compare(p1, p2);
+        String str1 = "[EntityCompareResult(fieldName=list, oldValue=null, newValue=[]), EntityCompareResult(fieldName=name, oldValue=Tom, newValue=Jerry)]";
         assertEquals(str1, entityCompareList.toString());
     }
 
@@ -69,7 +69,7 @@ class EntityCompareUtilsTest {
         p1.setCreate(date);
         Student p2 = new Student();
         p2.setCreate(date);
-        final List<EntityCompare> compare = EntityCompareUtils.compare(p1, p2);
+        final List<EntityCompareResult> compare = EntityCompareUtils.compare(p1, p2);
         assertTrue(compare.isEmpty());
     }
 

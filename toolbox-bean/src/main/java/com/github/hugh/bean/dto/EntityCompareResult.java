@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EntityCompare {
+public class EntityCompareResult {
 
     private String fieldName; // 属性名
     private Object oldValue; // 原值
