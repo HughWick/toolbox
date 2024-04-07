@@ -4,6 +4,7 @@ import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.DoubleMathUtils;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.StringUtils;
+import com.github.hugh.util.io.StreamUtils;
 import com.google.common.io.Files;
 import lombok.Cleanup;
 
@@ -339,16 +340,11 @@ public class FileUtils {
      * @since 2.5.14
      */
     public static String imageToBase64Str(File image) {
-        byte[] data;
         try (InputStream inputStream = new FileInputStream(image)) {
-            // 读取图片数据流
-            data = new byte[inputStream.available()];
-            inputStream.read(data);
+            return imageToBase64Str(inputStream);
         } catch (IOException ioException) {
             throw new ToolboxException(ioException.getMessage());
         }
-        // 对数据进行加密操作
-        return Base64.getEncoder().encodeToString(data);
     }
 
     /**
@@ -387,6 +383,24 @@ public class FileUtils {
             out.flush();
         } catch (Exception exception) {
             throw new ToolboxException(exception.getMessage());
+        }
+    }
+
+    /**
+     * 将输入流转换为Base64编码的字符串表示。
+     *
+     * @param inputStream 输入流，用于读取图片数据
+     * @return Base64编码的图片字符串
+     * @since 2.7.5
+     */
+    public static String imageToBase64Str(InputStream inputStream) {
+        try {
+            // 将InputStream转换为byte数组
+            byte[] bytes = StreamUtils.toByteArray(inputStream);
+            // 将byte数组转换为Base64编码的字符串
+            return Base64.getEncoder().encodeToString(bytes);
+        } catch (IOException ioException) {
+            throw new ToolboxException(ioException);
         }
     }
 }
