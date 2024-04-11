@@ -1,4 +1,4 @@
-package com.github.hugh.common;
+package com.github.hugh.util.common;
 
 import com.github.hugh.util.common.NamesUtils;
 import org.junit.jupiter.api.Assertions;

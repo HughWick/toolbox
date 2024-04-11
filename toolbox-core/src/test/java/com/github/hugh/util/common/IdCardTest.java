@@ -1,7 +1,6 @@
-package com.github.hugh.common;
+package com.github.hugh.util.common;
 
 import com.github.hugh.exception.ToolboxException;
-import com.github.hugh.util.common.IdCardUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,6 +12,13 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version 1.0.0
  */
 class IdCardTest {
+
+    @Test
+    void testEmpty() {
+        String emptyStr = "";
+        assertTrue(IdCardUtils.isNotIdCard(emptyStr));
+        assertEquals(emptyStr, IdCardUtils.encrypt(emptyStr));
+    }
 
     @Test
     void testIdCard() {
@@ -31,5 +37,13 @@ class IdCardTest {
         assertEquals("430104********6214", IdCardUtils.encrypt(idcard18, 6, 4));
         ToolboxException exception = assertThrows(ToolboxException.class, () -> IdCardUtils.encrypt("idcard18", 7, 1));
         assertEquals("id card number length error", exception.getMessage());
+    }
+
+    @Test
+    void test02() {
+        String idCard1 = "430426199912309526";//
+        String idCard2 = "43042619991230952X";//
+        assertTrue(IdCardUtils.isIdCard(idCard1));
+        assertTrue(IdCardUtils.isNotIdCard(idCard2));
     }
 }
