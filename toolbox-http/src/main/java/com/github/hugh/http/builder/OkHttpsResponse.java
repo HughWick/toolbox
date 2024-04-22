@@ -2,9 +2,7 @@ package com.github.hugh.http.builder;
 
 import com.github.hugh.json.gson.GsonUtils;
 import com.github.hugh.json.gson.Jsons;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
 import java.util.List;
 
@@ -14,12 +12,23 @@ import java.util.List;
  * @author hugh
  * @since 2.5.1
  */
-@Data
-@Builder
-@AllArgsConstructor
+@Getter
 public class OkHttpsResponse {
 
     private String message; // 响应消息
+
+    private byte[] bytes;
+
+    /**
+     * 构造一个 OkHttpsResponse 对象。
+     *
+     * @param result 响应的字节数组
+     * @since 2.7.5
+     */
+    public OkHttpsResponse(byte[] result) {
+        this.bytes = result;
+        this.message = new String(result);
+    }
 
     /**
      * 将 HTTP 响应消息反序列化为指定类型的 Java 对象。

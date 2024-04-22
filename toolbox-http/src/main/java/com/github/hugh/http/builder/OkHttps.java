@@ -251,7 +251,7 @@ public class OkHttps {
             Headers headers = Headers.of(this.header);
             request.headers(headers);
         }
-        String result;
+        byte[] result;
         if (this.isSendCookies) {
             result = send(request.build(), cookieClient);
         } else {
@@ -339,7 +339,8 @@ public class OkHttps {
             Headers headers = Headers.of(this.header);
             request.headers(headers);
         }
-        return new OkHttpsResponse(send(request.build(), okHttpClient));
+        byte[] result = send(request.build(), okHttpClient);
+        return new OkHttpsResponse(result);
     }
 
     /**
@@ -376,7 +377,7 @@ public class OkHttps {
         } else {
             initOkHttpClient();
         }
-        final String result = send(request, okHttpClient);
+        byte[] result = send(request, okHttpClient);
         return new OkHttpsResponse(result);
     }
 
@@ -432,13 +433,13 @@ public class OkHttps {
      * @return String 返回结果
      * @throws IOException IO异常
      */
-    private static String send(Request request, OkHttpClient okHttpClient) throws IOException {
+    private byte[] send(Request request, OkHttpClient okHttpClient) throws IOException {
         try (Response response = okHttpClient.newCall(request).execute()) {
-            ResponseBody body1 = response.body();
-            if (body1 == null) {
+            ResponseBody responseBody = response.body();
+            if (responseBody == null) {
                 throw new ToolboxHttpException("result params is null ");
             }
-            return body1.string();
+            return responseBody.bytes();
         }
     }
 }
