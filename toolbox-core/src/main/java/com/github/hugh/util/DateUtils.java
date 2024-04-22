@@ -6,6 +6,7 @@ import com.github.hugh.support.date.TimeCalc;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1290,5 +1291,55 @@ public class DateUtils extends DateCode {
         } catch (ParseException e) {
             throw new ToolboxException(e);
         }
+    }
+
+    /**
+     * 判断给定的字符串是否表示一个时间戳。
+     *
+     * @param str 要检查的字符串
+     * @return 如果字符串表示一个时间戳，则返回 true；否则返回 false
+     * @since 2.7.5
+     */
+    public static boolean isTimestamp(String str) {
+        return isTimestamp(Long.parseLong(str));
+    }
+
+    /**
+     * 判断给定的字符串是否表示一个时间戳。
+     *
+     * @param timestamp 要检查的时间戳
+     * @return 如果字符串表示一个时间戳，则返回 true；否则返回 false
+     * @since 2.7.5
+     */
+    public static boolean isTimestamp(long timestamp) {
+        try {
+            Instant.ofEpochMilli(timestamp); // 尝试解析时间戳
+            return true;
+        } catch (NumberFormatException numberFormatException) {
+            // 如果字符串无法解析为长整型，则不是时间戳
+            return false;
+        }
+    }
+
+    /**
+     * 检查给定的时间戳字符串是否表示毫秒级别的时间戳。
+     *
+     * @param timestamp 时间戳字符串
+     * @return 如果时间戳字符串长度为13，则返回 true，否则返回 false
+     * @since 2.7.5
+     */
+    public static boolean isTimestampInMilli(String timestamp) {
+        return timestamp.length() == 13;
+    }
+
+    /**
+     * 检查给定的时间戳是否表示毫秒级别的时间戳。
+     *
+     * @param timestamp 时间戳
+     * @return 如果时间戳的字符串表示长度为13，则返回 true，否则返回 false
+     * @since 2.7.5
+     */
+    public static boolean isTimestampInMilli(long timestamp) {
+        return isTimestampInMilli(Long.toString(timestamp));
     }
 }

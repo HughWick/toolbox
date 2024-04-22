@@ -27,11 +27,14 @@ class DateTest {
         Date parse2 = DateUtils.parseDate(cstFormDate, DateCode.CST_FORM);
         assertNotNull(parse2);
         assertEquals(parse2.getTime(), date1.getTime());
-//        String str2 = "2016-06-04 13:00:21";
         String inputDateStr = "Jul 11 2020";
         String date2 = DateUtils.parseDateFormatStr(inputDateStr, "MMM dd yyyy", Locale.US, DateCode.YEAR_MONTH_DAY);
         assertEquals("Jul 11 2020", inputDateStr);
         assertEquals("2020-07-11", date2);
+
+        String str3 = "NaN-NaN-NaN NaN:NaN:NaN";
+        Date parse3 = DateUtils.parse(str3, "yyyy-MM-dd HH:mm:00");
+
     }
 
     @Test
@@ -278,6 +281,21 @@ class DateTest {
         long timeStr2 = 1697514508199L;
         String timestamp2 = DateUtils.formatTimestamp(timeStr2);
         assertEquals("2023-10-17 11:48:28", timestamp2);
+
+    }
+
+    @Test
+    void testIsTimestampInMilli() {
+        String str1 = "1713152121000";
+        String str2 = "1713152121";
+        long str3 = 1713152121L;
+        assertTrue(DateUtils.isTimestampInMilli(str1));
+        assertFalse(DateUtils.isTimestampInMilli(str3));
+        assertFalse(DateUtils.isTimestampInMilli(str2));
+        String str4 = "1713152121";
+        assertTrue(DateUtils.isTimestamp(str4));
+
+
 
     }
 }
