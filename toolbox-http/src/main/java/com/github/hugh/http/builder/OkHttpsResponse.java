@@ -15,9 +15,9 @@ import java.util.List;
 @Getter
 public class OkHttpsResponse {
 
-    private String message; // 响应消息
+    private final String message; // 响应消息
 
-    private byte[] bytes;
+    private final byte[] bytes;
 
     /**
      * 构造一个 OkHttpsResponse 对象。
