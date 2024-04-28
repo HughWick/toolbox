@@ -102,9 +102,18 @@ class OkHttpsTest {
                 .isSendCookie(true)
                 .doGet()
                 .getMessage();
+
         URI uri = URI.create(url);
         List<Cookie> cookies = OkHttpCode.COOKIE_STORE.get(uri.getHost());
         assertEquals("[username=admin; path=/, password=123456; path=/]", cookies.toString());
+        String url2 = "http://httpbin.org/cookies/set?username=user_k2&password=si45";
+        OkHttps.url(url2)
+                .isSendCookie(true)
+                .doPostForm()
+                .getMessage();
+        URI uri2 = URI.create(url2);
+        List<Cookie> cookies2 = OkHttpCode.COOKIE_STORE.get(uri2.getHost());
+        assertEquals("", cookies2.toString());
     }
 
     // 测试上传单张图片
