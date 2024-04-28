@@ -19,10 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -68,6 +65,13 @@ public class OkHttps {
      * 用于管理 TCP 连接的连接池对象，用于复用并限制 TCP 连接数量。通过使用连接池，可以在多个请求之间共享连接，避免建立和关闭连接的开销。ConnectionPool 对象包括最大连接数、保持时间等属性，可以根据实际情况进行配置。
      */
     private ConnectionPool connectionPool;
+
+    /**
+     * 参数
+     *
+     * @since 2.7.6
+     */
+    private Map<String, Object> params;
 
     /**
      * 默认的数据库连接池，最小连接数为 5 个，最大连接数为无限制。
@@ -223,6 +227,21 @@ public class OkHttps {
     }
 
     /**
+     * 设置具有指定键和值的参数。
+     *
+     * @param key   参数的键。
+     * @param value 与键关联的值。
+     * @return 修改后的 `OkHttps` 对象的引用。
+     */
+    public OkHttps setParam(String key, Object value) {
+        if (params == null) {
+            params = new HashMap<>();
+        }
+        params.put(key, value);
+        return this;
+    }
+
+    /**
      * 创建并返回一个新的 OkHttps 对象，设置请求的 URL。
      *
      * @param url 请求的 URL
@@ -242,6 +261,9 @@ public class OkHttps {
     public OkHttpsResponse doGet() throws IOException {
         // 确保URL不为null或空
         verifyUrlEmpty();
+        if (this.params != null) {
+            this.body = this.params;
+        }
         // 如果提供了查询参数，则将其添加到URL中
         url = UrlUtils.urlParam(url, this.body);
         // 构建请求对象

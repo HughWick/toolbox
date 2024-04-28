@@ -1,6 +1,5 @@
 package com.github.hugh.http.builder;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.hugh.http.OkHttpUpdateFileTest;
 import com.github.hugh.http.constant.MediaTypes;
 import com.github.hugh.http.constant.OkHttpCode;
@@ -302,21 +301,20 @@ class OkHttpsTest {
         System.out.println(OkHttps.url(url).doGet().getMessage());
     }
 
-
     @Test
-    void testInputStream() throws IOException {
+    void testPutParam() throws IOException {
         String token = "79_jsNMM_0UBXjjgLHnMb82dEfd1dDSMPxSI5MXjpBkegFPzWiV7qHUVgbIoAFxAmf2d8PQQuq-Qd5B4NF19I1-7il2CO-FUtvoLYPUVbfxzHPoO7CjTZFFeiKLFxoUMQiAGAKCG";
         String url1 = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + token;
-        JSONObject paramJson = new JSONObject();
-        paramJson.put("scene", "scene"); //二维码里携带的参数 String型  名称不可变
-        paramJson.put("page", "");//注意该接口传入的是page而不是path
-        paramJson.put("width", 280);//默认430，二维码的宽度，单位 px，最小 280px，最大 1280px
-        paramJson.put("is_hyaline", true);//默认是false，是否需要透明底色，为 true 时，生成透明底色的小程序
-        paramJson.put("auto_color", true);//自动配置线条颜色，如果颜色依然是黑色，则说明不建议配置主色调，默认 false
-        paramJson.put("env_version", "develop");//要打开的小程序版本。正式版为 "release"，体验版为 "trial"，开发版为 "develop"。默认是正式版。
-        OkHttpsResponse okHttpsResponse = OkHttps.url(url1).setBody(paramJson).doPostJson();
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url1)
+                .setParam("scene", "scene")
+                .setParam("page", "")
+                .setParam("width", 280)
+                .setParam("is_hyaline", true)
+                .setParam("auto_color", true)
+                .setParam("env_version", "develop")
+                .doGet();
         String s = Base64.getEncoder().encodeToString(okHttpsResponse.getBytes());
-        System.out.println("====1>>" + s);
+        System.out.println("====>>" + s);
         if (ImageUtils.isNotBase64Image(okHttpsResponse.getBytes())) {
 //            Jsons on = Jsons.on(okHttpsResponse.getMessage());
             System.out.println("---不是一张图片时显示->>" + okHttpsResponse.toJsons());
