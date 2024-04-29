@@ -233,6 +233,7 @@ public class OkHttps {
      * @param key   参数的键。
      * @param value 与键关联的值。
      * @return 修改后的 `OkHttps` 对象的引用。
+     * @since 2.7.6
      */
     public OkHttps setParam(String key, Object value) {
         if (params == null) {
@@ -314,12 +315,12 @@ public class OkHttps {
      */
     public OkHttpsResponse doPostForm() throws IOException {
         verifyUrlEmpty();
-        final String params = UrlUtils.jsonParse(this.body);
+        final String paramsStr = UrlUtils.jsonParse(this.body);
         if (this.isSendCookies) {
-            return doPost(MediaTypes.APPLICATION_FORM_URLENCODED, params, cookieClient);
+            return doPost(MediaTypes.APPLICATION_FORM_URLENCODED, paramsStr, cookieClient);
         } else {
             initOkHttpClient();
-            return doPost(MediaTypes.APPLICATION_FORM_URLENCODED, params, okHttpClient);
+            return doPost(MediaTypes.APPLICATION_FORM_URLENCODED, paramsStr, okHttpClient);
         }
     }
 
