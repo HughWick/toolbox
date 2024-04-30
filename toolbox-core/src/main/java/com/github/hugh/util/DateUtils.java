@@ -2,7 +2,7 @@ package com.github.hugh.util;
 
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.exception.ToolboxException;
-import com.github.hugh.support.date.TimeCalc;
+import com.github.hugh.components.datetime.TimeCalc;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

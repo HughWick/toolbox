@@ -1,4 +1,4 @@
-package com.github.hugh.support.date;
+package com.github.hugh.components.datetime;
 
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.exception.ToolboxException;
