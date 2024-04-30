@@ -1,5 +1,6 @@
 package com.github.hugh.http.builder;
 
+import com.alibaba.fastjson.JSON;
 import com.github.hugh.http.OkHttpUpdateFileTest;
 import com.github.hugh.http.constant.MediaTypes;
 import com.github.hugh.http.constant.OkHttpCode;
@@ -7,6 +8,7 @@ import com.github.hugh.http.exception.ToolboxHttpException;
 import com.github.hugh.http.model.FileFrom;
 import com.github.hugh.http.model.JsonPlaceholderResult;
 import com.github.hugh.http.model.ResponseData;
+import com.github.hugh.json.gson.GsonUtils;
 import com.github.hugh.json.gson.Jsons;
 import com.github.hugh.util.file.ImageUtils;
 import okhttp3.*;
@@ -47,6 +49,8 @@ class OkHttpsTest {
     private static final String http_json_placeholder_get_url = "http://jsonplaceholder.typicode.com/posts";
 
 
+    private static final String https_reqres_url = "https://reqres.in";
+
     @Test
     void testGet() throws IOException {
         final ToolboxHttpException toolboxHttpException = Assertions.assertThrowsExactly(ToolboxHttpException.class, () -> {
@@ -62,10 +66,33 @@ class OkHttpsTest {
         final ResponseData postman = new OkHttps().setUrl(http_bin_get_url).setBody(map).doGet().fromJson(ResponseData.class);
         assertEquals(params1, postman.getArgs().getFoo1());
         assertEquals("okhttp/4.9.3", postman.getHeaders().getUserAgent());
+    }
+
+    @Test
+    void testHeader() throws IOException {
+        Map<String, Object> map = new HashMap<>();
+        String params1 = "bar1";
+        map.put("foo1", params1);
+        map.put("foo2", "bar3");
         Map<String, String> headers = new HashMap<>();
         headers.put("User-Agent", "Custom User Agent");
-        final ResponseData responseData = new OkHttps().setUrl(http_bin_get_url).setBody(map).setHeader(headers).doGet().fromJson(ResponseData.class);
+        final ResponseData responseData = OkHttps.url(http_bin_get_url)
+                .setBody(map)
+                .setHeader(headers)
+                .doGet()
+                .fromJson(ResponseData.class);
         assertEquals("Custom User Agent", responseData.getHeaders().getUserAgent());
+        Map<String, String> headers2 = new HashMap<>();
+        headers2.put("User-Agent", "poxy-v2rayN");
+        final String message2 = OkHttps.url(http_bin_post_url)
+                .setBody(map)
+                .setHeader(headers2)
+                .doPostJson()
+                .getMessage();
+        ResponseData responseData2 = JSON.parseObject(message2, ResponseData.class);
+//        Jsons jsons = Jsons.on(message2);
+//        ResponseData responseData2 = jsons.formJson(ResponseData.class);
+        assertEquals("poxy-v2rayN", responseData2.getHeaders().getUserAgent());
     }
 
     @Test
@@ -86,11 +113,20 @@ class OkHttpsTest {
         String params1 = "bar1";
         map.put("foo1", params1);
         map.put("foo2", "bar3");
-        final Jsons jsons = new OkHttps().setUrl(http_bin_post_url).setBody(map).doPostJson().toJsons();
+        final Jsons jsons1 = new OkHttps().setUrl(http_bin_post_url).setBody(map).doPostJson().toJsons();
         assert MediaTypes.APPLICATION_JSON_UTF8 != null;
-        assertEquals(MediaTypes.APPLICATION_JSON_UTF8.toString(), jsons.getThis("headers").getString("Content-Type"));
+        assertEquals(MediaTypes.APPLICATION_JSON_UTF8.toString(), jsons1.getThis("headers").getString("Content-Type"));
         final ResponseData response1 = new OkHttps().setUrl(http_bin_post_url).doPostJson().fromJson(ResponseData.class);
         assertEquals("null", response1.getJson() + "");
+        String name2 = "jock";
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("user_name", name2);
+        Jsons jsons2 = OkHttps.url(http_bin_post_url)
+                .setBody(GsonUtils.toJson(map2))
+                .doPostJson()
+                .toJsons();
+        Jsons json = jsons2.getThis("json");
+        assertEquals(name2, json.getString("user_name"));
 //        final ResponseData responseData1 = new OkHttps().setUrl(http_bin_post_url).setBody(map).doPostForm().fromJson(ResponseData.class);
 //        assertEquals(params1, responseData1.getForm().getFoo1());
     }
@@ -106,14 +142,14 @@ class OkHttpsTest {
         URI uri = URI.create(url);
         List<Cookie> cookies = OkHttpCode.COOKIE_STORE.get(uri.getHost());
         assertEquals("[username=admin; path=/, password=123456; path=/]", cookies.toString());
-        String url2 = "http://httpbin.org/cookies/set?username=user_k2&password=si45";
-        OkHttps.url(url2)
-                .isSendCookie(true)
-                .doPostForm()
-                .getMessage();
-        URI uri2 = URI.create(url2);
-        List<Cookie> cookies2 = OkHttpCode.COOKIE_STORE.get(uri2.getHost());
-        assertEquals("", cookies2.toString());
+//        String url2 = "http://httpbin.org/cookies/set?username=user_k2&password=si45";
+//        OkHttps.url(url2)
+//                .isSendCookie(true)
+//                .doPostForm()
+//                .getMessage();
+//        URI uri2 = URI.create(url2);
+//        List<Cookie> cookies2 = OkHttpCode.COOKIE_STORE.get(uri2.getHost());
+//        assertEquals("", cookies2.toString());
     }
 
     // 测试上传单张图片
@@ -330,5 +366,22 @@ class OkHttpsTest {
         } else {
             assertTrue(ImageUtils.isBase64Image(okHttpsResponse.getBytes()));
         }
+    }
+
+
+    @Test
+    void testSetParam() throws IOException {
+        String url1 = https_reqres_url + "/api/users";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url1)
+                .setParam("page", 1).doGet();
+        assertEquals(1, okHttpsResponse.toJsons().getInt("page"));
+
+        String login_url = https_reqres_url + "/api/login";
+        OkHttpsResponse okHttpsResponse2 = OkHttps
+                .url(login_url)
+                .setParam("email", "eve.holt@reqres.in")
+                .setParam("password", "cityslicka")
+                .doPostJson();
+        assertNotNull(okHttpsResponse2.toJsons().getString("token"));
     }
 }

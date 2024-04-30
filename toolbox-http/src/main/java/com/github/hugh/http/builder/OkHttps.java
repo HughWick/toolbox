@@ -244,6 +244,18 @@ public class OkHttps {
     }
 
     /**
+     * 根据提供的参数设置对象的主体。
+     * 如果参数不为null，则将参数赋值给主体。
+     *
+     * @since 2.7.7
+     */
+    private void setBodyFromParams() {
+        if (this.params != null) {
+            this.body = this.params;
+        }
+    }
+
+    /**
      * 创建并返回一个新的 OkHttps 对象，设置请求的 URL。
      *
      * @param url 请求的 URL
@@ -263,9 +275,7 @@ public class OkHttps {
     public OkHttpsResponse doGet() throws IOException {
         // 确保URL不为null或空
         verifyUrlEmpty();
-        if (this.params != null) {
-            this.body = this.params;
-        }
+        setBodyFromParams();
         // 如果提供了查询参数，则将其添加到URL中
         url = UrlUtils.urlParam(url, this.body);
         // 构建请求对象
@@ -315,6 +325,7 @@ public class OkHttps {
      */
     public OkHttpsResponse doPostForm() throws IOException {
         verifyUrlEmpty();
+        setBodyFromParams();
         final String paramsStr = UrlUtils.jsonParse(this.body);
         if (this.isSendCookies) {
             return doPost(MediaTypes.APPLICATION_FORM_URLENCODED, paramsStr, cookieClient);
@@ -332,6 +343,7 @@ public class OkHttps {
      */
     public OkHttpsResponse doPostJson() throws IOException {
         verifyUrlEmpty();
+        setBodyFromParams();
         // 创建OkHttpClient实例并设置超时值
         if (this.isSendCookies) {
             okHttpClient = cookieClient;

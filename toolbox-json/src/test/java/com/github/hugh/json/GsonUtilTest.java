@@ -3,17 +3,16 @@ package com.github.hugh.json;
 import com.github.hugh.bean.expand.tree.ElementTree;
 import com.github.hugh.json.gson.GsonUtils;
 import com.github.hugh.json.gson.JsonObjectUtils;
-import com.github.hugh.json.model.GsonTest;
+import com.github.hugh.json.gson.Jsons;
+import com.github.hugh.json.model.ResponseData;
 import com.github.hugh.json.model.Student;
 import com.github.hugh.util.DateUtils;
-import com.github.hugh.util.MapUtils;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * gson 工具类测试
@@ -57,4 +56,33 @@ class GsonUtilTest {
         assertTrue(jsonValid);
     }
 
+
+    @Test
+    void testResponse() {
+        String str1 = "{\n" +
+                "  \"args\": {}, \n" +
+                "  \"data\": \"{\\\"foo1\\\":\\\"bar1\\\",\\\"foo2\\\":\\\"bar3\\\"}\", \n" +
+                "  \"files\": {}, \n" +
+                "  \"form\": {}, \n" +
+                "  \"headers\": {\n" +
+                "    \"Accept-Encoding\": \"gzip\", \n" +
+                "    \"Content-Length\": \"29\", \n" +
+                "    \"Content-Type\": \"application/json;charset=UTF-8\", \n" +
+                "    \"Host\": \"httpbin.org\", \n" +
+                "    \"User-Agent\": \"Custom User Agent\", \n" +
+                "    \"X-Amzn-Trace-Id\": \"Root=1-663046e8-00aceca639b1ac3753a69a83\"\n" +
+                "  }, \n" +
+                "  \"json\": {\n" +
+                "    \"foo1\": \"bar1\", \n" +
+                "    \"foo2\": \"bar3\"\n" +
+                "  }, \n" +
+                "  \"origin\": \"222.244.144.131\", \n" +
+                "  \"url\": \"https://httpbin.org/post\"\n" +
+                "}";
+        Jsons jsons = Jsons.on(str1);
+        ResponseData responseData = jsons.formJson(ResponseData.class);
+
+//        ResponseData responseData1 = GsonUtils.fromJson(str1, ResponseData.class);
+//        System.out.println(responseData1);
+    }
 }
