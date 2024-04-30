@@ -135,10 +135,9 @@ class OkHttpsTest {
     void testCookie() throws Exception {
         String url = "http://httpbin.org/cookies/set?username=admin&password=123456";
         final String responseData = new OkHttps().setUrl(url)
-                .isSendCookie(true)
+                .sendCookie()
                 .doGet()
                 .getMessage();
-
         URI uri = URI.create(url);
         List<Cookie> cookies = OkHttpCode.COOKIE_STORE.get(uri.getHost());
         assertEquals("[username=admin; path=/, password=123456; path=/]", cookies.toString());
@@ -359,7 +358,6 @@ class OkHttpsTest {
                 .setParam("env_version", "develop")
                 .doGet();
         String s = Base64.getEncoder().encodeToString(okHttpsResponse.getBytes());
-        System.out.println("====>>" + s);
         if (ImageUtils.isNotBase64Image(okHttpsResponse.getBytes())) {
 //            Jsons on = Jsons.on(okHttpsResponse.getMessage());
             System.out.println("---不是一张图片时显示->>" + okHttpsResponse.toJsons());

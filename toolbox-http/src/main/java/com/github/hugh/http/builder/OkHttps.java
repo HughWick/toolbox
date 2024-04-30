@@ -173,13 +173,13 @@ public class OkHttps {
     }
 
     /**
-     * 设置是否发送 cookie 的方法。
+     * 设置发送 cookie 的方法。
      *
-     * @param flag 是否发送 cookie 的标志，true 表示发送，false 表示不发送。
      * @return 返回一个 OkHttps 实例以支持方法链接调用。
      */
-    public OkHttps isSendCookie(boolean flag) {
-        this.isSendCookies = flag;
+    public OkHttps sendCookie() {
+        // 是否发送 cookie 的标志，true 表示发送，false 表示不发送。
+        this.isSendCookies = true;
         return this;
     }
 
