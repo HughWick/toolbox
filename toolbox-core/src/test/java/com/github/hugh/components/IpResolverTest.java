@@ -50,6 +50,9 @@ public class IpResolverTest {
         String ip3 = "154.18.161.64";
         final String str3 = IpResolver.on(ip3, easyRedisSupplier.get()).getComplete();
         assertNull(str3);
+        String ip4 = "";
+        final String str4 = IpResolver.on("", easyRedisSupplier.get()).getComplete();
+        assertNull(str4);
     }
 
     @Test

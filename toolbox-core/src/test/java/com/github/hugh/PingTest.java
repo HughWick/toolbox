@@ -35,28 +35,22 @@ public class PingTest {
     @Test
     void testPing() {
         String ip1 = "223.5.5.5";
-        PingDTO ping2 = PingUtils.ping(ip1);
-        assertEquals(0, ping2.getStatus());
+        PingDTO ping1 = PingUtils.ping(ip1);
+        assertEquals(0, ping1.getStatus());
         String ip2 = "172.17.10.11";
-        PingDTO ping1 = PingUtils.ping(ip2,3,500);
-        assertEquals(-1, ping1.getStatus());
+        PingDTO ping2 = PingUtils.ping(ip2,1,500);
+        assertEquals(-1, ping2.getStatus());
+    }
+
+    @Test
+    void testCount() {
         try {
-            String ip3 = "8.8.8.8";
+            String ip3 = "8.8.4.4";
             int connectedCount = PingUtils.getConnectedCount(ip3, 5, 200);
             assertEquals(5, connectedCount);
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
-    }
-
-    @Test
-    void test04() {
-//        for (int i = 0; i < 65535; i++) {
-//            String s = ScannerPortisAlive(i);
-//            if (s.equals("OPEN")) {
-//                System.out.println(i + "--->>");
-//            }
-//        }
     }
 
     static public String ScannerPortisAlive(int port) {

@@ -60,23 +60,20 @@ class GsonUtilTest {
     @Test
     void testResponse() {
         String str1 = "{\n" +
-                "  \"args\": {}, \n" +
-                "  \"data\": \"{\\\"foo1\\\":\\\"bar1\\\",\\\"foo2\\\":\\\"bar3\\\"}\", \n" +
-                "  \"files\": {}, \n" +
-                "  \"form\": {}, \n" +
+                "  \"args\": {},\n" +
+                "  \"data\": \"{\\\"foo1\\\":\\\"bar1\\\",\\\"foo2\\\":\\\"bar3\\\"}\",\n" +
+                "  \"files\": {},\n" +
+                "  \"form\": {},\n" +
                 "  \"headers\": {\n" +
-                "    \"Accept-Encoding\": \"gzip\", \n" +
-                "    \"Content-Length\": \"29\", \n" +
-                "    \"Content-Type\": \"application/json;charset=UTF-8\", \n" +
-                "    \"Host\": \"httpbin.org\", \n" +
-                "    \"User-Agent\": \"Custom User Agent\", \n" +
+                "    \"Accept-Encoding\": \"gzip\",\n" +
+                "    \"Content-Length\": \"29\",\n" +
+                "    \"Content-Type\": \"application/json;charset=UTF-8\",\n" +
+                "    \"Host\": \"httpbin.org\",\n" +
+                "    \"User-Agent\": \"Custom User Agent\",\n" +
                 "    \"X-Amzn-Trace-Id\": \"Root=1-663046e8-00aceca639b1ac3753a69a83\"\n" +
-                "  }, \n" +
-                "  \"json\": {\n" +
-                "    \"foo1\": \"bar1\", \n" +
-                "    \"foo2\": \"bar3\"\n" +
-                "  }, \n" +
-                "  \"origin\": \"222.244.144.131\", \n" +
+                "  },\n" +
+                "  \"json\": \"{\\\"foo1\\\":\\\"bar1\\\",\\\"foo2\\\":\\\"bar3\\\"}\",\n" +
+                "  \"origin\": \"222.244.144.131\",\n" +
                 "  \"url\": \"https://httpbin.org/post\"\n" +
                 "}";
         Jsons jsons = Jsons.on(str1);
