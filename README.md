@@ -19,11 +19,11 @@ JDK >=11
 | knife4j                                                | 3.0.3      | Swagger生成Api文档的增强 |
 | spring-beans                                           | 5.3.23     | spring 实体类工具      |
 | jedis                                                  | 3.6.3      | redis clients     |
-| [caffeine](https://github.com/ben-manes/caffeine)      | 3.1.2      | 高性能本地缓存           |
+| [caffeine](https://github.com/ben-manes/caffeine)      | 3.1.8      | 高性能本地缓存           |
 | [okhttp3](https://github.com/square/okhttp)            | 4.9.3      | 高性能http           |
 | javax.servlet-api                                      | 4.0.1      | Servlet API       |
 | kryo                                                   | 4.0.2      | 快速高效的Java序列化框架    |
-| [guava](https://github.com/google/guava)               | 32.1.3-jre | 谷歌套件              |
+| [guava](https://github.com/google/guava)               | 33.1.0-jre | 谷歌套件              |
 | [gson](https://github.com/google/gson)                 | 2.10.1     | Google Gson       |
 | [fastjson](https://github.com/alibaba/fastjson2)       | 1.2.83     | 阿里高性能json         |
 | [slf4j-simple](https://github.com/qos-ch/slf4j)        | 2.0.9      | 日志工具包             |
