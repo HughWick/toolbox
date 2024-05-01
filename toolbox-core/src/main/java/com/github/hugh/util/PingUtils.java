@@ -97,7 +97,7 @@ public class PingUtils {
      * @return List
      */
     public static List<String> batch(String ipAddress, int pingCount, int timeOut) {
-        List<String> strs = new ArrayList<>();
+        List<String> item = new ArrayList<>();
         String pingCommand = appendCmd(ipAddress, pingCount, timeOut);
         try {
             Process pro = Runtime.getRuntime().exec(pingCommand);
@@ -106,13 +106,13 @@ public class PingUtils {
             String line;
             while ((line = buf.readLine()) != null) {
                 if (!"".equals(line)) {//不等于空字符串时
-                    strs.add(line);
+                    item.add(line);
                 }
             }
+            return item;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            throw new ToolboxException(ex);
         }
-        return strs;
     }
 
     /**
