@@ -36,6 +36,9 @@ public class ResultDTO<T> {
      * @since 1.7.0
      */
     public boolean equalCode(String code) {
+        if (this.code == null) {
+            return false;
+        }
         return this.code.equals(code);
     }
 
