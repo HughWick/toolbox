@@ -709,4 +709,19 @@ public class BaseConvertUtils {
         byte[] bytes = BaseConvertUtils.hexToBytes(hexStr);
         return Base64.encode(bytes);
     }
+
+    /**
+     * 将字节数组转换为十六进制字符串表示形式的工具方法。
+     *
+     * @param bytes 待转换的字节数组
+     * @return 十六进制字符串表示形式
+     * @since 2.7.9
+     */
+    public static String byteToHexStr(byte[] bytes) {
+        StringBuilder stringBuffer = new StringBuilder();
+        for (byte aByte : bytes) {
+            stringBuffer.append(String.format("%02X", aByte & 0xFF));
+        }
+        return stringBuffer.toString();
+    }
 }
