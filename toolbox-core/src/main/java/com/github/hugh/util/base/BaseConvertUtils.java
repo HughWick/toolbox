@@ -62,10 +62,7 @@ public class BaseConvertUtils {
      * @since 2.3.9
      */
     public static String hexBytesToString(byte[] decBytes, String interval) {
-        boolean flag = false;
-        if (interval != null) {
-            flag = true;
-        }
+        boolean flag = interval != null;
         StringBuilder stringBuilder = new StringBuilder();
         for (byte b : decBytes) {
             stringBuilder.append(hexToString(b));
@@ -718,10 +715,29 @@ public class BaseConvertUtils {
      * @since 2.7.9
      */
     public static String byteToHexStr(byte[] bytes) {
-        StringBuilder stringBuffer = new StringBuilder();
+        return byteToHexStr(bytes, null);
+    }
+
+    /**
+     * 将字节数组转换为十六进制字符串表示形式的工具方法，并可指定分隔符。
+     *
+     * @param bytes 待转换的字节数组
+     * @param split 分隔符，如果为null则不添加分隔符
+     * @return 十六进制字符串表示形式，可带有指定的分隔符
+     * @since 2.7.9
+     */
+    public static String byteToHexStr(byte[] bytes, String split) {
+        boolean flag = split != null;
+        StringBuilder stringBuilder = new StringBuilder();
         for (byte aByte : bytes) {
-            stringBuffer.append(String.format("%02X", aByte & 0xFF));
+            stringBuilder.append(String.format("%02X", aByte & 0xFF));
+            if (flag) {
+                stringBuilder.append(split);
+            }
         }
-        return stringBuffer.toString();
+        if (flag) {
+            return StringUtils.trimLastPlace(stringBuilder);
+        }
+        return stringBuilder.toString();
     }
 }

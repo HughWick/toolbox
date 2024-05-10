@@ -1,14 +1,12 @@
-package com.github.hugh.base;
+package com.github.hugh.util.base;
 
 import com.github.hugh.constant.StrPool;
 import com.github.hugh.util.ListUtils;
-import com.github.hugh.util.base.BaseConvertUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 二、十、十六进制转换测试类
@@ -195,5 +193,67 @@ class BaseConvertTest {
         String str1 = "[15, -103, 0, -16, -55, -3, 13, -80, 93, -8, 20, -5, -75, -25, 0, 8, -45, -25, 0, 8, 45, -23, -1, 79]";
         final Object[] objects = ListUtils.guavaStringToList(str1).toArray();
         assertEquals(str1, Arrays.toString(objects));
+    }
+
+    @Test
+    void testByteToHexStr() {
+        // Arrange
+        byte[] bytes = { (byte) 0xAB, (byte) 0xCD, (byte) 0xEF };
+        // Act
+        String hexStr = BaseConvertUtils.byteToHexStr(bytes);
+        // Assert
+        assertEquals("ABCDEF", hexStr.toUpperCase());
+    }
+
+    @Test
+    void testByteToHexStrWithSplit() {
+        // Arrange
+        byte[] bytes = { (byte) 0x01, (byte) 0x23, (byte) 0x45, (byte) 0x67 };
+        String split = "-";
+        // Act
+        String hexStr = BaseConvertUtils.byteToHexStr(bytes, split);
+        // Assert
+        assertEquals("01-23-45-67", hexStr.toUpperCase());
+    }
+
+    @Test
+    void testByteToHexStrWithNullSplit() {
+        // Arrange
+        byte[] bytes = { (byte) 0x89, (byte) 0xAB, (byte) 0xCD };
+        // Act
+        String hexStr = BaseConvertUtils.byteToHexStr(bytes, null);
+        // Assert
+        assertEquals("89ABCD", hexStr.toUpperCase());
+    }
+    @Test
+    void testHexToDec() {
+        // Arrange
+        byte[] hexBytes = { (byte) 'A', (byte) 'B', (byte) 'C', (byte) 'D', (byte) 'E', (byte) 'F' };
+        byte[] expectedDecBytes = { (byte) 0xAB, (byte) 0xCD, (byte) 0xEF };
+
+        // Act
+        byte[] decBytes = BaseConvertUtils.hexToDec(hexBytes);
+        // Assert
+        assertArrayEquals(expectedDecBytes, decBytes);
+    }
+
+    @Test
+    void testHexToDecWithOddLengthInput() {
+        // Arrange
+        byte[] hexBytes = { (byte) 'A', (byte) 'B', (byte) 'C' }; // Odd length
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> BaseConvertUtils.hexToDec(hexBytes));
+    }
+
+
+    @Test
+    void testDecToHexBytes() {
+        // Arrange
+        byte[] decBytes = { (byte) 0xAB, (byte) 0xCD, (byte) 0xEF };
+        byte[] expectedHexBytes = { (byte) 'A', (byte) 'B', (byte) 'C', (byte) 'D', (byte) 'E', (byte) 'F' };
+        // Act
+        byte[] hexBytes = BaseConvertUtils.decToHexBytes(decBytes);
+        // Assert
+        assertArrayEquals(expectedHexBytes, hexBytes);
     }
 }

@@ -7,7 +7,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -120,6 +122,9 @@ class GzipUtilsTest {
         assertEquals(688, stringBuffer.length());
         String uncompress = GzipUtils.uncompress(BaseConvertUtils.hexToBytes(stringBuffer));
         assertEquals(jsonStr2, uncompress);
+        String encode = URLEncoder.encode(jsonStr2, StandardCharsets.UTF_8);
+        System.out.println("===URL>>" + encode);
+        System.out.println("====>>"+ encode.length());
     }
 
 }
