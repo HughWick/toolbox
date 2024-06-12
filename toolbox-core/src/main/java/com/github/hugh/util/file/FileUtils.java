@@ -403,4 +403,32 @@ public class FileUtils {
             throw new ToolboxException(ioException);
         }
     }
+
+    /**
+     * 从指定URL读取数据并返回字节数组。
+     *
+     * @param fileUrl URL地址，从中读取数据
+     * @return 包含从URL读取的数据的字节数组
+     * @since 2.7.10
+     */
+    public static byte[] readContentByUrl(String fileUrl) {
+        try {
+            URL url = new URL(fileUrl);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            try (InputStream inputStream = con.getInputStream();
+                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+                byte[] buffer = new byte[4096];
+                int num = inputStream.read(buffer);
+                while (num != -1) {
+                    byteArrayOutputStream.write(buffer, 0, num);
+                    num = inputStream.read(buffer);
+                }
+                // 刷新缓冲区并将数据转换为字节数组
+                byteArrayOutputStream.flush();
+                return byteArrayOutputStream.toByteArray();
+            }
+        } catch (IOException ioException) {
+            throw new ToolboxException(ioException);
+        }
+    }
 }

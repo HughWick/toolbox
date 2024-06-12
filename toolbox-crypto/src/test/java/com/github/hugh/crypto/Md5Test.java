@@ -1,5 +1,6 @@
 package com.github.hugh.crypto;
 
+import com.github.hugh.util.file.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -48,5 +49,15 @@ class Md5Test {
         File file = new File(ip2DbPath);
         String md5Result = "018f36293f3c4ed46674e19e87f731f4";
         assertEquals(md5Result, Md5Utils.encryptFile(file));
+    }
+
+
+    @Test
+    void testRead(){
+        String md5 = "676238ef7faa7e08d382c77a023f37f6";
+        String url1 = "https://minio.hnlot.com.cn/host-os/standard/host_standrd-1.0.24_240611_RELEASE.bin";
+        byte[] read = FileUtils.readContentByUrl(url1);
+        String s = Md5Utils.encryptBytes(read);
+        assertEquals(md5 , s);
     }
 }

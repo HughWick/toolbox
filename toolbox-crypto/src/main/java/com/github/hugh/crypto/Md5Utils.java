@@ -59,8 +59,8 @@ public class Md5Utils {
                 return result.toLowerCase();
             }
             return result;
-        } catch (NoSuchAlgorithmException e) {
-            throw new ToolboxException(e);
+        } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
+            throw new ToolboxException(noSuchAlgorithmException);
         }
     }
 
@@ -99,5 +99,28 @@ public class Md5Utils {
      */
     public static String encryptFile(String filePath) {
         return encryptFile(new File(filePath));
+    }
+
+    /**
+     * 对给定的字节数组进行MD5加密，并返回加密后的十六进制字符串表示。
+     *
+     * @param inputBytes 要加密的字节数组
+     * @return 加密后的十六进制字符串
+     * @since 2.7.10
+     */
+    public static String encryptBytes(byte[] inputBytes) {
+        try {
+            MessageDigest md5 = MessageDigest.getInstance(EncryptCode.MD5);
+            // 对字节数组进行MD5加密
+            byte[] hash = md5.digest(inputBytes);
+            // 将加密后的字节数组转换为字符串表示
+            StringBuilder stringBuilder = new StringBuilder();
+            for (byte b : hash) {
+                stringBuilder.append(String.format("%02x", b));
+            }
+            return stringBuilder.toString();
+        } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
+            throw new ToolboxException(noSuchAlgorithmException);
+        }
     }
 }
