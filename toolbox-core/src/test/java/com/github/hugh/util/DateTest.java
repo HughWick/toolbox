@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,6 +36,21 @@ class DateTest {
         String str3 = "NaN-NaN-NaN NaN:NaN:NaN";
         Date parse3 = DateUtils.parse(str3, "yyyy-MM-dd HH:mm:00");
 
+    }
+
+
+    @Test
+    void testRandomTime(){
+        // 创建一个随机数生成器
+        Random random = new Random();
+        // 生成随机的小时、分钟和秒
+        int hour = random.nextInt(24); // 0到23之间的随机整数
+        int minute = random.nextInt(60); // 0到59之间的随机整数
+        int second = random.nextInt(60); // 0到59之间的随机整数
+        // 格式化成HH:mm:ss的形式
+        String formattedTime = String.format("%02d:%02d:%02d", hour, minute, second);
+        // 打印随机生成的时间
+        System.out.println("随机生成的时间为: " + formattedTime);
     }
 
     @Test

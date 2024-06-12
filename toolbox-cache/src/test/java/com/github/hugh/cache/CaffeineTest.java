@@ -71,14 +71,24 @@ class CaffeineTest {
     @Test
     void expireAfterWrite() throws InterruptedException {
         String keys = "KEY_01";
-        Cache<String, String> expireAfterWrite = CaffeineCache.createExpireAfterWrite(1);
+        String value1 = "abc";
+        Cache<String, String> expireAfterWrite = CaffeineCache.createExpireAfterWrite(3);
 //        Integer ifPresent = expireAfterWrite.getIfPresent(keys);
         assertNull(expireAfterWrite.getIfPresent(keys));
-        assertEquals("abc", expireAfterWrite.get(keys, k -> "abc"));
+        assertEquals(value1, expireAfterWrite.get(keys, k -> value1));
         // 根据key查询一个缓存，如果没有返回NULL
-        assertEquals("abc", expireAfterWrite.getIfPresent(keys));
+        assertEquals(value1, expireAfterWrite.getIfPresent(keys));
         Thread.sleep(1000);
+        assertNotNull(expireAfterWrite.getIfPresent(keys));
+        assertEquals(value1, expireAfterWrite.getIfPresent(keys));
+        Thread.sleep(3000);
         assertNull(expireAfterWrite.getIfPresent(keys));
+//        ConcurrentMap<String, String> stringStringConcurrentMap = expireAfterWrite.asMap();
+//        System.out.println("=====>>"+expireAfterWrite.stats().toString());
+//        for (Map.Entry<String, String> entry : stringStringConcurrentMap.entrySet()) {
+//            System.out.println(entry.getKey()+"===="+entry.getValue());
+//        }
+//        assertEquals(0, expireAfterWrite.asMap().size());
     }
 
     // 测试最后一次写入或访问后经过固定时间过期
@@ -97,9 +107,6 @@ class CaffeineTest {
         assertEquals("abc", expireAfterAccess2.get(keys, k -> "abc"));
         assertNull(expireAfterAccess2.getIfPresent(key2));
     }
-
-
-
 
 
 //    @Test
