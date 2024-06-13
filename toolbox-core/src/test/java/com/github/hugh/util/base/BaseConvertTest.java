@@ -4,6 +4,7 @@ import com.github.hugh.constant.StrPool;
 import com.github.hugh.util.ListUtils;
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,7 +50,6 @@ class BaseConvertTest {
         // 十进制字符串转十六进制数组
         byte[] hexToBytes = BaseConvertUtils.decToHexBytes(str2);
         assertEquals(Arrays.toString(new byte[]{-1}), Arrays.toString(hexToBytes));
-//        System.out.println("---1----><" + Arrays.toString(hexToBytes));
         // 十六进制数组转 十六进制字符串
         String s = BaseConvertUtils.hexBytesToString(hexToBytes);
         assertEquals("FF", s);
@@ -189,6 +189,27 @@ class BaseConvertTest {
     }
 
     @Test
+    void testHexToDecReLongWithValidInput() {
+        String str1 = "32215";
+        byte[] decBytes = str1.getBytes(StandardCharsets.UTF_8);
+        System.out.println("====>"+ Arrays.toString(decBytes));
+
+        byte[] hexBytes = BaseConvertUtils.decToHexBytes(str1);
+        System.out.println("==hexBytes==>"+ Arrays.toString(hexBytes));
+//        System.out.println("=====11>>>>"+ Arrays.toString(BaseConvertUtils.hexToDec(hexBytes)));
+//        assertArrayEquals(decBytes, BaseConvertUtils.hexToDec(hexBytes));
+        // Given
+//        byte[] hexBytes = "7FA3".getBytes(StandardCharsets.UTF_8);
+//        System.out.println(Arrays.toString(hexBytes));
+        // When
+        long result = BaseConvertUtils.hexToLong(hexBytes);
+//        String s = BaseConvertUtils.hexBytesToString(hexBytes);
+//        System.out.println("=2=3==3==1===>>"+s);
+        // Then
+        assertEquals(32215, result, "The converted decimal should match");
+    }
+
+    @Test
     void testHexToDecReInt2() {
         String str1 = "[15, -103, 0, -16, -55, -3, 13, -80, 93, -8, 20, -5, -75, -25, 0, 8, -45, -25, 0, 8, 45, -23, -1, 79]";
         final Object[] objects = ListUtils.guavaStringToList(str1).toArray();
@@ -198,7 +219,7 @@ class BaseConvertTest {
     @Test
     void testByteToHexStr() {
         // Arrange
-        byte[] bytes = { (byte) 0xAB, (byte) 0xCD, (byte) 0xEF };
+        byte[] bytes = {(byte) 0xAB, (byte) 0xCD, (byte) 0xEF};
         // Act
         String hexStr = BaseConvertUtils.byteToHexStr(bytes);
         // Assert
@@ -208,7 +229,7 @@ class BaseConvertTest {
     @Test
     void testByteToHexStrWithSplit() {
         // Arrange
-        byte[] bytes = { (byte) 0x01, (byte) 0x23, (byte) 0x45, (byte) 0x67 };
+        byte[] bytes = {(byte) 0x01, (byte) 0x23, (byte) 0x45, (byte) 0x67};
         String split = "-";
         // Act
         String hexStr = BaseConvertUtils.byteToHexStr(bytes, split);
@@ -219,17 +240,18 @@ class BaseConvertTest {
     @Test
     void testByteToHexStrWithNullSplit() {
         // Arrange
-        byte[] bytes = { (byte) 0x89, (byte) 0xAB, (byte) 0xCD };
+        byte[] bytes = {(byte) 0x89, (byte) 0xAB, (byte) 0xCD};
         // Act
         String hexStr = BaseConvertUtils.byteToHexStr(bytes, null);
         // Assert
         assertEquals("89ABCD", hexStr.toUpperCase());
     }
+
     @Test
     void testHexToDec() {
         // Arrange
-        byte[] hexBytes = { (byte) 'A', (byte) 'B', (byte) 'C', (byte) 'D', (byte) 'E', (byte) 'F' };
-        byte[] expectedDecBytes = { (byte) 0xAB, (byte) 0xCD, (byte) 0xEF };
+        byte[] hexBytes = {(byte) 'A', (byte) 'B', (byte) 'C', (byte) 'D', (byte) 'E', (byte) 'F'};
+        byte[] expectedDecBytes = {(byte) 0xAB, (byte) 0xCD, (byte) 0xEF};
 
         // Act
         byte[] decBytes = BaseConvertUtils.hexToDec(hexBytes);
@@ -240,7 +262,7 @@ class BaseConvertTest {
     @Test
     void testHexToDecWithOddLengthInput() {
         // Arrange
-        byte[] hexBytes = { (byte) 'A', (byte) 'B', (byte) 'C' }; // Odd length
+        byte[] hexBytes = {(byte) 'A', (byte) 'B', (byte) 'C'}; // Odd length
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> BaseConvertUtils.hexToDec(hexBytes));
     }
@@ -249,8 +271,8 @@ class BaseConvertTest {
     @Test
     void testDecToHexBytes() {
         // Arrange
-        byte[] decBytes = { (byte) 0xAB, (byte) 0xCD, (byte) 0xEF };
-        byte[] expectedHexBytes = { (byte) 'A', (byte) 'B', (byte) 'C', (byte) 'D', (byte) 'E', (byte) 'F' };
+        byte[] decBytes = {(byte) 0xAB, (byte) 0xCD, (byte) 0xEF};
+        byte[] expectedHexBytes = {(byte) 'A', (byte) 'B', (byte) 'C', (byte) 'D', (byte) 'E', (byte) 'F'};
         // Act
         byte[] hexBytes = BaseConvertUtils.decToHexBytes(decBytes);
         // Assert

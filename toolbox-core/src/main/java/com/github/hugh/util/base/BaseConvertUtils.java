@@ -665,8 +665,19 @@ public class BaseConvertUtils {
      * @since 2.3.9
      */
     public static int hexToDecReInt(byte[] hexBytes) {
-        String s = hexBytesToString(hexBytes);
-        return (int) hexToDec(s);
+        return (int) hexToLong(hexBytes);
+    }
+
+    /**
+     * 将给定的十六进制字节数组转换为对应的十进制长整数值。
+     *
+     * @param hexBytes 要转换的十六进制字节数组
+     * @return 转换后的十进制长整数值
+     * @since 2.7.12
+     */
+    public static long hexToLong(byte[] hexBytes) {
+        String str = hexBytesToString(hexBytes);
+        return hexToDec(str);
     }
 
     /**
