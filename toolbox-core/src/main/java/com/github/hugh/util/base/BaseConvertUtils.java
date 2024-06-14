@@ -289,7 +289,7 @@ public class BaseConvertUtils {
      * </p>
      * <p>默认返回结果都为大写</p>
      * <p>
-     * 由于命名补规范，请使用{@link #hexBytesToString(byte[], String)}
+     * 由于命名不规范，请使用{@link #hexBytesToString(byte[], String)}
      * </p>
      *
      * @param decBytes 十进制字节数组

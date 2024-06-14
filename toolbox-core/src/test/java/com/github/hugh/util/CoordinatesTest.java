@@ -78,8 +78,8 @@ class CoordinatesTest {
         // 定位失败，且卫星数量为0
         String str5 = "$GNGGA,064603.00,2813.1906,N,11241.3959,E,0,00,99.99,-69.7,M,,M,,*78";
         GgaDTO ggaDTO5 = CoordinatesUtils.parseGga(str5);
-        assertEquals("00",ggaDTO5.getNumberOfSatellites());
-        assertEquals("0",ggaDTO5.getGpsStatus());
+        assertEquals("00", ggaDTO5.getNumberOfSatellites());
+        assertEquals("0", ggaDTO5.getGpsStatus());
 //        assertEquals("11:36:52", ggaDTO4.getReadingDate());
 
     }
@@ -166,4 +166,18 @@ class CoordinatesTest {
         assertEquals("second latitude error : " + lngAndLat16.split(",")[1], toolboxException8.getMessage());
 
     }
+
+
+    /**
+     * GGA时空的时候
+     */
+    @Test
+    void testEmpty() {
+        String str1 = "$GNGGA,015830.00,,,,,0,00,99.99,,,,,,*77\\r\\n\\r\\nOK\\r\\n";
+        GgaDTO ggaDTO = CoordinatesUtils.parseGga(str1);
+        System.out.println("====>>" + ggaDTO);
+        assertTrue(EmptyUtils.isEmpty(ggaDTO.getLongitude()));
+
+    }
+
 }
