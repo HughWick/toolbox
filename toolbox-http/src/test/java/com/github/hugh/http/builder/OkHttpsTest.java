@@ -382,4 +382,15 @@ class OkHttpsTest {
                 .doPostJson();
         assertNotNull(okHttpsResponse2.toJsons().getString("token"));
     }
+
+
+    @Test
+    void test404() throws IOException {
+//        String url1 = "http://api.hnlot.com.cn/a/b?userId=123";
+        String url2 = "http://api.hnlot.com.cn/a/b";
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", "123");
+        JsonPlaceholderResult.UserBean jsons = OkHttps.url(url2).setBody(params).doGet().fromJson(JsonPlaceholderResult.UserBean.class);
+        assertNull(jsons);
+    }
 }

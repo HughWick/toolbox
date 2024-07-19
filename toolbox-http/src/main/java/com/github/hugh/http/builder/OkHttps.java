@@ -276,6 +276,7 @@ public class OkHttps {
         // 确保URL不为null或空
         verifyUrlEmpty();
         setBodyFromParams();
+        String tempUrl = url;
         // 如果提供了查询参数，则将其添加到URL中
         url = UrlUtils.urlParam(url, this.body);
         // 构建请求对象
@@ -293,7 +294,7 @@ public class OkHttps {
             result = send(request.build(), okHttpClient);
         }
         // 发送请求并返回响应
-        return new OkHttpsResponse(result);
+        return new OkHttpsResponse(result, tempUrl);
     }
 
     /**
@@ -376,7 +377,7 @@ public class OkHttps {
             request.headers(headers);
         }
         byte[] result = send(request.build(), okHttpClient);
-        return new OkHttpsResponse(result);
+        return new OkHttpsResponse(result, url);
     }
 
     /**
@@ -414,7 +415,7 @@ public class OkHttps {
             initOkHttpClient();
         }
         byte[] result = send(request, okHttpClient);
-        return new OkHttpsResponse(result);
+        return new OkHttpsResponse(result, url);
     }
 
     /**
