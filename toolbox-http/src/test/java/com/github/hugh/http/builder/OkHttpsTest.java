@@ -372,7 +372,9 @@ class OkHttpsTest {
         String url1 = https_reqres_url + "/api/users";
         OkHttpsResponse okHttpsResponse = OkHttps.url(url1)
                 .setParam("page", 1).doGet();
-        assertEquals(1, okHttpsResponse.toJsons().getInt("page"));
+        Jsons jsons = okHttpsResponse.toJsons();
+        System.out.println(jsons);
+        assertEquals(1, jsons.getInt("page"));
 
         String login_url = https_reqres_url + "/api/login";
         OkHttpsResponse okHttpsResponse2 = OkHttps
@@ -391,6 +393,16 @@ class OkHttpsTest {
         Map<String, Object> params = new HashMap<>();
         params.put("userId", "123");
         JsonPlaceholderResult.UserBean jsons = OkHttps.url(url2).setBody(params).doGet().fromJson(JsonPlaceholderResult.UserBean.class);
+        assertNull(jsons);
+    }
+
+    @Test
+    void test404_2() throws IOException {
+        String url2 = "http://api.hnlot.com.cn/a/b";
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", "123");
+        Jsons jsons = OkHttps.url(url2).setBody(params).doGet().toJsons();
+//        JsonPlaceholderResult.UserBean jsons = OkHttps.url(url2).setBody(params).doGet().fromJson(JsonPlaceholderResult.UserBean.class);
         assertNull(jsons);
     }
 }

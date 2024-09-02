@@ -14,6 +14,7 @@ import com.google.common.base.Suppliers;
 import com.google.gson.*;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -26,6 +27,7 @@ import java.util.function.Supplier;
  * @author hugh
  * @since 2.4.10
  */
+@Slf4j
 public class GsonUtils {
     public GsonUtils() {
     }
@@ -483,9 +485,15 @@ public class GsonUtils {
      * @since 1.4.10
      */
     public static <E, T> T fromJson(E json, Class<T> classOfT) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Date.class, new CustomDateTypeAdapter());
-        return fromJson(gsonBuilder, json, classOfT);
+//            return GsonUtils.fromJson(this.message, clazz);
+        try {
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(Date.class, new CustomDateTypeAdapter());
+            return fromJson(gsonBuilder, json, classOfT);
+        } catch (JsonParseException jsonParseException) {
+            log.error("JSON解析实体失败，：{}，内容：{}", json);
+            throw jsonParseException;
+        }
     }
 
     /**

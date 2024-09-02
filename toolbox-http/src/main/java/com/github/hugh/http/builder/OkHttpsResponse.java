@@ -59,12 +59,7 @@ public class OkHttpsResponse {
             log.error("请求接口返回非法json字符串，URL：{}，内容：{}", this.url, this.message);
             return null;
         }
-        try {
-            return GsonUtils.fromJson(this.message, clazz);
-        } catch (JsonParseException jsonParseException) {
-            log.error("JSON解析失败，URL：{}，内容：{}", this.url, this.message);
-            throw jsonParseException;
-        }
+        return GsonUtils.fromJson(this.message, clazz);
     }
 
     /**
