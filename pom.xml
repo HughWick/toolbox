@@ -42,13 +42,13 @@
         <spring.version>5.3.23</spring.version>
         <powermock.version>2.0.9</powermock.version>
         <!--============================== 第三方工具类 ==============================-->
-        <google-gson.version>2.10.1</google-gson.version>
+        <google-gson.version>2.11.0</google-gson.version>
         <fastjson.version>1.2.83</fastjson.version>
         <okhttp.version>4.9.3</okhttp.version>
         <servlet-api.version>4.0.1</servlet-api.version>
         <google-guava.version>33.1.0-jre</google-guava.version>
         <kryo.version>4.0.2</kryo.version>
-        <slf4j-simple.version>2.0.13</slf4j-simple.version>
+        <slf4j-simple.version>2.0.16</slf4j-simple.version>
         <ip2region.version>2.7.0</ip2region.version>
         <UserAgentUtils.version>1.21</UserAgentUtils.version>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
@@ -59,7 +59,7 @@
         <commons-codec.version>1.15</commons-codec.version>
         <pdfbox.version>2.0.29</pdfbox.version>
         <knife4j.version>3.0.3</knife4j.version>
-        <bcprov-jdk15on.version>1.70</bcprov-jdk15on.version>
+        <bcprov-jdk18on.version>1.78.1</bcprov-jdk18on.version>
         <!--    test powermock 版本号与mockito版本号对等  -->
         <powermock.version>2.0.2</powermock.version>
         <mockito.version>2.23.4</mockito.version>
@@ -217,11 +217,11 @@
                 <artifactId>jakarta.validation-api</artifactId>
                 <version>${jakarta.validation-api.version}</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
+            <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on -->
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15on</artifactId>
-                <version>${bcprov-jdk15on.version}</version>
+                <artifactId>bcprov-jdk18on</artifactId>
+                <version>${bcprov-jdk18on.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox -->
             <dependency>
