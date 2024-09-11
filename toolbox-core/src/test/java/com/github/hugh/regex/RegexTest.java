@@ -4,6 +4,9 @@ import com.github.hugh.util.base.Base64;
 import com.github.hugh.util.regex.RegexUtils;
 import org.junit.jupiter.api.Test;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -91,16 +94,16 @@ class RegexTest {
 
     @Test
     void testWebSite() {
-        String url = "www.baidu.com";
-        String url1 = "http://www.baidu.com";
-        String url2 = "https://www.baidu.com";
-        assertFalse(RegexUtils.isWebSite(url));
-        assertTrue(RegexUtils.isWebSite(url1));
-        assertTrue(RegexUtils.isWebSite(url2));
-        assertTrue(RegexUtils.isNotWebSite(url));
+        String url_1 = "www.baidu.com";
+        String url_2 = "http://www.baidu.com";
+        String url_3 = "https://www.baidu.com";
+        assertFalse(RegexUtils.isWebSite(url_1));
+        assertTrue(RegexUtils.isWebSite(url_2));
+        assertTrue(RegexUtils.isWebSite(url_3));
+        assertTrue(RegexUtils.isNotWebSite(url_1));
 
-        assertFalse(RegexUtils.isUrl(url));
-        assertTrue(RegexUtils.isUrl(url1));
+        assertFalse(RegexUtils.isUrl(url_1));
+        assertTrue(RegexUtils.isUrl(url_2));
     }
 
     @Test
@@ -120,6 +123,112 @@ class RegexTest {
         String phoneStr = "13825004872";
         assertTrue(RegexUtils.isPhone(phoneStr));
         assertTrue(RegexUtils.isNotPhone(phoneStr + "a"));
+        String[] testValidPhoneNumbers = {
+                "18648293237",
+                "18978050839",
+                "18787430100",
+                "17687283010",
+                "18015323726",
+                "17507831217",
+                "14776385170",
+                "13794021755",
+                "18152222513",
+                "13561724388",
+                "15095695809",
+                "16218772914",
+                "13789542824",
+                "17873204222",
+                "19570151891",
+                "17322698512",
+                "15725030667",
+                "13528479148",
+                "15913849737",
+                "16625868750",
+                "17538341249",
+                "17218208007",
+                "17857352575",
+                "13371420258",
+                "19571200572",
+                "13542749223",
+                "14580334830",
+                "17807315276",
+                "18211443794",
+                "15731186549",
+                "18167881156",
+                "14887382331",
+                "19200565267",
+                "16253375056",
+                "16519418674",
+                "13524187207",
+                "15934860076",
+                "18468056147",
+                "16758283682",
+                "19907709806",
+                "17305024476",
+                "14591570201",
+                "15914845836",
+                "13125582747",
+                "18021352978",
+                "18906954897",
+                "17635847941",
+                "13066411104",
+                "18572542046",
+                "15256844239",
+                "17648090966",
+                "18601794303",
+                "15740056165",
+                "13903467346",
+                "13848257417",
+                "18142331794",
+                "17216406367",
+                "17676404179",
+                "13165293382",
+                "13205814038",
+                "13193617678",
+                "18124082219",
+                "17718937458",
+                "17377886528",
+                "14927370356",
+                "13392763775",
+                "13072743741",
+                "13538339308",
+                "13222558648",
+                "19945822353",
+                "14743145972",
+                "13379947431",
+                "14799591588",
+                "19987414164",
+                "13596661322",
+                "18808974423",
+                "17754207374",
+                "19910638316",
+                "13001900726",
+                "17557109371",
+                "19029141881",
+                "13870269805",
+                "15060051944",
+                "19972125638",
+                "18709954512",
+                "13026171765",
+                "19511705078",
+                "19704939579",
+                "13623482594",
+                "13383577652",
+                "19207977521",
+                "14873557486",
+                "15748407983",
+                "15635045752",
+                "14670746258",
+                "18800022105",
+                "16655678504",
+                "18488752689",
+                "14738548550",
+                "18270590366"
+        };
+        // 输出测试数据
+        for (String phoneNumber : testValidPhoneNumbers) {
+            assertTrue(RegexUtils.isPhone(phoneNumber) , phoneNumber);
+        }
     }
 
     // 测试验证IP
@@ -195,12 +304,87 @@ class RegexTest {
     }
 
     @Test
-    void testIsHexadecimal(){
+    void testIsHexadecimal() {
         String str1 = "7e 00 4a 20 22 08 05 00 75 84 01 03 00 01 00 00 5d 48 00 00 00 17 00 00 00 ae 00 00 48 2c 00 00 01 c2 01 9b 04 5d 04 5e 04 5f 04 5d 00 18 00 18 01 4d 01 b8 01 9d 00 00 00 00 00 00 00 3f 00 00 00 00 00 00 00 00 00 00 00 00 6f 7e";
-        assertTrue(RegexUtils.isHexadecimal(str1.replace(" " , "")));
+        assertTrue(RegexUtils.isHexadecimal(str1.replace(" ", "")));
         String str2 = "7e 00 4a 20 22 08 05 00 75 84 mm";
-        assertFalse(RegexUtils.isHexadecimal(str2.replace(" " , "")));
-        assertTrue(RegexUtils.isNotHexadecimal(str2.replace(" " , "")));
+        assertFalse(RegexUtils.isHexadecimal(str2.replace(" ", "")));
+        assertTrue(RegexUtils.isNotHexadecimal(str2.replace(" ", "")));
+    }
 
+    @Test
+    void testIsDomain() {
+        String domain1 = "blog.51cto.com";
+        String domain2 = "dev.hnlot.com.cn";
+        String domain3 = "223.5.5.5";
+        String domain4 = "2235fdg";
+        assertTrue(RegexUtils.isDomain(domain1));
+        assertTrue(RegexUtils.isDomain(domain2));
+        assertTrue(RegexUtils.isDomain(domain3));
+        assertFalse(RegexUtils.isDomain(domain4));
+        String[] valid_urls = {
+                // 常见的 HTTP 和 HTTPS URL
+                "http://example.com",
+                "https://example.com",
+                "http://www.example.com",
+                "https://www.example.com",
+                // FTP URLs
+                "ftp://example.com",
+                "ftp://user:pass@example.com",
+//                "ftp://192.168.1.1/resource",
+                // 不带协议的域名
+                "example.com",
+                "www.example.com",
+                "example.co.uk",
+                "subdomain.example.com",
+                // 带端口的 URL
+                "example.com:8080",
+                "example.com:80/path/to/resource",
+                // 包含路径、查询参数和片段标识符的 URL
+                "example.com/path/to/resource",
+                "example.com/path/to/resource?query=1#fragment",
+                // 带国际化字符的域名（IDN）
+                // 仅域名部分包含特殊字符
+                "example.com/path/to/resource%20with%20spaces",
+                "example.com/#hash",
+                // 不常见的协议
+                "mailto:user@example.com",
+                "http://example.com:99999", // Invalid port
+                "http://222.244.144.131",
+                "http://a.b-c.de",
+                "http://cmmop.nmg-ds.hnlot.com.cn",
+                "cmmop.nmg-ds.hnlot.com.cn:10110",
+                // 下面无法验证的url
+                "http://a.b--c.de/",
+                "http://www.foo.bar./",
+        };
+        for (String url : valid_urls) {
+            assertTrue(RegexUtils.isDomain(url), url);
+        }
+    }
+
+    @Test
+    void isNotDomain() {
+        // 无效的 URL 和 IP 地址
+        String[] invalid_urls = {
+                "256.256.256.256",     // Invalid IP
+                "http://",              // Invalid URL
+                "https://",             // Invalid URL
+                "ftp://",               // Invalid URL
+                "example..com",         // Invalid domain
+                "http://-example.com",  // Invalid domain
+                "http://example-.com",  // Invalid domain
+                "http://.example.com",   // Invalid domain
+                "http://example.com:abc", // Invalid port
+                "just_a_string",        // Invalid format
+                "https://xn--fsq@p1ai", // Russian IDN example (пример.рф)
+                "http://-a.b.co",
+                "http://foo.bar/foo(bar)baz quux",
+                "http://10.1.1.1",
+                "ftp://192.168.1.1/resource",
+        };
+        for (String url : invalid_urls) {
+            assertTrue(RegexUtils.isNotDomain(url), url);
+        }
     }
 }

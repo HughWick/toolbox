@@ -100,18 +100,19 @@ public class RegexUtils {
     /**
      * 电话号码正则表达式
      * <ul>
-     * <li>中国电信号段 133、149、153、173、177、179、180、181、189、191、199</li>
-     * <li>中国联通号段 130、131、132、145、155、156、166、175、176、185、186</li>
+     * <li>中国电信号段 133、149、153、162、173、177、180、181、189、190、191、199</li>
+     * <li>中国联通号段 130、131、132、145、146、155、156、166、175、176、185、186</li>
      * <li>中国移动号段
-     * 134(0-8)、135、136、137、138、139、147、150、151、152、157、158、159、178、182、183、184、187、188、198、195</li>
+     * 134(0-8)、135、136、137、138、139、147、148、150、151、152、157、158、159、178、182、183、184、187、188、197、198、195</li>
      * <li>其他号段 14号段以前为上网卡专属号段，如中国联通的是145，中国移动的是147等等。</li>
      * <li>虚拟运营商 电信：1700、1701、1702</li>
      * <li>移动：1703、1705、1706</li>
      * <li>联通：1704、1707、1708、1709、171</li>
      * <li>卫星通信：1349</li>
+     * <li>广电号段：179、192</li>
      * </ul>
      */
-    private static final Pattern PHONE_PATTERN = Pattern.compile("^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(16([5-7]))|(17[0,1,2,3,5,6,7,8,9])|(18[0-9])|(19[1|5|8|9]))\\d{8}$");
+    private static final Pattern PHONE_PATTERN = Pattern.compile("^((13[0-9])|(14[5-9])|(15([0-3]|[5-9]))|(16[2,5-7])|(17[0-3,5-9])|(18[0-9])|(19[0,1,2,5,7,8,9]))\\d{8}$");
 
     /**
      * URL 正则表达式
@@ -166,6 +167,38 @@ public class RegexUtils {
      * base64 - 正则
      */
     private static final Pattern BASE64_PATTERN = Pattern.compile("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$");
+
+    /**
+     * 域名正则表达式
+     * <ul>
+     *     <li>{@code https://mathiasbynens.be/demo/url-regex}</li>
+     * </ul>
+     */
+    private static final String DOMAIN_PATTERN = "^(?:" +
+            "(?:(?:https?|ftp)://)?" +  // 协议部分（可选）
+            "(?:\\S+(?::\\S*)?@)?" +   // 用户名:密码（可选）
+            "(?:" +
+            // IP 地址排除
+            // 私有和本地网络
+            "(?!(?:10|127)(?:\\.\\d{1,3}){3})" +
+            "(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})" +
+            "(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})" +
+            // IP 地址点分表示法八位数
+            "(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])" +
+            "(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}" +
+            "(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))" +
+            "|" +
+            // 主机和域名
+            "(?:" +
+            "(?:[a-z0-9\\u00a1-\\uFFFF][a-z0-9\\u00a1-\\uFFFF_-]{0,62})?[a-z0-9\\u00a1-\\uFFFF]" +
+            "\\.)+" +
+            // 顶级域名，可能以点结束
+            "(?:[a-z\\u00a1-\\uffff]{2,}\\.?)" +
+            ")" +
+            // 端口号（可选）
+            "(?::\\d{2,5})?" +
+            // 资源路径（可选）
+            "(?:[/?#]\\S*)?$)";
 
     /**
      * 对特殊字符转译
@@ -300,10 +333,12 @@ public class RegexUtils {
 
     /**
      * 是否为URL
+     * <p>2.7.14 之后使用{@link #isDomain(String)}</p>
      *
      * @param string 字符
      * @return boolean 结果
      */
+    @Deprecated
     public static boolean isUrl(final String string) {
         return isPatternMatch(string, URL_PATTERN);
     }
@@ -311,21 +346,25 @@ public class RegexUtils {
     /**
      * 验证字符串是一个网址
      * <p>1.5.16 重构了正则,字符串必须是由http or https 开头的url</p>
+     * <p>2.7.14 之后使用{@link #isDomain(String)}</p>
      *
      * @param string 结果
      * @return boolean 是否
      */
+    @Deprecated
     public static boolean isWebSite(final String string) {
         return WEB_SITE_PATTERN.matcher(string).matches();
     }
 
     /**
      * 验证字符串不是一个网址
+     * <p>2.7.14 之后使用{@link #isNotDomain(String)} (String)}</p>
      *
      * @param string 字符串
      * @return boolean {@code true} 字符串不是网址
      * @since 1.5.16
      */
+    @Deprecated
     public static boolean isNotWebSite(final String string) {
         return !isWebSite(string);
     }
@@ -691,5 +730,32 @@ public class RegexUtils {
      */
     public static boolean isNotHexadecimal(String str) {
         return !isHexadecimal(str);
+    }
+
+    /**
+     * 检查给定的字符串是否为有效的域名或 URL。
+     *
+     * @param str 要检查的字符串
+     * @return 如果字符串是有效的域名或 URL，则返回 true；否则返回 false
+     * @since 2.7.14
+     */
+    public static boolean isDomain(String str) {
+        if (EmptyUtils.isEmpty(str)) {
+            return false; // 如果字符串为空，返回 false
+        }
+        Pattern pattern = Pattern.compile(DOMAIN_PATTERN); // 编译正则表达式
+        Matcher matcher = pattern.matcher(str); // 创建匹配器
+        return matcher.matches(); // 返回是否匹配
+    }
+
+    /**
+     * 检查给定的字符串是否不是有效的域名或 URL。
+     *
+     * @param str 要检查的字符串
+     * @return 如果字符串不是有效的域名或 URL，则返回 true；否则返回 false
+     * @since 2.7.14
+     */
+    public static boolean isNotDomain(String str) {
+        return !isDomain(str); // 调用 isDomain 方法并取反结果
     }
 }

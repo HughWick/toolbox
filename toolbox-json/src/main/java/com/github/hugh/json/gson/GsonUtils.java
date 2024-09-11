@@ -485,13 +485,12 @@ public class GsonUtils {
      * @since 1.4.10
      */
     public static <E, T> T fromJson(E json, Class<T> classOfT) {
-//            return GsonUtils.fromJson(this.message, clazz);
         try {
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapter(Date.class, new CustomDateTypeAdapter());
             return fromJson(gsonBuilder, json, classOfT);
         } catch (JsonParseException jsonParseException) {
-            log.error("JSON解析实体失败，：{}，内容：{}", json);
+            log.error("JSON解析实体失败，内容：{}", json);
             throw jsonParseException;
         }
     }
