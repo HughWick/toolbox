@@ -151,7 +151,7 @@ public class NetworkUtils {
         boolean flag = true;
         try {
             flag = isPortUsing("127.0.0.1", port);
-        } catch (Exception e) {
+        } catch (Exception exception) {
         }
         return flag;
     }

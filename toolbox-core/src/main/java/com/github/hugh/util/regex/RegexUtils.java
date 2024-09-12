@@ -1,5 +1,6 @@
 package com.github.hugh.util.regex;
 
+import com.github.hugh.constant.StrPool;
 import com.github.hugh.util.EmptyUtils;
 
 import java.util.regex.Matcher;
@@ -504,7 +505,7 @@ public class RegexUtils {
      * @since 2.4.8
      */
     public static boolean isLonLat(String longitudeCommaLatitude) {
-        final String[] split1 = longitudeCommaLatitude.split(",");
+        final String[] split1 = longitudeCommaLatitude.split(StrPool.COMMA);
         return isLongitude(split1[0]) && isLatitude(split1[1]);
     }
 
