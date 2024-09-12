@@ -83,8 +83,9 @@ class StringUtilTest {
         String fileName = "0e9f4beeb6a5423585c6eabda21a63ee.jpg";
         String filePath = "C:\\Users\\Lenovo\\Desktop\\" + fileName;
         assertEquals(fileName, StringUtils.after(filePath, "\\"));
-
-
+        String path3 = "http://192.168.1.89/capture/DaHua/capture/SZC3JW439D00083/2024/8/15/42e36a636264411982f470de6001ac09.jpg";
+        String after3 = StringUtils.after(path3, "/", 4);
+        assertEquals("/DaHua/capture/SZC3JW439D00083/2024/8/15/42e36a636264411982f470de6001ac09.jpg" , after3);
     }
 
     @Test

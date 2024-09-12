@@ -100,7 +100,7 @@ public class RegexUtils {
     /**
      * 电话号码正则表达式
      * <ul>
-     * <li>中国电信号段 133、149、153、162、173、177、180、181、189、190、191、199</li>
+     * <li>中国电信号段 133、149、153、162、173、174、177、180、181、189、190、191、193、199</li>
      * <li>中国联通号段 130、131、132、145、146、155、156、166、175、176、185、186</li>
      * <li>中国移动号段
      * 134(0-8)、135、136、137、138、139、147、148、150、151、152、157、158、159、178、182、183、184、187、188、197、198、195</li>
@@ -112,7 +112,7 @@ public class RegexUtils {
      * <li>广电号段：179、192</li>
      * </ul>
      */
-    private static final Pattern PHONE_PATTERN = Pattern.compile("^((13[0-9])|(14[5-9])|(15([0-3]|[5-9]))|(16[2,5-7])|(17[0-3,5-9])|(18[0-9])|(19[0,1,2,5,7,8,9]))\\d{8}$");
+    private static final Pattern PHONE_PATTERN = Pattern.compile("^((13[0-9])|(14[5-9])|(15([0-3]|[5-9]))|(16[2,5-7])|(17[0-9])|(18[0-9])|(19[0-3,5,7,8,9]))\\d{8}$");
 
     /**
      * URL 正则表达式
@@ -124,8 +124,8 @@ public class RegexUtils {
      * （5）验证参数必须为xxx=xxx格式，且xxx=空格式通过
      * （6）验证参数与符号&连续个数为0个或1个
      * <p>
-     * https://www.cnblogs.com/woaiadu/p/7084250.html
      */
+    @Deprecated
     private static final Pattern URL_PATTERN = Pattern.compile("^([hH][tT]{2}[pP]:/*|[hH][tT]{2}[pP][sS]:/*|[fF][tT][pP]:/*)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/])+(\\??(([A-Za-z0-9-~]+\\={0,1})([A-Za-z0-9-~]*)\\&?)*)$");
 
     /**
@@ -170,9 +170,9 @@ public class RegexUtils {
 
     /**
      * 域名正则表达式
-     * <ul>
-     *     <li>{@code https://mathiasbynens.be/demo/url-regex}</li>
-     * </ul>
+     * <p>
+     * @see <a href="https://mathiasbynens.be/demo/url-regex">In search of the perfect URL validation regex</a>
+     * </p>
      */
     private static final String DOMAIN_PATTERN = "^(?:" +
             "(?:(?:https?|ftp)://)?" +  // 协议部分（可选）

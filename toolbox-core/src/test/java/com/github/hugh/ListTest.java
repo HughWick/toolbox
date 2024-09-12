@@ -1,5 +1,6 @@
 package com.github.hugh;
 
+import com.github.hugh.constant.StrPool;
 import com.github.hugh.model.Student;
 import com.github.hugh.util.ListUtils;
 import com.github.hugh.util.regex.RegexUtils;
@@ -9,6 +10,7 @@ import com.google.common.collect.Ordering;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -240,7 +242,7 @@ class ListTest {
         List<Student> list = Lists.newArrayList(student, student2, student3, student4);
         assertEquals("张三_李四_王五", ListUtils.listObjectToString(list, "name", "_"));
         assertEquals("张三,李四,王五", ListUtils.listObjectToString(list, "name"));
-//        System.out.println();
+        list.stream().map(Student::getName).collect(Collectors.toList());
         List<Map> listMap = new ArrayList<>();
         var item = new HashMap<>();
         item.put("name", "狗蛋");
@@ -251,7 +253,6 @@ class ListTest {
 //        System.out.println(ListUtils.listObjectToString(listMap, "name"));
         assertEquals("狗蛋,钢弹", ListUtils.listObjectToString(listMap, "name"));
     }
-
 
     @Test
     void test02(){
