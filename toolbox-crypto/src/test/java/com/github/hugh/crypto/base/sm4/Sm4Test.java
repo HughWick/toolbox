@@ -1,5 +1,6 @@
 package com.github.hugh.crypto.base.sm4;
 
+import com.github.hugh.crypto.util.Sm4Utils;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.json.gson.Jsons;
 import com.github.hugh.util.base.BaseConvertUtils;

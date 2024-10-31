@@ -22,6 +22,8 @@ import java.util.List;
 public class PdfUtils {
 
     /**
+     * pdf转图片
+     *
      * @param source      原文件
      * @param desFilePath 生成图片的路径
      * @param desFileName 生成图片的名称（多页文档时会变成：名称+下划线+从1开始的数字）
