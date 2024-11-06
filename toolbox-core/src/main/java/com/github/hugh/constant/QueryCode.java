@@ -7,7 +7,8 @@ package com.github.hugh.constant;
  * @since 2.7.0
  */
 public class QueryCode {
-    private QueryCode(){}
+    private QueryCode() {
+    }
 
     /**
      * 序列号
@@ -72,6 +73,12 @@ public class QueryCode {
      */
     public static final String SIZE = "SIZE";
 
+    /**
+     * app key
+     *
+     * @since 2.7.15
+     */
+    public static final String APPKEY = "appkey";
 
     /**
      * 小写
@@ -79,6 +86,9 @@ public class QueryCode {
      * @since 2.7.0
      */
     public static class Lowercase {
+        private Lowercase() {
+        }
+
         public static final String SERIAL_NO = QueryCode.SERIAL_NO.toLowerCase();
         /**
          * 序列号
@@ -128,6 +138,13 @@ public class QueryCode {
          * @since 2.7.1
          */
         public static final String SIZE = QueryCode.SIZE.toLowerCase();
+
+        /**
+         * 常量：app key
+         *
+         * @since 2.7.15
+         */
+        public static final String APPKEY = QueryCode.APPKEY.toLowerCase();
 
     }
 }
