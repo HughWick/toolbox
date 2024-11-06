@@ -1,5 +1,6 @@
 package com.github.hugh.http.builder;
 
+import com.github.hugh.crypto.Md5Utils;
 import com.github.hugh.json.gson.GsonUtils;
 import com.github.hugh.json.gson.Jsons;
 import com.google.gson.JsonParseException;
@@ -90,5 +91,15 @@ public class OkHttpsResponse {
      */
     public <T> List<T> toList(Class<T> clazz) {
         return GsonUtils.toArrayList(this.message, clazz);
+    }
+
+    /**
+     * 返回通过 MD5 算法加密字节数组后的结果。
+     *
+     * @return 加密后的 MD5 值
+     * @since 2.7.15
+     */
+    public String md5() {
+        return Md5Utils.encryptBytes(bytes);
     }
 }

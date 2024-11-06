@@ -405,4 +405,16 @@ class OkHttpsTest {
 //        JsonPlaceholderResult.UserBean jsons = OkHttps.url(url2).setBody(params).doGet().fromJson(JsonPlaceholderResult.UserBean.class);
         assertNull(jsons);
     }
+
+
+    @Test
+    void testFileMd5() throws IOException {
+        String url1 = "https://minio.hnlot.com.cn/host-os/traffic/host_traffic-1.4.1_240805_RELEASE.bin";
+        String md5_1 = OkHttps.url(url1).doGet().md5();
+        assertEquals("9b69c840de4de17bd219dd44bccd38d3", md5_1);
+        // minio没有文件错误
+        String url2 = "https://minio.hnlot.com.cn/host-os/traffic/host_traffic-1.4.1_240805_RELEASE.bin2";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url2).doGet();
+        assertTrue(okHttpsResponse.getMessage().contains("<Code>NoSuchKey</Code>"));
+    }
 }
