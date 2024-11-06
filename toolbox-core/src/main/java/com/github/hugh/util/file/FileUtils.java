@@ -1,5 +1,6 @@
 package com.github.hugh.util.file;
 
+import com.github.hugh.constant.StrPool;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.DoubleMathUtils;
 import com.github.hugh.util.EmptyUtils;
@@ -250,29 +251,41 @@ public class FileUtils {
     }
 
     /**
-     * 文件大小换算
+     * 格式化文件大小显示，默认包含单位，根据文件大小返回相应的大小字符串（带单位）。
      *
      * @param fileSize 文件大小
      * @return String 格式化后的文件大小：XX MB、XX GB
      * @since 2.2.2
      */
     public static String formatFileSize(long fileSize) {
+        return formatFileSize(fileSize, true);
+    }
+
+    /**
+     * 格式化文件大小显示，返回相应的大小字符串（带单位）。
+     *
+     * @param fileSize    文件大小
+     * @param includeUnit 是否包含单位（true 包含单位，false 不包含单位）
+     * @return 格式化后的文件大小字符串
+     * @since 2.7.15
+     */
+    public static String formatFileSize(long fileSize, boolean includeUnit) {
         String wrongSize = "0";
         if (fileSize <= 0) {
             return wrongSize;
         }
-        int kb = 1024;//定义KB的计算常量
-        int mb = kb * kb;//定义MB的计算常量
-        int gb = mb * kb;//定义GB的计算常量
+        int kb = 1024; // 定义 KB 的计算常量
+        int mb = kb * kb; // 定义 MB 的计算常量
+        int gb = mb * kb; // 定义 GB 的计算常量
         if (fileSize < kb) {
             DecimalFormat df = new DecimalFormat("#.00");
-            return df.format((double) fileSize) + "B";
+            return df.format((double) fileSize) + (includeUnit ? "B" : StrPool.EMPTY);
         } else if (fileSize < mb) {
-            return DoubleMathUtils.div(fileSize, kb, 2) + "KB";
+            return DoubleMathUtils.div(fileSize, kb, 2) + (includeUnit ? "KB" : StrPool.EMPTY);
         } else if (fileSize < gb) {
-            return DoubleMathUtils.div(fileSize, mb, 2) + "MB";
+            return DoubleMathUtils.div(fileSize, mb, 2) + (includeUnit ? "MB" : StrPool.EMPTY);
         } else {
-            return DoubleMathUtils.div(fileSize, gb, 2) + "GB";
+            return DoubleMathUtils.div(fileSize, gb, 2) + (includeUnit ? "GB" : StrPool.EMPTY);
         }
     }
 
@@ -291,7 +304,7 @@ public class FileUtils {
     }
 
     /**
-     * 文件大小换算
+     * 根据文件路径，格式化文件大小显示，返回相应的大小字符串（带单位）。
      *
      * @param path 文件路径
      * @return String 格式化后的文件大小：XX MB、XX GB

@@ -117,7 +117,7 @@ class FileTest {
     }
 
     @Test
-    void testSizeCalc() {
+    void testFormatFileSize() {
         String ip2DbPath = FileTest.class.getResource("/ip2region/ip2region.xdb").getFile();
 //        String head = "C:\\Users\\Hugh\\Desktop\\";
 //        String path = head + "FIGqfQdakAQeRiG.jpg";
@@ -134,8 +134,14 @@ class FileTest {
         assertEquals("981.58MB", FileUtils.formatFileSize(1029263971L));
         assertEquals("410.04KB", FileUtils.formatFileSize(419880));
         assertEquals("880.00B", FileUtils.formatFileSize(880));
+        // ==============================
+        assertEquals("213.00", FileUtils.formatFileSize(213, false));
+        assertEquals("10.55", FileUtils.formatFileSize(ip2DbPath));
+        assertEquals("1.26", FileUtils.formatFileSize(1354390941L, false));
+        assertEquals("981.58", FileUtils.formatFileSize(1029263971L, false));
+        assertEquals("410.04", FileUtils.formatFileSize(419880, false));
+        assertEquals("880.00", FileUtils.formatFileSize(880, false));
     }
-
 
     private static String getPath(String fileName) {
         return ImageTest.class.getResource(fileName).getPath();
