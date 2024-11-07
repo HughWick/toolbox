@@ -181,7 +181,7 @@ class StringUtilTest {
         assertEquals(result1, StringUtils.removeDuplicate(str2));
         String str3 = "呼叫刘呼叫刘晓晓";
 //        assertEquals("呼叫刘晓晓", StringUtils.removeDuplicate2(str3));
-        assertEquals("呼叫刘晓晓", StringUtils.removeDuplicate(str3));
+        assertEquals("呼叫刘晓", StringUtils.removeDuplicate(str3));
 
 
     }

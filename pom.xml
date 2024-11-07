@@ -5,8 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.hughwick</groupId>
     <artifactId>toolbox-parent</artifactId>
-    <version>2.7.15</version>
+    <version>2.7.16</version>
     <packaging>pom</packaging>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
 
     <modules>
         <module>toolbox-all</module>
@@ -35,7 +41,7 @@
         <plugin.surefire.ignore-failure>false</plugin.surefire.ignore-failure>
         <plugin.maven-source-plugin.version>2.2.1</plugin.maven-source-plugin.version>
         <plugin.maven-javadoc-plugin.version>3.3.1</plugin.maven-javadoc-plugin.version>
-        <plugin.maven-gpg-plugin.version>1.5</plugin.maven-gpg-plugin.version>
+        <plugin.maven-gpg-plugin.version>1.6</plugin.maven-gpg-plugin.version>
         <plugin.jacoco.version>0.8.8</plugin.jacoco.version>
         <!--============================== other ==============================-->
         <lombok.version>1.18.24</lombok.version>
@@ -137,7 +143,7 @@
             <version>1.0.8</version>
             <scope>test</scope>
         </dependency>
-     </dependencies>
+    </dependencies>
 
     <dependencyManagement>
         <dependencies>
@@ -306,11 +312,6 @@
     </build>
 
     <!--============================== ADD For sonatype START ==============================-->
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -323,7 +324,6 @@
         <connection>scm:git:https://github.com/HughWick/toolbox.git</connection>
         <developerConnection>scm:git:https://github.com/HughWick/toolbox.git</developerConnection>
         <url>https://github.com/HughWick/toolbox</url>
-        <tag>1.0.1</tag>
     </scm>
     <!-- 开发者信息 -->
     <developers>
@@ -341,6 +341,18 @@
             <id>release</id>
             <build>
                 <plugins>
+                    <!--   central发布插件    -->
+                    <!--新账号的配置：将组件部署到OSSRH并将其发布到Central Repository-->
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.4.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <tokenAuth>true</tokenAuth>
+                        </configuration>
+                    </plugin>
                     <!-- Source -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -386,14 +398,20 @@
                 </plugins>
             </build>
             <distributionManagement>
+                <!--      旧平台       -->
+                <!--                <snapshotRepository>-->
+                <!--                    <id>Hugh</id>-->
+                <!--                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>-->
+                <!--                </snapshotRepository>-->
+                <!--                <repository>-->
+                <!--                    <id>Hugh</id>-->
+                <!--                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
+                <!--                </repository>-->
+                <!--      新中央平台      -->
                 <snapshotRepository>
-                    <id>snapshot</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                    <id>central</id>
+                    <url>https://central.sonatype.com/</url>
                 </snapshotRepository>
-                <repository>
-                    <id>snapshot</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                </repository>
             </distributionManagement>
         </profile>
     </profiles>

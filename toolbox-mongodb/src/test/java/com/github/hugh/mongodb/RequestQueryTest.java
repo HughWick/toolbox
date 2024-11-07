@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author hugh
  */
 class RequestQueryTest {
-    private static final String CONNECTION_STRING = "mongodb://cmmop:cmmop#8225586@192.168.10.29:27018/cmmop?authSource=admin";
+    private static final String CONNECTION_STRING = "mongodb://cmmop:cmmop#8225586@192.168.10.29:7070/cmmop?authSource=admin";
 
     private static final String collection_name = "collection_test";
     private MongoTemplate mongoTemplate;

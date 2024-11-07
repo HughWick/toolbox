@@ -136,7 +136,7 @@ class FileTest {
         assertEquals("880.00B", FileUtils.formatFileSize(880));
         // ==============================
         assertEquals("213.00", FileUtils.formatFileSize(213, false));
-        assertEquals("10.55", FileUtils.formatFileSize(ip2DbPath));
+        assertEquals("10.55MB", FileUtils.formatFileSize(ip2DbPath));
         assertEquals("1.26", FileUtils.formatFileSize(1354390941L, false));
         assertEquals("981.58", FileUtils.formatFileSize(1029263971L, false));
         assertEquals("410.04", FileUtils.formatFileSize(419880, false));
