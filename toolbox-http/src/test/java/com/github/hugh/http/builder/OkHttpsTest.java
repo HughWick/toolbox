@@ -410,6 +410,12 @@ class OkHttpsTest {
         assertEquals("text/html", okHttpsResponse.getContentType());
         assertTrue(okHttpsResponse.is404());
     }
+    @Test
+    void test400() throws IOException {
+        String url1 = "https://httpbin.org/status/400";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url1).doGet();
+        assertTrue(okHttpsResponse.is400());
+    }
 
     @Test
     void test401() throws IOException {
