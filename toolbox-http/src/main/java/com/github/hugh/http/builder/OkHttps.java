@@ -6,10 +6,12 @@ import com.github.hugh.http.constant.MediaTypes;
 import com.github.hugh.http.constant.OkHttpCode;
 import com.github.hugh.http.exception.ToolboxHttpException;
 import com.github.hugh.http.model.FileFrom;
+import com.github.hugh.http.model.ResponseWrapper;
 import com.github.hugh.json.gson.GsonUtils;
 import com.github.hugh.json.gson.Jsons;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.ListUtils;
+import com.google.gson.JsonElement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -286,15 +288,15 @@ public class OkHttps {
             Headers headers = Headers.of(this.header);
             request.headers(headers);
         }
-        byte[] result;
+        ResponseWrapper responseWrapper;
         if (this.isSendCookies) {
-            result = send(request.build(), cookieClient);
+            responseWrapper = send(request.build(), cookieClient);
         } else {
             initOkHttpClient();
-            result = send(request.build(), okHttpClient);
+            responseWrapper = send(request.build(), okHttpClient);
         }
         // 发送请求并返回响应
-        return new OkHttpsResponse(result, tempUrl);
+        return okHttpsResponse(responseWrapper);
     }
 
     /**
@@ -376,8 +378,18 @@ public class OkHttps {
             Headers headers = Headers.of(this.header);
             request.headers(headers);
         }
-        byte[] result = send(request.build(), okHttpClient);
-        return new OkHttpsResponse(result, url);
+        ResponseWrapper responseWrapper = send(request.build(), okHttpClient);
+        return okHttpsResponse(responseWrapper);
+    }
+
+    /**
+     * 将 ResponseWrapper 对象转换为 OkHttpsResponse 对象。
+     *
+     * @param responseWrapper 包含响应数据的 ResponseWrapper 对象，包含响应体字节数组、Content-Type 和状态码等信息。
+     * @return 返回构造好的 OkHttpsResponse 对象，该对象包含了响应体字节数组、请求 URL 和响应的 Content-Type。
+     */
+    private OkHttpsResponse okHttpsResponse(ResponseWrapper responseWrapper) {
+        return new OkHttpsResponse(responseWrapper.getResponseBody(), url, responseWrapper.getContentType(), responseWrapper.getResponseCode());
     }
 
     /**
@@ -393,9 +405,10 @@ public class OkHttps {
                 .setType(MultipartBody.FORM);
         // 如果请求体不为空，则将其转换为 Map 对象，并遍历 Map 中的每一项，添加到请求体中
         if (EmptyUtils.isNotEmpty(this.body)) {
-            final Map<K, V> params = new Jsons(this.body).toMap();
-            for (Map.Entry<K, V> entry : params.entrySet()) {
-                requestBody.addFormDataPart(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
+            Jsons jsons = new Jsons(this.body);
+            for (Map.Entry<String, JsonElement> entrySet : jsons.entrySet()) {
+//            for (Map.Entry<K, V> entry : params.entrySet()) {
+                requestBody.addFormDataPart(String.valueOf(entrySet.getKey()), String.valueOf(entrySet.getValue()));
             }
         }
         if (ListUtils.isEmpty(this.fileFrom)) {
@@ -414,8 +427,8 @@ public class OkHttps {
         } else {
             initOkHttpClient();
         }
-        byte[] result = send(request, okHttpClient);
-        return new OkHttpsResponse(result, url);
+        ResponseWrapper responseWrapper = send(request, okHttpClient);
+        return okHttpsResponse(responseWrapper);
     }
 
     /**
@@ -467,16 +480,20 @@ public class OkHttps {
      *
      * @param request      请求内容
      * @param okHttpClient OkHttpClient
-     * @return String 返回结果
+     * @return ResponseWrapper 返回结果
      * @throws IOException IO异常
      */
-    private byte[] send(Request request, OkHttpClient okHttpClient) throws IOException {
+    private ResponseWrapper send(Request request, OkHttpClient okHttpClient) throws IOException {
         try (Response response = okHttpClient.newCall(request).execute()) {
             ResponseBody responseBody = response.body();
             if (responseBody == null) {
                 throw new ToolboxHttpException("result params is null ");
             }
-            return responseBody.bytes();
+            ResponseWrapper responseWrapper = new ResponseWrapper();
+            responseWrapper.setResponseCode(response.code());
+            responseWrapper.setContentType(response.header("Content-Type"));
+            responseWrapper.setResponseBody(responseBody.bytes());
+            return responseWrapper;
         }
     }
 }

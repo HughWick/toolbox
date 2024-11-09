@@ -63,7 +63,9 @@ class OkHttpsTest {
         map.put("foo2", "bar3");
         final String s2 = new OkHttps().setUrl(http_bin_get_url).setBody(map).doGet().getMessage();
         assertNotNull(s2);
-        final ResponseData postman = new OkHttps().setUrl(http_bin_get_url).setBody(map).doGet().fromJson(ResponseData.class);
+        OkHttpsResponse okHttpsResponse = new OkHttps().setUrl(http_bin_get_url).setBody(map).doGet();
+        assertTrue(okHttpsResponse.is200());
+        final ResponseData postman = okHttpsResponse.fromJson(ResponseData.class);
         assertEquals(params1, postman.getArgs().getFoo1());
         assertEquals("okhttp/4.9.3", postman.getHeaders().getUserAgent());
     }
@@ -158,7 +160,8 @@ class OkHttpsTest {
         var params = new HashMap<>();
         params.put("type", "0");
         final ToolboxHttpException toolboxHttpException = Assertions.assertThrowsExactly(ToolboxHttpException.class, () -> {
-            new OkHttps().setUrl(http_bin_post_url).setBody(params).uploadFile().getMessage();
+            OkHttpsResponse okHttpsResponse = new OkHttps().setUrl(http_bin_post_url).setBody(params).uploadFile();
+            System.out.println(okHttpsResponse.getMessage());
         });
         assertEquals("file is null", toolboxHttpException.getMessage());
         // 测试上传文件对应后台key为空
@@ -182,13 +185,13 @@ class OkHttpsTest {
         // 测试单个
         FileFrom media1 = new FileFrom("file", "vant_log_150x150.png", getPath(path7), null, MediaTypes.IMAGE_PNG);
         // 测试图片
-        final ResponseData responseData2 = new OkHttps().setUrl(http_bin_post_url)
+        OkHttpsResponse okHttpsResponse = new OkHttps().setUrl(http_bin_post_url)
                 .setBody(params)
                 .setFileFrom(media1)
-                .uploadFile()
-                .fromJson(ResponseData.class);
+                .uploadFile();
+        ResponseData responseData2 = okHttpsResponse.fromJson(ResponseData.class);
         // 验证数据长度
-        assertEquals("4366", responseData2.getHeaders().getContentLength());
+        assertEquals("4368", responseData2.getHeaders().getContentLength());
     }
 
     // 测试多张图片
@@ -385,14 +388,15 @@ class OkHttpsTest {
         assertNotNull(okHttpsResponse2.toJsons().getString("token"));
     }
 
-
     @Test
     void test404() throws IOException {
 //        String url1 = "http://api.hnlot.com.cn/a/b?userId=123";
         String url2 = "http://api.hnlot.com.cn/a/b";
         Map<String, Object> params = new HashMap<>();
         params.put("userId", "123");
-        JsonPlaceholderResult.UserBean jsons = OkHttps.url(url2).setBody(params).doGet().fromJson(JsonPlaceholderResult.UserBean.class);
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url2).setBody(params).doGet();
+        assertTrue(okHttpsResponse.is404());
+        JsonPlaceholderResult.UserBean jsons = okHttpsResponse.fromJson(JsonPlaceholderResult.UserBean.class);
         assertNull(jsons);
     }
 
@@ -401,9 +405,9 @@ class OkHttpsTest {
         String url2 = "http://api.hnlot.com.cn/a/b";
         Map<String, Object> params = new HashMap<>();
         params.put("userId", "123");
-        Jsons jsons = OkHttps.url(url2).setBody(params).doGet().toJsons();
-//        JsonPlaceholderResult.UserBean jsons = OkHttps.url(url2).setBody(params).doGet().fromJson(JsonPlaceholderResult.UserBean.class);
-        assertNull(jsons);
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url2).setBody(params).doGet();
+        assertEquals("text/html", okHttpsResponse.getContentType());
+        assertTrue(okHttpsResponse.is404());
     }
 
 
