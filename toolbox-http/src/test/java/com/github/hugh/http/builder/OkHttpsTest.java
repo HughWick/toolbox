@@ -191,7 +191,7 @@ class OkHttpsTest {
                 .uploadFile();
         ResponseData responseData2 = okHttpsResponse.fromJson(ResponseData.class);
         // 验证数据长度
-        assertEquals("4368", responseData2.getHeaders().getContentLength());
+        assertEquals("4366", responseData2.getHeaders().getContentLength());
     }
 
     // 测试多张图片

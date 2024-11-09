@@ -395,20 +395,21 @@ public class OkHttps {
     /**
      * 上传文件的方法
      *
-     * @param <K> 上传参数键类型
-     * @param <V> 上传参数值类型
      * @return OkHttpsResponse 响应结果对象
      * @throws IOException 文件上传失败抛出该异常
      */
-    public <K, V> OkHttpsResponse uploadFile() throws IOException {
+    public OkHttpsResponse uploadFile() throws IOException {
         MultipartBody.Builder requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM);
         // 如果请求体不为空，则将其转换为 Map 对象，并遍历 Map 中的每一项，添加到请求体中
         if (EmptyUtils.isNotEmpty(this.body)) {
             Jsons jsons = new Jsons(this.body);
             for (Map.Entry<String, JsonElement> entrySet : jsons.entrySet()) {
-//            for (Map.Entry<K, V> entry : params.entrySet()) {
-                requestBody.addFormDataPart(String.valueOf(entrySet.getKey()), String.valueOf(entrySet.getValue()));
+                String entryValue = GsonUtils.getAsString(entrySet.getValue());
+                if (entryValue == null) {
+                    entryValue = StrPool.EMPTY;
+                }
+                requestBody.addFormDataPart(entrySet.getKey(), entryValue);
             }
         }
         if (ListUtils.isEmpty(this.fileFrom)) {
