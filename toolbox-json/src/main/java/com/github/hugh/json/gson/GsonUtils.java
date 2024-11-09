@@ -15,7 +15,12 @@ import com.google.gson.*;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 
+import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.*;
@@ -833,5 +838,81 @@ public class GsonUtils {
             }
         }
         return item;
+    }
+
+    /**
+     * 将 XML 字符串转换为指定类型的 Java 对象
+     *
+     * @param <T>   转换目标类型的泛型
+     * @param xml   要转换的 XML 字符串
+     * @param clazz 目标 Java 类型的 Class 对象
+     * @return 转换后的 Java 对象
+     * @since 2.7.16
+     */
+    public static <T> T xmlToObject(String xml, Class<T> clazz) {
+        return xmlToObject(xml, clazz, null);
+    }
+
+    /**
+     * 将 XML 字符串转换为指定类型的 Java 对象，并支持指定根元素的解析
+     *
+     * @param <T>     转换目标类型的泛型
+     * @param xml     要转换的 XML 字符串
+     * @param clazz   目标 Java 类型的 Class 对象
+     * @param rootKey 根元素的名称，若为 null 或空，则直接解析整个 XML
+     * @return 转换后的 Java 对象
+     * @since 2.7.16
+     */
+    public static <T> T xmlToObject(String xml, Class<T> clazz, String rootKey) {
+        Jsons jsons = xmlToJson(xml);
+        // 如果根元素为空，则直接将 XML 转换为目标 Java 对象
+        if (EmptyUtils.isEmpty(rootKey)) {
+            return jsons.formJson(clazz);
+        } else {
+            // 如果指定了根元素，获取该根元素的内容并转换为目标 Java 对象
+            Jsons aThis = jsons.getThis(rootKey);
+            return aThis.formJson(clazz);
+        }
+    }
+
+    /**
+     * XML字符串转JSON对象
+     *
+     * @param xml xml字符串
+     * @return Jsons
+     * @since 2.7.16
+     */
+    public static Jsons xmlToJson(String xml) {
+        Map<String, Object> map = new HashMap<>();
+        SAXReader reader = new SAXReader();
+        Document document;
+        try {
+            document = reader.read(new StringReader(xml));
+        } catch (DocumentException documentException) {
+            throw new ToolboxJsonException(documentException);
+        }
+        Element root = document.getRootElement();
+        map.put(root.getName(), elementToMap(root));
+        return Jsons.on(map);
+    }
+
+    /**
+     * Element对象转map对象
+     *
+     * @param element Element对象
+     * @return map
+     * @since 2.7.16
+     */
+    public static Map<String, Object> elementToMap(Element element) {
+        Map<String, Object> map = new HashMap<>();
+        for (Object child : element.elements()) {
+            Element element1 = (Element) child;
+            if (element1.elements().isEmpty()) {
+                map.put(element1.getName(), element1.getText());
+            } else {
+                map.put(element1.getName(), elementToMap(element1));
+            }
+        }
+        return map;
     }
 }
