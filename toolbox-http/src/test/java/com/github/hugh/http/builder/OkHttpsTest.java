@@ -388,18 +388,19 @@ class OkHttpsTest {
         assertNotNull(okHttpsResponse2.toJsons().getString("token"));
     }
 
+    // 公共的404
     @Test
     void test404() throws IOException {
-//        String url1 = "http://api.hnlot.com.cn/a/b?userId=123";
-        String url2 = "http://api.hnlot.com.cn/a/b";
+        String url1 = "https://httpbin.org/status/404";
         Map<String, Object> params = new HashMap<>();
         params.put("userId", "123");
-        OkHttpsResponse okHttpsResponse = OkHttps.url(url2).setBody(params).doGet();
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url1).setBody(params).doGet();
         assertTrue(okHttpsResponse.is404());
         JsonPlaceholderResult.UserBean jsons = okHttpsResponse.fromJson(JsonPlaceholderResult.UserBean.class);
         assertNull(jsons);
     }
 
+    // nginx返回的404
     @Test
     void test404_2() throws IOException {
         String url2 = "http://api.hnlot.com.cn/a/b";
@@ -410,6 +411,47 @@ class OkHttpsTest {
         assertTrue(okHttpsResponse.is404());
     }
 
+    @Test
+    void test401() throws IOException {
+        String url1 = "https://httpbin.org/status/401";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url1).doGet();
+        assertTrue(okHttpsResponse.is401());
+    }
+
+    @Test
+    void test403() throws IOException {
+        String url1 = "https://httpbin.org/status/403";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url1).doGet();
+        assertTrue(okHttpsResponse.is403());
+    }
+
+    @Test
+    void test500() throws IOException {
+        String url1 = "https://httpbin.org/status/500";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url1).doGet();
+        assertTrue(okHttpsResponse.is500());
+    }
+
+    @Test
+    void test502() throws IOException {
+        String url = "https://httpbin.org/status/502";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url).doGet();
+        assertTrue(okHttpsResponse.is502());
+    }
+
+    @Test
+    void test503() throws IOException {
+        String url = "https://httpbin.org/status/503";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url).doGet();
+        assertTrue(okHttpsResponse.is503());
+    }
+
+    @Test
+    void test504() throws IOException {
+        String url = "https://httpbin.org/status/504";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url).doGet();
+        assertTrue(okHttpsResponse.is504());
+    }
 
     @Test
     void testFileMd5() throws IOException {

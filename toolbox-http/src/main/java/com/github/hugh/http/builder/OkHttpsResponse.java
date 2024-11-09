@@ -67,31 +67,6 @@ public class OkHttpsResponse {
     private int responseCode;
 
     /**
-     * 构造一个 OkHttpsResponse 对象。
-     *
-     * @param result 响应的字节数组
-     * @since 2.7.5
-     */
-    public OkHttpsResponse(byte[] result) {
-        this.bytes = result;
-        this.message = new String(result);
-    }
-
-    /**
-     * 构造一个 {@code OkHttpsResponse} 实例。
-     *
-     * @param result 服务器响应的字节数组。这些字节数据会被用来创建响应消息。
-     * @param url    请求的 URL。这是发送请求时使用的 URL。
-     * @since 2.7.13
-     * <p>此构造函数将响应的字节数组转换为字符串，并存储请求的 URL。</p>
-     */
-    public OkHttpsResponse(byte[] result, String url) {
-        this.bytes = result;
-        this.message = new String(result);
-        this.url = url;
-    }
-
-    /**
      * 构造一个 {@link OkHttpsResponse} 实例，用于封装 HTTP 响应的相关信息。
      * <p>
      * 该构造方法接受响应体的字节数组、响应的 URL、响应内容的类型、以及响应的状态码，创建一个新的响应对象。
@@ -193,5 +168,75 @@ public class OkHttpsResponse {
      */
     public boolean is200() {
         return this.responseCode == 200;
+    }
+
+    /**
+     * 判断响应状态码是否为 400（即错误的请求）。
+     *
+     * @return 如果响应码是 400，返回 true；否则返回 false。
+     * @since 2.7.16
+     */
+    public boolean is400() {
+        return this.responseCode == 400;
+    }
+
+    /**
+     * 判断响应状态码是否为 401（即未授权）。
+     *
+     * @return 如果响应码是 401，返回 true；否则返回 false。
+     * @since 2.7.16
+     */
+    public boolean is401() {
+        return this.responseCode == 401;
+    }
+
+    /**
+     * 判断响应状态码是否为 403（即禁止访问）。
+     *
+     * @return 如果响应码是 403，返回 true；否则返回 false。
+     * @since 2.7.16
+     */
+    public boolean is403() {
+        return this.responseCode == 403;
+    }
+
+    /**
+     * 判断响应状态码是否为 500（即服务器内部错误）。
+     *
+     * @return 如果响应码是 500，返回 true；否则返回 false。
+     * @since 2.7.16
+     */
+    public boolean is500() {
+        return this.responseCode == 500;
+    }
+
+    /**
+     * 判断响应状态码是否为 502（即坏网关）。
+     *
+     * @return 如果响应码是 502，返回 true；否则返回 false。
+     * @since 2.7.16
+     */
+    public boolean is502() {
+        return this.responseCode == 502;
+    }
+
+    /**
+     * 判断响应状态码是否为 503（即服务不可用）。
+     *
+     * @return 如果响应码是 503，返回 true；否则返回 false。
+     * @since 2.7.16
+     */
+    public boolean is503() {
+        return this.responseCode == 503;
+    }
+
+    /**
+     * 判断响应状态码是否为 504（即网关超时）。
+     *
+     * @return 如果响应码是 504，返回 true；否则返回 false。
+     * @since 2.7.16
+     */
+    public boolean is504() {
+        return this.responseCode == 504;
     }
 }
