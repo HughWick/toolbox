@@ -444,7 +444,9 @@ public class OkHttps {
             throw new ToolboxHttpException("upload file key is null");
         }
         File uploadFile;
-        if (file.getFile() == null) {
+        if (file.getFileArray() != null) {
+            return RequestBody.create(file.getFileMediaType(), file.getFileArray());
+        } else if (file.getFile() == null) {
             isFilePathEmpty(file.getPath());
             uploadFile = new File(file.getPath());
         } else {

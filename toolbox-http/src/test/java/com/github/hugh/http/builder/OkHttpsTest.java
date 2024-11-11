@@ -10,6 +10,7 @@ import com.github.hugh.http.model.JsonPlaceholderResult;
 import com.github.hugh.http.model.ResponseData;
 import com.github.hugh.json.gson.GsonUtils;
 import com.github.hugh.json.gson.Jsons;
+import com.github.hugh.util.file.FileUtils;
 import com.github.hugh.util.file.ImageUtils;
 import okhttp3.*;
 import okhttp3.mockwebserver.MockResponse;
@@ -166,24 +167,35 @@ class OkHttpsTest {
         assertEquals("file is null", toolboxHttpException.getMessage());
         // 测试上传文件对应后台key为空
         final ToolboxHttpException toolboxHttpException2 = Assertions.assertThrowsExactly(ToolboxHttpException.class, () -> {
+//            new FileFrom("", "84630805_p0.jpg", getPath(path1), null, MediaTypes.IMAGE_JPEG)
+            FileFrom fileFrom = new FileFrom();
+            fileFrom.setName("84630805_p0.jpg");
+            fileFrom.setPath(getPath(path1));
+            fileFrom.setFileMediaType(MediaTypes.IMAGE_JPEG);
             // 测试单个
-            List<FileFrom> mediaList1 = Collections.singletonList(
-                    new FileFrom("", "84630805_p0.jpg", getPath(path1), null, MediaTypes.IMAGE_JPEG)
-            );
+            List<FileFrom> mediaList1 = Collections.singletonList(fileFrom);
             new OkHttps().setUrl(http_bin_post_url).setFileFrom(mediaList1).uploadFile().getMessage();
         });
         assertEquals("upload file key is null", toolboxHttpException2.getMessage());
         // 测试上传文件路径为空
         final ToolboxHttpException toolboxHttpException3 = Assertions.assertThrowsExactly(ToolboxHttpException.class, () -> {
+//            new FileFrom("file", "84630805_p0.jpg", null, null, MediaTypes.IMAGE_JPEG)
+            FileFrom fileFrom = new FileFrom();
+            fileFrom.setKey("file");
+            fileFrom.setName("84630805_p0.jpg");
+            fileFrom.setFileMediaType(MediaTypes.IMAGE_JPEG);
             // 测试单个
-            List<FileFrom> mediaList1 = Collections.singletonList(
-                    new FileFrom("file", "84630805_p0.jpg", null, null, MediaTypes.IMAGE_JPEG)
-            );
+            List<FileFrom> mediaList1 = Collections.singletonList(fileFrom);
             new OkHttps().setUrl(http_bin_post_url).setUrl(http_bin_post_url).setFileFrom(mediaList1).uploadFile().getMessage();
         });
         assertEquals("file path is null", toolboxHttpException3.getMessage());
         // 测试单个
-        FileFrom media1 = new FileFrom("file", "vant_log_150x150.png", getPath(path7), null, MediaTypes.IMAGE_PNG);
+//        FileFrom media1 = new FileFrom("file", "vant_log_150x150.png", getPath(path7), null, MediaTypes.IMAGE_PNG);
+        FileFrom media1 = new FileFrom();
+        media1.setKey("file");
+        media1.setName("vant_log_150x150.png");
+        media1.setPath(getPath(path7));
+        media1.setFileMediaType(MediaTypes.IMAGE_PNG);
         // 测试图片
         OkHttpsResponse okHttpsResponse = new OkHttps().setUrl(http_bin_post_url)
                 .setBody(params)
@@ -197,17 +209,44 @@ class OkHttpsTest {
     // 测试多张图片
     @Test
     void testUploadFile() throws Exception {
+//        new FileFrom("file", "69956256_p1.jpg", getPath(path3), null, MediaTypes.TEXT_PLAIN),
+//                new FileFrom("file", "20200718234953_grmzy.jpeg", null, new File(getPath(path4)), MediaTypes.IMAGE_JPEG)
+        FileFrom fileFrom1 = new FileFrom();
+        fileFrom1.setKey("file");
+        fileFrom1.setName("69956256_p1.jpg");
+        fileFrom1.setPath(getPath(path3));
+        fileFrom1.setFileMediaType(MediaTypes.TEXT_PLAIN);
+        FileFrom fileFrom2 = new FileFrom();
+        fileFrom2.setKey("file");
+        fileFrom2.setName("20200718234953_grmzy.jpeg");
+        fileFrom2.setFile(new File(getPath(path4)));
+        fileFrom2.setFileMediaType(MediaTypes.IMAGE_JPEG);
         // 创建多个文件媒体信息对象
-        List<FileFrom> mediaList = Arrays.asList(
-                new FileFrom("file", "69956256_p1.jpg", getPath(path3), null, MediaTypes.TEXT_PLAIN),
-                new FileFrom("file", "20200718234953_grmzy.jpeg", null, new File(getPath(path4)), MediaTypes.IMAGE_JPEG)
-        );
+        List<FileFrom> mediaList = Arrays.asList(fileFrom1, fileFrom2);
         final var okHttpsResponse = new OkHttps().setUrl(http_bin_post_url).setFileFrom(mediaList)
                 .uploadFile();
         // 测试图片
         final ResponseData responseData3 = okHttpsResponse.fromJson(ResponseData.class);
         // 验证数据长度
         assertEquals("610771", responseData3.getHeaders().getContentLength());
+    }
+
+
+    @Test
+    void testUploadFileArray() throws Exception {
+        File file = new File(getPath(path4));
+        FileFrom fileFrom2 = new FileFrom();
+        fileFrom2.setKey("file");
+        fileFrom2.setName("20200718234953_grmzy.jpeg");
+        fileFrom2.setFileArray(FileUtils.toByteArray(file));
+        fileFrom2.setFileMediaType(MediaTypes.IMAGE_JPEG);
+        final var okHttpsResponse = new OkHttps().setUrl(http_bin_post_url).setFileFrom(fileFrom2)
+                .uploadFile();
+        // 测试图片
+        final ResponseData responseData3 = okHttpsResponse.fromJson(ResponseData.class);
+        System.out.println(responseData3.getFiles().getFile());
+        // 验证数据长度
+        assertEquals("420099", responseData3.getHeaders().getContentLength());
     }
 
     private static String getPath(String fileName) {
@@ -410,6 +449,7 @@ class OkHttpsTest {
         assertEquals("text/html", okHttpsResponse.getContentType());
         assertTrue(okHttpsResponse.is404());
     }
+
     @Test
     void test400() throws IOException {
         String url1 = "https://httpbin.org/status/400";

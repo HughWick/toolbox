@@ -1,8 +1,6 @@
 package com.github.hugh.http.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import okhttp3.MediaType;
 
 import java.io.File;
@@ -13,9 +11,6 @@ import java.io.File;
  * @author hugh
  * @since 2.5.1
  */
-//@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
 public class FileFrom {
 
@@ -33,4 +28,6 @@ public class FileFrom {
 
     // 文件类型（MIME 类型）
     private MediaType fileMediaType;
+
+    private byte[] fileArray;// 文件数组
 }
