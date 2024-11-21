@@ -14,6 +14,9 @@ import java.net.UnknownHostException;
  **/
 public class NetworkUtils {
 
+    private NetworkUtils() {
+    }
+
     /**
      * 检测IP地址是否能ping通
      *
@@ -37,6 +40,31 @@ public class NetworkUtils {
         } catch (Exception ex) {
             return false;
         }
+    }
+
+    /**
+     * 使用默认超时时间（200毫秒）测试指定IP地址是否可达。
+     *
+     * @param ip 目标IP地址
+     * @return 如果ping测试失败，返回true；否则返回false
+     * @since 2.7.19
+     */
+    public static boolean pingFail(String ip) {
+        // 使用默认超时200毫秒
+        return pingFail(ip, 200);
+    }
+
+    /**
+     * 使用指定的超时时间测试指定IP地址是否可达。
+     *
+     * @param ip      目标IP地址
+     * @param timeout 超时时间（毫秒）
+     * @return 如果ping测试失败，返回true；否则返回false
+     * @since 2.7.19
+     */
+    public static boolean pingFail(String ip, int timeout) {
+        // ping方法返回false表示ping失败，所以取反返回true表示失败
+        return !ping(ip, timeout);
     }
 
     /**

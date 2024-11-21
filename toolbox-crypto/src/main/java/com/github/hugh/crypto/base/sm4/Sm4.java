@@ -82,12 +82,27 @@ public class Sm4 {
         return this;
     }
 
-
+    /**
+     * 设置加密密钥类型为 HEX（十六进制）
+     * <p>
+     * 该方法将当前对象的加密密钥类型设置为 `Sm4Enum.HEX.getCode()`，表示密钥类型为十六进制格式。
+     * </p>
+     *
+     * @return 返回当前对象（`Sm4`）本身，支持链式调用。
+     */
     public Sm4 encryptKeyTypeByHex() {
         this.encryptKeyType = Sm4Enum.HEX.getCode();
         return this;
     }
 
+    /**
+     * 获取加密密钥
+     * <p>
+     * 该方法返回当前对象中存储的加密密钥字符串。
+     * </p>
+     *
+     * @return 返回加密密钥的字符串表示。
+     */
     public String getKey() {
         return this.key;
     }

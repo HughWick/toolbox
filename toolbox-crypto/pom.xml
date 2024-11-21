@@ -28,6 +28,12 @@
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk18on</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.lingmoyun</groupId>
+            <artifactId>minilzo-java</artifactId>
+            <version>0.0.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

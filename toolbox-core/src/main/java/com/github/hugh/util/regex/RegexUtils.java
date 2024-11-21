@@ -113,7 +113,8 @@ public class RegexUtils {
      * <li>广电号段：179、192</li>
      * </ul>
      */
-    private static final Pattern PHONE_PATTERN = Pattern.compile("^((13[0-9])|(14[5-9])|(15([0-3]|[5-9]))|(16[2,5-7])|(17[0-9])|(18[0-9])|(19[0-3,5,7,8,9]))\\d{8}$");
+    public static final String PHONE_PATTERN_STR ="^((13[\\d])|(14[5-9])|(15([0-3]|[5-9]))|(16[2,5-7])|(17[0-9])|(18[0-9])|(19[0-3,5,7,8,9]))\\d{8}$";
+    public static final Pattern PHONE_PATTERN = Pattern.compile(PHONE_PATTERN_STR);
 
     /**
      * URL 正则表达式

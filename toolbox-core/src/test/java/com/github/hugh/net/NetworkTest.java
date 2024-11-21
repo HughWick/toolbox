@@ -24,8 +24,16 @@ class NetworkTest {
     void testPing() {
         assertTrue(NetworkUtils.ping("www.baidu.com"));
         assertFalse(NetworkUtils.ping("www.google.com", 500));
+        assertTrue(NetworkUtils.ping("223.5.5.5" , 400));
 //        System.out.println("=1==>>" + NetworkUtils.ping("www.baidu.com"));
 //        System.out.println("==2=>>" + NetworkUtils.ping("www.google.com", 500));
+    }
+
+    @Test
+    void testPingFall(){
+        assertFalse(NetworkUtils.pingFail("223.5.5.5" , 400));
+        assertTrue(NetworkUtils.pingFail("114.114.114.114" , 40));
+        assertTrue(NetworkUtils.pingFail("114.114.114.114"  ));
     }
 
     @Test

@@ -141,8 +141,8 @@ public class Sm4Utils {
             cipher = generateEcbCipher(Cipher.DECRYPT_MODE, keyBytes);
             // 解密密文并获得解密后的字节数组
             decryptBytes = cipher.doFinal(cipherText);
-        } catch (BadPaddingException e) {
-            if ("pad block corrupted".equals(e.getMessage())) {
+        } catch (BadPaddingException badPaddingException) {
+            if ("pad block corrupted".equals(badPaddingException.getMessage())) {
                 // 如果填充块损坏，使用无填充的ECB模式生成Cipher对象，并进行解密
                 cipher = generateEcbCipher(Sm4Enum.ALGORITHM_NAME_ECB_NO_PADDING.getCode(), Cipher.DECRYPT_MODE, keyBytes);
                 try {
@@ -153,12 +153,12 @@ public class Sm4Utils {
                     throw new ToolboxException("解密失败：填充异常", ex);
                 }
             } else {
-                throw new ToolboxException("解密失败：填充异常", e);
+                throw new ToolboxException("解密失败：填充异常", badPaddingException);
             }
-        } catch (IllegalBlockSizeException e) {
-            throw new ToolboxException("解密失败：无效的块大小", e);
-        } catch (Exception e) {
-            throw new ToolboxException("解密过程中出现错误", e);
+        } catch (IllegalBlockSizeException illegalBlockSizeException) {
+            throw new ToolboxException("解密失败：无效的块大小", illegalBlockSizeException);
+        } catch (Exception exception) {
+            throw new ToolboxException("解密过程中出现错误", exception);
         }
         return new String(decryptBytes); // 将解密后的字节数组转换为字符串并返回
     }

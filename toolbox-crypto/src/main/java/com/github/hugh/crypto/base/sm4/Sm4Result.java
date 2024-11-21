@@ -31,6 +31,10 @@ public class Sm4Result {
         return BaseConvertUtils.hexBytesToString(this.bytes);
     }
 
+    public byte[] bytes() {
+        return this.bytes;
+    }
+
     /**
      * 将加密结果转换为Base64字符串表示形式
      *
