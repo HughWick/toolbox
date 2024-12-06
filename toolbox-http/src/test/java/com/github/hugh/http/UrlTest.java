@@ -53,7 +53,7 @@ class UrlTest {
         Jsons jsons = UrlUtils.parseUrlJson(url1);
         assertEquals("13", jsons.getString("result"));
         assertEquals("签名不正确，请修改后发送！签名格式：例如【某某公司】，字数3-8个字，有问题请联系客服中心。", jsons.getString("description"));
-        assertEquals(null, jsons.getString("linkid"));
+        assertNull(jsons.getString("linkid"));
     }
 
 
@@ -106,8 +106,7 @@ class UrlTest {
     // 测试 null 的 URL 参数字符串
     @Test
     void testParseUrlWithNullString() {
-        String urlParams = null;
-        Map<String, String> result = UrlUtils.parseUrl(urlParams);
+        Map<String, String> result = UrlUtils.parseUrl(null);
         // 验证返回一个空的 Map
         assertTrue(result.isEmpty());
     }

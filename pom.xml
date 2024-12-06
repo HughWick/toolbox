@@ -48,7 +48,8 @@
         <spring.version>5.3.23</spring.version>
         <powermock.version>2.0.9</powermock.version>
         <!--============================== 第三方工具类 ==============================-->
-        <google-gson.version>2.11.0</google-gson.version>
+        <!--   gson再往上的版本测试用例会出现问题     -->
+        <google-gson.version>2.10.1</google-gson.version>
         <fastjson.version>1.2.83</fastjson.version>
         <okhttp.version>4.9.3</okhttp.version>
         <servlet-api.version>4.0.1</servlet-api.version>
