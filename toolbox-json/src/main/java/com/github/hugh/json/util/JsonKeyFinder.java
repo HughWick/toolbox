@@ -20,7 +20,7 @@ public class JsonKeyFinder {
      *
      * @param jsonString 要解析的 JSON 字符串。
      * @param ignoreKeys 可变参数，表示需要忽略的键。可以传入多个需要忽略的键，也可以不传，表示不忽略任何键。
-     * @return 返回一个包含所有提取的键的列表（List<String>），列表中不包含被忽略的键。
+     * @return 返回一个包含所有提取的键的列表（{@code List<String>}），列表中不包含被忽略的键。
      */
     public static List<String> getAllKeys(String jsonString, String... ignoreKeys) {
         List<String> keys = new ArrayList<>();

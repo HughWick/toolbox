@@ -82,7 +82,7 @@ public class UrlUtils {
      * 该方法将传入的 URL 参数字符串解析为键值对并返回一个 Map。默认使用 UTF-8 编码格式进行解码。
      * </p>
      *
-     * @param urlParams 要解析的 URL 参数字符串，格式为 "key1=value1&key2=value2"。
+     * @param urlParams 要解析的 URL 参数字符串，格式为 {@code "key1=value1&key2=value2"}
      * @return 返回一个包含解析后参数的 Map，键和值都经过 URL 解码。
      * @since 2.7.4
      */
@@ -96,7 +96,7 @@ public class UrlUtils {
      * 该方法将传入的 URL 参数字符串解析为键值对并返回一个 Map。可以指定自定义的编码格式进行解码。
      * </p>
      *
-     * @param urlParams 要解析的 URL 参数字符串，格式为 "key1=value1&key2=value2"。
+     * @param urlParams 要解析的 URL 参数字符串，格式为 {@code key1=value1&key2=value2}
      * @param encoding  用于解码 URL 参数的字符编码格式，通常使用 UTF-8 或其他编码。
      * @return 返回一个包含解析后参数的 Map，键和值都经过 URL 解码。
      */
