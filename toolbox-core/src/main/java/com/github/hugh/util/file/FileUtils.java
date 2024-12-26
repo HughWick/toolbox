@@ -6,6 +6,7 @@ import com.github.hugh.util.DoubleMathUtils;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.StringUtils;
 import com.github.hugh.util.io.StreamUtils;
+import com.github.hugh.util.regex.RegexUtils;
 import com.google.common.io.Files;
 import lombok.Cleanup;
 
@@ -17,6 +18,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.text.DecimalFormat;
 import java.util.Base64;
+import java.util.regex.Matcher;
 
 /**
  * 文件工具类
@@ -414,6 +416,57 @@ public class FileUtils {
             return Base64.getEncoder().encodeToString(bytes);
         } catch (IOException ioException) {
             throw new ToolboxException(ioException);
+        }
+    }
+
+    /**
+     * 从 Base64 编码的字符串中提取 MIME 类型
+     *
+     * @param base64String Base64 编码的字符串，通常以 "data:image/..." 或 "data:application/pdf;base64,..." 开头
+     * @return 返回 MIME 类型（例如："image/jpeg"），如果字符串不是有效的 Base64 数据 URI，则返回 null
+     * @since 2.7.19
+     */
+    public static String getMimeType(String base64String) {
+        if (base64String == null || base64String.isEmpty()) {
+            return null;  // 如果输入字符串为空或 null，则返回 null
+        }
+        // 使用正则表达式匹配 Base64 数据 URI 格式
+        Matcher matcher = RegexUtils.BASE64_DATA_URI_REGEX.matcher(base64String);
+        // 如果匹配成功，提取出 MIME 类型部分
+        if (matcher.matches()) {
+            return matcher.group(1);  // group(1) 表示正则匹配结果中的 MIME 类型部分
+        }
+        // 如果没有匹配到数据 URI 格式，则返回 null
+        return null;
+    }
+
+    /**
+     * 根据 MIME 类型获取对应的文件扩展名
+     *
+     * @param mimeType MIME 类型（例如："image/jpeg"）
+     * @return 返回文件扩展名（例如："jpg"），如果没有找到匹配的 MIME 类型，则返回 null
+     * @since 2.7.19
+     */
+    public static String getExtensionFromMimeType(String mimeType) {
+        if (mimeType == null || mimeType.isEmpty()) {
+            return null;  // 如果输入的 MIME 类型为空或 null，则返回 null
+        }
+        // 根据常见的 MIME 类型返回相应的文件扩展名
+        switch (mimeType) {
+            case "image/jpeg":
+                return "jpg";  // JPEG 图片对应的扩展名是 .jpg
+            case "image/png":
+                return "png";  // PNG 图片对应的扩展名是 .png
+            case "image/gif":
+                return "gif";  // GIF 图片对应的扩展名是 .gif
+            case "application/pdf":
+                return "pdf";  // PDF 文件对应的扩展名是 .pdf
+            case "text/plain":
+                return "txt";  // 纯文本文件对应的扩展名是 .txt
+            // ... 可以在这里添加更多的 MIME 类型与文件扩展名的映射
+            default:
+                // 如果没有找到对应的扩展名，则返回 null
+                return null;
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.github.hugh.regex;
+package com.github.hugh.util.regex;
 
 import com.github.hugh.util.regex.PasswordRegex;
 import org.junit.jupiter.api.Assertions;

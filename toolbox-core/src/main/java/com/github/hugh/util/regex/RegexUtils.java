@@ -3,6 +3,7 @@ package com.github.hugh.util.regex;
 import com.github.hugh.constant.StrPool;
 import com.github.hugh.util.EmptyUtils;
 
+import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -113,7 +114,7 @@ public class RegexUtils {
      * <li>广电号段：179、192</li>
      * </ul>
      */
-    public static final String PHONE_PATTERN_STR ="^((13[\\d])|(14[5-9])|(15([0-3]|[5-9]))|(16[2,5-7])|(17[0-9])|(18[0-9])|(19[0-3,5,7,8,9]))\\d{8}$";
+    public static final String PHONE_PATTERN_STR = "^((13[\\d])|(14[5-9])|(15([0-3]|[5-9]))|(16[2,5-7])|(17[0-9])|(18[0-9])|(19[0-3,5,7,8,9]))\\d{8}$";
     public static final Pattern PHONE_PATTERN = Pattern.compile(PHONE_PATTERN_STR);
 
     /**
@@ -166,13 +167,51 @@ public class RegexUtils {
     private static final Pattern SPECIAL_CHAR_PATTERN = Pattern.compile("[ _`~!@#$%^&*()+=|{}':;,\\[\\].<>/?！￥…（）—【】‘；：”“’。，、？]|\n|\r|\t");
 
     /**
-     * base64 - 正则
+     * 用于匹配 Base64 编码字符串的正则表达式。
+     * <p>
+     * 该正则表达式用于验证字符串是否符合 Base64 编码规范，但不进行实际的解码操作。
+     * 它检查字符串是否由 4 个 Base64 字符（A-Z, a-z, 0-9, +, /）组成的小组组成，
+     * 并且允许末尾有 0、1 或 2 个填充字符“=”。
+     * <p>
+     * 匹配规则：
+     * <ul>
+     *     <li>([A-Za-z0-9+/]{4})*：匹配 0 个或多个由 4 个 Base64 字符组成的组。</li>
+     *     <li>([A-Za-z0-9+/]{4}：匹配完整的 4 个 Base64 字符的组。</li>
+     *     <li>[A-Za-z0-9+/]{3}=：匹配 3 个 Base64 字符后跟一个“=”填充字符的组。</li>
+     *     <li>[A-Za-z0-9+/]{2}==：匹配 2 个 Base64 字符后跟两个“=”填充字符的组。</li>
+     * </ul>
+     * <p>
+     * 此正则表达式不处理 data URI 头部。
      */
-    private static final Pattern BASE64_PATTERN = Pattern.compile("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$");
-
+    public static final Pattern BASE64_PATTERN = Pattern.compile("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$");
+    /**
+     * 用于匹配包含 data URI 头部和 Base64 编码数据的字符串的正则表达式。
+     * <p>
+     * 该正则表达式用于提取 data URI 中的 MIME 类型和 Base64 编码的数据部分。
+     * <p>
+     * 匹配规则：
+     * <ul>
+     *     <li>^data:：匹配字符串的开头是否为 "data:"。</li>
+     *     <li>([a-z]+/[-a-z]+)?：匹配可选的 MIME 类型，例如 "image/jpeg" 或 "text/plain"。
+     *         <ul>
+     *             <li>[a-z]+：匹配一个或多个小写字母。</li>
+     *             <li>/：匹配斜杠。</li>
+     *             <li>[-a-z]+：匹配一个或多个小写字母或连字符。</li>
+     *             <li>?：表示 MIME 类型部分是可选的。</li>
+     *         </ul>
+     *     </li>
+     *     <li>;base64,：匹配 ";base64," 分隔符。</li>
+     *     <li>(.*)：匹配 Base64 编码的数据部分（捕获组）。</li>
+     *     <li>$：匹配字符串的结尾。</li>
+     * </ul>
+     * <p>
+     * 例如：匹配 "data:image/png;base64,iVBORw0KGgo..."，并提取 "image/png" 和 "iVBORw0KGgo..."。
+     */
+    public static final Pattern BASE64_DATA_URI_REGEX = Pattern.compile("^data:([a-z]+/[-a-z]+)?;base64,(.*)$");
     /**
      * 域名正则表达式
      * <p>
+     *
      * @see <a href="https://mathiasbynens.be/demo/url-regex">In search of the perfect URL validation regex</a>
      * </p>
      */
@@ -692,7 +731,31 @@ public class RegexUtils {
      * @since 2.6.1
      */
     public static boolean isBase64(String str) {
-        return BASE64_PATTERN.matcher(str).matches();
+        if (str == null || str.isEmpty()) {
+            return false;
+        }
+        // 1. 尝试匹配 data URI 头部
+        Matcher matcher = BASE64_DATA_URI_REGEX.matcher(str);
+        if (matcher.matches()) {
+            str = matcher.group(2); // 提取 Base64 数据部分
+        }
+        // 2. 移除空白字符 (可选，但推荐)
+        str = str.replaceAll("\\s", "");
+        // 3. 基本长度检查 (优化性能)
+        if (str.length() % 4 != 0) {
+            return false;
+        }
+        // 4. 使用正则表达式进行初步校验 (可选，但推荐)
+        if (!BASE64_PATTERN.matcher(str).matches()) {
+            return false;
+        }
+        // 5. 最终校验：尝试解码
+        try {
+            Base64.getDecoder().decode(str);
+            return true;
+        } catch (IllegalArgumentException illegalArgumentException) {
+            return false; // 解码失败，不是有效的 Base64
+        }
     }
 
     /**
