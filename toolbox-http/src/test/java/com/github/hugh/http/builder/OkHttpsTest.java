@@ -399,7 +399,7 @@ class OkHttpsTest {
                 .setParam("auto_color", true)
                 .setParam("env_version", "develop")
                 .doGet();
-        String s = Base64.getEncoder().encodeToString(okHttpsResponse.getBytes());
+//        String s = Base64.getEncoder().encodeToString(okHttpsResponse.getBytes());
         if (ImageUtils.isNotBase64Image(okHttpsResponse.getBytes())) {
 //            Jsons on = Jsons.on(okHttpsResponse.getMessage());
             System.out.println("---不是一张图片时显示->>" + okHttpsResponse.toJsons());
@@ -442,7 +442,7 @@ class OkHttpsTest {
     // nginx返回的404
     @Test
     void test404_2() throws IOException {
-        String url2 = "http://api.hnlot.com.cn/a/b";
+        String url2 = "https://api.hnlot.com.cn/a/b";
         Map<String, Object> params = new HashMap<>();
         params.put("userId", "123");
         OkHttpsResponse okHttpsResponse = OkHttps.url(url2).setBody(params).doGet();

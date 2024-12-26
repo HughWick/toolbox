@@ -99,12 +99,7 @@ public class OkHttpsResponse {
      * @return 返回反序列化后的 Java 对象。
      */
     public <T> T fromJson(Class<T> clazz) {
-        if (is404()) {
-            log.error("请求接口响应404，URL：{}，响应内容：{}", this.url, this.message);
-            return null;
-        }
-        if (GsonUtils.isNotJsonValid(this.message)) {
-            log.error("请求接口返回非法json字符串，URL：{}，响应内容：{}", this.url, this.message);
+        if (isErrorResponse()) {
             return null;
         }
         return GsonUtils.fromJson(this.message, clazz);
@@ -125,6 +120,9 @@ public class OkHttpsResponse {
      * @return Jsons 对象
      */
     public Jsons toJsons() {
+        if (isErrorResponse()) {
+            return null;
+        }
         return new Jsons(this.message);
     }
 
@@ -137,6 +135,9 @@ public class OkHttpsResponse {
      * @since 2.5.9
      */
     public <T> List<T> toList(Class<T> clazz) {
+        if (isErrorResponse()) {
+            return null;
+        }
         return GsonUtils.toArrayList(this.message, clazz);
     }
 
@@ -238,5 +239,25 @@ public class OkHttpsResponse {
      */
     public boolean is504() {
         return this.responseCode == 504;
+    }
+
+    /**
+     * 检查接口响应是否出错。
+     * 主要检查两种错误：
+     * 1. 404 错误（找不到资源）。
+     * 2. JSON 格式错误（响应内容不是合法的 JSON 字符串）。
+     *
+     * @return 如果发生错误则返回 true，否则返回 false。
+     */
+    private boolean isErrorResponse() {
+        if (is404()) {
+            log.error("请求接口响应404，URL：{}，响应内容：{}", this.url, this.message);
+            return true;
+        }
+        if (GsonUtils.isNotJsonValid(this.message)) {
+            log.error("请求接口返回非法json字符串，URL：{}，响应内容：{}", this.url, this.message);
+            return true;
+        }
+        return false;
     }
 }
