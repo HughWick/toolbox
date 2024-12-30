@@ -381,20 +381,23 @@ public class FileUtils {
      * @since 2.5.14
      */
     public static void base64StrToImage(String base64Str, String path) {
-        // 解密
-        byte[] b = Base64.getDecoder().decode(base64Str);
-        for (int i = 0; i < b.length; ++i) {
-            if (b[i] < 0) {
-                b[i] += 256;
-            }
+        // 移除 MIME 类型前缀
+        String data = base64Str;
+        Matcher matcher = RegexUtils.BASE64_DATA_URI_REGEX.matcher(base64Str);
+        if (matcher.matches()) {
+            data = matcher.group(2);
+        } else if (base64Str.contains("data:")) { // 如果包含data: 但不匹配完整格式，则抛出异常
+            throw new IllegalArgumentException("Invalid Base64 data URI format.");
         }
+        // 解密
+        byte[] decodedBytes = Base64.getDecoder().decode(data);
         // 文件夹不存在则自动创建
         File tempFile = new File(path);
         if (!tempFile.getParentFile().exists()) {
             tempFile.getParentFile().mkdirs();
         }
         try (OutputStream out = new FileOutputStream(tempFile)) {
-            out.write(b);
+            out.write(decodedBytes);
             out.flush();
         } catch (Exception exception) {
             throw new ToolboxException(exception.getMessage());
