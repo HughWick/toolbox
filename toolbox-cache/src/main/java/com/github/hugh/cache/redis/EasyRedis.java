@@ -1,5 +1,6 @@
 package com.github.hugh.cache.redis;
 
+import com.github.hugh.exception.ToolboxException;
 import com.google.common.base.Suppliers;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -123,18 +124,20 @@ public class EasyRedis {
      * @return String
      */
     public String set(int dbIndex, String key, String value, int seconds) {
-        Jedis jedis = jedisPool.getResource();
-        jedis.select(dbIndex);
-        String result;
-        if (seconds <= 0) {
-            result = jedis.setex(key, 99, value);
-            // 永不过期
-            jedis.persist(key);
-        } else {
-            result = jedis.setex(key, seconds, value);
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.select(dbIndex);
+            String result;
+            if (seconds <= 0) {
+                result = jedis.setex(key, 99, value);
+                // 永不过期
+                jedis.persist(key);
+            } else {
+                result = jedis.setex(key, seconds, value);
+            }
+            return result;
+        } catch (Exception exception) {
+            throw new ToolboxException(exception);
         }
-        jedis.close();
-        return result;
     }
 
     /**
@@ -186,18 +189,20 @@ public class EasyRedis {
      * @since 2.3.2
      */
     public String set(int dbIndex, byte[] key, byte[] value, int seconds) {
-        Jedis jedis = jedisPool.getResource();
-        jedis.select(dbIndex);
-        String result;
-        if (seconds <= 0) {
-            result = jedis.setex(key, 99, value);
-            // 永不过期
-            jedis.persist(key);
-        } else {
-            result = jedis.setex(key, seconds, value);
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.select(dbIndex);
+            String result;
+            if (seconds <= 0) {
+                result = jedis.setex(key, 99, value);
+                // 永不过期
+                jedis.persist(key);
+            } else {
+                result = jedis.setex(key, seconds, value);
+            }
+            return result;
+        } catch (Exception exception) {
+            throw new ToolboxException(exception);
         }
-        jedis.close();
-        return result;
     }
 
     /**
@@ -218,11 +223,12 @@ public class EasyRedis {
      * @return String
      */
     public String get(int dbIndex, String key) {
-        Jedis jedis = jedisPool.getResource();
-        jedis.select(dbIndex);
-        String result = jedis.get(key);
-        jedis.close();
-        return result;
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.select(dbIndex);
+            return jedis.get(key);
+        } catch (Exception exception) {
+            throw new ToolboxException(exception);
+        }
     }
 
     /**
@@ -233,11 +239,12 @@ public class EasyRedis {
      * @return List
      */
     public List<String> mget(int dbIndex, String... keys) {
-        Jedis jedis = jedisPool.getResource();
-        jedis.select(dbIndex);
-        List<String> result = jedis.mget(keys);
-        jedis.close();
-        return result;
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.select(dbIndex);
+            return jedis.mget(keys);
+        } catch (Exception exception) {
+            throw new ToolboxException(exception);
+        }
     }
 
     /**
@@ -269,11 +276,12 @@ public class EasyRedis {
      * @return byte[]
      */
     public byte[] get(int dbIndex, byte[] key) {
-        Jedis jedis = jedisPool.getResource();
-        jedis.select(dbIndex);
-        byte[] result = jedis.get(key);
-        jedis.close();
-        return result;
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.select(dbIndex);
+            return jedis.get(key);
+        } catch (Exception exception) {
+            throw new ToolboxException(exception);
+        }
     }
 
     /**
@@ -294,11 +302,12 @@ public class EasyRedis {
      * @return Long 被删除 key 的数量
      */
     public Long del(int dbIndex, String... keys) {
-        Jedis jedis = jedisPool.getResource();
-        jedis.select(dbIndex);
-        Long result = jedis.del(keys);
-        jedis.close();
-        return result;
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.select(dbIndex);
+            return jedis.del(keys);
+        } catch (Exception exception) {
+            throw new ToolboxException(exception);
+        }
     }
 
     /**
@@ -319,11 +328,12 @@ public class EasyRedis {
      * @return Long
      */
     public Long del(int dbIndex, byte[]... keys) {
-        Jedis jedis = jedisPool.getResource();
-        jedis.select(dbIndex);
-        Long result = jedis.del(keys);
-        jedis.close();
-        return result;
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.select(dbIndex);
+            return jedis.del(keys);
+        } catch (Exception exception) {
+            throw new ToolboxException(exception);
+        }
     }
 
     /**
@@ -344,11 +354,12 @@ public class EasyRedis {
      * @return Boolean 若 key 存在返回 {@code true}}，否则返回{@code false}}
      */
     public Boolean exists(int dbIndex, String key) {
-        Jedis jedis = jedisPool.getResource();
-        jedis.select(dbIndex);
-        Boolean result = jedis.exists(key);
-        jedis.close();
-        return result;
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.select(dbIndex);
+            return jedis.exists(key);
+        } catch (Exception exception) {
+            throw new ToolboxException(exception);
+        }
     }
 
     /**
@@ -383,11 +394,12 @@ public class EasyRedis {
      * @return Long 设置成功返回 {@code 1}。当 key不存在或者不能为key设置过期时间时(比如在低于 2.1.3 版本的 Redis 中你尝试更新 key 的过期时间)返回0。
      */
     public Long expire(int dbIndex, byte[] key, int seconds) {
-        Jedis jedis = jedisPool.getResource();
-        jedis.select(dbIndex);
-        Long result = jedis.expire(key, seconds);
-        jedis.close();
-        return result;
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.select(dbIndex);
+            return jedis.expire(key, seconds);
+        } catch (Exception exception) {
+            throw new ToolboxException(exception);
+        }
     }
 
     /**
@@ -414,11 +426,12 @@ public class EasyRedis {
      * @return Long 当key不存在时,返回 {@code -2},当key存在但没有设置剩余生存时间时，返回{@code -1},否则，以秒为单位，返回 key 的剩余生存时间。
      */
     public Long ttl(int dbIndex, String key) {
-        Jedis jedis = jedisPool.getResource();
-        jedis.select(dbIndex);
-        Long result = jedis.ttl(key);
-        jedis.close();
-        return result;
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.select(dbIndex);
+            return jedis.ttl(key);
+        } catch (Exception exception) {
+            throw new ToolboxException(exception);
+        }
     }
 
     /**
@@ -433,11 +446,12 @@ public class EasyRedis {
      * @return Long
      */
     public Long incr(String key) {
-        Jedis jedis = jedisPool.getResource();
-        jedis.select(dbIndex);
-        Long result = jedis.incr(key);
-        jedis.close();
-        return result;
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.select(dbIndex);
+            return jedis.incr(key);
+        } catch (Exception exception) {
+            throw new ToolboxException(exception);
+        }
     }
 
     /**
@@ -477,17 +491,19 @@ public class EasyRedis {
      * @return Long 如果字段是哈希表中的一个新建字段，并且值设置成功，返回{@code 1}。如果哈希表中域字段已经存在且旧值已被新值覆盖，返回 {@code 0}
      */
     public Long hset(int dbIndex, String key, String field, String value, int timeout) {
-        Jedis jedis = jedisPool.getResource();
-        jedis.select(dbIndex);
-        Long result = jedis.hset(key, field, value);
-        if (timeout == -1) {
-            // 永不过期
-            jedis.persist(key);
-        } else {
-            jedis.expire(key, timeout);
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.select(dbIndex);
+            Long result = jedis.hset(key, field, value);
+            if (timeout == -1) {
+                // 永不过期
+                jedis.persist(key);
+            } else {
+                jedis.expire(key, timeout);
+            }
+            return result;
+        } catch (Exception exception) {
+            throw new ToolboxException(exception);
         }
-        jedis.close();
-        return result;
     }
 
     /**
@@ -510,11 +526,12 @@ public class EasyRedis {
      * @return String 返回给定字段的值。如果给定的字段或 key 不存在时，返回 null 。
      */
     public String hget(int dbIndex, String key, String field) {
-        Jedis jedis = jedisPool.getResource();
-        jedis.select(dbIndex);
-        String result = jedis.hget(key, field);
-        jedis.close();
-        return result;
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.select(dbIndex);
+            return jedis.hget(key, field);
+        } catch (Exception exception) {
+            throw new ToolboxException(exception);
+        }
     }
 
     /**
@@ -535,11 +552,12 @@ public class EasyRedis {
      * @return Map
      */
     public Map<String, String> hgetAll(int dbIndex, String key) {
-        Jedis jedis = jedisPool.getResource();
-        jedis.select(dbIndex);
-        Map<String, String> result = jedis.hgetAll(key);
-        jedis.close();
-        return result;
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.select(dbIndex);
+            return jedis.hgetAll(key);
+        } catch (Exception exception) {
+            throw new ToolboxException(exception);
+        }
     }
 
     /**
@@ -562,11 +580,12 @@ public class EasyRedis {
      * @return Long 被成功删除字段的数量，不包括被忽略的字段。
      */
     public Long hdel(int dbIndex, String key, String... fields) {
-        Jedis jedis = jedisPool.getResource();
-        jedis.select(dbIndex);
-        Long result = jedis.hdel(key, fields);
-        jedis.close();
-        return result;
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.select(dbIndex);
+            return jedis.hdel(key, fields);
+        } catch (Exception exception) {
+            throw new ToolboxException(exception);
+        }
     }
 
     /**
@@ -590,11 +609,12 @@ public class EasyRedis {
      * @return Set
      */
     public Set<String> getAllKeys(int dbIndex, String path) {
-        Jedis jedis = jedisPool.getResource();
-        jedis.select(dbIndex);
-        Set<String> keys = jedis.keys(path);
-        jedis.close();
-        return keys;
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.select(dbIndex);
+            return jedis.keys(path);
+        } catch (Exception exception) {
+            throw new ToolboxException(exception);
+        }
     }
 
     /**
@@ -614,10 +634,11 @@ public class EasyRedis {
      * @since 2.3.4
      */
     public long dbSize(int dbIndex) {
-        Jedis jedis = jedisPool.getResource();
-        jedis.select(dbIndex);
-        Long aLong = jedis.dbSize();
-        jedis.close();
-        return aLong;
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.select(dbIndex);
+            return jedis.dbSize();
+        } catch (Exception exception) {
+            throw new ToolboxException(exception);
+        }
     }
 }

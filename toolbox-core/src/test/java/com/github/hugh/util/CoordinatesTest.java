@@ -101,6 +101,11 @@ class CoordinatesTest {
         assertEquals("2023-05-05 10:49:26", rmcDTO2.getReadingDate());
         assertEquals("A", rmcDTO2.getStatus());
 //        assertEquals("V*14", rmcDTO2.getCalibrationValue());
+
+
+        String rmc3 = "$GNRMC,004046.00,A,2714.85989,N,11128.20777,E,0.301,,080125,,,A,V*15\\r\\n\\r\\nOK\\r\\n";
+        RmcDTO rmcDTO3 = CoordinatesUtils.parseRmc(rmc3);
+        System.out.println(rmcDTO3);
     }
 
 
