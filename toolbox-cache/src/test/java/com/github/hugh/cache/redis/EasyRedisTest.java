@@ -10,10 +10,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -30,9 +27,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @Configuration
 class EasyRedisTest {
 
-    public static final String IP_ADDR = "141.147.176.125";
+    //    public static final String IP_ADDR = "141.147.176.125";
+    public static final String IP_ADDR = "192.168.1.45";
+    //    public static final String PASSWORD = "password123";
+    public static final String PASSWORD = "jugg#8225586";
     public static final int PORT = 7779;
-    public static final String PASSWORD = "password123";
     public static final int GET_TEST_INDEX = 14;
 
     /**
@@ -58,8 +57,6 @@ class EasyRedisTest {
         jedisPoolConfig.setTimeBetweenEvictionRunsMillis(30000);
         // 是否在从池中取出连接前进行检验,如果检验失败,则从池中去除连接并尝试取出另一个
         jedisPoolConfig.setTestOnBorrow(true);
-        // 在空闲时检查有效性, 默认false
-        jedisPoolConfig.setTestWhileIdle(true);
 //        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "43.128.14.188", 9991, 10000, "password123@");
         JedisPool jedisPool = new JedisPool(jedisPoolConfig, IP_ADDR, PORT, 10000, PASSWORD);
 //        log.info("初始化redis pool。end...");
@@ -191,12 +188,21 @@ class EasyRedisTest {
         assertNull(get);
         assertNull(instance.get(1, "set_test_03"));
         assertEquals("null", Arrays.toString(instance.get(byteKey)));
+        instance.set(dbIndex, byteKey, value.getBytes(StandardCharsets.UTF_8));
         final byte[] bytes = new byte[]{115, 100, 106, 102, 104, 107, 106};
-        assertArrayEquals(bytes, instance.get(1, byteKey));
+        assertArrayEquals(bytes, instance.get(dbIndex, byteKey));
         assertEquals(Lists.newArrayList(null, null), instance.mget(0, key, "set_test_02"));
+        instance.del(dbIndex, byteKey);
+    }
 
-        final Set<String> allKeys = instance.getAllKeys(GET_TEST_INDEX, "*");
+
+    @Test
+    void getAllKeys() {
+        EasyRedis easyRedis = EasyRedis.getInstance(redisPoolFactory());
+        final Set<String> allKeys = easyRedis.getAllKeys(GET_TEST_INDEX, "*");
         assertTrue(ListUtils.isEmpty(allKeys));
+        final Set<String> allKeys2 = easyRedis.getAllKeys("*");
+        assertTrue(ListUtils.isEmpty(allKeys2));
     }
 
     @Test
@@ -249,10 +255,12 @@ class EasyRedisTest {
     void incrTest() {
         String key = "incr_test_01";
         EasyRedis easyRedis = supplier.get();
-        final long l = easyRedis.del(key);
-        assertEquals(1, l);
-        Long ttl = easyRedis.incr(key);
-        assertEquals(1, ttl.intValue());
+        Long ttl1 = easyRedis.incr(key);
+        assertEquals(1, ttl1.intValue());
+        Long ttl2 = easyRedis.incr(key);
+        assertEquals(2, ttl2.intValue());
+        final long del = easyRedis.del(key);
+        assertEquals(1, del);
     }
 
     @Test
@@ -267,7 +275,6 @@ class EasyRedisTest {
         assertEquals(url1, easyRedis.hget(key, "url"));
         easyRedis.hset(key, "account", "hugh");
 //        System.out.println(easyRedis.hget(key, "url"));
-        System.out.println(easyRedis.hgetAll(key));
         Long account = easyRedis.hdel(key, "account");
         assertEquals(1, account);
 //        System.out.println("===del=>" + account);
@@ -278,4 +285,19 @@ class EasyRedisTest {
         EasyRedis easyRedis = supplier.get();
         assertEquals(0, easyRedis.dbSize(4));
     }
+
+    @Test
+    void hgetAllTest() {
+        EasyRedis easyRedis = supplier.get();
+        String key1 = "ab";
+        String field1 = "json";
+        Map<String, String> stringStringMap = easyRedis.hgetAll(key1);
+        assertTrue(stringStringMap.isEmpty());
+        Long hset = easyRedis.hset(key1, field1, "www.google.com");
+        assertEquals(1, hset);
+        Long hdel = easyRedis.hdel(key1, field1);
+        assertEquals(1, hdel);
+    }
+
+
 }

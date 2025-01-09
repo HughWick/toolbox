@@ -2,6 +2,7 @@ package com.github.hugh.cache.redis;
 
 import com.github.hugh.exception.ToolboxException;
 import com.google.common.base.Suppliers;
+import redis.clients.jedis.BinaryJedis;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -9,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -189,20 +191,7 @@ public class EasyRedis {
      * @since 2.3.2
      */
     public String set(int dbIndex, byte[] key, byte[] value, int seconds) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.select(dbIndex);
-            String result;
-            if (seconds <= 0) {
-                result = jedis.setex(key, 99, value);
-                // 永不过期
-                jedis.persist(key);
-            } else {
-                result = jedis.setex(key, seconds, value);
-            }
-            return result;
-        } catch (Exception exception) {
-            throw new ToolboxException(exception);
-        }
+        return set(dbIndex, new String(key, StandardCharsets.UTF_8), new String(value, StandardCharsets.UTF_8), seconds);
     }
 
     /**
@@ -223,12 +212,7 @@ public class EasyRedis {
      * @return String
      */
     public String get(int dbIndex, String key) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.select(dbIndex);
-            return jedis.get(key);
-        } catch (Exception exception) {
-            throw new ToolboxException(exception);
-        }
+        return executeWithJedis(dbIndex, jedis -> jedis.get(key));
     }
 
     /**
@@ -276,12 +260,7 @@ public class EasyRedis {
      * @return byte[]
      */
     public byte[] get(int dbIndex, byte[] key) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.select(dbIndex);
-            return jedis.get(key);
-        } catch (Exception exception) {
-            throw new ToolboxException(exception);
-        }
+        return executeWithJedis(dbIndex, jedis -> jedis.get(key));
     }
 
     /**
@@ -302,12 +281,7 @@ public class EasyRedis {
      * @return Long 被删除 key 的数量
      */
     public Long del(int dbIndex, String... keys) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.select(dbIndex);
-            return jedis.del(keys);
-        } catch (Exception exception) {
-            throw new ToolboxException(exception);
-        }
+        return executeWithJedis(dbIndex, jedis -> jedis.del(keys));
     }
 
     /**
@@ -328,12 +302,7 @@ public class EasyRedis {
      * @return Long
      */
     public Long del(int dbIndex, byte[]... keys) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.select(dbIndex);
-            return jedis.del(keys);
-        } catch (Exception exception) {
-            throw new ToolboxException(exception);
-        }
+        return executeWithJedis(dbIndex, jedis -> jedis.del(keys));
     }
 
     /**
@@ -354,12 +323,7 @@ public class EasyRedis {
      * @return Boolean 若 key 存在返回 {@code true}}，否则返回{@code false}}
      */
     public Boolean exists(int dbIndex, String key) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.select(dbIndex);
-            return jedis.exists(key);
-        } catch (Exception exception) {
-            throw new ToolboxException(exception);
-        }
+        return executeWithJedis(dbIndex, jedis -> jedis.exists(key));
     }
 
     /**
@@ -381,7 +345,7 @@ public class EasyRedis {
      * @param seconds 过期时间，单位：秒
      * @return Long 设置成功返回 {@code 1}。当 key不存在或者不能为key设置过期时间时(比如在低于 2.1.3 版本的 Redis 中你尝试更新 key 的过期时间)返回0。
      */
-    public Long expire(byte[] key, int seconds) {
+    public Long expire(byte[] key, long seconds) {
         return expire(dbIndex, key, seconds);
     }
 
@@ -393,13 +357,8 @@ public class EasyRedis {
      * @param seconds 过期时间，单位：秒
      * @return Long 设置成功返回 {@code 1}。当 key不存在或者不能为key设置过期时间时(比如在低于 2.1.3 版本的 Redis 中你尝试更新 key 的过期时间)返回0。
      */
-    public Long expire(int dbIndex, byte[] key, int seconds) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.select(dbIndex);
-            return jedis.expire(key, seconds);
-        } catch (Exception exception) {
-            throw new ToolboxException(exception);
-        }
+    public Long expire(int dbIndex, byte[] key, long seconds) {
+        return executeWithJedis(dbIndex, jedis -> jedis.expire(key, seconds));
     }
 
     /**
@@ -426,12 +385,7 @@ public class EasyRedis {
      * @return Long 当key不存在时,返回 {@code -2},当key存在但没有设置剩余生存时间时，返回{@code -1},否则，以秒为单位，返回 key 的剩余生存时间。
      */
     public Long ttl(int dbIndex, String key) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.select(dbIndex);
-            return jedis.ttl(key);
-        } catch (Exception exception) {
-            throw new ToolboxException(exception);
-        }
+        return executeWithJedis(dbIndex, jedis -> jedis.ttl(key));
     }
 
     /**
@@ -446,12 +400,7 @@ public class EasyRedis {
      * @return Long
      */
     public Long incr(String key) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.select(dbIndex);
-            return jedis.incr(key);
-        } catch (Exception exception) {
-            throw new ToolboxException(exception);
-        }
+        return executeWithJedis(dbIndex, jedis -> jedis.incr(key));
     }
 
     /**
@@ -526,12 +475,7 @@ public class EasyRedis {
      * @return String 返回给定字段的值。如果给定的字段或 key 不存在时，返回 null 。
      */
     public String hget(int dbIndex, String key, String field) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.select(dbIndex);
-            return jedis.hget(key, field);
-        } catch (Exception exception) {
-            throw new ToolboxException(exception);
-        }
+        return executeWithJedis(dbIndex, jedis -> jedis.hget(key, field));
     }
 
     /**
@@ -552,12 +496,7 @@ public class EasyRedis {
      * @return Map
      */
     public Map<String, String> hgetAll(int dbIndex, String key) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.select(dbIndex);
-            return jedis.hgetAll(key);
-        } catch (Exception exception) {
-            throw new ToolboxException(exception);
-        }
+        return executeWithJedis(dbIndex, jedis -> jedis.hgetAll(key));
     }
 
     /**
@@ -580,12 +519,7 @@ public class EasyRedis {
      * @return Long 被成功删除字段的数量，不包括被忽略的字段。
      */
     public Long hdel(int dbIndex, String key, String... fields) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.select(dbIndex);
-            return jedis.hdel(key, fields);
-        } catch (Exception exception) {
-            throw new ToolboxException(exception);
-        }
+        return executeWithJedis(dbIndex, jedis -> jedis.hdel(key, fields));
     }
 
     /**
@@ -609,12 +543,7 @@ public class EasyRedis {
      * @return Set
      */
     public Set<String> getAllKeys(int dbIndex, String path) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.select(dbIndex);
-            return jedis.keys(path);
-        } catch (Exception exception) {
-            throw new ToolboxException(exception);
-        }
+        return executeWithJedis(dbIndex, jedis -> jedis.keys(path));
     }
 
     /**
@@ -634,9 +563,24 @@ public class EasyRedis {
      * @since 2.3.4
      */
     public long dbSize(int dbIndex) {
+        return executeWithJedis(dbIndex, BinaryJedis::dbSize);
+    }
+
+    /**
+     * 执行 Jedis 操作，并处理连接获取、数据库选择和异常处理。
+     *
+     * <p>此方法封装了获取 Jedis 连接、选择指定数据库以及执行提供的操作，并在操作过程中发生异常时抛出 ToolboxException。
+     * 使用 try-with-resources 确保 Jedis 连接在使用后会被正确关闭。
+     *
+     * @param dbIndex   要选择的 Redis 数据库索引。
+     * @param operation 要执行的 Jedis 操作，它是一个接受 Jedis 对象并返回泛型类型 T 的函数。
+     * @param <T>       操作返回的结果类型。
+     * @return 执行 Jedis 操作后返回的结果。
+     */
+    private <T> T executeWithJedis(int dbIndex, Function<Jedis, T> operation) {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.select(dbIndex);
-            return jedis.dbSize();
+            return operation.apply(jedis);
         } catch (Exception exception) {
             throw new ToolboxException(exception);
         }
