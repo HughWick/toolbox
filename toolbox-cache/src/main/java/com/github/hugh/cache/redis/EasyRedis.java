@@ -125,7 +125,7 @@ public class EasyRedis {
      * @param seconds 存储时间,单位：秒
      * @return String
      */
-    public String set(int dbIndex, String key, String value, int seconds) {
+    public String set(int dbIndex, String key, String value, long seconds) {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.select(dbIndex);
             String result;
@@ -223,12 +223,7 @@ public class EasyRedis {
      * @return List
      */
     public List<String> mget(int dbIndex, String... keys) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.select(dbIndex);
-            return jedis.mget(keys);
-        } catch (Exception exception) {
-            throw new ToolboxException(exception);
-        }
+        return executeWithJedis(dbIndex, jedis -> jedis.mget(keys));
     }
 
     /**
@@ -425,7 +420,7 @@ public class EasyRedis {
      * @param timeout 过期时间，单位：秒
      * @return Long 如果字段是哈希表中的一个新建字段，并且值设置成功，返回{@code 1}。如果哈希表中域字段已经存在且旧值已被新值覆盖，返回 {@code 0}
      */
-    public Long hset(String key, String field, String value, int timeout) {
+    public Long hset(String key, String field, String value, long timeout) {
         return hset(dbIndex, key, field, value, timeout);
     }
 
@@ -439,7 +434,7 @@ public class EasyRedis {
      * @param timeout 过期时间，单位：秒
      * @return Long 如果字段是哈希表中的一个新建字段，并且值设置成功，返回{@code 1}。如果哈希表中域字段已经存在且旧值已被新值覆盖，返回 {@code 0}
      */
-    public Long hset(int dbIndex, String key, String field, String value, int timeout) {
+    public Long hset(int dbIndex, String key, String field, String value, long timeout) {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.select(dbIndex);
             Long result = jedis.hset(key, field, value);

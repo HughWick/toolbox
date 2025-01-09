@@ -1,6 +1,7 @@
 package com.github.hugh.cache.redis;
 
 import com.github.hugh.util.ListUtils;
+import com.github.hugh.util.RandomUtils;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
@@ -27,10 +28,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @Configuration
 class EasyRedisTest {
 
-    //    public static final String IP_ADDR = "141.147.176.125";
-    public static final String IP_ADDR = "192.168.1.45";
-    //    public static final String PASSWORD = "password123";
-    public static final String PASSWORD = "jugg#8225586";
+    public static final String IP_ADDR = "141.147.176.125";
+    public static final String PASSWORD = "password123";
     public static final int PORT = 7779;
     public static final int GET_TEST_INDEX = 14;
 
@@ -57,8 +56,8 @@ class EasyRedisTest {
         jedisPoolConfig.setTimeBetweenEvictionRunsMillis(30000);
         // 是否在从池中取出连接前进行检验,如果检验失败,则从池中去除连接并尝试取出另一个
         jedisPoolConfig.setTestOnBorrow(true);
-//        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "43.128.14.188", 9991, 10000, "password123@");
-        JedisPool jedisPool = new JedisPool(jedisPoolConfig, IP_ADDR, PORT, 10000, PASSWORD);
+        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "192.168.1.45", PORT, 10000, "jugg#8225586");
+//        JedisPool jedisPool = new JedisPool(jedisPoolConfig, IP_ADDR, PORT, 10000, PASSWORD);
 //        log.info("初始化redis pool。end...");
         System.out.println("初始化redis pool。end...");
         return jedisPool;
@@ -191,10 +190,22 @@ class EasyRedisTest {
         instance.set(dbIndex, byteKey, value.getBytes(StandardCharsets.UTF_8));
         final byte[] bytes = new byte[]{115, 100, 106, 102, 104, 107, 106};
         assertArrayEquals(bytes, instance.get(dbIndex, byteKey));
-        assertEquals(Lists.newArrayList(null, null), instance.mget(0, key, "set_test_02"));
-        instance.del(dbIndex, byteKey);
     }
 
+    @Test
+    void mgetTest() {
+        int dbIndex = 0;
+        String key1 = "mget_test_01";
+        String key2 = "mget_test_02";
+        EasyRedis instance = EasyRedis.getInstance(redisPoolFactory());
+        assertEquals(Lists.newArrayList(null, null), instance.mget(dbIndex, key1, key2));
+        String str1 = RandomUtils.randomString(5);
+        String set = instance.set(key1, str1);
+        assertEquals("OK", set);
+        List<String> mget1 = instance.mget(0, key1);
+        assertEquals(Lists.newArrayList(str1), mget1);
+        instance.del(dbIndex, key1);
+    }
 
     @Test
     void getAllKeys() {
@@ -208,13 +219,12 @@ class EasyRedisTest {
     @Test
     void delTest() {
         EasyRedis instance = supplier.get();
-        String key = "set_test_01";
+        String key = "del_test_01";
+        instance.set(key, RandomUtils.randomString(5));
         assertEquals(1, instance.del(key));
-        assertEquals(1, instance.del("byte_test_01".getBytes(StandardCharsets.UTF_8)));
-        assertEquals(0, instance.del(1, "set_test_03"));
-//        System.out.println("---1-<>>>><>>" + instance.del(key));
-//        System.out.println("--2--<>>>><>>" + instance.del("byte_test_01".getBytes(StandardCharsets.UTF_8)));
-//        System.out.println("---3-<>>>><>>" + instance.del(1, "set_test_03"));
+        instance.set(key.getBytes(StandardCharsets.UTF_8), RandomUtils.randomString(5).getBytes(StandardCharsets.UTF_8));
+        assertEquals(1, instance.del(key.getBytes(StandardCharsets.UTF_8)));
+//        assertEquals(0, instance.del(1, "set_test_03"));
     }
 
     @Test
@@ -266,18 +276,20 @@ class EasyRedisTest {
     @Test
     void hsetTest() {
         String url1 = "www.baidu.com";
+        String key1 = "hset_test_01";
         EasyRedis easyRedis = supplier.get();
-        String key = "test02";
-        Long hset = easyRedis.hset(key, "json", "www.google.com");
-        assertEquals(0, hset);
-//        System.out.println(hset);
-        easyRedis.hset(key, "url", url1);
-        assertEquals(url1, easyRedis.hget(key, "url"));
-        easyRedis.hset(key, "account", "hugh");
-//        System.out.println(easyRedis.hget(key, "url"));
-        Long account = easyRedis.hdel(key, "account");
+        String field1 = "json";
+        String field2 = "url";
+        String field3 = "account";
+        Long hset = easyRedis.hset(key1, field1, "www.google.com");
+        assertEquals(1, hset);
+        easyRedis.hset(key1, field2, url1);
+        assertEquals(url1, easyRedis.hget(key1, field2));
+        easyRedis.hset(key1, field3, "hugh");
+        Long account = easyRedis.hdel(key1, field3);
         assertEquals(1, account);
-//        System.out.println("===del=>" + account);
+        Long hdel2 = easyRedis.hdel(key1, field1,field2);
+        assertEquals(2, hdel2);
     }
 
     @Test
