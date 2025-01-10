@@ -76,12 +76,12 @@ class EasyRedisTest {
     /**
      * 放入过期时间
      */
-    Supplier<EasyRedis> supplier2 = Suppliers.memoizeWithExpiration(easyRedisSupplier::get, 5, TimeUnit.SECONDS);
+//    Supplier<EasyRedis> supplier2 = Suppliers.memoizeWithExpiration(easyRedisSupplier::get, 5, TimeUnit.SECONDS);
 
     /**
      * 线程安全的int
      */
-    static AtomicInteger hashcode = new AtomicInteger(0);
+//    static AtomicInteger hashcode = new AtomicInteger(0);
     static AtomicInteger hashcode2 = new AtomicInteger(0);
 
     static ThreadPoolExecutor fixedThreadPool1 = new ThreadPoolExecutor(10, 10, 20, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
