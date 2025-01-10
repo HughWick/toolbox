@@ -690,12 +690,15 @@ public class GsonUtils {
         if (EmptyUtils.isEmpty(str)) {
             return false;
         }
-        try {
-            parse(str);
-        } catch (Exception e) {
+        if (!str.trim().startsWith("{") || !str.trim().endsWith("}")) {
             return false;
         }
-        return true;
+        try {
+            JsonElement jsonElement = JsonParser.parseString(str);
+            return jsonElement.isJsonObject();
+        } catch (JsonParseException jsonParseException) {
+            return false;
+        }
     }
 
     /**
@@ -721,11 +724,11 @@ public class GsonUtils {
             return false;
         }
         try {
-            parseArray(str);
+            JsonElement jsonElement = JsonParser.parseString(str);
+            return jsonElement.isJsonArray();
         } catch (Exception exception) {
             return false;
         }
-        return true;
     }
 
     /**

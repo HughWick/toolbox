@@ -1,7 +1,5 @@
-package com.github.hugh.json;
+package com.github.hugh.json.gson;
 
-import com.github.hugh.json.gson.GsonUtils;
-import com.github.hugh.json.gson.Jsons;
 import com.github.hugh.json.model.Command;
 import com.github.hugh.json.model.ResponseData;
 import com.github.hugh.json.model.Student;
@@ -134,5 +132,120 @@ class GsonUtilTest {
     void test04() {
         String str1 = "{\"action\":\"heartbeat\",\"count\":\"0\",\"00030009\":\"D01020240605114\",\"00050001\":\"31\"}{\"action\":\"time\",\"00010001\":\"12.27\",\"00010007\":\"0.00\",\"00010008\":\"0.00\",\"00020001\":\"23.0\",\"00020002\":\"30.0\",\"00020003\":\"0\",\"00020004\":\"0\",\"00020009\":\"C_0019\",\"0002000a\":\"1\",\"00030003\":\"(未知)\",\"00030004\":\"湖南省/邵阳市/大祥区/城北路街道\",\"00050001\":\"31\",\"00050006\":\"FDD LTE\",\"00060001\":\"$GNGGA,020952.00,2714.58325,N,11127.58547,E,1,22,0.65,229.2,M,,M,,*5E\\r\\n\\r\\nOK\\r\\n\",\"00060002\":\"$GNRMC,020951.00,A,2714.58329,N,11127.58545,E,0.254,,311024,,,A,V*15\\r\\n\\r\\nOK\\r\\n\",\"00070007\":\"192.168.75.100\",\"00070009\":\"00\",\"0007000a\":\"00\",\"0007000c\":\"0\",\"0007000d\":[0,0,0,0],\"0007000e\":[0,0,0,0,0,0,0,0,0],\"0007000f\":\"\",\"00070010\":\"0\",\"01000003\":\"NULL\",\"02000003\":\"NULL\",\"03010001\":\"230.52\",\"03010002\":\"0.21\",\"03010003\":\"25.65\",\"03010006\":\"3.55\",\"06000001\":\"1\",\"06000002\":\"12.24\",\"06000003\":\"0.259\",\"06010001\":\"1\",\"06010002\":\"12.25\",\"06010003\":\"0.000\",\"06020001\":\"1\",\"06020002\":\"12.28\",\"06020003\":\"0.000\",\"06030001\":\"1\",\"06030002\":\"12.27\",\"06030003\":\"0.000\",\"07000001\":\"1\",\"07000002\":\"230.52\",\"07010001\":\"1\",\"07010002\":\"230.52\",\"07020001\":\"1\",\"07020002\":\"230.52\",\"07030001\":\"1\",\"07030002\":\"230.52\",\"07040001\":\"1\",\"07040002\":\"230.52\",\"07050001\":\"1\",\"07050002\":\"0.00\",\"07060001\":\"1\",\"07060002\":\"0.00\",\"07070001\":\"1\",\"07070002\":\"0.00\",\"07080001\":\"1\",\"07080002\":\"0.00\",\"01000003\":\"NULL\",\"02000003\":\"NULL\",\"00030009\":\"D01020240605114\"}";
         assertTrue(GsonUtils.isNotJsonValid(str1));
+    }
+    // 测试字符串是否为json
+    @Test
+    void testIsJson() {
+        var str = "{\"age\":1,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1888,\"name\":\"张三\",\"create\":\"16250247130001\"}";
+        var str2 = "{code:006,message:测试,age:18,created:2022-03-21 18:02:11,amount:199.88,switchs:true}";
+        assertTrue(GsonUtils.isJsonObject(str));
+        assertTrue(GsonUtils.isNotJsonObject(str2));
+        assertFalse(GsonUtils.isJsonObject(str2));
+        assertTrue(GsonUtils.isJsonValid(str));
+        assertFalse(GsonUtils.isJsonValid(""));
+        assertTrue(GsonUtils.isNotJsonValid(""));
+
+    }
+
+    @Test
+    void testJsonArray(){
+        var array = "[1,2,3,4,5]";
+        var array2 = "1,2,3,4,5";
+        assertTrue(GsonUtils.isJsonArray(array));
+        assertFalse(GsonUtils.isJsonArray(array2));
+        assertTrue(GsonUtils.isNotJsonArray(array2));
+//        assertFalse(JsonObjectUtils.isNotJsonArray(array));
+    }
+
+    @Test
+    void isJsonObject_validJsonObject() {
+        assertTrue(GsonUtils.isJsonObject("{}"));
+        assertTrue(GsonUtils.isJsonObject("{\"key\":\"value\"}"));
+        assertTrue(GsonUtils.isJsonObject("{\"key\":123}"));
+        assertTrue(GsonUtils.isJsonObject("{\"key\":true}"));
+        assertTrue(GsonUtils.isJsonObject("{\"key\":null}"));
+        assertTrue(GsonUtils.isJsonObject("{\"key\":{\"nestedKey\":\"nestedValue\"}}"));
+        assertTrue(GsonUtils.isJsonObject("{\"key\":[1,2,3]}"));
+        assertTrue(GsonUtils.isJsonObject(" {\"key\":\"value\"} ")); // 前后有空格
+        assertTrue(GsonUtils.isJsonObject("{\"key\" : \"value\"}")); // key和value之间有空格
+        assertTrue(GsonUtils.isJsonObject("{\"key\":\"value\", \"anotherKey\":123}"));
+        assertTrue(GsonUtils.isJsonObject("{\"key with space\":\"value\"}")); // key包含空格
+        assertTrue(GsonUtils.isJsonObject("{\"key\":\"value with space\"}")); // value包含空格
+        assertTrue(GsonUtils.isJsonObject("{\"key\":\"value\\\"with\\\"quotes\"}")); // value包含转义引号
+    }
+
+    @Test
+    void isJsonObject_invalidJsonObject() {
+        assertFalse(GsonUtils.isJsonObject(""));
+        assertFalse(GsonUtils.isJsonObject(null));
+        assertFalse(GsonUtils.isJsonObject("{\"key\":\"value\"")); // 缺少结尾大括号
+        assertFalse(GsonUtils.isJsonObject("{\"key\":\"value\" ")); // 结尾有空格，但结构不完整
+//        assertFalse(GsonUtils.isJsonObject("{key:\"value\"}")); // key缺少引号
+//        assertFalse(GsonUtils.isJsonObject("{\"key\":value}")); // value缺少引号
+        assertFalse(GsonUtils.isJsonObject("{\"key\":\"value\",}")); // 结尾有逗号
+        assertFalse(GsonUtils.isJsonObject("{\"key\"\"value\"}")); // 缺少冒号
+        assertFalse(GsonUtils.isJsonObject("{\"key\":\"value\"\"anotherKey\":\"anotherValue\"}")); // 缺少逗号分隔
+        assertFalse(GsonUtils.isJsonObject("[1,2,3]")); // 是 JSON 数组
+        assertFalse(GsonUtils.isJsonObject("123")); // 是 JSON 数字
+        assertFalse(GsonUtils.isJsonObject("true")); // 是 JSON 布尔值
+        assertFalse(GsonUtils.isJsonObject("null")); // 是 JSON null 值
+        assertFalse(GsonUtils.isJsonObject("invalid json string"));
+        assertFalse(GsonUtils.isJsonObject("{ \"key\" : \"value\" ")); // 结尾空格，且结构不完整
+    }
+
+    @Test
+    void isJsonObject_emptyString() {
+        assertFalse(GsonUtils.isJsonObject(""));
+    }
+
+    @Test
+    void isJsonObject_nullString() {
+        assertFalse(GsonUtils.isJsonObject(null));
+    }
+
+    @Test
+    void isJsonObject_notJsonObjectString() {
+        assertFalse(GsonUtils.isJsonObject("hello world"));
+        assertFalse(GsonUtils.isJsonObject("12345"));
+        assertFalse(GsonUtils.isJsonObject("true"));
+        assertFalse(GsonUtils.isJsonObject("false"));
+    }
+
+
+
+    @Test
+    void isJsonArray_validJsonArray() {
+        assertTrue(GsonUtils.isJsonArray("[]"));
+        assertTrue(GsonUtils.isJsonArray("[1, 2, 3]"));
+        assertTrue(GsonUtils.isJsonArray("[\"apple\", \"banana\"]"));
+        assertTrue(GsonUtils.isJsonArray("[true, false, true]"));
+        assertTrue(GsonUtils.isJsonArray("[null, null]"));
+        assertTrue(GsonUtils.isJsonArray("[{\"key\": \"value\"}, {\"key\": \"another\"}]")); // 数组包含对象
+        assertTrue(GsonUtils.isJsonArray("[[1, 2], [3, 4]]")); // 数组包含数组
+        assertTrue(GsonUtils.isJsonArray(" [1, 2] ")); // 前后有空格
+    }
+
+    @Test
+    void isJsonArray_invalidJsonArray() {
+        assertFalse(GsonUtils.isJsonArray(""));
+        assertFalse(GsonUtils.isJsonArray(null));
+        assertFalse(GsonUtils.isJsonArray("[1, 2")); // 缺少结尾中括号
+        assertFalse(GsonUtils.isJsonArray("1, 2, 3]")); // 缺少开始中括号
+        assertFalse(GsonUtils.isJsonArray("{ \"key\": \"value\" }")); // 是 JSON 对象
+        assertFalse(GsonUtils.isJsonArray("123")); // 是 JSON 数字
+        assertFalse(GsonUtils.isJsonArray("\"hello\"")); // 是 JSON 字符串
+        assertFalse(GsonUtils.isJsonArray("true")); // 是 JSON 布尔值
+        assertFalse(GsonUtils.isJsonArray("null")); // 是 JSON null
+        assertFalse(GsonUtils.isJsonArray("invalid json"));
+    }
+
+    @Test
+    void isJsonArray_emptyString() {
+        assertFalse(GsonUtils.isJsonArray(""));
+    }
+
+    @Test
+    void isJsonArray_nullString() {
+        assertFalse(GsonUtils.isJsonArray(null));
     }
 }

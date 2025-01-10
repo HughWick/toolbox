@@ -323,26 +323,6 @@ class JsonObjectUtilsTest {
 //        System.out.println("==END==");
     }
 
-    // 测试字符串是否为json
-    @Test
-    void testIsJson() {
-        var str = "{\"age\":1,\"amount\":10.14,\"birthday\":null,\"create\":null,\"id\":1888,\"name\":\"张三\",\"create\":\"16250247130001\"}";
-        var str2 = "{code:006,message:测试,age:18,created:2022-03-21 18:02:11,amount:199.88,switchs:true}";
-        assertTrue(JsonObjectUtils.isJsonObject(str));
-        assertTrue(JsonObjectUtils.isNotJsonObject(str2));
-        assertFalse(JsonObjectUtils.isJsonObject(str2));
-        assertTrue(JsonObjectUtils.isJsonValid(str));
-        assertFalse(JsonObjectUtils.isJsonValid(""));
-        assertTrue(JsonObjectUtils.isNotJsonValid(""));
-
-        var array = "[1,2,3,4,5]";
-        var array2 = "1,2,3,4,5";
-        assertTrue(JsonObjectUtils.isJsonArray(array));
-        assertFalse(JsonObjectUtils.isJsonArray(array2));
-        assertTrue(JsonObjectUtils.isNotJsonArray(array2));
-//        assertFalse(JsonObjectUtils.isNotJsonArray(array));
-    }
-
     // 测试多个json解析，与统计出现次数
     @Test
     void testMultipleJsonStr() {
