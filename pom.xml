@@ -61,7 +61,7 @@
         <UserAgentUtils.version>1.21</UserAgentUtils.version>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <mongodb.version>2.6.13</mongodb.version>
-        <redis.version>3.6.3</redis.version>
+        <redis.version>3.7.1</redis.version>
         <caffeine.version>3.1.8</caffeine.version>
         <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
         <commons-codec.version>1.15</commons-codec.version>

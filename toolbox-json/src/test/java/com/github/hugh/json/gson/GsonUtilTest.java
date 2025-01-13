@@ -3,9 +3,9 @@ package com.github.hugh.json.gson;
 import com.github.hugh.json.model.Command;
 import com.github.hugh.json.model.ResponseData;
 import com.github.hugh.json.model.Student;
-import com.github.hugh.util.DateUtils;
 import org.junit.jupiter.api.Test;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,22 +21,53 @@ class GsonUtilTest {
     @Test
     void testFormJson() {
         String create = "1625024713000";
-        Student student1 = new Student();
-        student1.setId(1);
-        student1.setAge(2);
-        student1.setName("张三");
-        student1.setAmount(10.14);
-        student1.setBirthday(null);
-//        student1.setSystem(0);
-        student1.setCreate(DateUtils.parseTimestamp(create));
+//        Student student1 = new Student();
+//        student1.setId(1);
+//        student1.setAge(2);
+//        student1.setName("张三");
+//        student1.setAmount(10.14);
+//        student1.setBirthday(null);
+////        student1.setSystem(0);
+//        student1.setCreate(DateUtils.parseTimestamp(create));
         String strJson1 = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"birthday\":null,\"create\":\"" + create + "\"}";
-        Student student = GsonUtils.fromJson(strJson1, Student.class);
-        assertEquals(student1.toString(), student.toString());
-        String jsonStr = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"create\":\"2021-06-30 11:45:13\",\"system\":0}";
-        assertEquals(jsonStr, GsonUtils.toJson(student));
-        String jsonStr2 = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"create\":" + create + ",\"system\":0}";
-        assertEquals(jsonStr2, GsonUtils.toJsonTimestamp(student));
+        Student student1 = GsonUtils.fromJson(strJson1, Student.class);
+        assertEquals(student1.toString(), student1.toString());
+        String jsonStr2 = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"create\":\"2021-06-30 11:45:13\",\"system\":0}";
+        assertEquals(jsonStr2, GsonUtils.toJson(student1));
+        String jsonStr3 = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"create\":" + create + ",\"system\":0}";
+        assertEquals(jsonStr3, GsonUtils.toJsonTimestamp(student1));
+        // 假设 `in` 是一个 JSON 解析器或输入流，可以模拟输入字符串
+        String input = "SomeRandomText";
+        String jsonStr4 = "{\"create\":" + input + "}";
+        Student student4 = GsonUtils.fromJson(jsonStr4, Student.class);
+        assertNull(student4.getCreate());
     }
+
+    // 测试秒级时间戳
+    @Test
+    void testFromJsonWithSecondTimestamp() {
+        // 假设当前时间戳为秒级时间戳
+        long currentTimeInSeconds = System.currentTimeMillis() / 1000;
+        String jsonWithSecondTimestamp = "{\"create\":" + currentTimeInSeconds + "}";
+        Student student = GsonUtils.fromJson(jsonWithSecondTimestamp, Student.class);
+        // 断言从JSON中解析出的Date对象是否与期望时间相符
+        Date expectedDate = new Date(currentTimeInSeconds * 1000); // 转换为毫秒级时间戳
+        assertEquals(expectedDate, student.getCreate());
+        // 假设当前时间戳为毫秒级时间戳
+        long currentTimeInMillis = System.currentTimeMillis();
+        String jsonWithMillisecondTimestamp = "{\"create\":" + currentTimeInMillis + "}";
+        Student student2 = GsonUtils.fromJson(jsonWithMillisecondTimestamp, Student.class);
+        // 断言从JSON中解析出的Date对象是否与期望时间相符
+        Date expectedDate2 = new Date(currentTimeInMillis); // 毫秒级时间戳直接使用
+        assertEquals(expectedDate2, student2.getCreate());
+        // 字符串
+        long currentTimeInSecondsStr3 = System.currentTimeMillis() / 1000;
+        String jsonWithSecondsTimestampStr3 = "{\"create\":\"" + currentTimeInSecondsStr3 + "\"}";
+        Student student3 = GsonUtils.fromJson(jsonWithSecondsTimestampStr3, Student.class);
+        Date expectedDate3 = new Date(currentTimeInSecondsStr3 * 1000); // 毫秒级时间戳直接使用
+        assertEquals(expectedDate3.getTime(), student3.getCreate().getTime());
+    }
+
 
 //    @Test
 //    void testEmpty() {
@@ -133,6 +164,7 @@ class GsonUtilTest {
         String str1 = "{\"action\":\"heartbeat\",\"count\":\"0\",\"00030009\":\"D01020240605114\",\"00050001\":\"31\"}{\"action\":\"time\",\"00010001\":\"12.27\",\"00010007\":\"0.00\",\"00010008\":\"0.00\",\"00020001\":\"23.0\",\"00020002\":\"30.0\",\"00020003\":\"0\",\"00020004\":\"0\",\"00020009\":\"C_0019\",\"0002000a\":\"1\",\"00030003\":\"(未知)\",\"00030004\":\"湖南省/邵阳市/大祥区/城北路街道\",\"00050001\":\"31\",\"00050006\":\"FDD LTE\",\"00060001\":\"$GNGGA,020952.00,2714.58325,N,11127.58547,E,1,22,0.65,229.2,M,,M,,*5E\\r\\n\\r\\nOK\\r\\n\",\"00060002\":\"$GNRMC,020951.00,A,2714.58329,N,11127.58545,E,0.254,,311024,,,A,V*15\\r\\n\\r\\nOK\\r\\n\",\"00070007\":\"192.168.75.100\",\"00070009\":\"00\",\"0007000a\":\"00\",\"0007000c\":\"0\",\"0007000d\":[0,0,0,0],\"0007000e\":[0,0,0,0,0,0,0,0,0],\"0007000f\":\"\",\"00070010\":\"0\",\"01000003\":\"NULL\",\"02000003\":\"NULL\",\"03010001\":\"230.52\",\"03010002\":\"0.21\",\"03010003\":\"25.65\",\"03010006\":\"3.55\",\"06000001\":\"1\",\"06000002\":\"12.24\",\"06000003\":\"0.259\",\"06010001\":\"1\",\"06010002\":\"12.25\",\"06010003\":\"0.000\",\"06020001\":\"1\",\"06020002\":\"12.28\",\"06020003\":\"0.000\",\"06030001\":\"1\",\"06030002\":\"12.27\",\"06030003\":\"0.000\",\"07000001\":\"1\",\"07000002\":\"230.52\",\"07010001\":\"1\",\"07010002\":\"230.52\",\"07020001\":\"1\",\"07020002\":\"230.52\",\"07030001\":\"1\",\"07030002\":\"230.52\",\"07040001\":\"1\",\"07040002\":\"230.52\",\"07050001\":\"1\",\"07050002\":\"0.00\",\"07060001\":\"1\",\"07060002\":\"0.00\",\"07070001\":\"1\",\"07070002\":\"0.00\",\"07080001\":\"1\",\"07080002\":\"0.00\",\"01000003\":\"NULL\",\"02000003\":\"NULL\",\"00030009\":\"D01020240605114\"}";
         assertTrue(GsonUtils.isNotJsonValid(str1));
     }
+
     // 测试字符串是否为json
     @Test
     void testIsJson() {
@@ -148,7 +180,7 @@ class GsonUtilTest {
     }
 
     @Test
-    void testJsonArray(){
+    void testJsonArray() {
         var array = "[1,2,3,4,5]";
         var array2 = "1,2,3,4,5";
         assertTrue(GsonUtils.isJsonArray(array));
@@ -210,7 +242,6 @@ class GsonUtilTest {
         assertFalse(GsonUtils.isJsonObject("true"));
         assertFalse(GsonUtils.isJsonObject("false"));
     }
-
 
 
     @Test

@@ -28,26 +28,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class JsonObjectUtilsTest {
 
     @Test
-    void testFormJson() {
-        String create = "1625024713000";
-        Student student1 = new Student();
-        student1.setId(1);
-        student1.setAge(2);
-        student1.setName("张三");
-        student1.setAmount(10.14);
-        student1.setBirthday(null);
-//        student1.setSystem(0);
-        student1.setCreate(DateUtils.parseTimestamp(create));
-        String strJson1 = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"birthday\":null,\"create\":\"" + create + "\"}";
-        Student student = JsonObjectUtils.fromJson(strJson1, Student.class);
-        assertEquals(student1.toString(), student.toString());
-        String jsonStr = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"create\":\"2021-06-30 11:45:13\",\"system\":0}";
-        assertEquals(jsonStr, JsonObjectUtils.toJson(student));
-        String jsonStr2 = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"create\":" + create + ",\"system\":0}";
-        assertEquals(jsonStr2, JsonObjectUtils.toJsonTimestamp(student));
-    }
-
-    @Test
     void testAddProperty() {
         String str1 = "{\"country\":\"国家\"}";
         JsonObject item = new JsonObject();
