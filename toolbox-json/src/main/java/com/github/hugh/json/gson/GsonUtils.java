@@ -690,11 +690,12 @@ public class GsonUtils {
         if (EmptyUtils.isEmpty(str)) {
             return false;
         }
-        if (!str.trim().startsWith("{") || !str.trim().endsWith("}")) {
+        String trimmedStr = str.trim();
+        if (!trimmedStr.startsWith("{") || !trimmedStr.endsWith("}")) {
             return false;
         }
         try {
-            JsonElement jsonElement = JsonParser.parseString(str);
+            JsonElement jsonElement = JsonParser.parseString(trimmedStr);
             return jsonElement.isJsonObject();
         } catch (JsonParseException jsonParseException) {
             return false;
