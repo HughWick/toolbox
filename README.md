@@ -18,7 +18,7 @@ JDK >=11
 | validation-api                                         | 2.0.2      | 注解                |
 | knife4j                                                | 3.0.3      | Swagger生成Api文档的增强 |
 | spring-beans                                           | 5.3.23     | spring 实体类工具      |
-| jedis                                                  | 3.6.3      | redis clients     |
+| jedis                                                  | 3.7.1      | redis clients     |
 | [caffeine](https://github.com/ben-manes/caffeine)      | 3.1.8      | 高性能本地缓存           |
 | [okhttp3](https://github.com/square/okhttp)            | 4.9.3      | 高性能http           |
 | javax.servlet-api                                      | 4.0.1      | Servlet API       |

@@ -64,7 +64,6 @@
         <redis.version>3.7.1</redis.version>
         <caffeine.version>3.1.8</caffeine.version>
         <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
-        <commons-codec.version>1.15</commons-codec.version>
         <pdfbox.version>2.0.29</pdfbox.version>
         <knife4j.version>3.0.3</knife4j.version>
         <bcprov-jdk18on.version>1.78.1</bcprov-jdk18on.version>
