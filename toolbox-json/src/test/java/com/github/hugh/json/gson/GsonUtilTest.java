@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * gson 工具类测试
@@ -256,6 +257,10 @@ class GsonUtilTest {
         assertTrue(GsonUtils.isJsonArray(" [1, 2] ")); // 前后有空格
     }
 
+    @Test
+    void testIsJsonArray_throwsJsonParseException_invalidSyntax_missingQuote() {
+        assertFalse(GsonUtils.isJsonArray("[\"value]"));
+    }
     @Test
     void isJsonArray_invalidJsonArray() {
         assertFalse(GsonUtils.isJsonArray(""));

@@ -691,13 +691,14 @@ public class GsonUtils {
             return false;
         }
         String trimmedStr = str.trim();
-        if (!trimmedStr.startsWith("{") || !trimmedStr.endsWith("}")) {
+        if (!trimmedStr.startsWith(StrPool.CURLY_BRACKETS_START) || !trimmedStr.endsWith(StrPool.CURLY_BRACKETS_END)) {
             return false;
         }
         try {
             JsonElement jsonElement = JsonParser.parseString(trimmedStr);
             return jsonElement.isJsonObject();
         } catch (JsonParseException jsonParseException) {
+            log.debug("字符串验证是JsonObject异常，内容：{}", str);
             return false;
         }
     }
@@ -724,10 +725,15 @@ public class GsonUtils {
         if (EmptyUtils.isEmpty(str)) {
             return false;
         }
+        String trimmedStr = str.trim();
+        if (!trimmedStr.startsWith(StrPool.BRACKET_START) || !trimmedStr.endsWith(StrPool.BRACKET_END)) {
+            return false;
+        }
         try {
-            JsonElement jsonElement = JsonParser.parseString(str);
+            JsonElement jsonElement = JsonParser.parseString(trimmedStr);
             return jsonElement.isJsonArray();
-        } catch (Exception exception) {
+        } catch (JsonParseException jsonParseException) {
+            log.debug("字符串验证是JsonArray异常，内容：{}", str);
             return false;
         }
     }
