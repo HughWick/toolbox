@@ -42,7 +42,6 @@
         <plugin.maven-source-plugin.version>2.2.1</plugin.maven-source-plugin.version>
         <plugin.maven-javadoc-plugin.version>3.3.1</plugin.maven-javadoc-plugin.version>
         <plugin.maven-gpg-plugin.version>1.6</plugin.maven-gpg-plugin.version>
-        <plugin.jacoco.version>0.8.8</plugin.jacoco.version>
         <!--============================== other ==============================-->
         <lombok.version>1.18.24</lombok.version>
         <spring.version>5.3.23</spring.version>

@@ -6,6 +6,8 @@ jobs:
   report:
     runs-on: ubuntu-latest
     steps:
+      - name: Set Timezone to Asia/Shanghai
+        run: sudo timedatectl set-timezone Asia/Shanghai
       - uses: actions/checkout@v4
       - name: Set up JDK 11
         uses: actions/setup-java@v4
@@ -15,12 +17,9 @@ jobs:
           cache: maven
 
       - name: Build with Maven
-        run: mvn install -Dmaven.test.failure.ignore=true -B -V
-
+        run: mvn install -Dmaven.test.failure.ignore=true -B -V && pwd
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./target/site/jacoco/jacoco.xml
-      - name: Set Timezone to Asia/Shanghai
-        run: sudo timedatectl set-timezone Asia/Shanghai
