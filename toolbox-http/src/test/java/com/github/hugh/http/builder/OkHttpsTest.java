@@ -402,7 +402,7 @@ class OkHttpsTest {
 //        String s = Base64.getEncoder().encodeToString(okHttpsResponse.getBytes());
         if (ImageUtils.isNotBase64Image(okHttpsResponse.getBytes())) {
 //            Jsons on = Jsons.on(okHttpsResponse.getMessage());
-            System.out.println("---不是一张图片时显示->>" + okHttpsResponse.toJsons());
+//            System.out.println("---不是一张图片时显示->>" + okHttpsResponse.toJsons());
         } else {
             assertTrue(ImageUtils.isBase64Image(okHttpsResponse.getBytes()));
         }

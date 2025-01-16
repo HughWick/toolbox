@@ -56,8 +56,8 @@ class EasyRedisTest {
         jedisPoolConfig.setTimeBetweenEvictionRunsMillis(30000);
         // 是否在从池中取出连接前进行检验,如果检验失败,则从池中去除连接并尝试取出另一个
         jedisPoolConfig.setTestOnBorrow(true);
-        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "192.168.1.45", PORT, 10000, "jugg#8225586");
-//        JedisPool jedisPool = new JedisPool(jedisPoolConfig, IP_ADDR, PORT, 10000, PASSWORD);
+//        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "192.168.1.45", PORT, 10000, "jugg#8225586");
+        JedisPool jedisPool = new JedisPool(jedisPoolConfig, IP_ADDR, PORT, 10000, PASSWORD);
 //        log.info("初始化redis pool。end...");
         System.out.println("初始化redis pool。end...");
         return jedisPool;
