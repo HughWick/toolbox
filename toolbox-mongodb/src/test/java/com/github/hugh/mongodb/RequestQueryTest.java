@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author hugh
  */
 class RequestQueryTest {
-    private static final String CONNECTION_STRING = "mongodb://cmmop:cmmop#8225586@192.168.10.29:7070/cmmop?authSource=admin";
+    private static final String CONNECTION_STRING = "mongodb://hugh:8225586@47.79.38.215:7070/test_01?authSource=admin";
 
     private static final String collection_name = "collection_test";
     private MongoTemplate mongoTemplate;
@@ -40,17 +39,14 @@ class RequestQueryTest {
 
     @AfterEach
     void clean() {
-//        mongodExecutable.stop();
     }
 
     @BeforeEach
     void setup() {
-//        String ip = "localhost";
-//        int port = 27017;
         if (mongoTemplate == null) {
             System.out.println("=======init====");
             MongoClient mongoClient = MongoClients.create(CONNECTION_STRING);
-            mongoTemplate = new MongoTemplate(mongoClient, "cmmop");
+            mongoTemplate = new MongoTemplate(mongoClient, "test_01");
         }
     }
 
@@ -61,7 +57,6 @@ class RequestQueryTest {
         });
         assertEquals(null, nullPointerException.getMessage());
         Query query1 = RequestQuery.createPage(new HashMap<>()).query();
-        System.out.println("--->" + query1.toString());
         String sqlStr1 = "Query: {}, Fields: {}, Sort: {}";
         assertEquals(sqlStr1, query1.toString());
     }

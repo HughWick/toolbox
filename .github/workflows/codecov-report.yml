@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - 2.7.X  # 或者你的主分支名称
+      - 2.7.X
 jobs:
   report:
     runs-on: ubuntu-latest
@@ -14,4 +14,4 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn install -Dmaven.javadoc.skip=true -Dmaven.test.failure.ignore=true -B -V
+        run: mvn install -Dmaven.test.failure.ignore=true -B -V
