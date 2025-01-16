@@ -1,25 +1,31 @@
-on:
-  push:
+on: # 定义工作流触发条件
+  push: # 当有代码推送时触发
     branches:
-      - 2.7.X
-jobs:
-  report:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set Timezone to Asia/Shanghai
-        run: sudo timedatectl set-timezone Asia/Shanghai
-      - uses: actions/checkout@v4
-      - name: Set up JDK 11
-        uses: actions/setup-java@v4
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-          cache: maven
+      - 2.7.X # 监听 2.7.X 分支
 
-      - name: Build with Maven
-        run: mvn install -Dmaven.test.failure.ignore=true -B -V && pwd
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./target/site/jacoco/jacoco.xml
+jobs: # 定义工作流中的任务
+  report: # 任务名称为 report
+    runs-on: ubuntu-latest # 运行在最新的 Ubuntu 操作系统上
+    steps: # 定义任务中的步骤
+      - name: Set Timezone to Asia/Shanghai # 步骤名称：设置时区为亚洲/上海
+        run: sudo timedatectl set-timezone Asia/Shanghai # 运行的脚本：设置时区命令
+      - uses: actions/checkout@v4 # 使用 actions/checkout@v4 这个 Action，用于检出代码
+      - name: Set up JDK 11 # 步骤名称：安装 JDK 11
+        uses: actions/setup-java@v4 # 使用 actions/setup-java@v4 这个 Action，用于安装 Java 环境
+        with: # 配置参数
+          java-version: '11' # Java 版本设置为 11
+          distribution: 'temurin' # 使用 Temurin 发行版的 JDK
+          cache: maven # 缓存 Maven 依赖
+
+      - name: Build with Maven # 步骤名称：使用 Maven 构建
+        run: mvn install -Dmaven.test.failure.ignore=true -B -V # 运行的脚本：Maven 构建命令，忽略测试失败，静默模式，显示版本
+      - name: sss
+        run: |
+            pwd 
+            ls
+            cd ./target/site/jacoco/
+      - name: Upload coverage to Codecov # 步骤名称：上传覆盖率报告到 Codecov
+        uses: codecov/codecov-action@v3 # 使用 codecov/codecov-action@v3 这个 Action，用于上传代码覆盖率
+        with: # 配置参数
+          token: ${{ secrets.CODECOV_TOKEN }} # Codecov 的 Token，从 Secrets 中获取
+          files: ./target/site/jacoco/jacoco.xml # 覆盖率报告文件的路径
