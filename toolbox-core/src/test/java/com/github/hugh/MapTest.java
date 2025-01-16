@@ -239,7 +239,7 @@ class MapTest {
         gsonTest.setSwitchs(false);
         gsonTest.setCreated(new Date());
         Map<String, Object> stringObjectMap = MapUtils.entityToMap(gsonTest);
-        System.out.println("==2==>>"+stringObjectMap);
+//        System.out.println("==2==>>"+stringObjectMap);
         // 校验stringObjectMap中的值类型是否与GsonTest中的一致
         assertEquals(String.class, stringObjectMap.get("code").getClass());
         assertEquals(Integer.class, stringObjectMap.get("age").getClass());
