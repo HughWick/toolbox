@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author hugh
  */
 class RequestQueryTest {
-    private static final String CONNECTION_STRING = "mongodb://hugh:8225586@47.79.38.215:7070/test_01?authSource=admin";
+//    private static final String CONNECTION_STRING = "mongodb://hugh:8225586@47.79.38.215:7070/test_01?authSource=admin";
 
     private static final String collection_name = "collection_test";
     private MongoTemplate mongoTemplate;
@@ -45,7 +45,7 @@ class RequestQueryTest {
     void setup() {
         if (mongoTemplate == null) {
             System.out.println("=======init====");
-            MongoClient mongoClient = MongoClients.create(CONNECTION_STRING);
+            MongoClient mongoClient = MongoClients.create(MongoQueryTest.CONNECTION_STRING);
             mongoTemplate = new MongoTemplate(mongoClient, "test_01");
         }
     }

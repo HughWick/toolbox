@@ -26,9 +26,11 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class MongoQueryTest {
 
+    public static final String CONNECTION_STRING = "mongodb://hugh:8225586@47.79.38.215:7070/test_01?authSource=admin";
+
     private static final String SERIAL_NUMBER = "serial_number";
     private static final String CREATE_DATE = "createDate";
-    private static final String CONNECTION_STRING = "mongodb://cmmop:cmmop#8225586@192.168.10.29:7070/cmmop?authSource=admin";
+//    private static final String CONNECTION_STRING = "mongodb://cmmop:cmmop#8225586@192.168.10.29:7070/cmmop?authSource=admin";
 
     private static final String collection_name = "collection_test";
     private MongoTemplate mongoTemplate;
