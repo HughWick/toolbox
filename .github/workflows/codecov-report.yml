@@ -18,11 +18,13 @@ jobs: # 定义工作流中的任务
           distribution: 'temurin' # 使用 Temurin 发行版的 JDK
           cache: maven # 缓存 Maven 依赖
 
-      - name: Build with Maven # 步骤名称：使用 Maven 构建
-        run: mvn verify -Dmaven.test.failure.ignore=true -B -V # 运行的脚本：Maven 构建命令，忽略测试失败，静默模式，显示版本
+      - name: 生成代码覆盖率报告
+        # 运行的脚本：Maven 构建命令，忽略测试失败，静默模式，显示版本
+        run: mvn verify -Dmaven.test.failure.ignore=true -B -V test jacoco:report
 
-      - name: Upload test results to Codecov
+      - name: 上传覆盖率到 Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
+        uses: codecov/codecov-action@v3
         with: # 配置参数
+          files: target/site/jacoco/jacoco.xml # 调整为你的覆盖率报告路径
           token: ${{ secrets.CODECOV_TOKEN }} # Codecov 的 Token，从 Secrets 中获取
