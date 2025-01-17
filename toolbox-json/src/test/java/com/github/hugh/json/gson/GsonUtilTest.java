@@ -157,7 +157,7 @@ class GsonUtilTest {
         assertEquals(replace, str2);
 //        }
         // 替换掉完整的
-        System.out.println("=====>>" + replace);
+//        System.out.println("=====>>" + replace);
     }
 
     @Test

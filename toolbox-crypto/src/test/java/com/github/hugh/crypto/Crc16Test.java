@@ -135,7 +135,7 @@ class Crc16Test {
         String str = "8aTH0000202309190001";
         String str2 = "8a566f5d68953414";
         String verCode = Crc16Utils.getVerCode(str2, 2);
-        System.out.println("=====>>"+verCode);
+//        System.out.println("=====>>"+verCode);
     }
 
 }

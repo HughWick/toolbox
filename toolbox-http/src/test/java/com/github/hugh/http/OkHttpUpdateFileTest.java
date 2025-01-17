@@ -29,7 +29,7 @@ public class OkHttpUpdateFileTest {
         fileMap.put("鬼灭之刃2.jpg", "D:\\OneDrive\\图片\\鬼灭之刃\\78382590_p4.jpg");
         fileMap.put("鬼灭之刃3.jpg", "D:\\OneDrive\\图片\\鬼灭之刃\\79733019_p0.jpg");
         String result = OkHttpUtils.upload(url, params, "file", fileMap);
-        System.out.println("--->" + result);
+//        System.out.println("--->" + result);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class OkHttpUpdateFileTest {
         fileMap.put("share_572031b53d646c2c8a8191bdd93a95b2.png", getPath(path6));
         fileMap.put("vant_log_150x150.png", getPath(path7));
         String result = OkHttpUtils.upload(url, params, "file", fileMap);
-        System.out.println("--->" + result);
+//        System.out.println("--->" + result);
     }
 
     private static String getPath(String fileName) {

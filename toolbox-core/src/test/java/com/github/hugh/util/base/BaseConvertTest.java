@@ -192,10 +192,10 @@ class BaseConvertTest {
     void testHexToDecReLongWithValidInput() {
         String str1 = "32215";
         byte[] decBytes = str1.getBytes(StandardCharsets.UTF_8);
-        System.out.println("====>"+ Arrays.toString(decBytes));
+//        System.out.println("====>"+ Arrays.toString(decBytes));
 
         byte[] hexBytes = BaseConvertUtils.decToHexBytes(str1);
-        System.out.println("==hexBytes==>"+ Arrays.toString(hexBytes));
+//        System.out.println("==hexBytes==>"+ Arrays.toString(hexBytes));
 //        System.out.println("=====11>>>>"+ Arrays.toString(BaseConvertUtils.hexToDec(hexBytes)));
 //        assertArrayEquals(decBytes, BaseConvertUtils.hexToDec(hexBytes));
         // Given

@@ -180,7 +180,7 @@ class CoordinatesTest {
     void testEmpty() {
         String str1 = "$GNGGA,015830.00,,,,,0,00,99.99,,,,,,*77\\r\\n\\r\\nOK\\r\\n";
         GgaDTO ggaDTO = CoordinatesUtils.parseGga(str1);
-        System.out.println("====>>" + ggaDTO);
+//        System.out.println("====>>" + ggaDTO);
         assertTrue(EmptyUtils.isEmpty(ggaDTO.getLongitude()));
 
     }

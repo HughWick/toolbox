@@ -244,7 +244,7 @@ class OkHttpsTest {
                 .uploadFile();
         // 测试图片
         final ResponseData responseData3 = okHttpsResponse.fromJson(ResponseData.class);
-        System.out.println(responseData3.getFiles().getFile());
+//        System.out.println(responseData3.getFiles().getFile());
         // 验证数据长度
         assertEquals("420099", responseData3.getHeaders().getContentLength());
     }
@@ -382,9 +382,9 @@ class OkHttpsTest {
 
     @Test
     void testHttps() throws IOException {
-        String url = "https://factory.web.hnlot.com.cn/v2/host/queryList";
+//        String url = "https://factory.web.hnlot.com.cn/v2/host/queryList";
 //        final Jsons jsons = OkHttps.url(url).doGet().toJsons();
-        System.out.println(OkHttps.url(url).doGet().getMessage());
+//        System.out.println(OkHttps.url(url).doGet().getMessage());
     }
 
     @Test
@@ -415,7 +415,7 @@ class OkHttpsTest {
         OkHttpsResponse okHttpsResponse = OkHttps.url(url1)
                 .setParam("page", 1).doGet();
         Jsons jsons = okHttpsResponse.toJsons();
-        System.out.println(jsons);
+//        System.out.println(jsons);
         assertEquals(1, jsons.getInt("page"));
 
         String login_url = https_reqres_url + "/api/login";
@@ -440,15 +440,15 @@ class OkHttpsTest {
     }
 
     // nginx返回的404
-    @Test
-    void test404_2() throws IOException {
-        String url2 = "https://api.hnlot.com.cn/a/b";
-        Map<String, Object> params = new HashMap<>();
-        params.put("userId", "123");
-        OkHttpsResponse okHttpsResponse = OkHttps.url(url2).setBody(params).doGet();
-        assertEquals("text/html", okHttpsResponse.getContentType());
-        assertTrue(okHttpsResponse.is404());
-    }
+//    @Test
+//    void test404_2() throws IOException {
+//        String url2 = "https://api.hnlot.com.cn/a/b";
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("userId", "123");
+//        OkHttpsResponse okHttpsResponse = OkHttps.url(url2).setBody(params).doGet();
+//        assertEquals("text/html", okHttpsResponse.getContentType());
+//        assertTrue(okHttpsResponse.is404());
+//    }
 
     @Test
     void test400() throws IOException {

@@ -7,8 +7,6 @@ import com.lingmoyun.minilzo.MiniLZO;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.StopWatch;
 
-import java.nio.charset.StandardCharsets;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -226,10 +224,10 @@ class Sm4Test {
         /*********************ECB加解密*************************/
         Sm4Result sm4Result = sm4.encryptEcb(str1);
         String cipherText = sm4Result.toHex();
-        System.out.println("==1==>" + cipherText.getBytes(StandardCharsets.UTF_8).length);
-        System.out.println("==2==>" + sm4Result.bytes().length);
+//        System.out.println("==1==>" + cipherText.getBytes(StandardCharsets.UTF_8).length);
+//        System.out.println("==2==>" + sm4Result.bytes().length);
         byte[] compressed = MiniLZO.compress(sm4Result.bytes());
-        System.out.println("===3=====>>" + compressed.length);
+//        System.out.println("===3=====>>" + compressed.length);
         byte[] bytes = BaseConvertUtils.hexToBytes(cipherText);
         assertArrayEquals(sm4Result.bytes(), bytes);
         // 解密
@@ -258,7 +256,7 @@ class Sm4Test {
         String str1 = "Y2oJiZAgshH/xyIyPm4D/q6T2bdAObsLR9Isvc2CvvI73T8bflodpDr/JqrHxcW8MKKy8UpQycRrL6dcIg/OP0u4/dOuXLSD9W2/Qf/o5X0pO/mlKYwu9RJsI6myBPVzCUh5t1eBI14IoFPHywTmjyv1Vz2qa3z6fPGrMGcFWQiFrIHz9IWbxII6tT4Hmv1Gk5uQWC3MMn4zfEOGbOiDx205B+A9rc6I9WKIjFwUsijhNP0pUVrfKKo+QXPsiL113m+aXN6t16YXRzM6Bbhx6g==";
         Sm4 sm4 = Sm4.on(("1234567890123456")).encryptKeyTypeByStr();
         String s = sm4.decryptEcb(str1);
-        System.out.println("==>>" + s);
+//        System.out.println("==>>" + s);
 
     }
 }

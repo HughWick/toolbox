@@ -136,17 +136,17 @@ class GzipUtilsTest {
                 "  \"origin\": \"222.244.144.131\",\n" +
                 "  \"url\": \"https://httpbin.org/post\"\n" +
                 "}";
-        System.out.println("===ori=>" + jsonStr2.length());
+//        System.out.println("===ori=>" + jsonStr2.length());
         byte[] bytes = GzipUtils.compressToByteArray(jsonStr2);
-        System.out.println("==压缩后>>>>>" + Arrays.toString(bytes));
-        System.out.println("===压缩后长度>>>" + bytes.length);
+//        System.out.println("==压缩后>>>>>" + Arrays.toString(bytes));
+//        System.out.println("===压缩后长度>>>" + bytes.length);
         String stringBuffer = BaseConvertUtils.byteToHexStr(bytes);
         assertEquals(688, stringBuffer.length());
         String uncompress = GzipUtils.uncompress(BaseConvertUtils.hexToBytes(stringBuffer));
         assertEquals(jsonStr2, uncompress);
         String encode = URLEncoder.encode(jsonStr2, StandardCharsets.UTF_8);
-        System.out.println("===URL>>" + encode);
-        System.out.println("====>>" + encode.length());
+//        System.out.println("===URL>>" + encode);
+//        System.out.println("====>>" + encode.length());
     }
 
 }
