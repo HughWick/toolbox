@@ -26,23 +26,13 @@ jobs: # 定义工作流中的任务
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v3
         with: # 配置参数
-          files: ./toolbox-core/target/site/jacoco/jacoco.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
-      - name: 上传覆盖率到 Codecov toolbox-json
+      - name: 上传覆盖率到 Codecov
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v3
-        with: # 配置参数
-          files: ./toolbox-json/target/site/jacoco/jacoco.xml
+        with:
           token: ${{ secrets.CODECOV_TOKEN }}
-      - name: 上传覆盖率到 Codecov toolbox-http
-        if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v3
-        with: # 配置参数
-          files: ./toolbox-http/target/site/jacoco/jacoco.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
-      - name: 上传覆盖率到 Codecov toolbox-cache
-        if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v3
-        with: # 配置参数
-          files: ./toolbox-cache/target/site/jacoco/jacoco.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
+          files: |
+              ./toolbox-core/target/site/jacoco/jacoco.xml
+              ./toolbox-json/target/site/jacoco/jacoco.xml
+              ./toolbox-http/target/site/jacoco/jacoco.xml
+              ./toolbox-cache/target/site/jacoco/jacoco.xml
