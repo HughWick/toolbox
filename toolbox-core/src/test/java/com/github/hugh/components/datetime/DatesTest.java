@@ -26,9 +26,9 @@ class DatesTest {
 //        String str3 = "NaN-NaN-NaN NaN:NaN:NaN";
 //        Date date3 = Dates.on(str3).setFormat("yyyy-MM-dd HH:mm:00").toDate();
         String str3 = "1713152121";
-        Date date3 = Dates.on(str3).parse().toDate();
+//        Date date3 = Dates.on(str3).parse().toDate();
         assertEquals("2024-04-15 11:35:21", Dates.on(str3).parse().format());
-        String temp = "1779832902356332544";
+//        String temp = "1779832902356332544";
 //        System.out.println("====>>"+temp.length());
     }
 

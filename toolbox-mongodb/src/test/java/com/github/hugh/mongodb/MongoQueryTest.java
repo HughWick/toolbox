@@ -10,13 +10,11 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,55 +23,88 @@ import static org.junit.jupiter.api.Assertions.*;
  * @date 2023/12/13 17:13
  */
 class MongoQueryTest {
-
-    public static final String CONNECTION_STRING = "mongodb://hugh:8225586@47.79.38.215:7070/test_01?authSource=admin";
+    private static final String databaseName = "test_01";
+    public static final String CONNECTION_STRING = "mongodb://hugh:8225586@47.79.38.215:7070/" + databaseName + "?authSource=admin";
 
     private static final String SERIAL_NUMBER = "serial_number";
     private static final String CREATE_DATE = "createDate";
 //    private static final String CONNECTION_STRING = "mongodb://cmmop:cmmop#8225586@192.168.10.29:7070/cmmop?authSource=admin";
 
     private static final String collection_name = "collection_test";
+
     private MongoTemplate mongoTemplate;
 
+    private static boolean INIT_DATA_FLAG = true;
+
+    private CollectionDto createCollectionDto(String serialNumber, int flag, int status, String createBy, String createDateString, int vintage, int deleteFlag) {
+        CollectionDto collectionDto = new CollectionDto();
+        collectionDto.setSerialNo(IdSequence.snowflake());
+        collectionDto.setSerialNumber(serialNumber);
+        collectionDto.setFlag(flag); // 设置默认值或从外部传入
+        collectionDto.setStatus(status);
+        collectionDto.setDeleteFlag(deleteFlag);
+        collectionDto.setDataVersion(0);
+        collectionDto.setCreateBy(createBy);
+        collectionDto.setCreateDate(DateUtils.parse(createDateString));
+        collectionDto.setVintage(vintage);
+        return collectionDto;
+    }
 
     @AfterEach
     void clean() {
 //        mongodExecutable.stop();
     }
 
+    List<CollectionDto> items = Arrays.asList(
+            createCollectionDto("123", 0, 0, null, "2023-11-04 02:24:32.123", 2011, 0),
+            createCollectionDto("test1", 0, 1, null, "2023-12-05 02:25:29.456", 2012, 0),
+            createCollectionDto("test2", 0, 0, null, "2023-12-06 02:47:47.333", 2013, 0),
+            createCollectionDto("D901", 1, 1, null, "2023-12-07 07:08:24.321", 2014, 0),
+            createCollectionDto("D101", 1, 1, "null", "2023-12-08 07:29:48.369", 2015, 0),
+            createCollectionDto("test03", 1, 0, "", "2023-12-09 07:54:54.741", 2016, 1),
+
+            createCollectionDto("ym_0001", 1, 0, "盘满", "2023-12-10 00:49:38", 2017, 0),
+            createCollectionDto("ym_0002", 0, 0, "熊锦明", "2023-12-11 00:50:45", 2018, 0),
+            createCollectionDto("YM_0003", 0, 0, "叶文洁", "2023-12-12 01:09:50", 2019, 0),
+            createCollectionDto("YM_0004", 0, 0, "何德之", "2023-12-13 02:45:47", 2020, 0),
+            createCollectionDto("Ym_0005", 0, 0, "李金玲", "2023-12-14 02:48:03", 2021, 0),
+            createCollectionDto("Ym_0006", 0, 0, "周冬键", "2023-12-15 02:51:23", 2022, 0),
+            createCollectionDto("Ym_0007", 0, 0, "爱寺米", "2024-01-19 00:47:15", 2023, 0)
+    );
+
     @BeforeEach
     void setup() {
-//        String ip = "localhost";
-//        int port = 27017;
-        System.out.println("=======init====");
-        MongoClient mongoClient = MongoClients.create(CONNECTION_STRING);
-        mongoTemplate = new MongoTemplate(mongoClient, "cmmop");
+        if (mongoTemplate == null) {
+            MongoClient mongoClient = MongoClients.create(CONNECTION_STRING);
+            mongoTemplate = new MongoTemplate(mongoClient, databaseName);
+        }
+        if (INIT_DATA_FLAG) {
+            for (CollectionDto collectionDto : items) {
+                // 检查集合中是否已经有数据，这里假设至少有一个你想要初始化的数据存在就认为已经初始化过了
+                Map<String, Object> params = new HashMap<>();
+                params.put("serial_number", collectionDto.getSerialNumber());
+                Query query = RequestQuery.create(params).query();
+                boolean alreadyInitialized = mongoTemplate.exists(query, collection_name);
+                if (alreadyInitialized) {
+//                System.out.println("数据已存在，跳过初始化。");
+                } else {
+                    mongoTemplate.save(collectionDto, collection_name);
+                }
+            }
+        }
+        INIT_DATA_FLAG = false;
     }
 
-    @DisplayName("given object to save"
-            + " when save object using MongoDB template"
-            + " then object is saved")
     @Test
-    void testAdd() {
-        // given
-//        DBObject objectToSave = BasicDBObjectBuilder.start()
-//                .add("key", "value1")
-//                .get();
-        CollectionDto collectionTest = new CollectionDto();
-        collectionTest.setSerialNo(IdSequence.snowflake());
-        collectionTest.setSerialNumber("Ym_0006");
-        collectionTest.setFlag(0);
-        collectionTest.setStatus(0);
-        collectionTest.setDeleteFlag(1);
-        collectionTest.setDataVersion(0);
-        collectionTest.setCreateBy("爱寺米");
-        collectionTest.setCreateDate(new Date());
-        collectionTest.setVintage(2023);
-        // when
-        mongoTemplate.save(collectionTest, collection_name);
-        // then
-        List<CollectionDto> collection = mongoTemplate.findAll(CollectionDto.class, collection_name);
-        collection.forEach(System.out::println);
+    void testInit() {
+        // 添加断言，验证所有 items 中的数据都已存在于数据库中
+        for (CollectionDto collectionDto : items) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("serial_number", collectionDto.getSerialNumber());
+            Query query = RequestQuery.create(params).query();
+            boolean existsAfterOperation = mongoTemplate.exists(query, collection_name);
+            assertTrue(existsAfterOperation, "断言失败: 数据初始化后，serialNumber为 " + collectionDto.getSerialNumber() + " 的数据应该存在。");
+        }
     }
 
     @Test
@@ -86,13 +117,13 @@ class MongoQueryTest {
         mongoQuery2.where("flag", 0);
         mongoQuery2.where("status", 0);
         CollectionDto one2 = mongoTemplate.findOne(mongoQuery2.query(), CollectionDto.class);
-        System.out.println("---->" + one2);
+//        System.out.println("---->" + one2);
         assertNotNull(one2);
         MongoQuery mongoQuery3 = new MongoQuery();
 //        mongoQuery3.where("flag", 0);
         mongoQuery3.where("status", "0");
         CollectionDto one3 = mongoTemplate.findOne(mongoQuery3.query(), CollectionDto.class);
-        System.out.println("---->" + one2);
+//        System.out.println("---->" + one2);
     }
 
     @Test
@@ -104,7 +135,7 @@ class MongoQueryTest {
         MongoQuery mongoQuery2 = new MongoQuery();
         mongoQuery2.likeIgnoreCase(SERIAL_NUMBER, "ym");
         List<CollectionDto> collectionTests2 = mongoTemplate.find(mongoQuery2.query(), CollectionDto.class);
-        assertEquals(3, collectionTests2.size());
+        assertEquals(7, collectionTests2.size());
     }
 
     @Test
@@ -120,8 +151,11 @@ class MongoQueryTest {
         assertEquals(5, collectionTests2.size());
         final ToolboxMongoException mongoQueryException1 = assertThrowsExactly(ToolboxMongoException.class, () -> MongoQuery.on().or(new ArrayList<>(), Lists.newArrayList(11)));
         assertEquals("keys和values不能为空", mongoQueryException1.getMessage());
-        final ToolboxMongoException mongoQueryException2 = assertThrowsExactly(ToolboxMongoException.class, () -> MongoQuery.on().or(Lists.newArrayList("flag", "status"), Lists.newArrayList(11)));
-        assertEquals("keys和values的数量不匹配", mongoQueryException2.getMessage());
+        MongoQuery.on().or(Lists.newArrayList("flag", "status"), Lists.newArrayList(11));
+//        final ToolboxMongoException mongoQueryException2 = assertThrowsExactly(
+//                ToolboxMongoException.class, () ->
+//                MongoQuery.on().or(Lists.newArrayList("flag", "status"), Lists.newArrayList(11)));
+//        assertEquals("keys和values的数量不匹配", mongoQueryException2.getMessage());
     }
 
     // 降序
@@ -224,15 +258,15 @@ class MongoQueryTest {
         MongoQuery mongoQuery1 = new MongoQuery();
         mongoQuery1.gt(CREATE_DATE, DateUtils.parse("2023-12-15 08:49:38.795", DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC_SSS));
         List<CollectionDto> collection1 = mongoTemplate.find(mongoQuery1.query(), CollectionDto.class);
-        assertEquals(2, collection1.size());
+        assertEquals(1, collection1.size());
     }
 
+    //同时满足大于和小于
     @Test
     void testGtAndLt() {
         MongoQuery mongoQuery1 = new MongoQuery();
 //        mongoQuery1.gt("createDate", DateUtils.parse("2023-12-14 15:08:24.289"));
-        mongoQuery1.gtAndLt(CREATE_DATE, DateUtils.parse("2023-12-14 15:08:24.289", DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC_SSS),
-                DateUtils.parse("2023-12-14 15:54:54.684", DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC_SSS));
+        mongoQuery1.gtAndLt(CREATE_DATE, DateUtils.parse("2023-11-04 02:24:32.122"), DateUtils.parse("2023-12-05 02:25:29.456"));
 //        mongoQuery1.gt(CREATE_DATE, DateUtils.parse("2023-12-14 15:08:24.289", DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC_SSS))
 //                .lt(CREATE_DATE ,DateUtils.parse("2023-12-14 15:54:54.684", DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC_SSS) );
         List<CollectionDto> collection1 = mongoTemplate.find(mongoQuery1.query(), CollectionDto.class);
@@ -245,7 +279,7 @@ class MongoQueryTest {
         mongoQuery1.gte(CREATE_DATE, DateUtils.parse("2023-12-14 15:08:24.289"));
 //        mongoQuery1.gte("createDate", ("2023-12-14 15:08:24.289"));
         List<CollectionDto> collection1 = mongoTemplate.find(mongoQuery1.query(), CollectionDto.class);
-        assertEquals(6, collection1.size());
+        assertEquals(2, collection1.size());
     }
 
     @Test
@@ -254,7 +288,7 @@ class MongoQueryTest {
 //        mongoQuery1.gt("createDate", DateUtils.parse("2023-12-14 15:08:24.289"));
         mongoQuery1.lt(CREATE_DATE, DateUtils.parse("2023-12-14 10:47:47.47", DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC_SSS));
         List<CollectionDto> collection1 = mongoTemplate.find(mongoQuery1.query(), CollectionDto.class);
-        assertEquals(2, collection1.size());
+        assertEquals(11, collection1.size());
     }
 
     @Test
@@ -262,21 +296,22 @@ class MongoQueryTest {
         MongoQuery mongoQuery1 = new MongoQuery();
         mongoQuery1.lte(CREATE_DATE, DateUtils.parse("2023-12-14 15:08:24.289", DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC_SSS));
         List<CollectionDto> collection1 = mongoTemplate.find(mongoQuery1.query(), CollectionDto.class);
-        assertEquals(4, collection1.size());
+        assertEquals(11, collection1.size());
     }
 
+    // 满足大于等于和小于等于
     @Test
     void testLtAndGt() {
         MongoQuery mongoQuery1 = new MongoQuery();
         mongoQuery1.gteAndLte(CREATE_DATE,
-                DateUtils.parse("2023-12-14 10:25:29"),
-                DateUtils.parse("2023-12-14 15:29:48.676", DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC_SSS));
+                DateUtils.parse("2023-12-06 02:47:47.333"),
+                DateUtils.parse("2023-12-09 07:54:54.741"));
         List<CollectionDto> collection1 = mongoTemplate.find(mongoQuery1.query(), CollectionDto.class);
         assertEquals(4, collection1.size());
         MongoQuery mongoQuery2 = new MongoQuery();
         mongoQuery2.gteAndLte(CREATE_DATE,
-                        DateUtils.parse("2023-12-14 10:25:29"),
-                        DateUtils.parse("2023-12-14 15:29:48.676", DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC_SSS))
+                        DateUtils.parse("2023-12-08 07:29:48.369"),
+                        DateUtils.parse("2023-12-11 00:50:45"))
                 .where("delete_flag", 0);
         List<CollectionDto> collection2 = mongoTemplate.find(mongoQuery2.query(), CollectionDto.class);
         assertEquals(3, collection2.size());

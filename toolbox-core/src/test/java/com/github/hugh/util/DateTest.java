@@ -38,6 +38,13 @@ class DateTest {
 
     }
 
+    @Test
+    void parseDate_millisecondFormat() {
+        String dateStr = "2023-12-05 10:30:00.123";
+        Date expectedDate = new Date(1701743400123L); // 2023-12-05 10:30:00.123 的毫秒值
+        Date parsedDate = DateUtils.parseDate(dateStr, "yyyy-MM-dd HH:mm:ss.SSS");
+        assertEquals(expectedDate, parsedDate);
+    }
 
     @Test
     void testRandomTime(){

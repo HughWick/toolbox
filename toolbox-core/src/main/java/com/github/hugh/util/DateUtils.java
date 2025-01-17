@@ -202,7 +202,12 @@ public class DateUtils extends DateCode {
         if (EmptyUtils.isEmpty(dateStr)) {
             return null;
         }
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, locale);
+        SimpleDateFormat simpleDateFormat;
+        if (dateStr.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}")) {
+            simpleDateFormat = new SimpleDateFormat(DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC_SSS);
+        } else {
+            simpleDateFormat = new SimpleDateFormat(format, locale);
+        }
         try {
             // 解析日期字符串，并返回解析得到的Date对象
             return simpleDateFormat.parse(dateStr);
