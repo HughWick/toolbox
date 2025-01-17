@@ -22,10 +22,13 @@ jobs: # 定义工作流中的任务
         # 运行的脚本：Maven 构建命令，忽略测试失败，静默模式，显示版本
         run: mvn verify -Dmaven.test.failure.ignore=true -B -V
 
-      - name: 上传覆盖率到 Codecov cache
-        if: ${{ !cancelled() }}
+      - name: 上传覆盖率到 Codecov
         uses: codecov/codecov-action@v3
         with:
+          # 为这次上传的覆盖率数据添加一个标签，用于在 Codecov 网站上进行分类和筛选
+          flags: unittests
+          # 启用详细输出模式，提供更详细的日志信息，有助于调试问题
+          verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
           files: |
             ./toolbox-cache/target/site/jacoco/jacoco.xml,
