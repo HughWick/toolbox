@@ -28,5 +28,5 @@ jobs: # 定义工作流中的任务
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: |
-              ./toolbox-core/target/site/jacoco/jacoco.xml
+#              ./toolbox-core/target/site/jacoco/jacoco.xml
               ./toolbox-json/target/site/jacoco/jacoco.xml
