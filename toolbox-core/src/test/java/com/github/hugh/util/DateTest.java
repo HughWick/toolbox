@@ -194,14 +194,24 @@ class DateTest {
     }
 
     @Test
-    void testGetOneMonthAgo() {
-        // 获取一个月前的日期
-        Date oneMonthAgo = DateUtils.getOneMonthAgo();
-        // 验证返回的日期是否是一个月前的日期
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, -1);
-        Date expectedDate = cal.getTime();
-        assertEquals(expectedDate.getTime(), oneMonthAgo.getTime());
+    void getMonthAgo_validDateAndPositiveMonth() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2023, Calendar.NOVEMBER, 15); // Set date to 2023-11-15
+        Date initialDate = calendar.getTime();
+        int monthsAgo = 3;
+        Date result = DateUtils.getMonthAgo(initialDate, monthsAgo);
+        calendar.add(Calendar.MONTH, -monthsAgo);
+        Date expectedDate = calendar.getTime();
+
+        // Compare year, month, and day for simplicity
+        Calendar resultCalendar = Calendar.getInstance();
+        resultCalendar.setTime(result);
+        Calendar expectedCalendar = Calendar.getInstance();
+        expectedCalendar.setTime(expectedDate);
+
+        assertEquals(expectedCalendar.get(Calendar.YEAR), resultCalendar.get(Calendar.YEAR));
+        assertEquals(expectedCalendar.get(Calendar.MONTH), resultCalendar.get(Calendar.MONTH));
+        assertEquals(expectedCalendar.get(Calendar.DAY_OF_MONTH), resultCalendar.get(Calendar.DAY_OF_MONTH));
     }
 
     @Test
