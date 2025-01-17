@@ -22,7 +22,7 @@ jobs: # 定义工作流中的任务
         # 运行的脚本：Maven 构建命令，忽略测试失败，静默模式，显示版本
         run: mvn verify -Dmaven.test.failure.ignore=true -B -V
 
-      - name: 上传覆盖率到 Codecov toolbox-core
+      - name: 上传覆盖率到 Codecov
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v3
         with:
@@ -30,5 +30,3 @@ jobs: # 定义工作流中的任务
           files: |
               ./toolbox-core/target/site/jacoco/jacoco.xml
               ./toolbox-json/target/site/jacoco/jacoco.xml
-              ./toolbox-http/target/site/jacoco/jacoco.xml
-              ./toolbox-cache/target/site/jacoco/jacoco.xml
