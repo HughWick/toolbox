@@ -25,10 +25,6 @@ jobs: # 定义工作流中的任务
       - name: 上传覆盖率到 Codecov toolbox-core
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v3
-        with: # 配置参数
-      - name: 上传覆盖率到 Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: |
