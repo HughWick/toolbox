@@ -22,33 +22,46 @@ jobs: # 定义工作流中的任务
         # 运行的脚本：Maven 构建命令，忽略测试失败，静默模式，显示版本
         run: mvn verify -Dmaven.test.failure.ignore=true -B -V
 
-      - name: 上传覆盖率到 Codecov core
-        if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./toolbox-core/target/site/jacoco/jacoco.xml
-      - name: 上传覆盖率到 Codecov json
-        if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./toolbox-json/target/site/jacoco/jacoco.xml
-      - name: 上传覆盖率到 Codecov http
-        if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./toolbox-http/target/site/jacoco/jacoco.xml
       - name: 上传覆盖率到 Codecov cache
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./toolbox-cache/target/site/jacoco/jacoco.xml
+      - name: 上传覆盖率到 Codecov core
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./toolbox-core/target/site/jacoco/jacoco.xml
+      - name: 上传覆盖率到 Codecov crypto
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./toolbox-crypto/target/site/jacoco/jacoco.xml
+      - name: 上传覆盖率到 Codecov db
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./toolbox-db/target/site/jacoco/jacoco.xml
+      - name: 上传覆盖率到 Codecov http
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./toolbox-http/target/site/jacoco/jacoco.xml
+      - name: 上传覆盖率到 Codecov json
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./toolbox-json/target/site/jacoco/jacoco.xml
       - name: 上传覆盖率到 Codecov mongo
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./toolbox-mongodb/target/site/jacoco/jacoco.xml
+
