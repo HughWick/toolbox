@@ -1,7 +1,9 @@
 package com.github.hugh.util.regex;
 
+import com.github.hugh.constant.StrPool;
 import com.github.hugh.util.EmptyUtils;
 
+import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -100,18 +102,20 @@ public class RegexUtils {
     /**
      * 电话号码正则表达式
      * <ul>
-     * <li>中国电信号段 133、149、153、173、177、179、180、181、189、191、199</li>
-     * <li>中国联通号段 130、131、132、145、155、156、166、175、176、185、186</li>
+     * <li>中国电信号段 133、149、153、162、173、174、177、180、181、189、190、191、193、199</li>
+     * <li>中国联通号段 130、131、132、145、146、155、156、166、175、176、185、186</li>
      * <li>中国移动号段
-     * 134(0-8)、135、136、137、138、139、147、150、151、152、157、158、159、178、182、183、184、187、188、198、195</li>
+     * 134(0-8)、135、136、137、138、139、147、148、150、151、152、157、158、159、178、182、183、184、187、188、197、198、195</li>
      * <li>其他号段 14号段以前为上网卡专属号段，如中国联通的是145，中国移动的是147等等。</li>
      * <li>虚拟运营商 电信：1700、1701、1702</li>
      * <li>移动：1703、1705、1706</li>
      * <li>联通：1704、1707、1708、1709、171</li>
      * <li>卫星通信：1349</li>
+     * <li>广电号段：179、192</li>
      * </ul>
      */
-    private static final Pattern PHONE_PATTERN = Pattern.compile("^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(16([5-7]))|(17[0,1,2,3,5,6,7,8,9])|(18[0-9])|(19[1|5|8|9]))\\d{8}$");
+    public static final String PHONE_PATTERN_STR = "^((13[\\d])|(14[5-9])|(15([0-3]|[5-9]))|(16[2,5-7])|(17[0-9])|(18[0-9])|(19[0-3,5,7,8,9]))\\d{8}$";
+    public static final Pattern PHONE_PATTERN = Pattern.compile(PHONE_PATTERN_STR);
 
     /**
      * URL 正则表达式
@@ -123,8 +127,8 @@ public class RegexUtils {
      * （5）验证参数必须为xxx=xxx格式，且xxx=空格式通过
      * （6）验证参数与符号&连续个数为0个或1个
      * <p>
-     * https://www.cnblogs.com/woaiadu/p/7084250.html
      */
+    @Deprecated
     private static final Pattern URL_PATTERN = Pattern.compile("^([hH][tT]{2}[pP]:/*|[hH][tT]{2}[pP][sS]:/*|[fF][tT][pP]:/*)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/])+(\\??(([A-Za-z0-9-~]+\\={0,1})([A-Za-z0-9-~]*)\\&?)*)$");
 
     /**
@@ -161,6 +165,81 @@ public class RegexUtils {
      * 特殊字符-正则
      */
     private static final Pattern SPECIAL_CHAR_PATTERN = Pattern.compile("[ _`~!@#$%^&*()+=|{}':;,\\[\\].<>/?！￥…（）—【】‘；：”“’。，、？]|\n|\r|\t");
+
+    /**
+     * 用于匹配 Base64 编码字符串的正则表达式。
+     * <p>
+     * 该正则表达式用于验证字符串是否符合 Base64 编码规范，但不进行实际的解码操作。
+     * 它检查字符串是否由 4 个 Base64 字符（A-Z, a-z, 0-9, +, /）组成的小组组成，
+     * 并且允许末尾有 0、1 或 2 个填充字符“=”。
+     * <p>
+     * 匹配规则：
+     * <ul>
+     *     <li>([A-Za-z0-9+/]{4})*：匹配 0 个或多个由 4 个 Base64 字符组成的组。</li>
+     *     <li>([A-Za-z0-9+/]{4}：匹配完整的 4 个 Base64 字符的组。</li>
+     *     <li>[A-Za-z0-9+/]{3}=：匹配 3 个 Base64 字符后跟一个“=”填充字符的组。</li>
+     *     <li>[A-Za-z0-9+/]{2}==：匹配 2 个 Base64 字符后跟两个“=”填充字符的组。</li>
+     * </ul>
+     * <p>
+     * 此正则表达式不处理 data URI 头部。
+     */
+    public static final Pattern BASE64_PATTERN = Pattern.compile("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$");
+    /**
+     * 用于匹配包含 data URI 头部和 Base64 编码数据的字符串的正则表达式。
+     * <p>
+     * 该正则表达式用于提取 data URI 中的 MIME 类型和 Base64 编码的数据部分。
+     * <p>
+     * 匹配规则：
+     * <ul>
+     *     <li>^data:：匹配字符串的开头是否为 "data:"。</li>
+     *     <li>([a-z]+/[-a-z]+)?：匹配可选的 MIME 类型，例如 "image/jpeg" 或 "text/plain"。
+     *         <ul>
+     *             <li>[a-z]+：匹配一个或多个小写字母。</li>
+     *             <li>/：匹配斜杠。</li>
+     *             <li>[-a-z]+：匹配一个或多个小写字母或连字符。</li>
+     *             <li>?：表示 MIME 类型部分是可选的。</li>
+     *         </ul>
+     *     </li>
+     *     <li>;base64,：匹配 ";base64," 分隔符。</li>
+     *     <li>(.*)：匹配 Base64 编码的数据部分（捕获组）。</li>
+     *     <li>$：匹配字符串的结尾。</li>
+     * </ul>
+     * <p>
+     * 例如：匹配 "data:image/png;base64,iVBORw0KGgo..."，并提取 "image/png" 和 "iVBORw0KGgo..."。
+     */
+    public static final Pattern BASE64_DATA_URI_REGEX = Pattern.compile("^data:([a-z]+/[-a-z]+)?;base64,(.*)$");
+    /**
+     * 域名正则表达式
+     * <p>
+     *
+     * @see <a href="https://mathiasbynens.be/demo/url-regex">In search of the perfect URL validation regex</a>
+     * </p>
+     */
+    private static final String DOMAIN_PATTERN = "^(?:" +
+            "(?:(?:https?|ftp)://)?" +  // 协议部分（可选）
+            "(?:\\S+(?::\\S*)?@)?" +   // 用户名:密码（可选）
+            "(?:" +
+            // IP 地址排除
+            // 私有和本地网络
+            "(?!(?:10|127)(?:\\.\\d{1,3}){3})" +
+            "(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})" +
+            "(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})" +
+            // IP 地址点分表示法八位数
+            "(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])" +
+            "(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}" +
+            "(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))" +
+            "|" +
+            // 主机和域名
+            "(?:" +
+            "(?:[a-z0-9\\u00a1-\\uFFFF][a-z0-9\\u00a1-\\uFFFF_-]{0,62})?[a-z0-9\\u00a1-\\uFFFF]" +
+            "\\.)+" +
+            // 顶级域名，可能以点结束
+            "(?:[a-z\\u00a1-\\uffff]{2,}\\.?)" +
+            ")" +
+            // 端口号（可选）
+            "(?::\\d{2,5})?" +
+            // 资源路径（可选）
+            "(?:[/?#]\\S*)?$)";
 
     /**
      * 对特殊字符转译
@@ -295,10 +374,12 @@ public class RegexUtils {
 
     /**
      * 是否为URL
+     * <p>2.7.14 之后使用{@link #isDomain(String)}</p>
      *
      * @param string 字符
      * @return boolean 结果
      */
+    @Deprecated
     public static boolean isUrl(final String string) {
         return isPatternMatch(string, URL_PATTERN);
     }
@@ -306,21 +387,25 @@ public class RegexUtils {
     /**
      * 验证字符串是一个网址
      * <p>1.5.16 重构了正则,字符串必须是由http or https 开头的url</p>
+     * <p>2.7.14 之后使用{@link #isDomain(String)}</p>
      *
      * @param string 结果
      * @return boolean 是否
      */
+    @Deprecated
     public static boolean isWebSite(final String string) {
         return WEB_SITE_PATTERN.matcher(string).matches();
     }
 
     /**
      * 验证字符串不是一个网址
+     * <p>2.7.14 之后使用{@link #isNotDomain(String)} (String)}</p>
      *
      * @param string 字符串
      * @return boolean {@code true} 字符串不是网址
      * @since 1.5.16
      */
+    @Deprecated
     public static boolean isNotWebSite(final String string) {
         return !isWebSite(string);
     }
@@ -460,7 +545,7 @@ public class RegexUtils {
      * @since 2.4.8
      */
     public static boolean isLonLat(String longitudeCommaLatitude) {
-        final String[] split1 = longitudeCommaLatitude.split(",");
+        final String[] split1 = longitudeCommaLatitude.split(StrPool.COMMA);
         return isLongitude(split1[0]) && isLatitude(split1[1]);
     }
 
@@ -636,5 +721,106 @@ public class RegexUtils {
      */
     public static boolean isNotUpperCaseAndNumber(String string) {
         return !isUpperCaseAndNumber(string);
+    }
+
+    /**
+     * 检查给定的字符串是否是合法的 Base64 编码字符串。
+     *
+     * @param str 要验证的字符串。
+     * @return 如果字符串是合法的 Base64 编码字符串，则返回 {@code true}，否则返回 {@code false}。
+     * @since 2.6.1
+     */
+    public static boolean isBase64(String str) {
+        if (str == null || str.isEmpty()) {
+            return false;
+        }
+        // 1. 尝试匹配 data URI 头部
+        Matcher matcher = BASE64_DATA_URI_REGEX.matcher(str);
+        if (matcher.matches()) {
+            str = matcher.group(2); // 提取 Base64 数据部分
+        }
+        // 2. 移除空白字符 (可选，但推荐)
+        str = str.replaceAll("\\s", "");
+        // 3. 基本长度检查 (优化性能)
+        if (str.length() % 4 != 0) {
+            return false;
+        }
+        // 4. 使用正则表达式进行初步校验 (可选，但推荐)
+        if (!BASE64_PATTERN.matcher(str).matches()) {
+            return false;
+        }
+        // 5. 最终校验：尝试解码
+        try {
+            Base64.getDecoder().decode(str);
+            return true;
+        } catch (IllegalArgumentException illegalArgumentException) {
+            return false; // 解码失败，不是有效的 Base64
+        }
+    }
+
+    /**
+     * 判断给定的字符串是否不是 Base64 编码。
+     *
+     * @param str 待判断的字符串
+     * @return 如果给定的字符串不是 Base64 编码，则返回 true；否则返回 false。
+     * @since 2.6.1
+     */
+    public static boolean isNotBase64(String str) {
+        return !isBase64(str);
+    }
+
+    /**
+     * 验证给定的字符串是否都为十六进制字符。
+     *
+     * @param str 待验证的字符串
+     * @return 如果字符串都为十六进制字符，则返回true；否则返回false
+     * @since 2.6.7
+     */
+    public static boolean isHexadecimal(String str) {
+        // 判断字符串是否为空
+        if (str == null || str.isEmpty()) {
+            return false;
+        }
+        // 使用正则表达式匹配判断字符串是否都为十六进制字符
+        String hexadecimalPattern = "^[0-9a-fA-F]+$";
+        return Pattern.matches(hexadecimalPattern, str);
+    }
+
+    /**
+     * 验证给定的字符串是否不都为十六进制字符。
+     *
+     * @param str 待验证的字符串
+     * @return 如果字符串不都为十六进制字符，则返回true；否则返回false
+     * @since 2.6.7
+     */
+    public static boolean isNotHexadecimal(String str) {
+        return !isHexadecimal(str);
+    }
+
+    /**
+     * 检查给定的字符串是否为有效的域名或 URL。
+     *
+     * @param str 要检查的字符串
+     * @return 如果字符串是有效的域名或 URL，则返回 true；否则返回 false
+     * @since 2.7.14
+     */
+    public static boolean isDomain(String str) {
+        if (EmptyUtils.isEmpty(str)) {
+            return false; // 如果字符串为空，返回 false
+        }
+        Pattern pattern = Pattern.compile(DOMAIN_PATTERN); // 编译正则表达式
+        Matcher matcher = pattern.matcher(str); // 创建匹配器
+        return matcher.matches(); // 返回是否匹配
+    }
+
+    /**
+     * 检查给定的字符串是否不是有效的域名或 URL。
+     *
+     * @param str 要检查的字符串
+     * @return 如果字符串不是有效的域名或 URL，则返回 true；否则返回 false
+     * @since 2.7.14
+     */
+    public static boolean isNotDomain(String str) {
+        return !isDomain(str); // 调用 isDomain 方法并取反结果
     }
 }

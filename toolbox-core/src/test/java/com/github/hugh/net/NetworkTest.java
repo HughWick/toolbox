@@ -2,14 +2,14 @@ package com.github.hugh.net;
 
 import com.github.hugh.util.net.NetworkUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.StopWatch;
 
 import java.io.IOException;
 import java.net.InetAddress;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * java 网络工具测试类
@@ -22,10 +22,18 @@ class NetworkTest {
     //
     @Test
     void testPing() {
-        assertTrue( NetworkUtils.ping("www.baidu.com"));
-        assertFalse(NetworkUtils.ping("www.google.com", 500));
+        assertTrue(NetworkUtils.ping("www.baidu.com"));
+        assertFalse(NetworkUtils.ping("www.google321.com", 500));
+        assertTrue(NetworkUtils.ping("223.5.5.5" , 400));
 //        System.out.println("=1==>>" + NetworkUtils.ping("www.baidu.com"));
 //        System.out.println("==2=>>" + NetworkUtils.ping("www.google.com", 500));
+    }
+
+    @Test
+    void testPingFall(){
+        assertFalse(NetworkUtils.pingFail("223.5.5.5" , 400));
+        assertTrue(NetworkUtils.pingFail("114.114.114.132" , 40));
+        assertTrue(NetworkUtils.pingFail("114.114.114.142"  ));
     }
 
     @Test
@@ -55,12 +63,23 @@ class NetworkTest {
     }
 
     @Test
-    void testSocket() {
+    void testIsConnect() {
         boolean connect = NetworkUtils.isConnect("222.244.144.131", 10010);
         assertTrue(connect);
         boolean connect2 = NetworkUtils.isConnect("192.168.1.86", 9567);
         assertFalse(connect2);
-//        System.out.println("-->>" + connect);
+        boolean connect3 = NetworkUtils.isConnect("www.baidu.com", 80, 1000);
+        assertTrue(connect3);
+    }
+
+    @Test
+    void testIsNotConnect() {
+        boolean connect = NetworkUtils.isNotConnect("www.google.com", 80,2000);
+        assertTrue(connect);
+        boolean connect2 = NetworkUtils.isNotConnect("172.17.0.6", 80);
+        assertTrue(connect2);
+//        boolean connect3 = NetworkUtils.isConnect("www.baidu.com", 80, 1000);
+//        assertTrue(connect3);
     }
 
     @Test

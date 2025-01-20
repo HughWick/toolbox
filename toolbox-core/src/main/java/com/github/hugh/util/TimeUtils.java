@@ -8,6 +8,7 @@ import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -476,5 +477,40 @@ public class TimeUtils extends DateCode {
                 timeoutOperation.doOperation();
             }
         }
+    }
+
+    /**
+     * 将 {@link Date} 对象转换为 {@link LocalDateTime} 对象，使用系统默认时区。
+     *
+     * @param date 要转换的 {@link Date} 对象
+     * @return 转换后的 {@link LocalDateTime} 对象
+     * @since 2.7.0
+     */
+    public static LocalDateTime convert(Date date) {
+        return convert(date, ZoneId.systemDefault());
+    }
+
+    /**
+     * 将 {@link Date} 对象转换为 {@link LocalDateTime} 对象，使用指定的时区。
+     *
+     * @param date   要转换的 {@link Date} 对象
+     * @param zoneId 用于进行转换的时区 ID
+     * @return 转换后的 {@link LocalDateTime} 对象
+     * @since 2.7.0
+     */
+    public static LocalDateTime convert(Date date, ZoneId zoneId) {
+        Instant instant = date.toInstant();
+        return LocalDateTime.ofInstant(instant, zoneId);
+    }
+
+    /**
+     * 将 {@link Date} 对象转换为 {@link LocalDateTime} 对象，使用上海时区（Asia/Shanghai）。
+     *
+     * @param date 要转换的 {@link Date} 对象
+     * @return 转换后的 {@link LocalDateTime} 对象
+     * @since 2.7.0
+     */
+    public static LocalDateTime convertShanghai(Date date) {
+        return convert(date, ZoneId.of("Asia/Shanghai"));
     }
 }

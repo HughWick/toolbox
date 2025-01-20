@@ -6,6 +6,7 @@ import lombok.ToString;
 
 /**
  * 常用字符串枚举
+ * 使用静态的常量{@link  com.github.hugh.constant.StrPool}
  *
  * @author hugh
  * @since 2.4.9

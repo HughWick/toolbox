@@ -62,10 +62,7 @@ public class BaseConvertUtils {
      * @since 2.3.9
      */
     public static String hexBytesToString(byte[] decBytes, String interval) {
-        boolean flag = false;
-        if (interval != null) {
-            flag = true;
-        }
+        boolean flag = interval != null;
         StringBuilder stringBuilder = new StringBuilder();
         for (byte b : decBytes) {
             stringBuilder.append(hexToString(b));
@@ -113,6 +110,17 @@ public class BaseConvertUtils {
     }
 
     /**
+     * 将十进制整数转换为十六进制字符串
+     *
+     * @param decimal 十进制整数
+     * @return 十六进制字符串
+     * @since 2.6.7
+     */
+    public static String decToHex(long decimal) {
+        return Long.toHexString(decimal);
+    }
+
+    /**
      * 十进制转16进制
      *
      * @param decimal 十进制
@@ -121,6 +129,55 @@ public class BaseConvertUtils {
      */
     public static String decToHex(String decimal) {
         return decToHex(Integer.parseInt(decimal));
+    }
+
+    /**
+     * 将十进制整数转换为左起根据用户需求补0的十六进制字符串。
+     *
+     * @param decimal 十进制整数。
+     * @param digits  转换后的十六进制字符串位数。
+     * @return 左起根据用户需求补0的十六进制字符串。
+     * @since 2.6.4
+     */
+    public static String decToHex(int decimal, int digits) {
+        return convertDecToHex(decimal, digits);
+    }
+
+    /**
+     * 将十进制整数转换为十六进制字符串，并在左侧补0以生成指定位数的十六进制字符串
+     *
+     * @param decimal 十进制整数
+     * @param digits  期望的十六进制字符串位数
+     * @return 补0后的十六进制字符串
+     * @since 2.6.7
+     */
+    public static String decToHex(long decimal, int digits) {
+        return convertDecToHex(decimal, digits);
+    }
+
+    /**
+     * 将十进制整数转换为十六进制字符串，并在左侧补0以生成指定位数的十六进制字符串
+     *
+     * @param decimal 十进制整数
+     * @param digits  期望的十六进制字符串位数
+     * @return 补0后的十六进制字符串
+     * @since 2.6.7
+     */
+    private static String convertDecToHex(long decimal, int digits) {
+        String hexStr = Long.toHexString(decimal); // 将十进制整数转换为十六进制字符串
+        return complement(hexStr, digits); // 在左侧补0，生成指定位数的十六进制字符串
+    }
+
+    /**
+     * 将十进制整数转换为左起根据用户需求补0的十六进制字符串。
+     *
+     * @param decimalStr 十进制整数字符串。
+     * @param digits     转换后的十六进制字符串位数。
+     * @return 左起根据用户需求补0的十六进制字符串。
+     * @since 2.6.4
+     */
+    public static String decToHex(String decimalStr, int digits) {
+        return decToHex(Long.parseLong(decimalStr), digits);
     }
 
     /**
@@ -232,7 +289,7 @@ public class BaseConvertUtils {
      * </p>
      * <p>默认返回结果都为大写</p>
      * <p>
-     * 由于命名补规范，请使用{@link #hexBytesToString(byte[], String)}
+     * 由于命名不规范，请使用{@link #hexBytesToString(byte[], String)}
      * </p>
      *
      * @param decBytes 十进制字节数组
@@ -561,7 +618,7 @@ public class BaseConvertUtils {
      * 十六进制字符串转byte数组
      *
      * <p>
-     * 2022-7-23 就不该用这个方法，直接调用{@link  #hexToAscii}
+     * 2022-7-23 就不该用这个方法，直接调用{@link  #hexToBytes}
      * </p>
      * <p>
      * 如果有存在空格，则线{@link String#replace(char, char)}掉所有空格，再调用{@link  #hexToBytes}
@@ -608,7 +665,90 @@ public class BaseConvertUtils {
      * @since 2.3.9
      */
     public static int hexToDecReInt(byte[] hexBytes) {
-        String s = hexBytesToString(hexBytes);
-        return (int) hexToDec(s);
+        return (int) hexToLong(hexBytes);
+    }
+
+    /**
+     * 将给定的十六进制字节数组转换为对应的十进制长整数值。
+     *
+     * @param hexBytes 要转换的十六进制字节数组
+     * @return 转换后的十进制长整数值
+     * @since 2.7.12
+     */
+    public static long hexToLong(byte[] hexBytes) {
+        String str = hexBytesToString(hexBytes);
+        return hexToDec(str);
+    }
+
+    /**
+     * 将字符串转换为十六进制表示形式
+     *
+     * @param input 要转换的字符串
+     * @return 转换后的十六进制字符串
+     * @since 2.6.1
+     */
+    public static String strToHex(String input) {
+        StringBuilder hexString = new StringBuilder();
+        for (char c : input.toCharArray()) {
+            hexString.append(Integer.toHexString(c));
+        }
+        return hexString.toString();
+    }
+
+    /**
+     * 将十六进制字符串转换为 Base64 编码的字符串。
+     *
+     * @param hexStr 十六进制字符串
+     * @return Base64 编码的字符串
+     * @since 2.6.1
+     */
+    public static String hexToBase64(String hexStr) {
+        return new String(hexToBase64Bytes(hexStr));
+    }
+
+    /**
+     * 将十六进制字符串转换为 Base64 编码的字节数组。
+     *
+     * @param hexStr 十六进制字符串
+     * @return Base64 编码的字节数组
+     * @since 2.6.1
+     */
+    public static byte[] hexToBase64Bytes(String hexStr) {
+        byte[] bytes = BaseConvertUtils.hexToBytes(hexStr);
+        return Base64.encode(bytes);
+    }
+
+    /**
+     * 将字节数组转换为十六进制字符串表示形式的工具方法。
+     *
+     * @param bytes 待转换的字节数组
+     * @return 十六进制字符串表示形式
+     * @since 2.7.9
+     */
+    public static String byteToHexStr(byte[] bytes) {
+        return byteToHexStr(bytes, null);
+    }
+
+    /**
+     * 将字节数组转换为十六进制字符串表示形式的工具方法，并可指定分隔符。
+     *
+     * @param bytes 待转换的字节数组
+     * @param split 分隔符，如果为null则不添加分隔符
+     * @return 十六进制字符串表示形式，可带有指定的分隔符
+     * @since 2.7.9
+     */
+    public static String byteToHexStr(byte[] bytes, String split) {
+        boolean flag = split != null;
+        StringBuilder stringBuilder = new StringBuilder();
+        for (byte aByte : bytes) {
+            stringBuilder.append(String.format("%02X", aByte & 0xFF));
+            if (flag) {
+                stringBuilder.append(split);
+            }
+        }
+        if (flag) {
+            return StringUtils.trimLastPlace(stringBuilder);
+        }
+        return stringBuilder.toString();
     }
 }

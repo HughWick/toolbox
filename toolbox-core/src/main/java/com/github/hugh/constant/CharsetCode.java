@@ -7,6 +7,7 @@ package com.github.hugh.constant;
  * @since 1.3.5
  */
 public class CharsetCode {
+    private CharsetCode(){}
 
     /**
      * utf-8

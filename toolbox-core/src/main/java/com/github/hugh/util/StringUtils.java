@@ -1,8 +1,11 @@
 package com.github.hugh.util;
 
+import com.github.hugh.constant.CharsetCode;
 import com.github.hugh.constant.guava.CharMatchers;
+import com.github.hugh.exception.ToolboxException;
 import com.google.common.base.CaseFormat;
 
+import java.io.UnsupportedEncodingException;
 import java.math.RoundingMode;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -99,8 +102,8 @@ public class StringUtils {
     /**
      * 截取字符最后一个之前的所有字符串
      * <ul>
-     * <li>例：字符串：https://github.com/HughWick/toolbox</li>
-     * <li>返回字符串：https://github.com/HughWick</li>
+     * <li>例：字符串：{@code https://github.com/HughWick/toolbox}</li>
+     * <li>返回字符串：{@code https://github.com/HughWick}</li>
      * </ul>
      *
      * @param value 字符串
@@ -349,7 +352,7 @@ public class StringUtils {
      * 将字符串按照指定的字符与次数进行切割
      * <ul>
      * <li>注：返回结果中首字符为指定切割的字符</li>
-     * <li>例：源字符串 http://hyga.hnlot.com.cn:8000/capture/DaHua/capture/6G0BEB9GA12F70A/2021/1/17/9946090cb09b4986af8615174e862b9e.jpg</li>
+     * <li>例：源字符串 http://www.baidu.com/capture/DaHua/capture/6G0BEB9GA12F70A/2021/1/17/9946090cb09b4986af8615174e862b9e.jpg</li>
      * <li>获取"/"出现的第4次后的所有字符，结果为：/DaHua/capture/6G0BEB9GA12F70A/2021/1/17/9946090cb09b4986af8615174e862b9e.jpg</li>
      * </ul>
      *
@@ -546,5 +549,91 @@ public class StringUtils {
         DoubleMathUtils.numberFormat.setGroupingUsed(groupingUsed);
         DoubleMathUtils.numberFormat.setRoundingMode(roundingMode);
         return DoubleMathUtils.numberFormat.format(value);
+    }
+
+    /**
+     * 计算字符串在 GB2312 编码下的字节长度
+     * <p>一个中文占2个字节</p>
+     *
+     * @param str 待计算字符串
+     * @return 字节长度
+     * @since 2.6.2
+     */
+    public static int calcGb2312Length(String str) {
+        return getStringLength(str, CharsetCode.GB_2312);
+    }
+
+    /**
+     * 计算使用UTF-8字符集编码的字符串的字节长度
+     * <p>一个中文占3个字节</p>
+     *
+     * @param str 输入的字符串
+     * @return 字节长度
+     */
+    public static int calcUtf8Length(String str) {
+        return getStringLength(str, CharsetCode.UTF_8);
+    }
+
+    /**
+     * 计算使用UTF-16字符集编码的字符串的字节长度
+     * <p>一个中文占2个字节</p>
+     *
+     * @param str 输入的字符串
+     * @return 字节长度
+     */
+    public static int calcUtf16Length(String str) {
+        return getStringLength(str, CharsetCode.UTF_16);
+    }
+
+    /**
+     * 计算使用GBK字符集编码的字符串的字节长度
+     * <p>一个中文占2个字节</p>
+     *
+     * @param str 输入的字符串
+     * @return 字节长度
+     */
+    public static int calcGbkLength(String str) {
+        return getStringLength(str, CharsetCode.GBK);
+    }
+
+    /**
+     * 计算字符串在指定字符集下的字节长度
+     *
+     * @param str         待计算字符串
+     * @param charsetName 字符集名称
+     * @return 字节长度
+     * @since 2.6.2
+     */
+    public static int getStringLength(String str, String charsetName) {
+        try {
+            byte[] bytes = str.getBytes(charsetName);
+            return bytes.length;
+        } catch (UnsupportedEncodingException unsupportedEncodingException) {
+            throw new ToolboxException(unsupportedEncodingException);
+        }
+    }
+
+    /**
+     * 去除重复字符串内容
+     *
+     * @param str 字符串
+     * @return String
+     * @since 2.6.8
+     */
+    public static String removeDuplicate(String str) {
+        StringBuilder stringBuffer = new StringBuilder();
+        int len = str.length();
+        for (int i = 0; i < len; i++) {
+            char c = str.charAt(i);
+            if (str.indexOf(c) == str.lastIndexOf(c)) {//此字符第一次位置和最后位置一致 即肯定没有重复的直接添加
+                stringBuffer.append(c);
+            } else {//同理 次字符出现过多次
+                int disposition = str.indexOf(c);//次字符第一次出现的位置
+                if (disposition == i) {//第一次出现的位置和当前位置一致 即第一次出现添加
+                    stringBuffer.append(c);
+                }
+            }
+        }
+        return stringBuffer.toString();
     }
 }

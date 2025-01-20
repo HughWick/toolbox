@@ -2,12 +2,14 @@ package com.github.hugh.util;
 
 import com.github.hugh.bean.dto.PingDTO;
 import com.github.hugh.constant.CharsetCode;
+import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.system.OsUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -37,7 +39,6 @@ public class PingUtils {
         try {
             return getConnectedCount(ipAddress, pingCount, timeOut) == pingCount;
         } catch (IOException ioException) {
-            ioException.printStackTrace();
             return false;
         }
     }
@@ -96,7 +97,7 @@ public class PingUtils {
      * @return List
      */
     public static List<String> batch(String ipAddress, int pingCount, int timeOut) {
-        List<String> strs = new ArrayList<>();
+        List<String> item = new ArrayList<>();
         String pingCommand = appendCmd(ipAddress, pingCount, timeOut);
         try {
             Process pro = Runtime.getRuntime().exec(pingCommand);
@@ -105,13 +106,13 @@ public class PingUtils {
             String line;
             while ((line = buf.readLine()) != null) {
                 if (!"".equals(line)) {//不等于空字符串时
-                    strs.add(line);
+                    item.add(line);
                 }
             }
+            return item;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            throw new ToolboxException(ex);
         }
-        return strs;
     }
 
     /**
@@ -158,89 +159,173 @@ public class PingUtils {
         return send(cmd);
     }
 
+//    /**
+//     * 通过ip获取信息,loss:丢包率，delay:延时
+//     *
+//     * @param cmd 命令
+//     * @return {@link PingDTO}
+//     * @since 1.6.4
+//     */
+//    private static PingDTO send(String cmd) {
+//        PingDTO ping = new PingDTO();
+//        String line;
+//        String loss = "";//丢包率
+//        String delay = "";//延时
+//        try {
+//            //获取当前进程运行对象
+//            Runtime runtime = Runtime.getRuntime();
+//            Process process = runtime.exec(cmd);
+//            try (InputStream inputStream = process.getInputStream();
+//                 InputStreamReader isReader = new InputStreamReader(inputStream, CharsetCode.GB_2312);
+//                 BufferedReader reader = new BufferedReader(isReader)) {
+//                StringBuilder buffer = new StringBuilder();
+//                if (OsUtils.isWindows()) {//Windows系统执行结果解析
+//                    while ((line = reader.readLine()) != null) {
+//                        //丢包率
+//                        if (line.contains("%")) {
+//                            loss = line.substring(line.lastIndexOf("=") + 1, line.indexOf("%") + 1);
+//                            if (loss.contains("(")) {
+//                                loss = loss.substring(loss.indexOf("(") + 1).strip();
+//                            }
+//                        }
+//                        //网络延时
+//                        if ((line.contains(",") || line.contains("，")) && line.contains("=") && line.contains("ms")) {
+//                            delay = line.substring(line.lastIndexOf("=") + 1, line.lastIndexOf("ms") + 2).strip();
+//                        }
+//                        buffer.append(line).append("\n");
+//                    }
+//                } else {//Linux系统执行结果解析
+//                    while ((line = reader.readLine()) != null) {
+//                        //丢包率
+//                        if (line.contains("%")) {
+//                            String[] msg = null;
+//                            if (line.contains(",")) {
+//                                msg = line.split(",");
+//                            } else if (line.contains("，")) {
+//                                msg = line.split("，");
+//                            }
+//                            assert msg != null;
+//                            if (msg.length > 0) {
+//                                loss = msg[2].substring(0, msg[2].indexOf("%") + 1).strip();
+//                            }
+//                        }
+//                        //网络延时
+//                        if (line.contains("/")) {
+//                            String[] msg = line.split("=");
+//                            String[] names = msg[0].split("/");
+//                            String[] values = msg[1].split("/");
+//                            for (int i = 0; i < names.length; i++) {
+//                                String str = names[i];
+//                                if ("avg".equalsIgnoreCase(str)) {
+//                                    delay = values[i];
+//                                    break;
+//                                }
+//                            }
+//                        }
+//                        buffer.append(line).append("\n");
+//                    }
+//                }
+//                // 替换百分号
+//                loss = loss.replace("%", "");
+//                delay = delay.replace("ms", "");
+//                if (EmptyUtils.isNotEmpty(loss)) {
+//                    ping.setLoss(Integer.parseInt(loss));
+//                }
+//                if (EmptyUtils.isNotEmpty(delay)) {
+//                    ping.setDelay(Double.parseDouble(delay));
+//                } else {
+//                    ping.setDelay(-1);// 延迟
+//                    ping.setStatus(-1);//无法ping通
+//                }
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            ping.setStatus(-2);
+//        }
+//        return ping;
+//    }
+
     /**
-     * 通过ip获取信息,loss:丢包率，delay:延时
+     * 发送 ping 命令并解析结果。
      *
-     * @param cmd 命令
-     * @return {@link PingDTO}
-     * @since 1.6.4
+     * @param cmd 要执行的 ping 命令
+     * @return 包含解析结果的 PingDTO 对象
      */
-    private static PingDTO send(String cmd) {
+    public static PingDTO send(String cmd) {
         PingDTO ping = new PingDTO();
-        String line;
-        String loss = "";//丢包率
-        String delay = "";//延时
         try {
-            //获取当前进程运行对象
             Runtime runtime = Runtime.getRuntime();
             Process process = runtime.exec(cmd);
             try (InputStream inputStream = process.getInputStream();
-                 InputStreamReader isReader = new InputStreamReader(inputStream, CharsetCode.GB_2312);
+                 InputStreamReader isReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                  BufferedReader reader = new BufferedReader(isReader)) {
+                String line;
                 StringBuilder buffer = new StringBuilder();
-                if (OsUtils.isWindows()) {//Windows系统执行结果解析
-                    while ((line = reader.readLine()) != null) {
-                        //丢包率
-                        if (line.contains("%")) {
-                            loss = line.substring(line.lastIndexOf("=") + 1, line.indexOf("%") + 1);
-                            if (loss.contains("(")) {
-                                loss = loss.substring(loss.indexOf("(") + 1).strip();
-                            }
-                        }
-                        //网络延时
-                        if ((line.contains(",") || line.contains("，")) && line.contains("=") && line.contains("ms")) {
-                            delay = line.substring(line.lastIndexOf("=") + 1, line.lastIndexOf("ms") + 2).strip();
-                        }
-                        buffer.append(line).append("\n");
-                    }
-                } else {//Linux系统执行结果解析
-                    while ((line = reader.readLine()) != null) {
-                        //丢包率
-                        if (line.contains("%")) {
-                            String[] msg = null;
-                            if (line.contains(",")) {
-                                msg = line.split(",");
-                            } else if (line.contains("，")) {
-                                msg = line.split("，");
-                            }
-                            assert msg != null;
-                            if (msg.length > 0) {
-                                loss = msg[2].substring(0, msg[2].indexOf("%") + 1).strip();
-                            }
-                        }
-                        //网络延时
-                        if (line.contains("/")) {
-                            String[] msg = line.split("=");
-                            String[] names = msg[0].split("/");
-                            String[] values = msg[1].split("/");
-                            for (int i = 0; i < names.length; i++) {
-                                String str = names[i];
-                                if ("avg".equalsIgnoreCase(str)) {
-                                    delay = values[i];
-                                    break;
-                                }
-                            }
-                        }
-                        buffer.append(line).append("\n");
-                    }
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line).append("\n");
                 }
-                // 替换百分号
-                loss = loss.replace("%", "");
-                delay = delay.replace("ms", "");
-                if (EmptyUtils.isNotEmpty(loss)) {
-                    ping.setLoss(Integer.parseInt(loss));
-                }
-                if (EmptyUtils.isNotEmpty(delay)) {
-                    ping.setDelay(Double.parseDouble(delay));
+                String result = buffer.toString();
+                if (OsUtils.isWindows()) {
+                    parseWindowsResult(result, ping);
                 } else {
-                    ping.setDelay(-1);// 延迟
-                    ping.setStatus(-1);//无法ping通
+                    parseLinuxResult(result, ping);
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            ping.setStatus(-2);
+        } catch (IOException ioException) {
+            throw new ToolboxException(ioException);
         }
         return ping;
+    }
+
+    /**
+     * 解析 Windows 系统上 ping 命令的结果。
+     *
+     * @param result ping 命令的结果字符串
+     * @param ping   要填充解析数据的 PingDTO 对象
+     */
+    private static void parseWindowsResult(String result, PingDTO ping) {
+        String lossPattern = "=(\\d+)%";
+        String delayPattern = "=\\d+ms";
+        Pattern lossRegex = Pattern.compile(lossPattern);
+        Pattern delayRegex = Pattern.compile(delayPattern);
+        Matcher lossMatcher = lossRegex.matcher(result);
+        Matcher delayMatcher = delayRegex.matcher(result);
+        if (lossMatcher.find()) {
+            ping.setLoss(Integer.parseInt(lossMatcher.group(1)));
+        }
+        if (delayMatcher.find()) {
+            String delay = delayMatcher.group();
+            delay = delay.substring(1, delay.length() - 2);
+            ping.setDelay(Double.parseDouble(delay));
+        } else {
+            ping.setDelay(-1);
+            ping.setStatus(-1);
+        }
+    }
+
+    /**
+     * 解析 Linux 系统上 ping 命令的结果。
+     *
+     * @param result ping 命令的结果字符串
+     * @param ping   要填充解析数据的 PingDTO 对象
+     */
+    private static void parseLinuxResult(String result, PingDTO ping) {
+        String lossPattern = "\\d+\\.\\d+/%";
+        String delayPattern = "/(\\d+\\.\\d+)/";
+        Pattern lossRegex = Pattern.compile(lossPattern);
+        Pattern delayRegex = Pattern.compile(delayPattern);
+        Matcher lossMatcher = lossRegex.matcher(result);
+        Matcher delayMatcher = delayRegex.matcher(result);
+        if (lossMatcher.find()) {
+            String loss = lossMatcher.group();
+            loss = loss.substring(0, loss.length() - 2);
+            ping.setLoss((int) Double.parseDouble(loss));
+        }
+        if (delayMatcher.find()) {
+            ping.setDelay(Double.parseDouble(delayMatcher.group(1)));
+        } else {
+            ping.setDelay(-1);
+            ping.setStatus(-1);
+        }
     }
 }

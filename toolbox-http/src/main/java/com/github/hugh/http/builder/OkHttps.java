@@ -6,10 +6,12 @@ import com.github.hugh.http.constant.MediaTypes;
 import com.github.hugh.http.constant.OkHttpCode;
 import com.github.hugh.http.exception.ToolboxHttpException;
 import com.github.hugh.http.model.FileFrom;
+import com.github.hugh.http.model.ResponseWrapper;
 import com.github.hugh.json.gson.GsonUtils;
 import com.github.hugh.json.gson.Jsons;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.ListUtils;
+import com.google.gson.JsonElement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,10 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -70,6 +69,13 @@ public class OkHttps {
     private ConnectionPool connectionPool;
 
     /**
+     * 参数
+     *
+     * @since 2.7.6
+     */
+    private Map<String, Object> params;
+
+    /**
      * 默认的数据库连接池，最小连接数为 5 个，最大连接数为无限制。
      * 在连接闲置时间达到 60 秒后，连接池会将该连接关闭以释放资源。
      */
@@ -90,6 +96,7 @@ public class OkHttps {
                 @NotNull
                 @Override
                 public List<Cookie> loadForRequest(@NotNull HttpUrl httpUrl) {
+                    // TODO 这里需要修改，当多次请求的时候不会出现第二个请求的参数
                     List<Cookie> cookies = OkHttpCode.COOKIE_STORE.get(httpUrl.host());
                     return cookies == null ? new ArrayList<>() : cookies;
                 }
@@ -168,13 +175,13 @@ public class OkHttps {
     }
 
     /**
-     * 设置是否发送 cookie 的方法。
+     * 设置发送 cookie 的方法。
      *
-     * @param flag 是否发送 cookie 的标志，true 表示发送，false 表示不发送。
      * @return 返回一个 OkHttps 实例以支持方法链接调用。
      */
-    public OkHttps isSendCookie(boolean flag) {
-        this.isSendCookies = flag;
+    public OkHttps sendCookie() {
+        // 是否发送 cookie 的标志，true 表示发送，false 表示不发送。
+        this.isSendCookies = true;
         return this;
     }
 
@@ -223,6 +230,34 @@ public class OkHttps {
     }
 
     /**
+     * 设置具有指定键和值的参数。
+     *
+     * @param key   参数的键。
+     * @param value 与键关联的值。
+     * @return 修改后的 `OkHttps` 对象的引用。
+     * @since 2.7.6
+     */
+    public OkHttps setParam(String key, Object value) {
+        if (params == null) {
+            params = new HashMap<>();
+        }
+        params.put(key, value);
+        return this;
+    }
+
+    /**
+     * 根据提供的参数设置对象的主体。
+     * 如果参数不为null，则将参数赋值给主体。
+     *
+     * @since 2.7.7
+     */
+    private void setBodyFromParams() {
+        if (this.params != null) {
+            this.body = this.params;
+        }
+    }
+
+    /**
      * 创建并返回一个新的 OkHttps 对象，设置请求的 URL。
      *
      * @param url 请求的 URL
@@ -242,6 +277,8 @@ public class OkHttps {
     public OkHttpsResponse doGet() throws IOException {
         // 确保URL不为null或空
         verifyUrlEmpty();
+        setBodyFromParams();
+//        String tempUrl = url;
         // 如果提供了查询参数，则将其添加到URL中
         url = UrlUtils.urlParam(url, this.body);
         // 构建请求对象
@@ -251,15 +288,15 @@ public class OkHttps {
             Headers headers = Headers.of(this.header);
             request.headers(headers);
         }
-        String result;
+        ResponseWrapper responseWrapper;
         if (this.isSendCookies) {
-            result = send(request.build(), cookieClient);
+            responseWrapper = send(request.build(), cookieClient);
         } else {
             initOkHttpClient();
-            result = send(request.build(), okHttpClient);
+            responseWrapper = send(request.build(), okHttpClient);
         }
         // 发送请求并返回响应
-        return new OkHttpsResponse(result);
+        return okHttpsResponse(responseWrapper);
     }
 
     /**
@@ -291,12 +328,13 @@ public class OkHttps {
      */
     public OkHttpsResponse doPostForm() throws IOException {
         verifyUrlEmpty();
-        final String params = UrlUtils.jsonParse(this.body);
+        setBodyFromParams();
+        final String paramsStr = UrlUtils.jsonParse(this.body);
         if (this.isSendCookies) {
-            return doPost(MediaTypes.APPLICATION_FORM_URLENCODED, params, cookieClient);
+            return doPost(MediaTypes.APPLICATION_FORM_URLENCODED, paramsStr, cookieClient);
         } else {
             initOkHttpClient();
-            return doPost(MediaTypes.APPLICATION_FORM_URLENCODED, params, okHttpClient);
+            return doPost(MediaTypes.APPLICATION_FORM_URLENCODED, paramsStr, okHttpClient);
         }
     }
 
@@ -308,6 +346,7 @@ public class OkHttps {
      */
     public OkHttpsResponse doPostJson() throws IOException {
         verifyUrlEmpty();
+        setBodyFromParams();
         // 创建OkHttpClient实例并设置超时值
         if (this.isSendCookies) {
             okHttpClient = cookieClient;
@@ -339,25 +378,38 @@ public class OkHttps {
             Headers headers = Headers.of(this.header);
             request.headers(headers);
         }
-        return new OkHttpsResponse(send(request.build(), okHttpClient));
+        ResponseWrapper responseWrapper = send(request.build(), okHttpClient);
+        return okHttpsResponse(responseWrapper);
+    }
+
+    /**
+     * 将 ResponseWrapper 对象转换为 OkHttpsResponse 对象。
+     *
+     * @param responseWrapper 包含响应数据的 ResponseWrapper 对象，包含响应体字节数组、Content-Type 和状态码等信息。
+     * @return 返回构造好的 OkHttpsResponse 对象，该对象包含了响应体字节数组、请求 URL 和响应的 Content-Type。
+     */
+    private OkHttpsResponse okHttpsResponse(ResponseWrapper responseWrapper) {
+        return new OkHttpsResponse(responseWrapper.getResponseBody(), url, responseWrapper.getContentType(), responseWrapper.getResponseCode());
     }
 
     /**
      * 上传文件的方法
      *
-     * @param <K> 上传参数键类型
-     * @param <V> 上传参数值类型
      * @return OkHttpsResponse 响应结果对象
      * @throws IOException 文件上传失败抛出该异常
      */
-    public <K, V> OkHttpsResponse uploadFile() throws IOException {
+    public OkHttpsResponse uploadFile() throws IOException {
         MultipartBody.Builder requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM);
         // 如果请求体不为空，则将其转换为 Map 对象，并遍历 Map 中的每一项，添加到请求体中
         if (EmptyUtils.isNotEmpty(this.body)) {
-            final Map<K, V> params = new Jsons(this.body).toMap();
-            for (Map.Entry<K, V> entry : params.entrySet()) {
-                requestBody.addFormDataPart(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
+            Jsons jsons = new Jsons(this.body);
+            for (Map.Entry<String, JsonElement> entrySet : jsons.entrySet()) {
+                String entryValue = GsonUtils.getAsString(entrySet.getValue());
+                if (entryValue == null) {
+                    entryValue = StrPool.EMPTY;
+                }
+                requestBody.addFormDataPart(entrySet.getKey(), entryValue);
             }
         }
         if (ListUtils.isEmpty(this.fileFrom)) {
@@ -376,8 +428,8 @@ public class OkHttps {
         } else {
             initOkHttpClient();
         }
-        final String result = send(request, okHttpClient);
-        return new OkHttpsResponse(result);
+        ResponseWrapper responseWrapper = send(request, okHttpClient);
+        return okHttpsResponse(responseWrapper);
     }
 
     /**
@@ -392,7 +444,9 @@ public class OkHttps {
             throw new ToolboxHttpException("upload file key is null");
         }
         File uploadFile;
-        if (file.getFile() == null) {
+        if (file.getFileArray() != null) {
+            return RequestBody.create(file.getFileMediaType(), file.getFileArray());
+        } else if (file.getFile() == null) {
             isFilePathEmpty(file.getPath());
             uploadFile = new File(file.getPath());
         } else {
@@ -429,16 +483,20 @@ public class OkHttps {
      *
      * @param request      请求内容
      * @param okHttpClient OkHttpClient
-     * @return String 返回结果
+     * @return ResponseWrapper 返回结果
      * @throws IOException IO异常
      */
-    private static String send(Request request, OkHttpClient okHttpClient) throws IOException {
+    private ResponseWrapper send(Request request, OkHttpClient okHttpClient) throws IOException {
         try (Response response = okHttpClient.newCall(request).execute()) {
-            ResponseBody body1 = response.body();
-            if (body1 == null) {
+            ResponseBody responseBody = response.body();
+            if (responseBody == null) {
                 throw new ToolboxHttpException("result params is null ");
             }
-            return body1.string();
+            ResponseWrapper responseWrapper = new ResponseWrapper();
+            responseWrapper.setResponseCode(response.code());
+            responseWrapper.setContentType(response.header("Content-Type"));
+            responseWrapper.setResponseBody(responseBody.bytes());
+            return responseWrapper;
         }
     }
 }

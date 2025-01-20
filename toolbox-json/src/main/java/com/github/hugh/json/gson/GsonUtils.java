@@ -14,7 +14,13 @@ import com.google.common.base.Suppliers;
 import com.google.gson.*;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
+import lombok.extern.slf4j.Slf4j;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 
+import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.*;
@@ -26,8 +32,11 @@ import java.util.function.Supplier;
  * @author hugh
  * @since 2.4.10
  */
+@Slf4j
 public class GsonUtils {
-    public GsonUtils(){}
+    public GsonUtils() {
+    }
+
     /**
      * [年-月-日 时:分:秒]完整的日期格式
      */
@@ -315,7 +324,7 @@ public class GsonUtils {
 //            if (clazz == null) {
 //                result = (T) new Jsons(jsonElement);
 //            } else {
-                result = JSON.parseObject(jsonElement.toString(), clazz);
+            result = JSON.parseObject(jsonElement.toString(), clazz);
 //            }
             resultList.add(result);
         }
@@ -355,6 +364,8 @@ public class GsonUtils {
      * 对象转换为{@link HashMap}
      *
      * <p>使用的自定义的{@link MapTypeAdapter}解析器,重写了数值转换校验</p>
+     * <p>该方法转换出来的value数据类型都为{@link String}</p>
+     * <p>如需要将实体中的值转换为对应类型的值，使用{@link MapUtils#entityToMap(Object)}</p>
      *
      * @param object 对象
      * @param <E>    对象泛型
@@ -475,12 +486,18 @@ public class GsonUtils {
      * @param classOfT 实体class
      * @param <E>      入参json类型
      * @param <T>      实体类型
-     * @return 1.4.10
+     * @return 实体对象
+     * @since 1.4.10
      */
     public static <E, T> T fromJson(E json, Class<T> classOfT) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Date.class, new CustomDateTypeAdapter());
-        return fromJson(gsonBuilder, json, classOfT);
+        try {
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(Date.class, new CustomDateTypeAdapter());
+            return fromJson(gsonBuilder, json, classOfT);
+        } catch (JsonParseException jsonParseException) {
+            log.error("JSON解析实体失败，内容：{}", json);
+            throw jsonParseException;
+        }
     }
 
     /**
@@ -673,12 +690,17 @@ public class GsonUtils {
         if (EmptyUtils.isEmpty(str)) {
             return false;
         }
-        try {
-            parse(str);
-        } catch (Exception e) {
+        String trimmedStr = str.trim();
+        if (!trimmedStr.startsWith(StrPool.CURLY_BRACKETS_START) || !trimmedStr.endsWith(StrPool.CURLY_BRACKETS_END)) {
             return false;
         }
-        return true;
+        try {
+            JsonElement jsonElement = JsonParser.parseString(trimmedStr);
+            return jsonElement.isJsonObject();
+        } catch (JsonParseException jsonParseException) {
+            log.debug("字符串验证是JsonObject异常，内容：{}", str);
+            return false;
+        }
     }
 
     /**
@@ -703,12 +725,17 @@ public class GsonUtils {
         if (EmptyUtils.isEmpty(str)) {
             return false;
         }
-        try {
-            parseArray(str);
-        } catch (Exception exception) {
+        String trimmedStr = str.trim();
+        if (!trimmedStr.startsWith(StrPool.BRACKET_START) || !trimmedStr.endsWith(StrPool.BRACKET_END)) {
             return false;
         }
-        return true;
+        try {
+            JsonElement jsonElement = JsonParser.parseString(trimmedStr);
+            return jsonElement.isJsonArray();
+        } catch (JsonParseException jsonParseException) {
+            log.debug("字符串验证是JsonArray异常，内容：{}", str);
+            return false;
+        }
     }
 
     /**
@@ -821,5 +848,81 @@ public class GsonUtils {
             }
         }
         return item;
+    }
+
+    /**
+     * 将 XML 字符串转换为指定类型的 Java 对象
+     *
+     * @param <T>   转换目标类型的泛型
+     * @param xml   要转换的 XML 字符串
+     * @param clazz 目标 Java 类型的 Class 对象
+     * @return 转换后的 Java 对象
+     * @since 2.7.16
+     */
+    public static <T> T xmlToObject(String xml, Class<T> clazz) {
+        return xmlToObject(xml, clazz, null);
+    }
+
+    /**
+     * 将 XML 字符串转换为指定类型的 Java 对象，并支持指定根元素的解析
+     *
+     * @param <T>     转换目标类型的泛型
+     * @param xml     要转换的 XML 字符串
+     * @param clazz   目标 Java 类型的 Class 对象
+     * @param rootKey 根元素的名称，若为 null 或空，则直接解析整个 XML
+     * @return 转换后的 Java 对象
+     * @since 2.7.16
+     */
+    public static <T> T xmlToObject(String xml, Class<T> clazz, String rootKey) {
+        Jsons jsons = xmlToJson(xml);
+        // 如果根元素为空，则直接将 XML 转换为目标 Java 对象
+        if (EmptyUtils.isEmpty(rootKey)) {
+            return jsons.formJson(clazz);
+        } else {
+            // 如果指定了根元素，获取该根元素的内容并转换为目标 Java 对象
+            Jsons aThis = jsons.getThis(rootKey);
+            return aThis.formJson(clazz);
+        }
+    }
+
+    /**
+     * XML字符串转JSON对象
+     *
+     * @param xml xml字符串
+     * @return Jsons
+     * @since 2.7.16
+     */
+    public static Jsons xmlToJson(String xml) {
+        Map<String, Object> map = new HashMap<>();
+        SAXReader reader = new SAXReader();
+        Document document;
+        try {
+            document = reader.read(new StringReader(xml));
+        } catch (DocumentException documentException) {
+            throw new ToolboxJsonException(documentException);
+        }
+        Element root = document.getRootElement();
+        map.put(root.getName(), elementToMap(root));
+        return Jsons.on(map);
+    }
+
+    /**
+     * Element对象转map对象
+     *
+     * @param element Element对象
+     * @return map
+     * @since 2.7.16
+     */
+    public static Map<String, Object> elementToMap(Element element) {
+        Map<String, Object> map = new HashMap<>();
+        for (Object child : element.elements()) {
+            Element element1 = (Element) child;
+            if (element1.elements().isEmpty()) {
+                map.put(element1.getName(), element1.getText());
+            } else {
+                map.put(element1.getName(), elementToMap(element1));
+            }
+        }
+        return map;
     }
 }

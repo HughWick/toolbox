@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,17 +17,47 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class DateTest {
 
-    // 测速 cst时间格式转换
+    // 测试 cst时间格式转换
     @Test
     void testParse() throws ParseException {
-        String strDateObj = "Mon Mar 21 18:02:11 CST 2022";
-        assertEquals(28, strDateObj.length());
+        String cstFormDate = "Mon Mar 21 18:02:11 CST 2022";
+        assertEquals(28, cstFormDate.length());
         SimpleDateFormat sdf = new SimpleDateFormat(DateCode.CST_FORM, Locale.US);
-        Date d = sdf.parse(strDateObj);
-        assertEquals(1647856931000L, d.getTime());
-        Date parse = DateUtils.parseDate(strDateObj, DateCode.CST_FORM);
-        assertNotNull(parse);
-        assertEquals(parse.getTime(), d.getTime());
+        Date date1 = sdf.parse(cstFormDate);
+        assertEquals(1647856931000L, date1.getTime());
+        Date parse2 = DateUtils.parseDate(cstFormDate, DateCode.CST_FORM);
+        assertNotNull(parse2);
+        assertEquals(parse2.getTime(), date1.getTime());
+        String inputDateStr = "Jul 11 2020";
+        String date2 = DateUtils.parseDateFormatStr(inputDateStr, "MMM dd yyyy", Locale.US, DateCode.YEAR_MONTH_DAY);
+        assertEquals("Jul 11 2020", inputDateStr);
+        assertEquals("2020-07-11", date2);
+
+//        String str3 = "NaN-NaN-NaN NaN:NaN:NaN";
+//        Date parse3 = DateUtils.parse(str3, "yyyy-MM-dd HH:mm:00");
+
+    }
+
+    @Test
+    void parseDate_millisecondFormat() {
+        String dateStr = "2023-12-05 10:30:00.123";
+        Date expectedDate = new Date(1701743400123L); // 2023-12-05 10:30:00.123 的毫秒值
+        Date parsedDate = DateUtils.parseDate(dateStr, "yyyy-MM-dd HH:mm:ss.SSS");
+        assertEquals(expectedDate, parsedDate);
+    }
+
+    @Test
+    void testRandomTime(){
+        // 创建一个随机数生成器
+        Random random = new Random();
+        // 生成随机的小时、分钟和秒
+        int hour = random.nextInt(24); // 0到23之间的随机整数
+        int minute = random.nextInt(60); // 0到59之间的随机整数
+        int second = random.nextInt(60); // 0到59之间的随机整数
+        // 格式化成HH:mm:ss的形式
+        String formattedTime = String.format("%02d:%02d:%02d", hour, minute, second);
+        // 打印随机生成的时间
+        System.out.println("随机生成的时间为: " + formattedTime);
     }
 
     @Test
@@ -78,8 +109,7 @@ class DateTest {
 
     @Test
     void test04() {
-//        @Test
-//        void test04() {
+
         long remainingMilliSec = DateUtils.getEarlyMorningSec();
         assertNotNull(remainingMilliSec);
         assertTrue(remainingMilliSec > 0);
@@ -91,7 +121,6 @@ class DateTest {
         assertNotNull(endHour);
 
 //        assertTrue(endHour.isAfter(iniHour));
-//        }
 //        System.out.println("-距离凌晨还剩余多少毫秒-->>" + DateUtils.getEarlyMorningSec());
 //        System.out.println("--获取小时整点时间->>" + DateUtils.getIniHour());
 //        System.out.println("--获取当前小时的结束时间点->>" + DateUtils.getEndHour());
@@ -137,15 +166,16 @@ class DateTest {
     void testIsDateFormat() {
         String timeStart1 = "2022-05-11 00:00:00";
         String timeStart2 = "2022-05-11";
-        String timeStart3 = "2022-11";
-        String timeStart4 = "Thu Aug 27 18:05:49 CST 2015";
+//        String timeStart3 = "Sep 13 2023 09:02:23";
 //        String timeStart5 = "2022-05-11 00:00:00";
         assertTrue(DateUtils.isDateFormat(timeStart1, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
         assertFalse(DateUtils.isDateFormat(timeStart1 + "a", DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
         assertTrue(DateUtils.isDateFormat(timeStart2, DateCode.YEAR_MONTH_DAY));
         assertFalse(DateUtils.isDateFormat(timeStart2 + "b", DateCode.YEAR_MONTH_DAY));
+        String timeStart3 = "2022-11";
         assertTrue(DateUtils.isDateFormat(timeStart3, DateCode.YEAR_MONTH));
         assertFalse(DateUtils.isDateFormat(timeStart3 + "b", DateCode.YEAR_MONTH));
+        String timeStart4 = "Thu Aug 27 18:05:49 CST 2015";
         assertTrue(DateUtils.isDateFormat(timeStart4, DateCode.CST_FORM));
         assertFalse(DateUtils.isDateFormat("Thu Aug 27 18:05:49 _ST 2015", DateCode.CST_FORM));
         assertFalse(DateUtils.isDateFormat("Thu Aug 27 18:05:49 _ST A015", DateCode.CST_FORM));
@@ -164,14 +194,24 @@ class DateTest {
     }
 
     @Test
-    void testGetOneMonthAgo() {
-        // 获取一个月前的日期
-        Date oneMonthAgo = DateUtils.getOneMonthAgo();
-        // 验证返回的日期是否是一个月前的日期
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, -1);
-        Date expectedDate = cal.getTime();
-        assertEquals(expectedDate, oneMonthAgo);
+    void getMonthAgo_validDateAndPositiveMonth() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2023, Calendar.NOVEMBER, 15); // Set date to 2023-11-15
+        Date initialDate = calendar.getTime();
+        int monthsAgo = 3;
+        Date result = DateUtils.getMonthAgo(initialDate, monthsAgo);
+        calendar.add(Calendar.MONTH, -monthsAgo);
+        Date expectedDate = calendar.getTime();
+
+        // Compare year, month, and day for simplicity
+        Calendar resultCalendar = Calendar.getInstance();
+        resultCalendar.setTime(result);
+        Calendar expectedCalendar = Calendar.getInstance();
+        expectedCalendar.setTime(expectedDate);
+
+        assertEquals(expectedCalendar.get(Calendar.YEAR), resultCalendar.get(Calendar.YEAR));
+        assertEquals(expectedCalendar.get(Calendar.MONTH), resultCalendar.get(Calendar.MONTH));
+        assertEquals(expectedCalendar.get(Calendar.DAY_OF_MONTH), resultCalendar.get(Calendar.DAY_OF_MONTH));
     }
 
     @Test
@@ -251,5 +291,44 @@ class DateTest {
 
         // 测试空日期的情况，应该返回 true
         assertTrue(DateUtils.belowSystem(null));
+    }
+
+    @Test
+    void testFormatTimestamp() {
+        // 秒
+        String str1 = "1697513319";
+        String s1 = DateUtils.formatTimestampSecond(str1);
+        assertEquals("2023-10-17 11:28:39", s1);
+        long str2 = 1697511216L;
+        String s2 = DateUtils.formatTimestampSecond(str2);
+        assertEquals("2023-10-17 10:53:36", s2);
+        String s3 = DateUtils.formatTimestampSecond(str1, DateCode.YEAR_MONTH_DAY);
+        assertEquals("2023-10-17", s3);
+        long str4 = 1697511216L;
+        String s4 = DateUtils.formatTimestampSecond(str4, DateCode.YEAR_MONTH_DAY_SIMPLE);
+        assertEquals("20231017", s4);
+        // 毫秒
+        String timeStr1 = "1697514229199";
+        String timestamp1 = DateUtils.formatTimestamp(timeStr1);
+        assertEquals("2023-10-17 11:43:49", timestamp1);
+        long timeStr2 = 1697514508199L;
+        String timestamp2 = DateUtils.formatTimestamp(timeStr2);
+        assertEquals("2023-10-17 11:48:28", timestamp2);
+
+    }
+
+    @Test
+    void testIsTimestampInMilli() {
+        String str1 = "1713152121000";
+        String str2 = "1713152121";
+        long str3 = 1713152121L;
+        assertTrue(DateUtils.isTimestampInMilli(str1));
+        assertFalse(DateUtils.isTimestampInMilli(str3));
+        assertFalse(DateUtils.isTimestampInMilli(str2));
+        String str4 = "1713152121";
+        assertTrue(DateUtils.isTimestamp(str4));
+
+
+
     }
 }

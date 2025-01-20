@@ -2,15 +2,18 @@ package com.github.hugh.db.util;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.github.hugh.constant.StrPool;
 import com.github.hugh.db.constants.QueryCode;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.ListUtils;
 import com.github.hugh.util.ServletUtils;
+import com.github.hugh.util.StringUtils;
 import com.google.common.base.CaseFormat;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Mybatis plus 查询条件工具类
@@ -36,19 +39,23 @@ public class MybatisPlusQueryUtils {
     private static final String LIKE = "_LIKE";
 
     /**
-     * 多个等于
+     * in 多个等于
      */
-    private static final String IN_FIELD_NAME = "_IN";
-
-    /**
-     * 空字符串
-     */
-    private static final String EMPTY = "";
+    private static final String IN_FIELD_NAME = "_in";
 
     /**
      * 排序
      */
     private static final String SORT = "sort";
+    /**
+     * 表示开始日期。
+     */
+    private static final String START_DATE = "startDate";
+
+    /**
+     * 表示结束日期。
+     */
+    private static final String END_DATE = "endDate";
 
     /**
      * 创建mybatis plus查询实例
@@ -68,6 +75,34 @@ public class MybatisPlusQueryUtils {
         QueryWrapper<E> queryWrapper = create(params);
         queryWrapper.eq((String) key, value);
         return queryWrapper;
+    }
+
+
+    /**
+     * 根据指定的参数创建一个 {@link QueryWrapper} 对象。
+     *
+     * @param params 参数Map，其中的key和value将用于创建QueryWrapper对象
+     * @param <T>    QueryWrapper对象的泛型类型
+     * @param <K>    Map中key的类型
+     * @param <V>    Map中value的类型
+     * @return 创建的QueryWrapper对象
+     */
+    public static <T, K, V> QueryWrapper<T> create(Map<K, V> params) {
+        return create(params, true);
+    }
+
+    /**
+     * 根据指定的参数Map创建一个使用小写键的QueryWrapper对象。
+     *
+     * @param params 参数Map，其中的key和value将用于创建QueryWrapper对象
+     * @param <T>    QueryWrapper对象的泛型类型
+     * @param <K>    Map中key的类型
+     * @param <V>    Map中value的类型
+     * @return 创建的QueryWrapper对象
+     * @since 2.7.4
+     */
+    public static <T, K, V> QueryWrapper<T> createLowCase(Map<K, V> params) {
+        return create(params, false);
     }
 
     /**
@@ -97,47 +132,62 @@ public class MybatisPlusQueryUtils {
      *  </li>
      * </ul>
      *
-     * @param params 查询条件
-     * @param <K>    KEY对象类型
-     * @param <V>    VALUE象类型
+     * @param params   查询条件
+     * @param <K>      KEY对象类型
+     * @param <V>      VALUE象类型
+     * @param keyUpper 数据库kye下划线命名方式，大小写，{@code true} 大写下划线，{@code false}小写下划线命名方式
      * @return QueryWrapper
      */
-    public static <T, K, V> QueryWrapper<T> create(Map<K, V> params) {
+    public static <T, K, V> QueryWrapper<T> create(Map<K, V> params, boolean keyUpper) {
         if (params == null) {
             throw new NullPointerException();
         }
+        // 使用Stream API遍历Map并修改，开始日期与结束日期，修改为大于等于（gte），与小于等于（lte）结尾
+        Map<String, Object> modifiedMap = params.entrySet().stream()
+                .collect(Collectors.toMap(entry -> modifyKey(String.valueOf(entry.getKey())), Map.Entry::getValue));
         QueryWrapper<T> queryWrapper = Wrappers.query();
-        for (Map.Entry<K, V> entry : params.entrySet()) {
-            String key = String.valueOf(entry.getKey());
+        for (Map.Entry<String, Object> entry : modifiedMap.entrySet()) {
+            String key = entry.getKey();
             String value = String.valueOf(entry.getValue());
-            String tableField = conversion(key);//将key转化为与数据库列一致的名称
+            String tableField = conversion(key, keyUpper);//将key转化为与数据库列一致的名称
             if (EmptyUtils.isEmpty(value) || SORT.equals(key)) {
                 //空时不操作
-            } else if (QueryCode.START_DATE.equals(tableField)) {
-                queryWrapper.ge(QueryCode.CREATE_DATE, value);//开始日期 小于等于
-            } else if (QueryCode.END_DATE.equals(tableField)) {
-                queryWrapper.le(QueryCode.CREATE_DATE, value);//结束日期 大于等于
             } else if (tableField.endsWith(LIKE)) {//判断结尾是否为模糊查询
-                tableField = tableField.replace(LIKE, EMPTY);//移除掉识别key
+                tableField = tableField.replace(LIKE, StrPool.EMPTY);//移除掉识别key
                 queryWrapper.like(tableField, value);
             } else if ("order".equals(key)) {
                 String sortValue = String.valueOf(params.get(SORT));
                 appendOrderSql(queryWrapper, value, sortValue);
             } else if (key.endsWith("_or")) { // 结尾是否为or
-                appendOrSql(queryWrapper, key, value);
-            } else if (tableField.endsWith(IN_FIELD_NAME)) {
+                appendOrSql(queryWrapper, key, value, keyUpper);
+            } else if (key.endsWith(IN_FIELD_NAME)) {
                 appendInSql(queryWrapper, tableField, value);
-            } else if (tableField.endsWith(GE)) {
-                tableField = tableField.replace(GE, EMPTY);
+            } else if (tableField.endsWith(GE) || tableField.endsWith("_ge")) {
+                tableField = StringUtils.before(tableField, StrPool.UNDERLINE);
                 queryWrapper.ge(tableField, value);
-            } else if (tableField.endsWith(LE)) {
-                tableField = tableField.replace(LE, EMPTY);//移除掉识别key
+            } else if (tableField.endsWith(LE) || tableField.endsWith("_le")) {
+                tableField = StringUtils.before(tableField, StrPool.UNDERLINE);
                 queryWrapper.le(tableField, value);//小于等于
             } else {
                 queryWrapper.eq(tableField, value);
             }
         }
         return queryWrapper;
+    }
+
+    /**
+     * 根据指定的键进行修改，返回修改后的键。
+     *
+     * @param key 要修改的键
+     * @return 修改后的键
+     */
+    private static String modifyKey(String key) {
+        if (START_DATE.equals(key)) {
+            return "createDate" + GE.toLowerCase();
+        } else if (END_DATE.equals(key)) {
+            return "createDate" + LE.toLowerCase();
+        }
+        return key;
     }
 
     /**
@@ -150,7 +200,7 @@ public class MybatisPlusQueryUtils {
      */
     private static <T> void appendOrderSql(QueryWrapper<T> queryWrapper, String orderValue, String sortValue) {
         if (!isAcronym(sortValue)) { // 判断判断的key不都是大写时、转换为驼峰
-            sortValue = conversion(sortValue);
+            sortValue = conversion(sortValue, true);
         }
         queryWrapper.orderBy(true, isAsc(orderValue), sortValue);
     }
@@ -164,12 +214,12 @@ public class MybatisPlusQueryUtils {
      * @param <T>          类型
      */
     private static <T> void appendInSql(QueryWrapper<T> queryWrapper, String tableField, Object value) {
-        tableField = tableField.replace(IN_FIELD_NAME, EMPTY);
+        tableField = StringUtils.before(tableField, StrPool.UNDERLINE);
         List<String> objects = ListUtils.guavaStringToList(String.valueOf(value));
         // 转换成 in语句
         StringBuilder stringBuilder = new StringBuilder();
         for (String string : objects) {
-            stringBuilder.append("'").append(string).append("'").append(",");
+            stringBuilder.append("'").append(string).append("'").append(StrPool.COMMA);
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         queryWrapper.inSql(tableField, stringBuilder.toString());
@@ -183,26 +233,33 @@ public class MybatisPlusQueryUtils {
      * @param value        值
      * @param <T>          类型
      */
-    private static <T> void appendOrSql(QueryWrapper<T> queryWrapper, String tableField, Object value) {
-        tableField = tableField.replace("_or", EMPTY);//移除掉标识or
-        List<String> strings = ListUtils.guavaStringToList(tableField, "_");
+    private static <T> void appendOrSql(QueryWrapper<T> queryWrapper, String tableField, Object value, boolean keyUpper) {
+        tableField = StringUtils.before(tableField, StrPool.UNDERLINE);
+        List<String> strings = ListUtils.guavaStringToList(tableField, StrPool.UNDERLINE);
         // 遍历所有or字段，放入like查询内
         queryWrapper.and(orQueryWrapper -> {
             for (String queryKey : strings) {
-                String conversion = conversion(queryKey);
+                String conversion = conversion(queryKey, keyUpper);
                 orQueryWrapper.like(conversion, value).or();
             }
         });
     }
 
     /**
-     * 驼峰转下划线
+     * 将驼峰命名的字符串转换为下划线形式。
      *
-     * @param str 字符串
-     * @return String
+     * @param str   驼峰命名的字符串
+     * @param upper 是否转换为大写形式
+     * @return 转换后的下划线形式的字符串
      */
-    private static String conversion(String str) {
-        return CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, str);
+    private static String conversion(String str, boolean upper) {
+        if (upper) {
+            // 将驼峰命名的字符串转换为大写下划线形式
+            return CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, str);
+        } else {
+            // 将驼峰命名的字符串转换为小写下划线形式
+            return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, str);
+        }
     }
 
     /**
@@ -269,6 +326,18 @@ public class MybatisPlusQueryUtils {
      */
     public static <T> QueryWrapper<T> create(HttpServletRequest request) {
         return create(request, null, null);
+    }
+
+    /**
+     * 根据HttpServletRequest对象创建一个使用小写键的QueryWrapper对象。
+     *
+     * @param request HttpServletRequest对象，用于获取请求参数
+     * @param <T>     QueryWrapper对象的泛型类型
+     * @return 创建的QueryWrapper对象
+     * @since 2.7.4
+     */
+    public static <T> QueryWrapper<T> createLowerCase(HttpServletRequest request) {
+        return create(ServletUtils.getParams(request), false);
     }
 
     /**

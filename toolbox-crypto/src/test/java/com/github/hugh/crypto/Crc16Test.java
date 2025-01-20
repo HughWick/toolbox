@@ -20,7 +20,7 @@ class Crc16Test {
         String code1 = Crc16Utils.generate();
         System.out.println("==1=>" + code1);
         assertEquals(10, code1.length());
-        assertTrue(Crc16Utils.checkCode(code1));
+        assertTrue(Crc16Utils.verifyCode(code1));
         assertTrue(RegexUtils.isNotLowerCaseAndNumber(code1));
         String code2 = Crc16Utils.generate(12);
         assertEquals(14, code2.length());
@@ -129,4 +129,13 @@ class Crc16Test {
         assertTrue(RegexUtils.isLowerCaseAndNumber(str3));
         assertTrue(Crc16Utils.verifyCode(str3, 4));
     }
+
+    @Test
+    void test04(){
+        String str = "8aTH0000202309190001";
+        String str2 = "8a566f5d68953414";
+        String verCode = Crc16Utils.getVerCode(str2, 2);
+//        System.out.println("=====>>"+verCode);
+    }
+
 }

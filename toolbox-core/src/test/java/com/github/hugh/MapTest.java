@@ -1,5 +1,6 @@
 package com.github.hugh;
 
+import com.github.hugh.model.GsonTest;
 import com.github.hugh.model.Student;
 import com.github.hugh.util.EntityUtils;
 import com.github.hugh.util.MapUtils;
@@ -42,14 +43,14 @@ class MapTest {
         map.clear();
         assertTrue(MapUtils.isEmpty(map));
         assertFalse(MapUtils.isNotEmpty(map));
-        assertFalse(MapUtils.isSuccess(map, "code", null));
+//        assertFalse(MapUtils.isSucces(map, "code", null));
         assertFalse(MapUtils.isEquals(map, "code", null));
-        assertFalse(MapUtils.isSuccess(null, "code", null));
+//        assertFalse(MapUtils.isSuccess(null, "code", null));
         assertFalse(MapUtils.isEquals(null, "code", null));
         map.put("code", "0000");
-        assertTrue(MapUtils.isSuccess(map, "code", "0000"));
+//        assertTrue(MapUtils.isSuccess(map, "code", "0000"));
         assertTrue(MapUtils.isEquals(map, "code", "0000"));
-        assertTrue(MapUtils.isFailure(map, "code", "00100"));
+//        assertTrue(MapUtils.isFailure(map, "code", "00100"));
         assertTrue(MapUtils.isNotEquals(map, "code", "00100"));
     }
 
@@ -90,6 +91,19 @@ class MapTest {
         MapUtils.setValue(map, "a", "1");
         assertEquals("1", map.get("a").toString());
     }
+
+    @Test
+    void testPutNotEmpty() {
+        String defaultValue1 = "str";
+        Map<String, Object> map = new HashMap<>();
+        MapUtils.putNotEmpty(map, "a", null, defaultValue1);
+        assertEquals(defaultValue1, map.get("a"));
+        String key2 = "b";
+        String value1 = "value1";
+        MapUtils.putNotEmpty(map, key2, value1, defaultValue1);
+        assertEquals(value1, map.get(key2));
+    }
+
 
     @Test
     void testRemoveKey() {
@@ -216,6 +230,23 @@ class MapTest {
         assertEquals(userToken, stringStringMap.get("X-Cmmop-User-Token"));
     }
 
+    @Test
+    void testEntityToMap() {
+        GsonTest gsonTest = new GsonTest();
+        gsonTest.setCode("012");
+        gsonTest.setAge(18);
+        gsonTest.setAmount(998.9);
+        gsonTest.setSwitchs(false);
+        gsonTest.setCreated(new Date());
+        Map<String, Object> stringObjectMap = MapUtils.entityToMap(gsonTest);
+//        System.out.println("==2==>>"+stringObjectMap);
+        // 校验stringObjectMap中的值类型是否与GsonTest中的一致
+        assertEquals(String.class, stringObjectMap.get("code").getClass());
+        assertEquals(Integer.class, stringObjectMap.get("age").getClass());
+        assertEquals(Double.class, stringObjectMap.get("amount").getClass());
+        assertEquals(Boolean.class, stringObjectMap.get("switchs").getClass());
+        assertEquals(Date.class, stringObjectMap.get("created").getClass());
+    }
 }
 
 

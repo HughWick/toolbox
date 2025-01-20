@@ -215,7 +215,7 @@ public class Crc16Utils {
             throw new CryptoException("code length less than verify length error");
         }
         String random = AppkeyUtils.generate().substring(0, length);
-        String code = random + getVerCode(random, verifyLength);//根据八位数随机码、计算一个crc16的校验码
+        String code = random + getVerCode(random, verifyLength);//根据指定位数随机码、计算一个crc16的校验码
         if (flag) {
             return code.toUpperCase();
         }
@@ -229,7 +229,7 @@ public class Crc16Utils {
      * @param verifyLength 验证码长度
      * @return String 验证码
      */
-    private static String getVerCode(String data, int verifyLength) {
+    public static String getVerCode(String data, int verifyLength) {
         int length = data.length() / 2;
         byte[] byteArray = new byte[length];
         for (int i = 0; i < length; i++) {

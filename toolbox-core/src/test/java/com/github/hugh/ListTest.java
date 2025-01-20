@@ -1,5 +1,6 @@
 package com.github.hugh;
 
+import com.github.hugh.constant.StrPool;
 import com.github.hugh.model.Student;
 import com.github.hugh.util.ListUtils;
 import com.github.hugh.util.regex.RegexUtils;
@@ -9,6 +10,7 @@ import com.google.common.collect.Ordering;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -240,7 +242,7 @@ class ListTest {
         List<Student> list = Lists.newArrayList(student, student2, student3, student4);
         assertEquals("张三_李四_王五", ListUtils.listObjectToString(list, "name", "_"));
         assertEquals("张三,李四,王五", ListUtils.listObjectToString(list, "name"));
-//        System.out.println();
+        list.stream().map(Student::getName).collect(Collectors.toList());
         List<Map> listMap = new ArrayList<>();
         var item = new HashMap<>();
         item.put("name", "狗蛋");
@@ -250,5 +252,12 @@ class ListTest {
         listMap.add(item2);
 //        System.out.println(ListUtils.listObjectToString(listMap, "name"));
         assertEquals("狗蛋,钢弹", ListUtils.listObjectToString(listMap, "name"));
+    }
+
+    @Test
+    void test02(){
+        String str1 = "00050001,00060001,00050006,00010001,0007000c,00070007,00070009,07000001,06000001,06010001,06020001,06000002,06000003,06010002,06010003,06020002,06020003,00020001,00020002,00020003,00020004,0007000d,0007000e,07000002,0007000a,06030002,06030003,07010001,07020001,07030001,07040001,07050001,07060001,07070001,07080001,07080002,07010002,07020002,07030002,07040002,07050002,07060002,07070002,07090002,03010001,03010002,03010003,03010006,0002000a,00020009,06030001,00060002,00010001,00010007,00010008";
+        System.out.println(ListUtils.guavaStringToList(str1).toString());
+
     }
 }

@@ -2,10 +2,11 @@ package com.github.hugh.util;
 
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.exception.ToolboxException;
-import com.github.hugh.support.date.TimeCalc;
+import com.github.hugh.components.datetime.TimeCalc;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -160,6 +161,7 @@ public class DateUtils extends DateCode {
 
     /**
      * 将字符串（yyyy-MM-dd）解析成日期
+     * <p>命名不规范，应直接调用{@link #parse(Object)}</p>
      *
      * @param dateStr 日期格式的字符串
      * @return Date 日期类型对象
@@ -170,27 +172,64 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 按照指定的格式，将字符串解析成日期类型对象，例如：yyyy-MM-dd,yyyy/MM/dd,yyyy/MM/dd hh:mm:ss
+     * 将给定的日期字符串按指定格式转换为Date对象。
      *
-     * @param dateStr 日期格式的字符串
-     * @param format  字符串的格式
-     * @return Date 日期类型对象
+     * @param dateStr 待转换的日期字符串
+     * @param format  日期格式
+     * @return 转换后的Date对象
      */
     public static Date parseDate(String dateStr, String format) {
+        Locale locale;
+        if (CST_FORM.equals(format)) {
+            locale = Locale.US;
+        } else {
+            locale = Locale.getDefault(Locale.Category.FORMAT);
+        }
+        return parseDate(dateStr, format, locale);
+    }
+
+    /**
+     * 将给定的日期字符串按指定格式和Locale转换为Date对象。
+     *
+     * @param dateStr 待转换的日期字符串
+     * @param format  日期格式
+     * @param locale  解析日期时使用的Locale
+     * @return 转换后的Date对象
+     * @since 2.6.7
+     */
+    public static Date parseDate(String dateStr, String format, Locale locale) {
+        // 判断待转换的日期字符串是否为空
         if (EmptyUtils.isEmpty(dateStr)) {
             return null;
         }
         SimpleDateFormat simpleDateFormat;
-        if (CST_FORM.equals(format)) {
-            simpleDateFormat = new SimpleDateFormat(format, Locale.US);
+        if (dateStr.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}")) {
+            simpleDateFormat = new SimpleDateFormat(DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC_SSS);
         } else {
-            simpleDateFormat = new SimpleDateFormat(format);
+            simpleDateFormat = new SimpleDateFormat(format, locale);
         }
         try {
+            // 解析日期字符串，并返回解析得到的Date对象
             return simpleDateFormat.parse(dateStr);
-        } catch (ParseException e) {
-            throw new ToolboxException(e);
+        } catch (ParseException parseException) {
+            // 如果解析日期时出现异常，则封装为ToolboxException异常并抛出
+            throw new ToolboxException(parseException);
         }
+    }
+
+    /**
+     * 将给定的日期字符串按指定的输入格式和Locale解析为Date对象，然后将其转换为指定的输出格式的日期字符串。
+     *
+     * @param dateStr      待转换的日期字符串
+     * @param inputFormat  输入日期格式
+     * @param locale       解析日期时使用的Locale
+     * @param resultFormat 输出日期格式
+     * @return 转换后的日期字符串
+     * @since 2.6.7
+     */
+    public static String parseDateFormatStr(String dateStr, String inputFormat, Locale locale, String resultFormat) {
+        Date date = parseDate(dateStr, inputFormat, locale);
+        return DateUtils.format(date, resultFormat);
     }
 
     /**
@@ -205,6 +244,63 @@ public class DateUtils extends DateCode {
     }
 
     /**
+     * 格式化时间戳，默认格式为年月日时分秒
+     *
+     * @param timestamp 时间戳字符串
+     * @return 格式化后的时间字符串
+     * @since 2.6.7
+     */
+    public static String formatTimestamp(String timestamp) {
+        return formatTimestamp(Long.parseLong(timestamp));
+    }
+
+    /**
+     * 格式化秒级时间戳，默认格式为年月日时分秒
+     *
+     * @param timestamp 秒级时间戳字符串
+     * @return 格式化后的时间字符串
+     * @since 2.6.7
+     */
+    public static String formatTimestampSecond(String timestamp) {
+        return formatTimestampSecond(Long.parseLong(timestamp));
+    }
+
+    /**
+     * 格式化秒级时间戳，默认格式为年月日时分秒
+     *
+     * @param timestamp 秒级时间戳字符串
+     * @param format    自定义日期时间格式
+     * @return 格式化后的时间字符串
+     * @since 2.6.7
+     */
+    public static String formatTimestampSecond(String timestamp, String format) {
+        return formatTimestampSecond(Long.parseLong(timestamp), format);
+    }
+
+    /**
+     * 格式化秒级时间戳，默认格式为年月日时分秒
+     *
+     * @param timestamp 秒级时间戳
+     * @return 格式化后的时间字符串
+     * @since 2.6.7
+     */
+    public static String formatTimestampSecond(long timestamp) {
+        return formatTimestampSecond(timestamp, YEAR_MONTH_DAY_HOUR_MIN_SEC);
+    }
+
+    /**
+     * 格式化秒级时间戳，默认格式为年月日时分秒
+     *
+     * @param timestamp 秒级时间戳
+     * @param format    自定义日期时间格式
+     * @return 格式化后的时间字符串
+     * @since 2.6.7
+     */
+    public static String formatTimestampSecond(long timestamp, String format) {
+        return formatTimestamp(timestamp * 1000, format);
+    }
+
+    /**
      * 将时间戳转换成日期格式的字符串
      *
      * @param timestamp 时间戳
@@ -213,9 +309,6 @@ public class DateUtils extends DateCode {
      * @since 1.3.12
      */
     public static String formatTimestamp(long timestamp, String format) {
-        if (timestamp < 0) {
-            return null;
-        }
         return new SimpleDateFormat(format).format(timestamp);
     }
 
@@ -1203,5 +1296,55 @@ public class DateUtils extends DateCode {
         } catch (ParseException e) {
             throw new ToolboxException(e);
         }
+    }
+
+    /**
+     * 判断给定的字符串是否表示一个时间戳。
+     *
+     * @param str 要检查的字符串
+     * @return 如果字符串表示一个时间戳，则返回 true；否则返回 false
+     * @since 2.7.5
+     */
+    public static boolean isTimestamp(String str) {
+        return isTimestamp(Long.parseLong(str));
+    }
+
+    /**
+     * 判断给定的字符串是否表示一个时间戳。
+     *
+     * @param timestamp 要检查的时间戳
+     * @return 如果字符串表示一个时间戳，则返回 true；否则返回 false
+     * @since 2.7.5
+     */
+    public static boolean isTimestamp(long timestamp) {
+        try {
+            Instant.ofEpochMilli(timestamp); // 尝试解析时间戳
+            return true;
+        } catch (NumberFormatException numberFormatException) {
+            // 如果字符串无法解析为长整型，则不是时间戳
+            return false;
+        }
+    }
+
+    /**
+     * 检查给定的时间戳字符串是否表示毫秒级别的时间戳。
+     *
+     * @param timestamp 时间戳字符串
+     * @return 如果时间戳字符串长度为13，则返回 true，否则返回 false
+     * @since 2.7.5
+     */
+    public static boolean isTimestampInMilli(String timestamp) {
+        return timestamp.length() == 13;
+    }
+
+    /**
+     * 检查给定的时间戳是否表示毫秒级别的时间戳。
+     *
+     * @param timestamp 时间戳
+     * @return 如果时间戳的字符串表示长度为13，则返回 true，否则返回 false
+     * @since 2.7.5
+     */
+    public static boolean isTimestampInMilli(long timestamp) {
+        return isTimestampInMilli(Long.toString(timestamp));
     }
 }

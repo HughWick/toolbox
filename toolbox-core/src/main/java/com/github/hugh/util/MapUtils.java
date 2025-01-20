@@ -9,6 +9,7 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -21,35 +22,7 @@ import java.util.*;
  * @since 1.0.2
  */
 public class MapUtils {
-
-    /**
-     * 校验map中code状态是否为0000(成功状态)
-     *
-     * @param map  Map
-     * @param key  map中的key
-     * @param code 需要验证的code码
-     * @param <K>  key 类型
-     * @param <V>  value 类型
-     * @return boolean {@code true} 一致
-     */
-    @Deprecated
-    public static <K, V> boolean isSuccess(Map<K, V> map, K key, String code) {
-        return isEquals(map, key, code);
-    }
-
-    /**
-     * 根据key与code码、校验与map中一致
-     *
-     * @param map  参数
-     * @param key  键
-     * @param code 值
-     * @param <K>  key 类型
-     * @param <V>  value 类型
-     * @return boolean {@code true} 不一致
-     */
-    @Deprecated
-    public static <K, V> boolean isFailure(Map<K, V> map, K key, String code) {
-        return !isEquals(map, key, code);
+    private MapUtils() {
     }
 
     /**
@@ -448,8 +421,57 @@ public class MapUtils {
     }
 
     /**
+     * 为map put不为空的值
+     * <p>如果key或value为空时则不put</p>
+     *
+     * @param map   map
+     * @param key   key
+     * @param value value
+     * @param <K>   the key type
+     * @param <V>   the value type
+     * @since 2.6.2
+     */
+    public static <K, V> void putNotEmpty(final Map<? super K, V> map, final K key, final V value) {
+        if (map == null) {
+            return;
+        }
+        if (EmptyUtils.isEmpty(key) || EmptyUtils.isEmpty(value)) {
+            return;
+        }
+        map.put(key, value);
+    }
+
+    /**
+     * 如果键和值都不为空，则将键值对存储到指定的Map中。如果值为空但有默认值，则使用默认值替代空值进行存储。
+     *
+     * @param map          目标Map
+     * @param key          键
+     * @param value        值
+     * @param defaultValue 默认值
+     * @param <K>          键类型
+     * @param <V>          值类型
+     * @since 2.6.2
+     */
+    public static <K, V> void putNotEmpty(final Map<? super K, V> map, final K key, final V value, final V defaultValue) {
+        if (map == null) {
+            return;
+        }
+        if (EmptyUtils.isEmpty(key)) {
+            return;
+        }
+        if (EmptyUtils.isEmpty(value)) {
+            if (EmptyUtils.isNotEmpty(defaultValue)) {
+                map.put(key, defaultValue);
+            }
+        } else {
+            map.put(key, value);
+        }
+    }
+
+    /**
      * 为map put值
      * <p>如果key或value为空时则不put</p>
+     * <p>2.6.2 之后修正命名规范，直接使用{@link #putNotEmpty(Map, Object, Object)}</p>
      *
      * @param map   map
      * @param key   key
@@ -458,14 +480,9 @@ public class MapUtils {
      * @param <V>   the value type
      * @since 1.7.3
      */
+    @Deprecated
     public static <K, V> void setValue(final Map<? super K, V> map, final K key, final V value) {
-        if (map == null) {
-            return;
-        }
-        if (EmptyUtils.isEmpty(key) || EmptyUtils.isEmpty(value)) {
-            return;
-        }
-        map.put(key, value);
+        putNotEmpty(map, key, value);
     }
 
     /**
@@ -590,5 +607,49 @@ public class MapUtils {
             map.put(values[0], values[1]);
         }
         return map;
+    }
+
+    /**
+     * 将一个 Java 对象转换为一个包含字段名和字段值的 Map。
+     *
+     * @param bean 要转换的对象
+     * @param <T>  对象的类型
+     * @return 包含字段名和字段值的 Map
+     * @throws ToolboxException 如果访问字段时发生异常
+     * @since 2.7.2
+     */
+    public static <T> Map<String, Object> entityToMap(T bean) throws ToolboxException {
+        return entityToMap(bean, false);
+    }
+
+    /**
+     * 将JavaBean对象转换为Map对象。
+     *
+     * @param bean       要转换的JavaBean对象
+     * @param isNotEmpty 是否只添加非空字段到Map中
+     * @param <T>        JavaBean对象类型
+     * @return 转换后的Map对象
+     * @since 2.7.2
+     */
+    public static <T> Map<String, Object> entityToMap(T bean, boolean isNotEmpty) {
+        Map<String, Object> item = new HashMap<>();
+        Class<?> clazz = bean.getClass();
+        for (Field field : clazz.getDeclaredFields()) {
+            try {
+                field.setAccessible(true);
+                // 将字段名和字段值添加到 Map 中
+                if (isNotEmpty) {
+                    if (EmptyUtils.isNotEmpty(field.get(bean))) {
+                        item.put(field.getName(), field.get(bean));
+                    }
+                } else {
+                    item.put(field.getName(), field.get(bean));
+                }
+            } catch (IllegalAccessException illegalAccessException) {
+                // 如果访问字段时发生异常，抛出自定义异常
+                throw new ToolboxException(illegalAccessException);
+            }
+        }
+        return item;
     }
 }

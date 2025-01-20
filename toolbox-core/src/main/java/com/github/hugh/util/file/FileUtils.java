@@ -1,12 +1,12 @@
 package com.github.hugh.util.file;
 
-import com.github.hugh.constant.enums.FileTypeEnum;
+import com.github.hugh.constant.StrPool;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.DoubleMathUtils;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.StringUtils;
-import com.github.hugh.util.base.BaseConvertUtils;
 import com.github.hugh.util.io.StreamUtils;
+import com.github.hugh.util.regex.RegexUtils;
 import com.google.common.io.Files;
 import lombok.Cleanup;
 
@@ -18,6 +18,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.text.DecimalFormat;
 import java.util.Base64;
+import java.util.regex.Matcher;
 
 /**
  * 文件工具类
@@ -252,29 +253,41 @@ public class FileUtils {
     }
 
     /**
-     * 文件大小换算
+     * 格式化文件大小显示，默认包含单位，根据文件大小返回相应的大小字符串（带单位）。
      *
      * @param fileSize 文件大小
      * @return String 格式化后的文件大小：XX MB、XX GB
      * @since 2.2.2
      */
     public static String formatFileSize(long fileSize) {
+        return formatFileSize(fileSize, true);
+    }
+
+    /**
+     * 格式化文件大小显示，返回相应的大小字符串（带单位）。
+     *
+     * @param fileSize    文件大小
+     * @param includeUnit 是否包含单位（true 包含单位，false 不包含单位）
+     * @return 格式化后的文件大小字符串
+     * @since 2.7.15
+     */
+    public static String formatFileSize(long fileSize, boolean includeUnit) {
         String wrongSize = "0";
         if (fileSize <= 0) {
             return wrongSize;
         }
-        int kb = 1024;//定义KB的计算常量
-        int mb = kb * kb;//定义MB的计算常量
-        int gb = mb * kb;//定义GB的计算常量
+        int kb = 1024; // 定义 KB 的计算常量
+        int mb = kb * kb; // 定义 MB 的计算常量
+        int gb = mb * kb; // 定义 GB 的计算常量
         if (fileSize < kb) {
             DecimalFormat df = new DecimalFormat("#.00");
-            return df.format((double) fileSize) + "B";
+            return df.format((double) fileSize) + (includeUnit ? "B" : StrPool.EMPTY);
         } else if (fileSize < mb) {
-            return DoubleMathUtils.div(fileSize, kb, 2) + "KB";
+            return DoubleMathUtils.div(fileSize, kb, 2) + (includeUnit ? "KB" : StrPool.EMPTY);
         } else if (fileSize < gb) {
-            return DoubleMathUtils.div(fileSize, mb, 2) + "MB";
+            return DoubleMathUtils.div(fileSize, mb, 2) + (includeUnit ? "MB" : StrPool.EMPTY);
         } else {
-            return DoubleMathUtils.div(fileSize, gb, 2) + "GB";
+            return DoubleMathUtils.div(fileSize, gb, 2) + (includeUnit ? "GB" : StrPool.EMPTY);
         }
     }
 
@@ -293,7 +306,7 @@ public class FileUtils {
     }
 
     /**
-     * 文件大小换算
+     * 根据文件路径，格式化文件大小显示，返回相应的大小字符串（带单位）。
      *
      * @param path 文件路径
      * @return String 格式化后的文件大小：XX MB、XX GB
@@ -301,95 +314,6 @@ public class FileUtils {
      */
     public static String formatFileSize(String path) {
         return formatFileSize(new File(path));
-    }
-
-    /**
-     * 获取文件真实类型
-     *
-     * @param filePath 文件路径
-     * @return String 文件类型
-     * @throws FileNotFoundException 文件未找到异常
-     * @since 2.4.6
-     */
-    public static String getFileType(String filePath) throws FileNotFoundException {
-        return getFileType(new File(filePath));
-    }
-
-    /**
-     * 获取文件真实类型
-     * <p>
-     *
-     * </p>
-     *
-     * @param file 文件
-     * @return String 文件类型
-     * @throws FileNotFoundException 文件未找到异常
-     * @since 2.4.6
-     */
-    public static String getFileType(File file) throws FileNotFoundException {
-        return getFileType(new FileInputStream(file), true);
-    }
-
-    /**
-     * 根据输入流获取文件类型。
-     * <p>
-     * 该方法不会关闭{@link InputStream}，如需获取完后关闭流则调用{@link  #getFileType(InputStream, boolean)}
-     * </p>
-     *
-     * @param inputStream 输入流
-     * @return 文件类型，如果无法确定类型则返回null
-     * @since 2.5.15
-     */
-    public static String getFileType(InputStream inputStream) {
-        return getFileType(inputStream, false);
-    }
-
-    /**
-     * 获取文件真实类型
-     * <p>zip文件头与xlsx近似，无法准确判断</p>
-     *
-     * @param inputStream 输入流
-     * @param closeStream 是否关闭输入流，true表示关闭，false表示不关闭
-     * @return String 文件类型，如果无法确定类型则返回null
-     * @since 2.4.6
-     */
-    public static String getFileType(InputStream inputStream, boolean closeStream) {
-        try (BufferedInputStream bis = new BufferedInputStream(inputStream)) {
-            String fileHead = getFileHead(bis);
-            if (EmptyUtils.isEmpty(fileHead)) {
-                return null;
-            }
-            FileTypeEnum[] fileTypes = FileTypeEnum.values();
-            for (FileTypeEnum type : fileTypes) {
-                if (fileHead.startsWith(type.getValue())) {
-                    return type.name().toLowerCase();
-                }
-            }
-            return null;
-        } catch (IOException ioException) {
-            throw new ToolboxException(ioException.getMessage());
-        } finally {
-            if (closeStream) {
-                StreamUtils.close(inputStream);
-            }
-        }
-    }
-
-    /**
-     * 获取文件流中文件头内容，并且转十六进制
-     *
-     * @param inputStream 文件流
-     * @return String 文件头十六进制
-     * @since 2.4.6
-     */
-    private static String getFileHead(InputStream inputStream) {
-        byte[] bytes = new byte[28];
-        try {
-            inputStream.read(bytes, 0, 28);
-        } catch (IOException ioException) {
-            throw new ToolboxException(ioException);
-        }
-        return BaseConvertUtils.hexBytesToString(bytes);
     }
 
     /**
@@ -431,16 +355,11 @@ public class FileUtils {
      * @since 2.5.14
      */
     public static String imageToBase64Str(File image) {
-        byte[] data;
         try (InputStream inputStream = new FileInputStream(image)) {
-            // 读取图片数据流
-            data = new byte[inputStream.available()];
-            inputStream.read(data);
+            return imageToBase64Str(inputStream);
         } catch (IOException ioException) {
             throw new ToolboxException(ioException.getMessage());
         }
-        // 对数据进行加密操作
-        return Base64.getEncoder().encodeToString(data);
     }
 
     /**
@@ -462,23 +381,95 @@ public class FileUtils {
      * @since 2.5.14
      */
     public static void base64StrToImage(String base64Str, String path) {
-        // 解密
-        byte[] b = Base64.getDecoder().decode(base64Str);
-        for (int i = 0; i < b.length; ++i) {
-            if (b[i] < 0) {
-                b[i] += 256;
-            }
+        // 移除 MIME 类型前缀
+        String data = base64Str;
+        Matcher matcher = RegexUtils.BASE64_DATA_URI_REGEX.matcher(base64Str);
+        if (matcher.matches()) {
+            data = matcher.group(2);
+        } else if (base64Str.contains("data:")) { // 如果包含data: 但不匹配完整格式，则抛出异常
+            throw new IllegalArgumentException("Invalid Base64 data URI format.");
         }
+        // 解密
+        byte[] decodedBytes = Base64.getDecoder().decode(data);
         // 文件夹不存在则自动创建
         File tempFile = new File(path);
         if (!tempFile.getParentFile().exists()) {
             tempFile.getParentFile().mkdirs();
         }
         try (OutputStream out = new FileOutputStream(tempFile)) {
-            out.write(b);
+            out.write(decodedBytes);
             out.flush();
         } catch (Exception exception) {
             throw new ToolboxException(exception.getMessage());
+        }
+    }
+
+    /**
+     * 将输入流转换为Base64编码的字符串表示。
+     *
+     * @param inputStream 输入流，用于读取图片数据
+     * @return Base64编码的图片字符串
+     * @since 2.7.5
+     */
+    public static String imageToBase64Str(InputStream inputStream) {
+        try {
+            // 将InputStream转换为byte数组
+            byte[] bytes = StreamUtils.toByteArray(inputStream);
+            // 将byte数组转换为Base64编码的字符串
+            return Base64.getEncoder().encodeToString(bytes);
+        } catch (IOException ioException) {
+            throw new ToolboxException(ioException);
+        }
+    }
+
+    /**
+     * 从 Base64 编码的字符串中提取 MIME 类型
+     *
+     * @param base64String Base64 编码的字符串，通常以 "data:image/..." 或 "data:application/pdf;base64,..." 开头
+     * @return 返回 MIME 类型（例如："image/jpeg"），如果字符串不是有效的 Base64 数据 URI，则返回 null
+     * @since 2.7.19
+     */
+    public static String getMimeType(String base64String) {
+        if (base64String == null || base64String.isEmpty()) {
+            return null;  // 如果输入字符串为空或 null，则返回 null
+        }
+        // 使用正则表达式匹配 Base64 数据 URI 格式
+        Matcher matcher = RegexUtils.BASE64_DATA_URI_REGEX.matcher(base64String);
+        // 如果匹配成功，提取出 MIME 类型部分
+        if (matcher.matches()) {
+            return matcher.group(1);  // group(1) 表示正则匹配结果中的 MIME 类型部分
+        }
+        // 如果没有匹配到数据 URI 格式，则返回 null
+        return null;
+    }
+
+    /**
+     * 根据 MIME 类型获取对应的文件扩展名
+     *
+     * @param mimeType MIME 类型（例如："image/jpeg"）
+     * @return 返回文件扩展名（例如："jpg"），如果没有找到匹配的 MIME 类型，则返回 null
+     * @since 2.7.19
+     */
+    public static String getExtensionFromMimeType(String mimeType) {
+        if (mimeType == null || mimeType.isEmpty()) {
+            return null;  // 如果输入的 MIME 类型为空或 null，则返回 null
+        }
+        // 根据常见的 MIME 类型返回相应的文件扩展名
+        switch (mimeType) {
+            case "image/jpeg":
+                return "jpg";  // JPEG 图片对应的扩展名是 .jpg
+            case "image/png":
+                return "png";  // PNG 图片对应的扩展名是 .png
+            case "image/gif":
+                return "gif";  // GIF 图片对应的扩展名是 .gif
+            case "application/pdf":
+                return "pdf";  // PDF 文件对应的扩展名是 .pdf
+            case "text/plain":
+                return "txt";  // 纯文本文件对应的扩展名是 .txt
+            // ... 可以在这里添加更多的 MIME 类型与文件扩展名的映射
+            default:
+                // 如果没有找到对应的扩展名，则返回 null
+                return null;
         }
     }
 }

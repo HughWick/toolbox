@@ -28,7 +28,7 @@ public @interface NotEmpty {
      *
      * @return String
      */
-    String message() default "";
+    String message() default "{com.github.hugh.aop.constraints.NotEmpty.message}";
 
     /**
      * 值

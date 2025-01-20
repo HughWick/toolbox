@@ -14,8 +14,11 @@ class AppkeyTest {
 
     @Test
     void testKey() {
-        System.out.println("--->"+AppkeyUtils.generate());
-        assertEquals(32 , AppkeyUtils.generate().length());
-        assertEquals(64 , AppkeyUtils.generateSecret().length());
+        String appkey1 = AppkeyUtils.generate();
+        String appSecret1 = AppkeyUtils.generateSecret();
+        System.out.println("-appkey1-->"+ appkey1);
+        System.out.println("-appSecret1-->"+ appSecret1);
+        assertEquals(32 , appkey1.length());
+        assertEquals(64 , appSecret1.length());
     }
 }

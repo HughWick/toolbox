@@ -14,9 +14,10 @@ import javax.validation.ConstraintValidatorContext;
  */
 public class NotEmptyValidator implements ConstraintValidator<NotEmpty, String> {
 
+    private String message;
     @Override
     public void initialize(NotEmpty notEmpty) {
-
+        this.message = notEmpty.value(); // 获取注解的 value 属性值
     }
 
     /**
@@ -29,6 +30,11 @@ public class NotEmptyValidator implements ConstraintValidator<NotEmpty, String> 
      */
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
+        // 如果值为null或空字符串，则禁用默认约束违规提示，并使用指定消息构建自定义约束违规提示
+        if (value == null || value.length() == 0) {
+            constraintValidatorContext.disableDefaultConstraintViolation(); // 禁用默认约束违规提示
+            constraintValidatorContext.buildConstraintViolationWithTemplate(message).addConstraintViolation(); // 使用指定消息构建自定义约束违规提示
+        }
         return EmptyUtils.isNotEmpty(value);
     }
 }

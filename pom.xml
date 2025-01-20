@@ -5,8 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.hughwick</groupId>
     <artifactId>toolbox-parent</artifactId>
-    <version>2.5.16</version>
+    <version>2.7.24</version>
     <packaging>pom</packaging>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
     <modules>
         <module>toolbox-all</module>
         <module>toolbox-aop</module>
@@ -17,6 +24,7 @@
         <module>toolbox-bean</module>
         <module>toolbox-json</module>
         <module>toolbox-http</module>
+        <module>toolbox-mongodb</module>
     </modules>
 
     <properties>
@@ -27,32 +35,42 @@
         <!--========================== All Plugins START =====================-->
         <plugin.compiler.version>3.8.1</plugin.compiler.version>
         <plugin.sonar.version>3.1.1</plugin.sonar.version>
-        <plugin.surefire.version>2.22.2</plugin.surefire.version>
-        <plugin.jacoco.version>0.8.8</plugin.jacoco.version>
+        <!--        <plugin.surefire.version>2.22.2</plugin.surefire.version>-->
+        <plugin.surefire.version>3.5.2</plugin.surefire.version>
+        <plugin.jacoco.version>0.8.12</plugin.jacoco.version>
         <plugin.surefire.skip-it>false</plugin.surefire.skip-it>
         <plugin.surefire.ignore-failure>false</plugin.surefire.ignore-failure>
         <plugin.maven-source-plugin.version>2.2.1</plugin.maven-source-plugin.version>
         <plugin.maven-javadoc-plugin.version>3.3.1</plugin.maven-javadoc-plugin.version>
-        <plugin.maven-gpg-plugin.version>1.5</plugin.maven-gpg-plugin.version>
-        <plugin.jacoco.version>0.8.8</plugin.jacoco.version>
+        <plugin.maven-gpg-plugin.version>1.6</plugin.maven-gpg-plugin.version>
         <!--============================== other ==============================-->
         <lombok.version>1.18.24</lombok.version>
         <spring.version>5.3.23</spring.version>
         <powermock.version>2.0.9</powermock.version>
         <!--============================== 第三方工具类 ==============================-->
+        <!--   gson再往上的版本测试用例会出现问题     -->
         <google-gson.version>2.10.1</google-gson.version>
         <fastjson.version>1.2.83</fastjson.version>
+        <!--        <fastjson.version>2.0.53</fastjson.version>-->
         <okhttp.version>4.9.3</okhttp.version>
         <servlet-api.version>4.0.1</servlet-api.version>
-        <google-guava.version>32.1.1-jre</google-guava.version>
+        <google-guava.version>33.1.0-jre</google-guava.version>
         <kryo.version>4.0.2</kryo.version>
-        <slf4j-simple.version>2.0.7</slf4j-simple.version>
+        <slf4j-simple.version>2.0.16</slf4j-simple.version>
         <ip2region.version>2.7.0</ip2region.version>
         <UserAgentUtils.version>1.21</UserAgentUtils.version>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
-        <redis.version>3.6.3</redis.version>
-        <caffeine.version>3.1.2</caffeine.version>
+        <mongodb.version>2.6.13</mongodb.version>
+        <redis.version>3.7.1</redis.version>
+        <caffeine.version>3.1.8</caffeine.version>
         <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
+        <pdfbox.version>2.0.29</pdfbox.version>
+        <knife4j.version>3.0.3</knife4j.version>
+        <bcprov-jdk18on.version>1.78.1</bcprov-jdk18on.version>
+        <dom4j.version>2.1.4</dom4j.version>
+        <!--    test powermock 版本号与mockito版本号对等  -->
+        <powermock.version>2.0.2</powermock.version>
+        <mockito.version>2.23.4</mockito.version>
     </properties>
 
     <dependencies>
@@ -84,6 +102,47 @@
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>mockwebserver</artifactId>
             <version>${okhttp.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito2 -->
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.powermock/powermock-core -->
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-core</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.powermock/powermock-module-junit4 -->
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!--     阿里json解析   -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!--    html 转pdf工具    -->
+        <dependency>
+            <groupId>io.woo</groupId>
+            <artifactId>htmltopdf</artifactId>
+            <version>1.0.8</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -166,6 +225,34 @@
                 <artifactId>jakarta.validation-api</artifactId>
                 <version>${jakarta.validation-api.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on -->
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk18on</artifactId>
+                <version>${bcprov-jdk18on.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox -->
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox</artifactId>
+                <version>${pdfbox.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-spring-boot-starter -->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-mongodb</artifactId>
+                <version>${mongodb.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dom4j</groupId>
+                <artifactId>dom4j</artifactId>
+                <version>${dom4j.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>
@@ -217,9 +304,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${plugin.surefire.version}</version>
-                <configuration>
-                    <argLine> -Xmx1024m -Dfile.encoding=UTF-8</argLine><!-- 解决从mvn test中读取测试数据时的中文乱码问题 -->
-                </configuration>
+                <!--                <configuration>-->
+                <!--                    <argLine>-Xmx1024m -Dfile.encoding=UTF-8</argLine>&lt;!&ndash; 解决从mvn test中读取测试数据时的中文乱码问题 &ndash;&gt;-->
+                <!--                </configuration>-->
             </plugin>
             <!--=================================== coveralls END ===================================-->
             <!--sonar-->
@@ -228,15 +315,14 @@
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>${plugin.sonar.version}</version>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
 
     <!--============================== ADD For sonatype START ==============================-->
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -249,7 +335,6 @@
         <connection>scm:git:https://github.com/HughWick/toolbox.git</connection>
         <developerConnection>scm:git:https://github.com/HughWick/toolbox.git</developerConnection>
         <url>https://github.com/HughWick/toolbox</url>
-        <tag>1.0.1</tag>
     </scm>
     <!-- 开发者信息 -->
     <developers>
@@ -267,6 +352,18 @@
             <id>release</id>
             <build>
                 <plugins>
+                    <!--   central发布插件    -->
+                    <!--新账号的配置：将组件部署到OSSRH并将其发布到Central Repository-->
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.4.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <tokenAuth>true</tokenAuth>
+                        </configuration>
+                    </plugin>
                     <!-- Source -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -312,14 +409,20 @@
                 </plugins>
             </build>
             <distributionManagement>
+                <!--      旧平台       -->
+                <!--                <snapshotRepository>-->
+                <!--                    <id>Hugh</id>-->
+                <!--                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>-->
+                <!--                </snapshotRepository>-->
+                <!--                <repository>-->
+                <!--                    <id>Hugh</id>-->
+                <!--                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
+                <!--                </repository>-->
+                <!--      新中央平台      -->
                 <snapshotRepository>
-                    <id>snapshot</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                    <id>central</id>
+                    <url>https://central.sonatype.com/</url>
                 </snapshotRepository>
-                <repository>
-                    <id>snapshot</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                </repository>
             </distributionManagement>
         </profile>
     </profiles>

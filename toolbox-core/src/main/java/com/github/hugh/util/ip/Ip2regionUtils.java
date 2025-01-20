@@ -1,6 +1,7 @@
 package com.github.hugh.util.ip;
 
 import com.github.hugh.bean.dto.Ip2regionDTO;
+import com.github.hugh.components.IpResolver;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.io.StreamUtils;
 import com.google.common.base.Suppliers;
@@ -10,7 +11,7 @@ import java.util.function.Supplier;
 
 /**
  * 基于 ip2region IP查询国家省市工具
- * <p>https://github.com/lionsoul2014/ip2region</p>
+ * <p><a href="https://github.com/lionsoul2014/ip2region">...</a></p>
  *
  * @author hugh
  * @since 1.5.2
@@ -64,7 +65,9 @@ public class Ip2regionUtils {
     public static String getCityInfo(String ip, byte[] cBuff) {
         try {
             // 1、从 dbPath 加载整个 xdb 到内存。
-//            byte[] cBuff = getData();
+            if (cBuff == null) {
+                cBuff = getData();
+            }
             // 2、使用上述的 cBuff 创建一个完全基于内存的查询对象。
             Searcher searcher = Searcher.newWithBuffer(cBuff);
             // 3、查询
@@ -82,19 +85,20 @@ public class Ip2regionUtils {
      * @since 1.5.4
      */
     public static Ip2regionDTO parse(String ip) {
-        String str = getCityInfo(ip);
-//        Supplier<byte[]> easyRedisSupplier = () -> StreamUtils.resourceToByteArray(Ip2regionUtils.class.getResource(XDB_PATH).getPath());
-//        String str = getCityInfo(ip, easyRedisSupplier.get());
-        if (str == null) {
-            return null;
-        }
-        String[] arr = str.split("\\|");
-        Ip2regionDTO ip2regionDTO = new Ip2regionDTO();
-        ip2regionDTO.setCountry(arr[0]);
-        ip2regionDTO.setRegion(arr[1]);
-        ip2regionDTO.setProvince(arr[2]);
-        ip2regionDTO.setCity(arr[3]);
-        ip2regionDTO.setIsp(arr[4]);
-        return ip2regionDTO;
+        return parse(ip, getData());
+    }
+
+    /**
+     * 根据IP地址解析国家、省份、城市、运营商信息
+     * 应直接使用{@link com.github.hugh.components.IpResolver}
+     *
+     * @param ip    IP
+     * @param cBuff 从 dbPath 加载整个 xdb 到内存
+     * @return {@link Ip2regionDTO}
+     * @since 2.7.5
+     */
+    @Deprecated
+    public static Ip2regionDTO parse(String ip, byte[] cBuff) {
+        return IpResolver.on(ip, cBuff).parse();
     }
 }

@@ -62,5 +62,10 @@ public class SuffixCode {
     /**
      * 音频
      */
+    public static final String MP3 = "MP3";
+
+    /**
+     * 音频
+     */
     public static final String M4A = "M4A";
 }

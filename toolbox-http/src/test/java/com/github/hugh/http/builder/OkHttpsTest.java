@@ -1,5 +1,6 @@
 package com.github.hugh.http.builder;
 
+import com.alibaba.fastjson.JSON;
 import com.github.hugh.http.OkHttpUpdateFileTest;
 import com.github.hugh.http.constant.MediaTypes;
 import com.github.hugh.http.constant.OkHttpCode;
@@ -7,7 +8,10 @@ import com.github.hugh.http.exception.ToolboxHttpException;
 import com.github.hugh.http.model.FileFrom;
 import com.github.hugh.http.model.JsonPlaceholderResult;
 import com.github.hugh.http.model.ResponseData;
+import com.github.hugh.json.gson.GsonUtils;
 import com.github.hugh.json.gson.Jsons;
+import com.github.hugh.util.file.FileUtils;
+import com.github.hugh.util.file.ImageUtils;
 import okhttp3.*;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -46,6 +50,8 @@ class OkHttpsTest {
     private static final String http_json_placeholder_get_url = "http://jsonplaceholder.typicode.com/posts";
 
 
+    private static final String https_reqres_url = "https://reqres.in";
+
     @Test
     void testGet() throws IOException {
         final ToolboxHttpException toolboxHttpException = Assertions.assertThrowsExactly(ToolboxHttpException.class, () -> {
@@ -58,13 +64,38 @@ class OkHttpsTest {
         map.put("foo2", "bar3");
         final String s2 = new OkHttps().setUrl(http_bin_get_url).setBody(map).doGet().getMessage();
         assertNotNull(s2);
-        final ResponseData postman = new OkHttps().setUrl(http_bin_get_url).setBody(map).doGet().fromJson(ResponseData.class);
+        OkHttpsResponse okHttpsResponse = new OkHttps().setUrl(http_bin_get_url).setBody(map).doGet();
+        assertTrue(okHttpsResponse.is200());
+        final ResponseData postman = okHttpsResponse.fromJson(ResponseData.class);
         assertEquals(params1, postman.getArgs().getFoo1());
         assertEquals("okhttp/4.9.3", postman.getHeaders().getUserAgent());
+    }
+
+    @Test
+    void testHeader() throws IOException {
+        Map<String, Object> map = new HashMap<>();
+        String params1 = "bar1";
+        map.put("foo1", params1);
+        map.put("foo2", "bar3");
         Map<String, String> headers = new HashMap<>();
         headers.put("User-Agent", "Custom User Agent");
-        final ResponseData responseData = new OkHttps().setUrl(http_bin_get_url).setBody(map).setHeader(headers).doGet().fromJson(ResponseData.class);
+        final ResponseData responseData = OkHttps.url(http_bin_get_url)
+                .setBody(map)
+                .setHeader(headers)
+                .doGet()
+                .fromJson(ResponseData.class);
         assertEquals("Custom User Agent", responseData.getHeaders().getUserAgent());
+        Map<String, String> headers2 = new HashMap<>();
+        headers2.put("User-Agent", "poxy-v2rayN");
+        final String message2 = OkHttps.url(http_bin_post_url)
+                .setBody(map)
+                .setHeader(headers2)
+                .doPostJson()
+                .getMessage();
+        ResponseData responseData2 = JSON.parseObject(message2, ResponseData.class);
+//        Jsons jsons = Jsons.on(message2);
+//        ResponseData responseData2 = jsons.formJson(ResponseData.class);
+        assertEquals("poxy-v2rayN", responseData2.getHeaders().getUserAgent());
     }
 
     @Test
@@ -85,11 +116,20 @@ class OkHttpsTest {
         String params1 = "bar1";
         map.put("foo1", params1);
         map.put("foo2", "bar3");
-        final Jsons jsons = new OkHttps().setUrl(http_bin_post_url).setBody(map).doPostJson().toJsons();
+        final Jsons jsons1 = new OkHttps().setUrl(http_bin_post_url).setBody(map).doPostJson().toJsons();
         assert MediaTypes.APPLICATION_JSON_UTF8 != null;
-        assertEquals(MediaTypes.APPLICATION_JSON_UTF8.toString(), jsons.getThis("headers").getString("Content-Type"));
+        assertEquals(MediaTypes.APPLICATION_JSON_UTF8.toString(), jsons1.getThis("headers").getString("Content-Type"));
         final ResponseData response1 = new OkHttps().setUrl(http_bin_post_url).doPostJson().fromJson(ResponseData.class);
         assertEquals("null", response1.getJson() + "");
+        String name2 = "jock";
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("user_name", name2);
+        Jsons jsons2 = OkHttps.url(http_bin_post_url)
+                .setBody(GsonUtils.toJson(map2))
+                .doPostJson()
+                .toJsons();
+        Jsons json = jsons2.getThis("json");
+        assertEquals(name2, json.getString("user_name"));
 //        final ResponseData responseData1 = new OkHttps().setUrl(http_bin_post_url).setBody(map).doPostForm().fromJson(ResponseData.class);
 //        assertEquals(params1, responseData1.getForm().getFoo1());
     }
@@ -98,12 +138,20 @@ class OkHttpsTest {
     void testCookie() throws Exception {
         String url = "http://httpbin.org/cookies/set?username=admin&password=123456";
         final String responseData = new OkHttps().setUrl(url)
-                .isSendCookie(true)
+                .sendCookie()
                 .doGet()
                 .getMessage();
         URI uri = URI.create(url);
         List<Cookie> cookies = OkHttpCode.COOKIE_STORE.get(uri.getHost());
         assertEquals("[username=admin; path=/, password=123456; path=/]", cookies.toString());
+//        String url2 = "http://httpbin.org/cookies/set?username=user_k2&password=si45";
+//        OkHttps.url(url2)
+//                .isSendCookie(true)
+//                .doPostForm()
+//                .getMessage();
+//        URI uri2 = URI.create(url2);
+//        List<Cookie> cookies2 = OkHttpCode.COOKIE_STORE.get(uri2.getHost());
+//        assertEquals("", cookies2.toString());
     }
 
     // 测试上传单张图片
@@ -113,35 +161,47 @@ class OkHttpsTest {
         var params = new HashMap<>();
         params.put("type", "0");
         final ToolboxHttpException toolboxHttpException = Assertions.assertThrowsExactly(ToolboxHttpException.class, () -> {
-            new OkHttps().setUrl(http_bin_post_url).setBody(params).uploadFile().getMessage();
+            OkHttpsResponse okHttpsResponse = new OkHttps().setUrl(http_bin_post_url).setBody(params).uploadFile();
+            System.out.println(okHttpsResponse.getMessage());
         });
         assertEquals("file is null", toolboxHttpException.getMessage());
         // 测试上传文件对应后台key为空
         final ToolboxHttpException toolboxHttpException2 = Assertions.assertThrowsExactly(ToolboxHttpException.class, () -> {
+//            new FileFrom("", "84630805_p0.jpg", getPath(path1), null, MediaTypes.IMAGE_JPEG)
+            FileFrom fileFrom = new FileFrom();
+            fileFrom.setName("84630805_p0.jpg");
+            fileFrom.setPath(getPath(path1));
+            fileFrom.setFileMediaType(MediaTypes.IMAGE_JPEG);
             // 测试单个
-            List<FileFrom> mediaList1 = Collections.singletonList(
-                    new FileFrom("", "84630805_p0.jpg", getPath(path1), null, MediaTypes.IMAGE_JPEG)
-            );
+            List<FileFrom> mediaList1 = Collections.singletonList(fileFrom);
             new OkHttps().setUrl(http_bin_post_url).setFileFrom(mediaList1).uploadFile().getMessage();
         });
         assertEquals("upload file key is null", toolboxHttpException2.getMessage());
         // 测试上传文件路径为空
         final ToolboxHttpException toolboxHttpException3 = Assertions.assertThrowsExactly(ToolboxHttpException.class, () -> {
+//            new FileFrom("file", "84630805_p0.jpg", null, null, MediaTypes.IMAGE_JPEG)
+            FileFrom fileFrom = new FileFrom();
+            fileFrom.setKey("file");
+            fileFrom.setName("84630805_p0.jpg");
+            fileFrom.setFileMediaType(MediaTypes.IMAGE_JPEG);
             // 测试单个
-            List<FileFrom> mediaList1 = Collections.singletonList(
-                    new FileFrom("file", "84630805_p0.jpg", null, null, MediaTypes.IMAGE_JPEG)
-            );
+            List<FileFrom> mediaList1 = Collections.singletonList(fileFrom);
             new OkHttps().setUrl(http_bin_post_url).setUrl(http_bin_post_url).setFileFrom(mediaList1).uploadFile().getMessage();
         });
         assertEquals("file path is null", toolboxHttpException3.getMessage());
         // 测试单个
-        FileFrom media1 = new FileFrom("file", "vant_log_150x150.png", getPath(path7), null, MediaTypes.IMAGE_PNG);
+//        FileFrom media1 = new FileFrom("file", "vant_log_150x150.png", getPath(path7), null, MediaTypes.IMAGE_PNG);
+        FileFrom media1 = new FileFrom();
+        media1.setKey("file");
+        media1.setName("vant_log_150x150.png");
+        media1.setPath(getPath(path7));
+        media1.setFileMediaType(MediaTypes.IMAGE_PNG);
         // 测试图片
-        final ResponseData responseData2 = new OkHttps().setUrl(http_bin_post_url)
+        OkHttpsResponse okHttpsResponse = new OkHttps().setUrl(http_bin_post_url)
                 .setBody(params)
                 .setFileFrom(media1)
-                .uploadFile()
-                .fromJson(ResponseData.class);
+                .uploadFile();
+        ResponseData responseData2 = okHttpsResponse.fromJson(ResponseData.class);
         // 验证数据长度
         assertEquals("4366", responseData2.getHeaders().getContentLength());
     }
@@ -149,17 +209,44 @@ class OkHttpsTest {
     // 测试多张图片
     @Test
     void testUploadFile() throws Exception {
+//        new FileFrom("file", "69956256_p1.jpg", getPath(path3), null, MediaTypes.TEXT_PLAIN),
+//                new FileFrom("file", "20200718234953_grmzy.jpeg", null, new File(getPath(path4)), MediaTypes.IMAGE_JPEG)
+        FileFrom fileFrom1 = new FileFrom();
+        fileFrom1.setKey("file");
+        fileFrom1.setName("69956256_p1.jpg");
+        fileFrom1.setPath(getPath(path3));
+        fileFrom1.setFileMediaType(MediaTypes.TEXT_PLAIN);
+        FileFrom fileFrom2 = new FileFrom();
+        fileFrom2.setKey("file");
+        fileFrom2.setName("20200718234953_grmzy.jpeg");
+        fileFrom2.setFile(new File(getPath(path4)));
+        fileFrom2.setFileMediaType(MediaTypes.IMAGE_JPEG);
         // 创建多个文件媒体信息对象
-        List<FileFrom> mediaList = Arrays.asList(
-                new FileFrom("file", "69956256_p1.jpg", getPath(path3), null, MediaTypes.TEXT_PLAIN),
-                new FileFrom("file", "20200718234953_grmzy.jpeg", null, new File(getPath(path4)), MediaTypes.IMAGE_JPEG)
-        );
+        List<FileFrom> mediaList = Arrays.asList(fileFrom1, fileFrom2);
         final var okHttpsResponse = new OkHttps().setUrl(http_bin_post_url).setFileFrom(mediaList)
                 .uploadFile();
         // 测试图片
         final ResponseData responseData3 = okHttpsResponse.fromJson(ResponseData.class);
         // 验证数据长度
         assertEquals("610771", responseData3.getHeaders().getContentLength());
+    }
+
+
+    @Test
+    void testUploadFileArray() throws Exception {
+        File file = new File(getPath(path4));
+        FileFrom fileFrom2 = new FileFrom();
+        fileFrom2.setKey("file");
+        fileFrom2.setName("20200718234953_grmzy.jpeg");
+        fileFrom2.setFileArray(FileUtils.toByteArray(file));
+        fileFrom2.setFileMediaType(MediaTypes.IMAGE_JPEG);
+        final var okHttpsResponse = new OkHttps().setUrl(http_bin_post_url).setFileFrom(fileFrom2)
+                .uploadFile();
+        // 测试图片
+        final ResponseData responseData3 = okHttpsResponse.fromJson(ResponseData.class);
+//        System.out.println(responseData3.getFiles().getFile());
+        // 验证数据长度
+        assertEquals("420099", responseData3.getHeaders().getContentLength());
     }
 
     private static String getPath(String fileName) {
@@ -295,8 +382,131 @@ class OkHttpsTest {
 
     @Test
     void testHttps() throws IOException {
-        String url = "http://factory.hnlot.com.cn/v2/host/queryList";
+//        String url = "https://factory.web.hnlot.com.cn/v2/host/queryList";
 //        final Jsons jsons = OkHttps.url(url).doGet().toJsons();
-        System.out.println(OkHttps.url(url).doGet().getMessage());
+//        System.out.println(OkHttps.url(url).doGet().getMessage());
+    }
+
+    @Test
+    void testPutParam() throws IOException {
+        String token = "79_jsNMM_0UBXjjgLHnMb82dEfd1dDSMPxSI5MXjpBkegFPzWiV7qHUVgbIoAFxAmf2d8PQQuq-Qd5B4NF19I1-7il2CO-FUtvoLYPUVbfxzHPoO7CjTZFFeiKLFxoUMQiAGAKCG";
+        String url1 = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + token;
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url1)
+                .setParam("scene", "scene")
+                .setParam("page", "")
+                .setParam("width", 280)
+                .setParam("is_hyaline", true)
+                .setParam("auto_color", true)
+                .setParam("env_version", "develop")
+                .doGet();
+//        String s = Base64.getEncoder().encodeToString(okHttpsResponse.getBytes());
+        if (ImageUtils.isNotBase64Image(okHttpsResponse.getBytes())) {
+//            Jsons on = Jsons.on(okHttpsResponse.getMessage());
+//            System.out.println("---不是一张图片时显示->>" + okHttpsResponse.toJsons());
+        } else {
+            assertTrue(ImageUtils.isBase64Image(okHttpsResponse.getBytes()));
+        }
+    }
+
+
+    @Test
+    void testSetParam() throws IOException {
+        String url1 = https_reqres_url + "/api/users";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url1)
+                .setParam("page", 1).doGet();
+        Jsons jsons = okHttpsResponse.toJsons();
+//        System.out.println(jsons);
+        assertEquals(1, jsons.getInt("page"));
+
+        String login_url = https_reqres_url + "/api/login";
+        OkHttpsResponse okHttpsResponse2 = OkHttps
+                .url(login_url)
+                .setParam("email", "eve.holt@reqres.in")
+                .setParam("password", "cityslicka")
+                .doPostJson();
+        assertNotNull(okHttpsResponse2.toJsons().getString("token"));
+    }
+
+    // 公共的404
+    @Test
+    void test404() throws IOException {
+        String url1 = "https://httpbin.org/status/404";
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", "123");
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url1).setBody(params).doGet();
+        assertTrue(okHttpsResponse.is404());
+        JsonPlaceholderResult.UserBean jsons = okHttpsResponse.fromJson(JsonPlaceholderResult.UserBean.class);
+        assertNull(jsons);
+    }
+
+    // nginx返回的404
+//    @Test
+//    void test404_2() throws IOException {
+//        String url2 = "https://api.hnlot.com.cn/a/b";
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("userId", "123");
+//        OkHttpsResponse okHttpsResponse = OkHttps.url(url2).setBody(params).doGet();
+//        assertEquals("text/html", okHttpsResponse.getContentType());
+//        assertTrue(okHttpsResponse.is404());
+//    }
+
+    @Test
+    void test400() throws IOException {
+        String url1 = "https://httpbin.org/status/400";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url1).doGet();
+        assertTrue(okHttpsResponse.is400());
+    }
+
+    @Test
+    void test401() throws IOException {
+        String url1 = "https://httpbin.org/status/401";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url1).doGet();
+        assertTrue(okHttpsResponse.is401());
+    }
+
+    @Test
+    void test403() throws IOException {
+        String url1 = "https://httpbin.org/status/403";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url1).doGet();
+        assertTrue(okHttpsResponse.is403());
+    }
+
+    @Test
+    void test500() throws IOException {
+        String url1 = "https://httpbin.org/status/500";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url1).doGet();
+        assertTrue(okHttpsResponse.is500());
+    }
+
+    @Test
+    void test502() throws IOException {
+        String url = "https://httpbin.org/status/502";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url).doGet();
+        assertTrue(okHttpsResponse.is502());
+    }
+
+    @Test
+    void test503() throws IOException {
+        String url = "https://httpbin.org/status/503";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url).doGet();
+        assertTrue(okHttpsResponse.is503());
+    }
+
+    @Test
+    void test504() throws IOException {
+        String url = "https://httpbin.org/status/504";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url).doGet();
+        assertTrue(okHttpsResponse.is504());
+    }
+
+    @Test
+    void testFileMd5() throws IOException {
+        String url1 = "https://minio.hnlot.com.cn/host-os/traffic/host_traffic-1.4.1_240805_RELEASE.bin";
+        String md5_1 = OkHttps.url(url1).doGet().md5();
+        assertEquals("9b69c840de4de17bd219dd44bccd38d3", md5_1);
+        // minio没有文件错误
+        String url2 = "https://minio.hnlot.com.cn/host-os/traffic/host_traffic-1.4.1_240805_RELEASE.bin2";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url2).doGet();
+        assertTrue(okHttpsResponse.getMessage().contains("<Code>NoSuchKey</Code>"));
     }
 }

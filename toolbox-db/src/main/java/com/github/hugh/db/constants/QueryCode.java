@@ -2,10 +2,12 @@ package com.github.hugh.db.constants;
 
 /**
  * 标准的数据库字段常量命令
+ * 2.7.X开始转移至core包中.{@link com.github.hugh.constant.QueryCode}
  *
  * @author hugh
  * @since 2.1.0
  */
+@Deprecated
 public class QueryCode {
 
     /**
