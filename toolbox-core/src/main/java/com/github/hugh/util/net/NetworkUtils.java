@@ -1,5 +1,7 @@
 package com.github.hugh.util.net;
 
+import com.github.hugh.util.EmptyUtils;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -35,6 +37,9 @@ public class NetworkUtils {
      * @return boolean 是否ping通
      */
     public static boolean ping(String ip, int timeout) {
+        if (EmptyUtils.isEmpty(ip)) {
+            return false;
+        }
         try {
             return InetAddress.getByName(ip).isReachable(timeout); // 当返回值是true时，说明host是可用的，false则不可。
         } catch (Exception ex) {
