@@ -16,7 +16,7 @@ jobs: # 定义工作流中的任务
           sudo timedatectl set-timezone Asia/Shanghai 
           date
 
-#      - uses: actions/checkout@v4 # 使用 actions/checkout@v4 这个 Action，用于检出代码
+      - uses: actions/checkout@v4 # 使用 actions/checkout@v4 这个 Action，用于检出代码
       - name: Set up JDK 11 # 步骤名称：安装 JDK 11
         uses: actions/setup-java@v4 # 使用 actions/setup-java@v4 这个 Action，用于安装 Java 环境
         with: # 配置参数
