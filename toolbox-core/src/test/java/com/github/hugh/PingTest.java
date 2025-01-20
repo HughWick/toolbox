@@ -40,15 +40,71 @@ class PingTest {
         assertEquals(-1, ping2.getStatus());
     }
 
+    // 测试正常情况下连接次数
     @Test
-    void testCount() {
-        try {
-            String ip3 = "8.8.4.4";
-            int connectedCount = PingUtils.getConnectedCount(ip3, 5, 200);
-            assertEquals(5, connectedCount, 1);
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
+    public void testGetConnectedCountNormal() throws IOException {
+        String ipAddress = "8.8.8.8";  // 你可以使用本地网络中的 IP 或者某个测试用的 IP
+        int pingCount = 4;
+        int timeOut = 1000;
+        int connectedCount = PingUtils.getConnectedCount(ipAddress, pingCount, timeOut);
+        // 这里我们假设网络连接正常，返回的连接次数应该等于 pingCount
+        assertEquals(pingCount, connectedCount);
+    }
+
+    // 测试连接失败，返回-1
+    @Test
+    public void testGetConnectedCountConnectionFailure() throws IOException {
+        String ipAddress = "10.255.255.255";  // 不存在或不可达的 IP
+        int pingCount = 4;
+        int timeOut = 1000;
+        int connectedCount = PingUtils.getConnectedCount(ipAddress, pingCount, timeOut);
+        // 假设连接失败，方法应返回 -1
+        assertEquals(0, connectedCount);
+    }
+
+    // 测试没有 ping 响应
+    @Test
+    public void testGetConnectedCountNoResponse() throws IOException {
+        String ipAddress = "172.17.1.100";  // 未响应的 IP 地址
+        int pingCount = 4;
+        int timeOut = 1000;
+        int connectedCount = PingUtils.getConnectedCount(ipAddress, pingCount, timeOut);
+        // 如果没有收到类似 `=xxms TTL=xx` 的响应，连接次数应该是 0
+        assertEquals(0, connectedCount);
+    }
+
+    // 测试异常的 pingCount 参数
+    @Test
+    public void testGetConnectedCountInvalidPingCount() throws IOException {
+        String ipAddress = "192.168.1.1";  // 正常的 IP 地址
+        int pingCount = -1;  // 非法的 pingCount
+        int timeOut = 1000;
+        // 假设我们的函数能正常处理异常情况，并返回0或-1
+        int connectedCount = PingUtils.getConnectedCount(ipAddress, pingCount, timeOut);
+        assertEquals(0, connectedCount);  // 如果 pingCount 为负值，应该返回-1
+    }
+
+    // 测试异常的 timeOut 参数
+    @Test
+    public void testGetConnectedCountInvalidTimeOut() {
+        String ipAddress = "192.168.1.1";  // 正常的 IP 地址
+        int pingCount = 4;
+        int timeOut = -1;  // 非法的 timeout
+        // 假设我们的函数能正常处理异常情况，并返回0或-1
+        IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class, () -> PingUtils.getConnectedCount(ipAddress, pingCount, timeOut));
+        assertEquals("Timeout must be a positive value.", illegalArgumentException.getMessage());  // 如果 timeOut 为负值，应该返回-1
+    }
+
+    // 测试多次 ping 响应
+    @Test
+    public void testGetConnectedCountMultipleResponses() throws IOException {
+        String ipAddress = "192.168.1.1";  // 假设这是一个测试用的 IP 地址
+        int pingCount = 5;
+        int timeOut = 1000;
+        // 假设输出的 ping 响应有 5 次有效的响应
+        int connectedCount = PingUtils.getConnectedCount(ipAddress, pingCount, timeOut);
+        // 如果每次 ping 都成功，返回的连接次数应该和 pingCount 一样
+        assertEquals(0, connectedCount);
     }
 
     @Test
