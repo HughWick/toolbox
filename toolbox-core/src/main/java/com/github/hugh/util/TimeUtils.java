@@ -86,11 +86,10 @@ public class TimeUtils extends DateCode {
      * @return LocalDateTime
      * @since 1.2.2
      */
-    private static LocalDateTime parseTime(String strTime, String format) {
+    public static LocalDateTime parseTime(String strTime, String format) {
         try {
             return LocalDateTime.parse(strTime, DateTimeFormatter.ofPattern(format));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
             return null;
         }
     }
@@ -422,6 +421,10 @@ public class TimeUtils extends DateCode {
      * @since 1.4.5
      */
     public static List<String> collectLocalDates(LocalDate start, LocalDate end) {
+        // 检查结束日期是否小于开始日期
+        if (end.isBefore(start)) {
+            throw new IllegalArgumentException("End date cannot be before start date");
+        }
         // 用起始时间作为流的源头，按照每次加一天的方式创建一个无限流
         return Stream.iterate(start, localDate -> localDate.plusDays(1))
                 // 截断无限流，长度为起始时间和结束时间的差+1个

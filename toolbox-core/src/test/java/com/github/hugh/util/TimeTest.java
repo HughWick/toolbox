@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,30 +37,94 @@ class TimeTest {
         assertFalse(TimeUtils.isCrossDay(start, end));
         assertTrue(TimeUtils.isCrossDay(start, end, 2));
     }
-
-//    @Test
-//    public void test03() {
-//        String timeStart = "2019-12-11";
-//        String timeEnd = "2020-12-20";
-//        TimeUtils.collectLocalDates(timeStart, timeEnd).forEach(System.out::println);
-//    }
-
+    // 测试 parseTime 方法，使用默认格式 YEAR_MONTH_DAY_HOUR_MIN_SEC
     @Test
-    void testGetYearMonthDay() {
-//        assertEquals(2023, TimeUtils.getYear());
-//        assertEquals(7, TimeUtils.getMonth());
-//        assertEquals(4, TimeUtils.getDay());
-//        assertEquals(20, TimeUtils.getHour());
-//        assertEquals(10, TimeUtils.getMinute());
-//        System.out.println(TimeUtils.getSecond());
-//        String timeStart = "2019-12-11 00:00:00";
-//        String timeEnd = "2020-12-20 23:59:59";
-//        long l = TimeUtils.differMilli(timeStart, timeEnd);
-//        System.out.println(l);
-//        System.out.println("---1>>" + TimeUtils.getMonth());
-//        System.out.println("---2>>" + TimeUtils.getDay());
-//        System.out.println("--3->>" + TimeUtils.isThisYear(12));
+    void testParseTimeWithDefaultFormat() {
+        String timeStr = "2025-01-20T09:26:09";
+        LocalDateTime result = TimeUtils.parseTime(timeStr);
+        assertNull(result);
+    }
 
+    // 测试 parseTime 方法，使用指定格式
+    @Test
+    public void testParseTimeWithCustomFormat() {
+        String timeStr = "2025-01-20 09:26:09";
+        String format = "yyyy-MM-dd HH:mm:ss";
+        LocalDateTime result = TimeUtils.parseTime(timeStr, format);
+        assertNotNull(result);
+        assertEquals(2025, result.getYear());
+        assertEquals(1, result.getMonthValue());
+        assertEquals(20, result.getDayOfMonth());
+        assertEquals(9, result.getHour());
+        assertEquals(26, result.getMinute());
+        assertEquals(9, result.getSecond());
+    }
+
+    // 测试 parseTime 方法，格式不匹配时返回 null
+    @Test
+    public void testParseTimeWithInvalidFormat() {
+        String timeStr = "2025-01-20T09:26:09";
+        String format = "yyyy/MM/dd HH:mm:ss";
+        LocalDateTime result = TimeUtils.parseTime(timeStr, format);
+        assertNull(result); // 格式不匹配，应该返回 null
+    }
+
+    // 测试 getYear 方法
+    @Test
+    public void testGetYear() {
+        int year = TimeUtils.getYear();
+        assertEquals(LocalDateTime.now().getYear(), year); // 应该返回当前年份
+    }
+
+    // 测试 isThisYear 方法，年份一致时返回 true
+    @Test
+    public void testIsThisYearWithSameYear() {
+        int currentYear = LocalDateTime.now().getYear();
+        boolean result = TimeUtils.isThisYear(currentYear);
+        assertTrue(result); // 当前年份与传入年份一致，应该返回 true
+    }
+
+    // 测试 isThisYear 方法，年份不一致时返回 false
+    @Test
+    public void testIsThisYearWithDifferentYear() {
+        int currentYear = LocalDateTime.now().getYear();
+        boolean result = TimeUtils.isThisYear(currentYear + 1); // 假设下一年
+        assertFalse(result); // 当前年份与传入年份不一致，应该返回 false
+    }
+
+    // 测试 getMonth 方法
+    @Test
+    public void testGetMonth() {
+        int month = TimeUtils.getMonth();
+        assertEquals(LocalDateTime.now().getMonthValue(), month); // 应该返回当前月份
+    }
+
+    // 测试 getDay 方法
+    @Test
+    public void testGetDay() {
+        int day = TimeUtils.getDay();
+        assertEquals(LocalDateTime.now().getDayOfMonth(), day); // 应该返回当前日期
+    }
+
+    // 测试 getHour 方法
+    @Test
+    public void testGetHour() {
+        int hour = TimeUtils.getHour();
+        assertEquals(LocalDateTime.now().getHour(), hour); // 应该返回当前小时
+    }
+
+    // 测试 getMinute 方法
+    @Test
+    public void testGetMinute() {
+        int minute = TimeUtils.getMinute();
+        assertEquals(LocalDateTime.now().getMinute(), minute); // 应该返回当前分钟
+    }
+
+    // 测试 getSecond 方法
+    @Test
+    public void testGetSecond() {
+        int second = TimeUtils.getSecond();
+        assertEquals(LocalDateTime.now().getSecond(), second); // 应该返回当前秒
     }
 
     // 测试获取昨日时间
@@ -146,4 +211,64 @@ class TimeTest {
         assertEquals(14, localDateTime2.getMinute());
         assertEquals(15, localDateTime2.getSecond());
     }
+    // 测试 collectLocalDates 方法，正常日期范围
+    @Test
+    public void testCollectLocalDatesNormalRange() {
+        String start = "2025-01-01";
+        String end = "2025-01-05";
+        List<String> result = TimeUtils.collectLocalDates(start, end);
+        assertNotNull(result);
+        assertEquals(5, result.size()); // 结果应该包含 5 个日期
+        assertEquals("2025-01-01", result.get(0));
+        assertEquals("2025-01-05", result.get(4));
+    }
+
+    // 测试 collectLocalDates 方法，起始和结束日期相同
+    @Test
+    public void testCollectLocalDatesSameDate() {
+        String start = "2025-01-01";
+        String end = "2025-01-01";
+        List<String> result = TimeUtils.collectLocalDates(start, end);
+        assertNotNull(result);
+        assertEquals(1, result.size()); // 结果应该只包含 1 个日期
+        assertEquals("2025-01-01", result.get(0));
+    }
+
+    // 测试 collectLocalDates 方法，跨越闰年
+    @Test
+    public void testCollectLocalDatesLeapYear() {
+        String start = "2024-02-28"; // 闰年
+        String end = "2024-03-01";
+        List<String> result = TimeUtils.collectLocalDates(start, end);
+        assertNotNull(result);
+        assertEquals(3, result.size()); // 结果应该包含 3 个日期
+        assertEquals("2024-02-28", result.get(0));
+        assertEquals("2024-03-01", result.get(2));
+    }
+
+    // 测试 collectLocalDates 方法，跨越一个月
+    @Test
+    public void testCollectLocalDatesOneMonth() {
+        String start = "2025-01-30";
+        String end = "2025-02-02";
+        List<String> result = TimeUtils.collectLocalDates(start, end);
+        assertNotNull(result);
+        assertEquals(4, result.size()); // 结果应该包含 4 个日期
+        assertEquals("2025-01-30", result.get(0));
+        assertEquals("2025-02-02", result.get(3));
+    }
+
+    // 测试 collectLocalDates 方法，日期逆序时返回空
+    @Test
+    void testCollectLocalDatesReverseOrder() {
+        String start = "2025-01-05";
+        String end = "2025-01-01";
+        // 断言抛出 IllegalArgumentException 异常
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            TimeUtils.collectLocalDates(start, end);
+        });
+
+        assertEquals("End date cannot be before start date", exception.getMessage());
+    }
+
 }

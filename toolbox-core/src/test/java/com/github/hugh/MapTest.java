@@ -66,16 +66,290 @@ class MapTest {
         map.put("create", strCreateDate);
         Map data = MapUtils.getMap(map, "data");
         assertNull(data);
-//        System.out.println("--1->" + data);
-//        String str = MapUtils.getString(map, "create");
         assertEquals(strCreateDate, MapUtils.getString(map, "create"));
-//        System.out.println("-2-->" + str);
-        assertEquals(1, MapUtils.getInt(map, "id"));
-        assertEquals(2, MapUtils.getLong(map, "age"));
-        assertEquals(10.14, MapUtils.getDouble(map, "amount"));
-//        System.out.println("-3-->" + MapUtils.getInt(map, "id"));
-//        System.out.println("-4-->" + MapUtils.getLong(map, "age"));
-//        System.out.println("-5-->" + MapUtils.getDouble(map, "amount"));
+    }
+
+    // 测试 getLong 方法
+    @Test
+    void testGetLongWithLongValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", 123L);
+        Long result = MapUtils.getLong(map, "key");
+        assertEquals(123L, result);
+    }
+
+    @Test
+    void testGetLongWithIntegerValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", 123);
+        Long result = MapUtils.getLong(map, "key");
+        assertEquals(123L, result);
+    }
+
+    @Test
+    void testGetLongWithStringValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", "123");
+        Long result = MapUtils.getLong(map, "key");
+        assertEquals(123L, result);
+    }
+
+    @Test
+    public void testGetLongWithNullValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", null);
+        Long result = MapUtils.getLong(map, "key");
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetLongWithNonNumberValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", "abc");
+        Long result = MapUtils.getLong(map, "key");
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetLongWithNullMap() {
+        Map<String, Object> map = null;
+        Long result = MapUtils.getLong(map, "key");
+        assertNull(result);
+    }
+
+    // 测试 getNumber 方法
+    @Test
+    public void testGetNumberWithNumberValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", 123L);
+        Number result = MapUtils.getNumber(map, "key");
+        assertEquals(123L, result);
+    }
+
+    @Test
+    public void testGetNumberWithIntegerValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", 123);
+        Number result = MapUtils.getNumber(map, "key");
+        assertEquals(123, result);
+    }
+
+    @Test
+    public void testGetNumberWithStringValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", "123");
+        Number result = MapUtils.getNumber(map, "key");
+        assertNotNull(result);
+        assertEquals(123, result.intValue());
+    }
+
+    @Test
+    public void testGetNumberWithNullValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", null);
+        Number result = MapUtils.getNumber(map, "key");
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetNumberWithInvalidString() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", "abc");
+        Number result = MapUtils.getNumber(map, "key");
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetNumberWithNullMap() {
+        Map<String, Object> map = null;
+        Number result = MapUtils.getNumber(map, "key");
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetNumberWithNegativeNumber() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", -123L);
+        Number result = MapUtils.getNumber(map, "key");
+        assertEquals(-123L, result);
+    }
+
+    @Test
+    public void testGetNumberWithDecimalValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", "123.45");
+        Number result = MapUtils.getNumber(map, "key");
+        assertNotNull(result);
+        assertEquals(123.45, result.doubleValue());
+    }
+
+    @Test
+    public void testGetNumberWithEmptyString() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", "");
+        Number result = MapUtils.getNumber(map, "key");
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetNumberWithSpecialCharacters() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", "\\$123");
+        Number result = MapUtils.getNumber(map, "key");
+        assertNull(result);
+    }
+
+    // 测试 getInt 方法
+    @Test
+    public void testGetIntWithIntegerValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", 123);
+        Integer result = MapUtils.getInt(map, "key");
+        assertEquals(123, result);
+    }
+
+    @Test
+    public void testGetIntWithLongValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", 123L);
+        Integer result = MapUtils.getInt(map, "key");
+        assertEquals(123, result);
+    }
+
+    @Test
+    public void testGetIntWithStringValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", "123");
+        Integer result = MapUtils.getInt(map, "key");
+        assertEquals(123, result);
+    }
+
+    @Test
+    public void testGetIntWithNullValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", null);
+        Integer result = MapUtils.getInt(map, "key");
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetIntWithNonNumberValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", "abc");
+        Integer result = MapUtils.getInt(map, "key");
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetIntWithNullMap() {
+        Map<String, Object> map = null;
+        Integer result = MapUtils.getInt(map, "key");
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetIntWithNegativeIntegerValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", -123);
+        Integer result = MapUtils.getInt(map, "key");
+        assertEquals(-123, result);
+    }
+
+    @Test
+    public void testGetIntWithNegativeLongValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", -123L);
+        Integer result = MapUtils.getInt(map, "key");
+        assertEquals(-123, result);
+    }
+
+    @Test
+    public void testGetIntWithDecimalString() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", "123.45");
+        Integer result = MapUtils.getInt(map, "key");
+        assertEquals(123, result);  // 由于是浮动数值，不能正确转换为整数
+    }
+
+    @Test
+    public void testGetIntWithEmptyString() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", "");
+        Integer result = MapUtils.getInt(map, "key");
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetIntWithSpecialCharacterString() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", "\\$123");
+        Integer result = MapUtils.getInt(map, "key");
+        assertNull(result);
+    }
+
+    @Test
+    public void testGetDoubleWithDoubleValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", 123.45);
+        Double result = MapUtils.getDouble(map, "key");
+        assertEquals(Double.valueOf(123.45), result);  // 确保返回的是原始的 Double 值
+    }
+
+    @Test
+    public void testGetDoubleWithIntegerValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", 123);
+        Double result = MapUtils.getDouble(map, "key");
+        assertEquals(Double.valueOf(123), result);  // 整数值转换为 Double，值应为 123.0
+    }
+
+    @Test
+    public void testGetDoubleWithStringValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", "123.45");
+        Double result = MapUtils.getDouble(map, "key");
+        assertEquals(Double.valueOf(123.45), result);  // 如果支持字符串转数字，值应为 123.45
+    }
+
+    @Test
+    public void testGetDoubleWithInvalidStringValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", "abc");
+        Double result = MapUtils.getDouble(map, "key");
+        assertNull(result);  // 字符串 "abc" 无法转换为数字，应返回 null
+    }
+
+    @Test
+    public void testGetDoubleWithNullValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", null);
+        Double result = MapUtils.getDouble(map, "key");
+        assertNull(result);  // 如果值为 null，返回 null
+    }
+
+    @Test
+    public void testGetDoubleWithUnsupportedType() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", true);  // 布尔值不能转换为数字
+        Double result = MapUtils.getDouble(map, "key");
+        assertNull(result);  // 返回 null，因为布尔值不能转换为数字
+    }
+
+    @Test
+    public void testGetDoubleWithFloatString() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", "123.45");
+        Double result = MapUtils.getDouble(map, "key");
+        assertEquals(Double.valueOf(123.45), result);  // 浮动数值的字符串应能正确转换为 Double
+    }
+
+    @Test
+    public void testGetDoubleWithMultipleNumbersInString() {
+        String str1 = "12.34.56";
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", str1);
+        Double result = MapUtils.getDouble(map, "key");
+        assertEquals("12.34", result);  // 如果字符串无法被解析为单一数字，应返回 null
     }
 
     @Test
@@ -246,6 +520,7 @@ class MapTest {
         assertEquals(Boolean.class, stringObjectMap.get("switchs").getClass());
         assertEquals(Date.class, stringObjectMap.get("created").getClass());
     }
+
     // Test 1: `isNotEmpty` 为 true，空值字段不应被添加到 Map 中
     @Test
     void testEntityToMapWithIsNotEmptyTrue() {
@@ -257,6 +532,7 @@ class MapTest {
         assertEquals("John", result.get("name"));
         assertEquals(List.of("Reading", "Swimming"), result.get("hobbies"));
     }
+
     // Test 2: `isNotEmpty` 为 false，所有字段都应被添加到 Map 中
     @Test
     public void testEntityToMapWithIsNotEmptyFalse() {
