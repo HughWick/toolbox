@@ -1,6 +1,5 @@
-package com.github.hugh.net;
+package com.github.hugh.util.net;
 
-import com.github.hugh.util.net.NetworkUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.StopWatch;
@@ -19,17 +18,16 @@ import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 class NetworkTest {
 
-    //
-//    @Test
-//    void testPing() {
-//        try {
-//            assertTrue(NetworkUtils.ping("www.baidu.com"));
-//        } catch (Exception e) {
-//            System.out.println("Error pinging www.baidu.com: " + e.getMessage());
-//        }
-//        assertFalse(NetworkUtils.ping("www.google321.com", 500));
-//        assertTrue(NetworkUtils.ping("223.5.5.5" , 400));
-//    }
+    @Test
+    void testPing() {
+        try {
+            assertTrue(NetworkUtils.ping("www.baidu.com"));
+        } catch (Exception e) {
+            System.out.println("Error pinging www.baidu.com: " + e.getMessage());
+        }
+        assertFalse(NetworkUtils.ping("www.google321.com", 500));
+        assertTrue(NetworkUtils.ping("223.5.5.5" , 400));
+    }
 //
 //    @Test
 //    void testPingFall(){

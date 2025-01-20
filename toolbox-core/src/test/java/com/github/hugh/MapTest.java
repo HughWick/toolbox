@@ -4,12 +4,11 @@ import com.github.hugh.model.GsonTest;
 import com.github.hugh.model.Student;
 import com.github.hugh.util.EntityUtils;
 import com.github.hugh.util.MapUtils;
+import lombok.Data;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.StopWatch;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -247,6 +246,136 @@ class MapTest {
         assertEquals(Boolean.class, stringObjectMap.get("switchs").getClass());
         assertEquals(Date.class, stringObjectMap.get("created").getClass());
     }
+    // Test 1: `isNotEmpty` 为 true，空值字段不应被添加到 Map 中
+    @Test
+    void testEntityToMapWithIsNotEmptyTrue() {
+        TestBean bean = new TestBean("John", null, List.of("Reading", "Swimming"));
+        Map<String, Object> result = MapUtils.entityToMap(bean, true);
+        assertTrue(result.containsKey("name"));
+        assertFalse(result.containsKey("age"));
+        assertTrue(result.containsKey("hobbies"));
+        assertEquals("John", result.get("name"));
+        assertEquals(List.of("Reading", "Swimming"), result.get("hobbies"));
+    }
+    // Test 2: `isNotEmpty` 为 false，所有字段都应被添加到 Map 中
+    @Test
+    public void testEntityToMapWithIsNotEmptyFalse() {
+        TestBean bean = new TestBean("John", null, List.of("Reading", "Swimming"));
+        Map<String, Object> result = MapUtils.entityToMap(bean, false);
+
+        assertTrue(result.containsKey("name"));
+        assertTrue(result.containsKey("age"));
+        assertTrue(result.containsKey("hobbies"));
+        assertEquals("John", result.get("name"));
+        assertNull(result.get("age"));
+        assertEquals(List.of("Reading", "Swimming"), result.get("hobbies"));
+    }
+
+    // Test 3: 测试非空字符串
+    @Test
+    public void testEmptyString() {
+        TestBean bean = new TestBean("", 25, List.of("Reading"));
+        Map<String, Object> result = MapUtils.entityToMap(bean, true);
+
+        // name 是空字符串，所以它不应该出现在 Map 中
+        assertFalse(result.containsKey("name"));
+        assertTrue(result.containsKey("age"));
+        assertTrue(result.containsKey("hobbies"));
+    }
+
+    // Test 4: 测试空列表
+    @Test
+    public void testEmptyList() {
+        TestBean bean = new TestBean("John", 30, List.of());
+        Map<String, Object> result = MapUtils.entityToMap(bean, true);
+
+        // hobbies 是空列表，所以它不应该出现在 Map 中
+        assertTrue(result.containsKey("name"));
+        assertTrue(result.containsKey("age"));
+        assertFalse(result.containsKey("hobbies"));
+    }
+
+
+    // 测试正常排序
+    @Test
+    public void testSortByValueAscNormal() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("a", 3);
+        map.put("b", 1);
+        map.put("c", 2);
+
+        Map<String, Integer> sortedMap = MapUtils.sortByValueAsc(map);
+        // 确保按值升序排序
+        List<Integer> sortedValues = new ArrayList<>(sortedMap.values());
+        assertEquals(Arrays.asList(1, 2, 3), sortedValues);
+    }
+
+    // 测试空map
+    @Test
+    public void testSortByValueAscEmptyMap() {
+        Map<String, Integer> map = new HashMap<>();
+
+        Map<String, Integer> sortedMap = MapUtils.sortByValueAsc(map);
+
+        // 空的 map 应该返回空的 map
+        assertTrue(sortedMap.isEmpty());
+    }
+
+    // 测试具有相同值的元素
+    @Test
+    public void testSortByValueAscWithEqualValues() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("a", 3);
+        map.put("b", 1);
+        map.put("c", 3);
+
+        Map<String, Integer> sortedMap = MapUtils.sortByValueAsc(map);
+
+        // 确保排序后值相同的元素按键的顺序排列
+        List<String> sortedKeys = new ArrayList<>(sortedMap.keySet());
+        assertEquals(Arrays.asList("b", "a", "c"), sortedKeys);
+    }
+
+    // 测试单元素 map
+    @Test
+    public void testSortByValueAscSingleElement() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("a", 3);
+
+        Map<String, Integer> sortedMap = MapUtils.sortByValueAsc(map);
+
+        // 单元素的 map 排序后应该仍然只有一个元素
+        assertEquals(1, sortedMap.size());
+        assertTrue(sortedMap.containsKey("a"));
+        assertEquals(Integer.valueOf(3), sortedMap.get("a"));
+    }
+
+    // 测试降序输入数据的排序
+    @Test
+    public void testSortByValueAscReversedInput() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("a", 5);
+        map.put("b", 3);
+        map.put("c", 1);
+
+        Map<String, Integer> sortedMap = MapUtils.sortByValueAsc(map);
+
+        // 检查升序排序结果
+        List<String> sortedKeys = new ArrayList<>(sortedMap.keySet());
+        assertEquals(Arrays.asList("c", "b", "a"), sortedKeys);
+    }
 }
 
+@Data
+class TestBean {
+    private String name;
+    private Integer age;
+    private List<String> hobbies;
+
+    public TestBean(String name, Integer age, List<String> hobbies) {
+        this.name = name;
+        this.age = age;
+        this.hobbies = hobbies;
+    }
+}
 
