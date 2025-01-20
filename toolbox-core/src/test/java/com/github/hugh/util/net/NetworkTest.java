@@ -18,6 +18,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 class NetworkTest {
 
+    private static final String CLOUD_FLARE_DNS = "1.1.1.1";
+
     @Test
     void testPing() {
         try {
@@ -26,7 +28,7 @@ class NetworkTest {
             System.out.println("Error pinging www.baidu.com: " + e.getMessage());
         }
         assertFalse(NetworkUtils.ping("www.google321.com", 500));
-        assertTrue(NetworkUtils.ping("223.5.5.5" , 400));
+        assertTrue(NetworkUtils.ping(CLOUD_FLARE_DNS , 400));
     }
 //
 //    @Test
@@ -87,7 +89,7 @@ class NetworkTest {
     @Test
     void testPingWithLongTimeout() {
         // 使用有效的 IP 地址，但设置较长的超时（5000 毫秒），应该返回 true
-        assertTrue(NetworkUtils.ping("223.5.5.5", 5000));
+        assertTrue(NetworkUtils.ping(CLOUD_FLARE_DNS, 5000));
     }
 
     @Test
@@ -153,9 +155,9 @@ class NetworkTest {
         assertTrue(result, "Expected ping to fail for unreachable IP address with default timeout");
 
         // 测试一个可以到达的IP地址，应该返回false（成功）
-        String reachableIp = "223.5.5.5"; // Google的公共DNS地址
-        result = NetworkUtils.pingFail(reachableIp);
-        assertFalse(result, "Expected ping to succeed for reachable IP address with default timeout");
+//        String reachableIp = "223.5.5.5"; // Google的公共DNS地址
+       boolean result2 = NetworkUtils.pingFail("223.5.5.5");
+        assertFalse(result2, "Expected ping to succeed for reachable IP address with default timeout");
     }
     @Test
     void testPingFailWithCustomTimeout() {
