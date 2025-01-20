@@ -73,7 +73,7 @@ public class IdCardValidator {
         }
         String idCard18Code = idCard.substring(17, 18); // 获取第18位
         char[] c = idCard17.toCharArray();
-        int[] bit = converCharToInt(c);
+        int[] bit = convertCharToInt(c);
         int sum17 = getPowerSum(bit);
         String checkCode = getCheckCodeBySum(sum17);// 将和值与11取模得到余数进行校验码判断
         if (null == checkCode) {
@@ -160,7 +160,7 @@ public class IdCardValidator {
         String idCard17 = idCard.substring(0, 6) + year + idCard.substring(8);
         char[] c = idCard17.toCharArray();
         // 将字符数组转为整型数组
-        int[] bit = converCharToInt(c);
+        int[] bit = convertCharToInt(c);
         int sum17 = getPowerSum(bit);
         // 获取和值与11取模得到余数进行校验码
         String checkCode = getCheckCodeBySum(sum17);
@@ -271,7 +271,7 @@ public class IdCardValidator {
      * @return int[] 整形数组
      * @throws NumberFormatException 数值转换错误
      */
-    private static int[] converCharToInt(char[] chars) throws NumberFormatException {
+    private static int[] convertCharToInt(char[] chars) throws NumberFormatException {
         int[] intArr = new int[chars.length];
         int k = 0;
         for (char temp : chars) {
@@ -301,14 +301,11 @@ public class IdCardValidator {
             String char2 = idCard.substring(1, 2);
             if (char2.equals("1")) {
                 info[1] = "M";
-//                System.out.println("MMMMMMM");
             } else if (char2.equals("2")) {
                 info[1] = "F";
-//                System.out.println("FFFFFFF");
             } else {
                 info[1] = "N";
                 info[2] = "false";
-//                System.out.println("NNNN");
                 return info;
             }
             // info[2] = validateTWCard(idCard) ? "true" : "false";
