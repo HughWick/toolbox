@@ -68,7 +68,7 @@ public class IdCardValidator {
             if (!tmpDate.equals(birthday)) {// 出生年月日不正确
                 return false;
             }
-        } catch (ParseException e1) {
+        } catch (ParseException parseException) {
             return false;
         }
         String idCard18Code = idCard.substring(17, 18); // 获取第18位
