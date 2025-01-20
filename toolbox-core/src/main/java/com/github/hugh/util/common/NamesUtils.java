@@ -67,13 +67,11 @@ public class NamesUtils {
             String mid = "·";// 少数名族分隔符
             if (str.contains(mid)) {
                 String[] arr = str.split(mid);
-                StringBuilder t = new StringBuilder(arr[0]);
-                t.append(mid);
+                StringBuilder stringBuilder = new StringBuilder(arr[0]);
+                stringBuilder.append(mid);
                 int last = arr[1].length();
-                for (int i = 0; i < last; i++) {
-                    t.append("*");
-                }
-                str = t.toString();
+                stringBuilder.append("*".repeat(last));
+                str = stringBuilder.toString();
             }
         }
         return str;

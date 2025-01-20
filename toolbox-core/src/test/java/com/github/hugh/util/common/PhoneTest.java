@@ -1,6 +1,5 @@
 package com.github.hugh.util.common;
 
-import com.github.hugh.util.common.PhoneUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,6 +17,6 @@ class PhoneTest {
         assertEquals("138****4872", PhoneUtils.encrypt("13825004872"));
         String str2 = "138****";
         assertEquals(str2, PhoneUtils.encrypt(str2));
-
+        assertEquals("", PhoneUtils.encrypt(""));
     }
 }
