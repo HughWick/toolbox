@@ -87,7 +87,7 @@ class NetworkTest {
     @Test
     void testPingWithLongTimeout() {
         // 使用有效的 IP 地址，但设置较长的超时（5000 毫秒），应该返回 true
-        assertTrue(NetworkUtils.ping("8.8.8.8", 5000));
+        assertTrue(NetworkUtils.ping("223.5.5.5", 5000));
     }
 
     @Test
@@ -128,7 +128,7 @@ class NetworkTest {
 
     @Test
     void testIsNotConnect() {
-        boolean connect = NetworkUtils.isNotConnect("www.google.com", 80,2000);
+        boolean connect = NetworkUtils.isNotConnect("www.google555.sc.com", 80,2000);
         assertTrue(connect);
         boolean connect2 = NetworkUtils.isNotConnect("172.17.0.6", 80);
         assertTrue(connect2);
@@ -146,19 +146,19 @@ class NetworkTest {
 
 
     @Test
-    public void testPingFailDefaultTimeout() {
+    void testPingFailDefaultTimeout() {
         // 测试一个无法到达的IP地址，应该返回true（失败）
         String unreachableIp = "192.0.2.0"; // 这是一个保留的无法到达的IP地址
         boolean result = NetworkUtils.pingFail(unreachableIp);
         assertTrue(result, "Expected ping to fail for unreachable IP address with default timeout");
 
         // 测试一个可以到达的IP地址，应该返回false（成功）
-        String reachableIp = "8.8.8.8"; // Google的公共DNS地址
+        String reachableIp = "223.5.5.5"; // Google的公共DNS地址
         result = NetworkUtils.pingFail(reachableIp);
         assertFalse(result, "Expected ping to succeed for reachable IP address with default timeout");
     }
     @Test
-    public void testPingFailWithCustomTimeout() {
+    void testPingFailWithCustomTimeout() {
         // 使用较短的超时测试无法到达的IP地址
         String unreachableIp = "192.0.2.0";
         int shortTimeout = 100; // 超时100毫秒
