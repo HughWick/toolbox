@@ -123,8 +123,10 @@ public class StreamUtils {
                 byteArrayOutputStream.write(buffer, 0, len);
             }
             return byteArrayOutputStream.toString(charset);
-        } catch (Exception e) {
-            throw new ToolboxException(e);
+        } catch (NullPointerException nullPointerException) {
+            throw nullPointerException;
+        } catch (Exception exception) {
+            throw new ToolboxException(exception);
         }
     }
 
@@ -146,7 +148,7 @@ public class StreamUtils {
      * @param str 字符串
      * @return InputStream
      */
-    public InputStream toInputStream(String str) {
+    public static InputStream toInputStream(String str) {
         return new ByteArrayInputStream(str.getBytes());
     }
 
