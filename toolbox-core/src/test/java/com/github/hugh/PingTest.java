@@ -124,14 +124,14 @@ class PingTest {
         assertEquals(0, ping.getLoss()); // 0% packet loss
         assertEquals(3.248, ping.getDelay(), 0.001); // average delay
         assertEquals(0, ping.getStatus());
-        String realStr2 = "PING 223.5.5.5 (223.5.5.5) 56(84) bytes of data.\n" +
-                "64 bytes from 223.5.5.5: icmp_seq=1 ttl=113 time=18.6 ms\n" +
-                "64 bytes from 223.5.5.5: icmp_seq=2 ttl=113 time=18.5 ms\n" +
-                "64 bytes from 223.5.5.5: icmp_seq=3 ttl=113 time=29.0 ms\n" +
-                "64 bytes from 223.5.5.5: icmp_seq=4 ttl=113 time=27.3 ms\n" +
-                "--- 223.5.5.5 ping statistics ---\n" +
-                "4 packets transmitted, 4 received, 0% packet loss, time 3003ms\n" +
-                "rtt min/avg/max/mdev = 18.539/23.413/29.042/4.832 ms";
+//        String realStr2 = "PING 223.5.5.5 (223.5.5.5) 56(84) bytes of data.\n" +
+//                "64 bytes from 223.5.5.5: icmp_seq=1 ttl=113 time=18.6 ms\n" +
+//                "64 bytes from 223.5.5.5: icmp_seq=2 ttl=113 time=18.5 ms\n" +
+//                "64 bytes from 223.5.5.5: icmp_seq=3 ttl=113 time=29.0 ms\n" +
+//                "64 bytes from 223.5.5.5: icmp_seq=4 ttl=113 time=27.3 ms\n" +
+//                "--- 223.5.5.5 ping statistics ---\n" +
+//                "4 packets transmitted, 4 received, 0% packet loss, time 3003ms\n" +
+//                "rtt min/avg/max/mdev = 18.539/23.413/29.042/4.832 ms";
 
 
         String realStr3 = "PING 144.144.114.114 (144.144.114.114) 56(84) bytes of data.\n" +
