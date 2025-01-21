@@ -81,8 +81,8 @@ public class RegexUtils {
     /**
      * 其他字符-正则模式
      */
-    private static final Pattern OTHER_CHARS_PATTERN = Pattern.compile("\\p{C}");
-
+//    private static final Pattern OTHER_CHARS_PATTERN = Pattern.compile("\\p{C}");
+    private static final Pattern OTHER_CHARS_PATTERN = Pattern.compile("[\\x00-\\x1F\\x7F\\n\\r\\t]");
     /**
      * 邮箱正则表达式
      * <p>
