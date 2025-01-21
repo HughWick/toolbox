@@ -11,6 +11,7 @@ import java.util.Locale;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 日期测试类
@@ -47,7 +48,7 @@ class DateTest {
     }
 
     @Test
-    void testRandomTime(){
+    void testRandomTime() {
         // 创建一个随机数生成器
         Random random = new Random();
         // 生成随机的小时、分钟和秒
@@ -71,11 +72,13 @@ class DateTest {
 //        System.out.println("--3->" + );
 //        System.out.println("--4->" + DateUtils.getDate(1));
         assertEquals("20200604130021", DateUtils.toStringTime(str));
+        assertEquals("", DateUtils.toStringTime(null));
 //        System.out.println("--5->" + DateUtils.getDate(DateUtils.toStringTime(str)));
 //        assertEquals(TimeUtils.getYear() + "" + TimeUtils.getMonth() + "" + TimeUtils.getDay(), DateUtils.getDateSign());
 //        System.out.println("--6->" + DateUtils.getDateSign());
         String s = DateUtils.toStringDate("20200604130021");
         assertTrue(DateUtils.isDateFormat(s));
+        assertEquals(null ,DateUtils.toStringDate(null));
 //        System.out.println(s);
         System.out.println("--根据当前时间的一天前的起始时间->" + DateUtils.getDayBeforeStartTime());
     }
@@ -127,6 +130,35 @@ class DateTest {
     }
 
     @Test
+    void testFormat() {
+        Date begin = DateUtils.parseTimestamp(1617943680000L);
+        assertEquals("2021-04-09 12:53:00", DateUtils.format(DateUtils.getMin(begin, 5), DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
+        assertNull(DateUtils.format(null, null));
+        assertEquals("2021-04-09", DateUtils.format(begin, null));
+    }
+
+    // 测试 getDate() 方法是否返回正确的日期格式
+    @Test
+    void testGetDateFormat() {
+        String result = DateUtils.getDate();
+        // 获取当前日期并格式化为期望的格式
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String expectedDate = sdf.format(new Date());
+        assertEquals(expectedDate, result, "getDate() should return the current date in 'yyyy-MM-dd' format.");
+    }
+
+    // 测试 getDate() 是否返回当前日期（不包括时间）
+    @Test
+    void testGetCurrentDate() {
+        // 获取当前日期，去掉时分秒的部分
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate = sdf.format(new Date());
+        String result = DateUtils.getDate();
+        // 比较两个日期字符串
+        assertEquals(currentDate, result, "getDate() should return the current date.");
+    }
+
+    @Test
     void test05() {
         Date begin = DateUtils.parseTimestamp(1617943680000L);
         Date end = DateUtils.parseTimestamp(1617948600000L);
@@ -135,7 +167,7 @@ class DateTest {
 //        System.out.println(DateUtils.minutesDifference(begin, DateUtils.parse(string)));
         assertEquals(82, DateUtils.minutesDifference(begin, end));
         assertEquals(4920, DateUtils.secondsDifference(begin, end));
-        assertEquals("2021-04-09 12:53:00", DateUtils.format(DateUtils.getMin(begin, 5), DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
+        assertNull(DateUtils.parseTimestamp(-1));
 //        System.out.println("3--->>" + DateUtils.format(DateUtils.getMin(begin, 5), DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
         Date date = DateUtils.parseDate("2022-01-22 00:00:00");
         assertTrue(DateUtils.checkTimeOut(date, 2));
@@ -327,7 +359,6 @@ class DateTest {
         assertFalse(DateUtils.isTimestampInMilli(str2));
         String str4 = "1713152121";
         assertTrue(DateUtils.isTimestamp(str4));
-
 
 
     }
