@@ -139,7 +139,7 @@ class MybatisPlusQueryUtilsTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("serialNo", "9001"); //直接添加request参数，相当简单
         QueryWrapper<Object> objectQueryWrapper = MybatisPlusQueryUtils.createLowerCase(request);
-        System.out.println(objectQueryWrapper.getSqlSelect());
+//        System.out.println(objectQueryWrapper.getSqlSelect());
         assertEquals("(serial_no = ?)", objectQueryWrapper.getTargetSql());
     }
 }
