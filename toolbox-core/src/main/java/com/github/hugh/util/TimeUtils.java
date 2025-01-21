@@ -1,6 +1,7 @@
 package com.github.hugh.util;
 
 import com.github.hugh.constant.DateCode;
+import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.support.TimeoutOperation;
 
 import java.time.*;
@@ -90,7 +91,7 @@ public class TimeUtils extends DateCode {
         try {
             return LocalDateTime.parse(strTime, DateTimeFormatter.ofPattern(format));
         } catch (Exception exception) {
-            return null;
+            throw new ToolboxException(exception);
         }
     }
 
@@ -322,6 +323,35 @@ public class TimeUtils extends DateCode {
     }
 
     /**
+     * 计算两个时间字符串之间的毫秒差。
+     *
+     * 该方法将两个时间字符串转换为 `LocalDateTime` 对象，然后计算它们之间的毫秒差。
+     * 如果开始时间和结束时间相同，则返回 0 毫秒；如果任一时间为空，返回 -1。
+     * 时间字符串的格式应符合传入的 `format` 参数要求。
+     *
+     * @param startTime 开始时间字符串
+     * @param endTime 结束时间字符串
+     * @param format 时间字符串的格式，例如 "yyyy-MM-dd HH:mm:ss"
+     * @return 返回开始时间和结束时间之间的毫秒差，如果输入为空则返回 -1，如果时间相同返回 0 毫秒
+     */
+    public static long differMilli(String startTime, String endTime, String format) {
+        if (EmptyUtils.isEmpty(startTime) || EmptyUtils.isEmpty(endTime)) {
+            return -1;
+        }
+        // 使用给定的格式解析时间字符串，转换为 LocalDateTime
+        LocalDateTime start = parseTime(startTime, format);
+        LocalDateTime end = parseTime(endTime, format);
+        // 如果开始时间和结束时间相同，返回 0 毫秒
+        if (start.equals(end)) {
+            return 0; // 如果时间相同，返回 0 毫秒
+        }
+        // 将 LocalDateTime 转换为 Instant，并加上 8 小时的时区偏移（中国标准时间）
+        Instant s = start.toInstant(ZoneOffset.ofHours(8));
+        Instant e = end.toInstant(ZoneOffset.ofHours(8));
+        return ChronoUnit.MILLIS.between(s, e);
+    }
+
+    /**
      * 校验开始日期与结束日期相差多少毫秒
      * <ul>
      * <li>注：return @{code -1} 时达标参数异常</li>
@@ -333,20 +363,7 @@ public class TimeUtils extends DateCode {
      * @since 1.2.4
      */
     public static long differMilli(String startTime, String endTime) {
-        if (EmptyUtils.isEmpty(startTime) || EmptyUtils.isEmpty(endTime)) {
-            return -1;
-        }
-        LocalDateTime start = parseTime(startTime);
-        if (start == null) {
-            return -1;
-        }
-        LocalDateTime end = parseTime(endTime);
-        if (end == null) {
-            return -1;
-        }
-        Instant s = start.toInstant(ZoneOffset.ofHours(8));//转换时增加8时区
-        Instant e = end.toInstant(ZoneOffset.ofHours(8));
-        return ChronoUnit.MILLIS.between(s, e);
+        return differMilli(startTime, endTime, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC);
     }
 
     /**
