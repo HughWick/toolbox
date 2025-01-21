@@ -42,7 +42,7 @@ class PingTest {
 
     // 测试正常情况下连接次数
     @Test
-    public void testGetConnectedCountNormal() throws IOException {
+    void testGetConnectedCountNormal() throws IOException {
         String ipAddress = "8.8.8.8";  // 你可以使用本地网络中的 IP 或者某个测试用的 IP
         int pingCount = 4;
         int timeOut = 1000;
@@ -53,7 +53,7 @@ class PingTest {
 
     // 测试连接失败，返回-1
     @Test
-    public void testGetConnectedCountConnectionFailure() throws IOException {
+    void testGetConnectedCountConnectionFailure() throws IOException {
         String ipAddress = "10.255.255.255";  // 不存在或不可达的 IP
         int pingCount = 4;
         int timeOut = 1000;
@@ -64,7 +64,7 @@ class PingTest {
 
     // 测试没有 ping 响应
     @Test
-    public void testGetConnectedCountNoResponse() throws IOException {
+    void testGetConnectedCountNoResponse() throws IOException {
         String ipAddress = "172.17.1.100";  // 未响应的 IP 地址
         int pingCount = 4;
         int timeOut = 1000;
@@ -75,7 +75,7 @@ class PingTest {
 
     // 测试异常的 pingCount 参数
     @Test
-    public void testGetConnectedCountInvalidPingCount() throws IOException {
+    void testGetConnectedCountInvalidPingCount() throws IOException {
         String ipAddress = "192.168.1.1";  // 正常的 IP 地址
         int pingCount = -1;  // 非法的 pingCount
         int timeOut = 1000;
@@ -86,7 +86,7 @@ class PingTest {
 
     // 测试异常的 timeOut 参数
     @Test
-    public void testGetConnectedCountInvalidTimeOut() {
+    void testGetConnectedCountInvalidTimeOut() {
         String ipAddress = "192.168.1.1";  // 正常的 IP 地址
         int pingCount = 4;
         int timeOut = -1;  // 非法的 timeout
