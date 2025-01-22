@@ -1,6 +1,7 @@
 package com.github.hugh.cache;
 
 import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.github.hugh.cache.caffeine.CaffeineCache;
@@ -108,23 +109,84 @@ class CaffeineTest {
         assertNull(expireAfterAccess2.getIfPresent(key2));
     }
 
+    // 测试方法 createExpireAfterWrite 的基本功能
+    @Test
+    void testCreateExpireAfterWrite_withExpireAfterWriteInSeconds() throws Exception {
+        CacheLoader<String, String> cacheLoader = new CacheLoader<>() {
+            @Override
+            public String load(String key) {
+                return "value_" + key;
+            }
+        };
 
-//    @Test
-//    void testo4() throws InterruptedException {
-//        String keys = "KEY_01";
-////        Cache<String, String> expireAfterWrite = CaffeineCache.createExpireAfterWrite(2, k -> "abc");
-//        Cache<Object, Object> expireAfterWrite = CaffeineCache.createExpireAfterWrite(2);
-//        System.out.println("---1->>" + expireAfterWrite.get(keys, k -> tem01()));
-//        System.out.println(expireAfterWrite.getIfPresent(keys));
-//        new Thread(() -> {
-//            try {
-//                System.out.println(expireAfterWrite.get(keys, k -> tem01()));
-//                Thread.sleep(1000);
-//            } catch (InterruptedException interruptedException) {
-//                interruptedException.printStackTrace();
-//            }
-//        }).start();
-//        Thread.sleep(3000);
-//        System.out.println("===>" + expireAfterWrite.getIfPresent(keys));
-//    }
+        LoadingCache<String, String> cache = CaffeineCache.createExpireAfterWrite(1, cacheLoader);
+
+        // 测试缓存加载功能
+        cache.put("key1", "value1");
+        assertEquals("value1", cache.get("key1"));
+
+        // 测试过期时间
+        TimeUnit.SECONDS.sleep(2);
+        assertNull(cache.getIfPresent("key1"), "Cache should have expired after 1 second");
+    }
+
+    // 测试方法 createExpireAfterWrite 的自定义时间单位
+    @Test
+    void testCreateExpireAfterWrite_withCustomTimeUnit() throws Exception {
+        CacheLoader<String, String> cacheLoader = new CacheLoader<>() {
+            @Override
+            public String load(String key) {
+                return "value_" + key;
+            }
+        };
+
+        LoadingCache<String, String> cache = CaffeineCache.createExpireAfterWrite(1, TimeUnit.MILLISECONDS, cacheLoader);
+
+        // 测试缓存加载功能
+        cache.put("key1", "value1");
+        assertEquals("value1", cache.get("key1"));
+
+        // 测试过期时间
+        TimeUnit.MILLISECONDS.sleep(2);
+        assertNull(cache.getIfPresent("key1"), "Cache should have expired after 1 millisecond");
+    }
+
+    // 测试 CacheLoader 自动加载缓存
+    @Test
+    void testCacheLoader_autoload() {
+        CacheLoader<String, String> cacheLoader = key -> "loaded_value_" + key;
+
+        LoadingCache<String, String> cache = CaffeineCache.createExpireAfterWrite(1, cacheLoader);
+
+        // 测试缓存加载功能
+        assertEquals("loaded_value_key1", cache.get("key1"));
+        assertEquals("loaded_value_key2", cache.get("key2"));
+    }
+
+    // 测试过期时间为 0 的情况
+    @Test
+    void testCache_withZeroExpireTime() throws Exception {
+        CacheLoader<String, String> cacheLoader = key -> "withZeroExpireTime_" + key;
+
+        LoadingCache<String, String> cache = CaffeineCache.createExpireAfterWrite(0, TimeUnit.SECONDS, cacheLoader);
+
+        // 测试缓存加载功能
+        cache.put("key1", "value1");
+        assertEquals("withZeroExpireTime_key1", cache.get("key1"));
+
+        // 测试立即过期
+        TimeUnit.SECONDS.sleep(1);
+        assertNull(cache.getIfPresent("key1"), "Cache should have expired immediately");
+    }
+
+    // 测试过期时间为负值的情况
+    @Test
+    void testCache_withNegativeExpireTime() throws Exception {
+        CacheLoader<String, String> cacheLoader = key -> "withNegativeExpireTime_" + key;
+        // 负值过期时间应该抛出 IllegalArgumentException
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
+            CaffeineCache.createExpireAfterWrite(-1, TimeUnit.SECONDS, cacheLoader);
+        });
+        assertEquals("Duration cannot be negative: -1 SECONDS", thrown.getMessage());
+    }
 }
