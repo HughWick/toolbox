@@ -19,9 +19,7 @@ jobs: # 定义工作流中的任务
           cache: maven
       - name: 生成代码覆盖率报告
         # 运行的脚本：Maven 构建命令，忽略测试失败，静默模式，显示版本
-        run: |
-          date
-          mvn verify -Dmaven.test.failure.ignore=true -B -V
+        run: mvn verify -Dmaven.test.failure.ignore=true -B -V
       - name: 上传覆盖率到 Codecov
         uses: codecov/codecov-action@v4
         with:

@@ -2,10 +2,8 @@ package com.github.hugh.util.net;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.springframework.util.StopWatch;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,9 +21,9 @@ class NetworkTest {
     @Test
     void testPing() {
         try {
-            assertTrue(NetworkUtils.ping("www.baidu.com"));
+            assertTrue(NetworkUtils.ping("www.amazon.com"));
         } catch (Exception e) {
-            System.out.println("Error pinging www.baidu.com: " + e.getMessage());
+            System.out.println("Error pinging www.amazon.com: " + e.getMessage());
         }
         assertFalse(NetworkUtils.ping("www.google321.com", 500));
         assertTrue(NetworkUtils.ping(CLOUD_FLARE_DNS , 400));
@@ -92,31 +90,31 @@ class NetworkTest {
         assertTrue(NetworkUtils.ping(CLOUD_FLARE_DNS, 5000));
     }
 
-    @Test
-    void test02() {
-        try {
-            int count = 0;
-            int timeout = 4000;
-            String ip = "192.168.1.32";
-            StopWatch stopWatch = new StopWatch();
-            stopWatch.start("开始");
-            while (count < 3) {
-//                System.out.println("=====开始=======");
-                InetAddress byName = InetAddress.getByName(ip);
-                boolean reachable = byName.isReachable(timeout);
-//                System.out.println("==结果=>>>" + reachable);
-                if (reachable) {
-                    return;
-                }
-                count++;
-            }
-            stopWatch.stop();
-            log.info(stopWatch.prettyPrint());
-//            System.out.println(stopWatch.prettyPrint());
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
-    }
+//    @Test
+//    void test02() {
+//        try {
+//            int count = 0;
+//            int timeout = 4000;
+//            String ip = "192.168.1.32";
+//            StopWatch stopWatch = new StopWatch();
+//            stopWatch.start("开始");
+//            while (count < 3) {
+////                System.out.println("=====开始=======");
+//                InetAddress byName = InetAddress.getByName(ip);
+//                boolean reachable = byName.isReachable(timeout);
+////                System.out.println("==结果=>>>" + reachable);
+//                if (reachable) {
+//                    return;
+//                }
+//                count++;
+//            }
+//            stopWatch.stop();
+//            log.info(stopWatch.prettyPrint());
+////            System.out.println(stopWatch.prettyPrint());
+//        } catch (IOException ioException) {
+//            ioException.printStackTrace();
+//        }
+//    }
 
     @Test
     void testIsConnect() {
