@@ -48,22 +48,22 @@ class DateTest {
         assertEquals(expectedDate, parsedDate);
     }
 
-    @Test
-    void testRandomTime() {
-        // 创建一个随机数生成器
-        Random random = new Random();
-        // 生成随机的小时、分钟和秒
-        int hour = random.nextInt(24); // 0到23之间的随机整数
-        int minute = random.nextInt(60); // 0到59之间的随机整数
-        int second = random.nextInt(60); // 0到59之间的随机整数
-        // 格式化成HH:mm:ss的形式
-        String formattedTime = String.format("%02d:%02d:%02d", hour, minute, second);
-        // 打印随机生成的时间
-        System.out.println("随机生成的时间为: " + formattedTime);
-    }
+//    @Test
+//    void testRandomTime() {
+//        // 创建一个随机数生成器
+//        Random random = new Random();
+//        // 生成随机的小时、分钟和秒
+//        int hour = random.nextInt(24); // 0到23之间的随机整数
+//        int minute = random.nextInt(60); // 0到59之间的随机整数
+//        int second = random.nextInt(60); // 0到59之间的随机整数
+//        // 格式化成HH:mm:ss的形式
+//        String formattedTime = String.format("%02d:%02d:%02d", hour, minute, second);
+//        // 打印随机生成的时间
+//        System.out.println("随机生成的时间为: " + formattedTime);
+//    }
 
     @Test
-    void testToStringTime(){
+    void testToStringTime() {
         String str = "2020-06-04 13:00:21";
         assertEquals("20200604130021", DateUtils.toStringTime(str));
         assertEquals("", DateUtils.toStringTime(null));
@@ -74,19 +74,22 @@ class DateTest {
         String str = "2020-06-04 13:00:21";
         assertTrue(DateUtils.isDateFormat(str));
         assertEquals("Thu Jun 04 00:00:00 CST 2020", DateUtils.parseDate(str).toString());
-//        System.out.println("-2-->" + );
         final boolean dateFormat = DateUtils.isDateFormat(DateUtils.getDate(DateCode.YEAR_MONTH_DAY), DateCode.YEAR_MONTH_DAY);
         assertTrue(dateFormat);
-//        System.out.println("--3->" + );
 //        System.out.println("--4->" + DateUtils.getDate(1));
 //        System.out.println("--5->" + DateUtils.getDate(DateUtils.toStringTime(str)));
 //        assertEquals(TimeUtils.getYear() + "" + TimeUtils.getMonth() + "" + TimeUtils.getDay(), DateUtils.getDateSign());
 //        System.out.println("--6->" + DateUtils.getDateSign());
-        String s = DateUtils.toStringDate("20200604130021");
-        assertTrue(DateUtils.isDateFormat(s));
-        assertEquals(null, DateUtils.toStringDate(null));
 //        System.out.println(s);
 //        System.out.println("--根据当前时间的一天前的起始时间->" + DateUtils.getDayBeforeStartTime());
+    }
+
+    @Test
+    void testToStrDate() {
+        String s = DateUtils.toStringDate("20200604130021");
+        assertEquals("2020-06-04 13:00:21", s);
+        assertTrue(DateUtils.isDateFormat(s));
+        assertNull(DateUtils.toStringDate(null));
     }
 
     @Test
@@ -117,22 +120,60 @@ class DateTest {
 
 
     @Test
-    void test04() {
-
+    void testEarlyMorningSec() {
         long remainingMilliSec = DateUtils.getEarlyMorningSec();
         assertNotNull(remainingMilliSec);
         assertTrue(remainingMilliSec > 0);
+    }
 
-        Date iniHour = DateUtils.getIniHour();
-        assertNotNull(iniHour);
+    /**
+     * 测试getIniHour方法：验证返回的是当日当前小时的起始时间，分钟、秒、毫秒都应该为0。
+     */
+    @Test
+    void testGetIniHour() {
+        // 获取当前日期时间
+        Date result = DateUtils.getIniHour();
 
-        Date endHour = DateUtils.getEndHour();
-        assertNotNull(endHour);
+        // 使用Calendar对比
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(result);
 
-//        assertTrue(endHour.isAfter(iniHour));
-//        System.out.println("-距离凌晨还剩余多少毫秒-->>" + DateUtils.getEarlyMorningSec());
-//        System.out.println("--获取小时整点时间->>" + DateUtils.getIniHour());
-//        System.out.println("--获取当前小时的结束时间点->>" + DateUtils.getEndHour());
+        // 验证分钟、秒和毫秒是否都为0
+        assertEquals(0, calendar.get(Calendar.MINUTE));
+        assertEquals(0, calendar.get(Calendar.SECOND));
+        assertEquals(0, calendar.get(Calendar.MILLISECOND));
+
+        // 验证年份、月份、日期和小时与当前时间相同
+        Calendar now = Calendar.getInstance();
+        assertEquals(now.get(Calendar.YEAR), calendar.get(Calendar.YEAR));
+        assertEquals(now.get(Calendar.MONTH), calendar.get(Calendar.MONTH));
+        assertEquals(now.get(Calendar.DATE), calendar.get(Calendar.DATE));
+        assertEquals(now.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.HOUR_OF_DAY));
+    }
+
+    /**
+     * 测试getEndHour方法：验证返回的是当日当前小时的结束时间，分钟、秒、毫秒都应该是最大值（59, 59, 999）。
+     */
+    @Test
+    void testGetEndHour() {
+        // 获取当前日期时间
+        Date result = DateUtils.getEndHour();
+
+        // 使用Calendar对比
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(result);
+
+        // 验证分钟、秒和毫秒是否为59和999
+        assertEquals(59, calendar.get(Calendar.MINUTE));
+        assertEquals(59, calendar.get(Calendar.SECOND));
+        assertEquals(999, calendar.get(Calendar.MILLISECOND));
+
+        // 验证年份、月份、日期和小时与当前时间相同
+        Calendar now = Calendar.getInstance();
+        assertEquals(now.get(Calendar.YEAR), calendar.get(Calendar.YEAR));
+        assertEquals(now.get(Calendar.MONTH), calendar.get(Calendar.MONTH));
+        assertEquals(now.get(Calendar.DATE), calendar.get(Calendar.DATE));
+        assertEquals(now.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.HOUR_OF_DAY));
     }
 
     @Test
@@ -175,9 +216,62 @@ class DateTest {
         assertEquals(4920, DateUtils.secondsDifference(begin, end));
         assertNull(DateUtils.parseTimestamp(-1));
 //        System.out.println("3--->>" + DateUtils.format(DateUtils.getMin(begin, 5), DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
-        Date date = DateUtils.parseDate("2022-01-22 00:00:00");
-        assertTrue(DateUtils.checkTimeOut(date, 2));
-        assertTrue(DateUtils.checkTimeOut(DateUtils.parseDate("2022-01-22 10:00:00"), 2));
+    }
+
+    @Test
+    public void testCheckTimeOut_NullDate() {
+        Date date = null;
+        int hour = 1;
+        assertTrue(DateUtils.checkTimeOut(date, hour), "Expected true when the date is null");
+    }
+
+    @Test
+    public void testCheckTimeOut_HourLessThanOrEqualZero() {
+        Date date = new Date();
+        assertTrue(DateUtils.checkTimeOut(date, 0), "Expected true when the hour is less than or equal to 0");
+        assertTrue(DateUtils.checkTimeOut(date, -1), "Expected true when the hour is negative");
+    }
+
+    @Test
+    public void testCheckTimeOut_WithinTimeLimit() {
+        Date date = new Date(System.currentTimeMillis() - 30 * 60 * 1000); // 30 minutes ago
+        int hour = 1;
+        assertFalse(DateUtils.checkTimeOut(date, hour), "Expected false when the time difference is within the limit of 1 hour");
+    }
+
+    @Test
+    public void testCheckTimeOut_ExceedsTimeLimit() {
+        Date date = new Date(System.currentTimeMillis() - 2 * 60 * 60 * 1000); // 2 hours ago
+        int hour = 1;
+        assertTrue(DateUtils.checkTimeOut(date, hour), "Expected true when the time exceeds the limit of 1 hour");
+    }
+
+    @Test
+    public void testCheckTimeOut_ExceedsTimeLimitWithHigherHours() {
+        Date date = new Date(System.currentTimeMillis() - 5 * 60 * 60 * 1000); // 5 hours ago
+        int hour = 3;
+        assertTrue(DateUtils.checkTimeOut(date, hour), "Expected true when the time exceeds the limit of 3 hours");
+    }
+
+    @Test
+    public void testCheckTimeOut_ExactlyOneHour() {
+        Date date = new Date(System.currentTimeMillis() - 1 * 60 * 60 * 1000); // 1 hour ago
+        int hour = 1;
+        assertFalse(DateUtils.checkTimeOut(date, hour), "Expected false when the time is exactly 1 hour ago");
+    }
+
+    @Test
+    void testCheckTimeOut_ExactlyTwoHours() {
+        Date date = new Date(System.currentTimeMillis() - 2 * 60 * 60 * 1000); // 2 hours ago
+        int hour = 2;
+        assertFalse(DateUtils.checkTimeOut(date, hour), "Expected false when the time is exactly 2 hours ago with 2-hour limit");
+    }
+
+    @Test
+    void testCheckTimeOut_HigherHourLimit() {
+        Date date = new Date(System.currentTimeMillis() - (60 * 60 * 1000)); // 1 hour ago
+        int hour = 2;
+        assertFalse(DateUtils.checkTimeOut(date, hour), "Expected true when the time is 1 hour ago but the limit is 2 hours");
     }
 
     @Test
@@ -370,13 +464,13 @@ class DateTest {
     }
 
     @Test
-    public void getStartDate_NullInput_ReturnsNull() {
+    void getStartDate_NullInput_ReturnsNull() {
         Date result = DateUtils.getStartDate(null);
         assertNull(result, "Expected null for null input");
     }
 
     @Test
-    public void getStartDate_ValidDate_ReturnsStartOfDay() {
+    void getStartDate_ValidDate_ReturnsStartOfDay() {
         // 设置一个特定的日期用于测试
         Calendar calendar = Calendar.getInstance();
         calendar.set(2023, Calendar.OCTOBER, 15, 14, 30, 45);
@@ -395,13 +489,13 @@ class DateTest {
 
 
     @Test
-    public void getEndDate_NullInput_ReturnsNull() {
+    void getEndDate_NullInput_ReturnsNull() {
         Date result = DateUtils.getEndDate(null);
         assertNull(result, "Expected null for null input");
     }
 
     @Test
-    public void getEndDate_ValidDate_ReturnsEndDate() {
+    void getEndDate_ValidDate_ReturnsEndDate() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2023, Calendar.JANUARY, 1, 12, 0, 0);
         calendar.set(Calendar.MILLISECOND, 0);

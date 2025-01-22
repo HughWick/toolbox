@@ -7,6 +7,9 @@ import com.github.hugh.components.datetime.TimeCalc;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -194,7 +197,7 @@ public class DateUtils extends DateCode {
      */
     public static Date parseDate(String dateStr, String format, Locale locale) {
         // 判断待转换的日期字符串是否为空
-        if (EmptyUtils.isEmpty(dateStr)) {
+        if (dateStr == null || dateStr.trim().isEmpty()) {
             return null;
         }
         SimpleDateFormat simpleDateFormat;
