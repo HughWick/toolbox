@@ -126,7 +126,7 @@ public class DateUtils extends DateCode {
      */
     public static String toStringDate(String strDate) {
         if (strDate == null) {
-            return "";
+            return null;
         }
         String reg = "(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})(\\d{2})";
         return strDate.replaceAll(reg, "$1-$2-$3 $4:$5:$6");
@@ -1176,11 +1176,13 @@ public class DateUtils extends DateCode {
 
     /**
      * 日期对象的字符串 转 日期对象
+     * 直接使用{@link  #parse(Object, String)}
      *
      * @param dataStr 日期对象字符串 @{code Fri Oct 09 00:00:00 CST 2020}
      * @return Date
      * @since 1.2.8
      */
+    @Deprecated
     public static Date dateStrToDate(String dataStr) {
         try {
             return new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US).parse(dataStr);

@@ -78,7 +78,7 @@ class DateTest {
 //        System.out.println("--6->" + DateUtils.getDateSign());
         String s = DateUtils.toStringDate("20200604130021");
         assertTrue(DateUtils.isDateFormat(s));
-        assertEquals(null ,DateUtils.toStringDate(null));
+        assertEquals(null, DateUtils.toStringDate(null));
 //        System.out.println(s);
         System.out.println("--根据当前时间的一天前的起始时间->" + DateUtils.getDayBeforeStartTime());
     }
@@ -361,5 +361,51 @@ class DateTest {
         assertTrue(DateUtils.isTimestamp(str4));
 
 
+    }
+
+    @Test
+    public void getStartDate_NullInput_ReturnsNull() {
+        Date result = DateUtils.getStartDate(null);
+        assertNull(result, "Expected null for null input");
+    }
+
+    @Test
+    public void getStartDate_ValidDate_ReturnsStartOfDay() {
+        // 设置一个特定的日期用于测试
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2023, Calendar.OCTOBER, 15, 14, 30, 45);
+        calendar.set(Calendar.MILLISECOND, 500);
+        Date date = calendar.getTime();
+        Date result = DateUtils.getStartDate(date);
+        Calendar expectedCalendar = Calendar.getInstance();
+        expectedCalendar.setTime(date);
+        expectedCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        expectedCalendar.set(Calendar.MINUTE, 0);
+        expectedCalendar.set(Calendar.SECOND, 0);
+        expectedCalendar.set(Calendar.MILLISECOND, 0);
+        Date expectedDate = expectedCalendar.getTime();
+        assertEquals(expectedDate, result, "Expected start of day date");
+    }
+
+
+    @Test
+    public void getEndDate_NullInput_ReturnsNull() {
+        Date result = DateUtils.getEndDate(null);
+        assertNull(result, "Expected null for null input");
+    }
+
+    @Test
+    public void getEndDate_ValidDate_ReturnsEndDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2023, Calendar.JANUARY, 1, 12, 0, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Date date = calendar.getTime();
+        Date result = DateUtils.getEndDate(date);
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.setTime(result);
+        assertEquals(23, calendar2.get(Calendar.HOUR_OF_DAY), "Expected hour to be 23");
+        assertEquals(59, calendar2.get(Calendar.MINUTE), "Expected minute to be 59");
+        assertEquals(59, calendar2.get(Calendar.SECOND), "Expected second to be 59");
+        assertEquals(999, calendar2.get(Calendar.MILLISECOND), "Expected millisecond to be 999");
     }
 }
