@@ -6,29 +6,22 @@ on: # 定义工作流触发条件
 
 jobs: # 定义工作流中的任务
   report: # 任务名称为 report
-    runs-on: ubuntu-latest # 运行在最新的 Ubuntu 操作系统上
+    runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Shanghai # 设置时区为上海 (UTC+8)
     steps: # 定义任务中的步骤
-      - name: Before freeing up memory space
-        run: |
-          echo "Before freeing up memory space"
-          free -h
-      - name: Set Timezone to Asia/Shanghai # 步骤名称：设置时区为亚洲/上海
-        run: |
-          sudo timedatectl set-timezone Asia/Shanghai 
-          date
-
       - uses: actions/checkout@v4 # 使用 actions/checkout@v4 这个 Action，用于检出代码
       - name: Set up JDK 11 # 步骤名称：安装 JDK 11
         uses: actions/setup-java@v4 # 使用 actions/setup-java@v4 这个 Action，用于安装 Java 环境
         with: # 配置参数
           java-version: '11' # Java 版本设置为 11
           distribution: 'temurin' # 使用 Temurin 发行版的 JDK
-          cache: maven # 缓存 Maven 依赖
-
+          cache: maven
       - name: 生成代码覆盖率报告
         # 运行的脚本：Maven 构建命令，忽略测试失败，静默模式，显示版本
-        run: mvn verify -Dmaven.test.failure.ignore=true -B -V
-
+        run: |
+          date
+          mvn verify -Dmaven.test.failure.ignore=true -B -V
       - name: 上传覆盖率到 Codecov
         uses: codecov/codecov-action@v4
         with:
