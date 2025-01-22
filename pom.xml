@@ -51,7 +51,7 @@
         <!--   gson再往上的版本测试用例会出现问题     -->
         <google-gson.version>2.10.1</google-gson.version>
         <fastjson.version>1.2.83</fastjson.version>
-        <!--        <fastjson.version>2.0.53</fastjson.version>-->
+        <!--        <fastjson.version>2.0.54</fastjson.version>-->
         <okhttp.version>4.9.3</okhttp.version>
         <servlet-api.version>4.0.1</servlet-api.version>
         <google-guava.version>33.1.0-jre</google-guava.version>
@@ -59,7 +59,7 @@
         <slf4j-simple.version>2.0.16</slf4j-simple.version>
         <ip2region.version>2.7.0</ip2region.version>
         <UserAgentUtils.version>1.21</UserAgentUtils.version>
-        <mybatis-plus.version>3.5.9</mybatis-plus.version>
+        <mybatis-plus.version>3.5.8</mybatis-plus.version>
         <mongodb.version>2.6.13</mongodb.version>
         <redis.version>3.7.1</redis.version>
         <caffeine.version>3.1.8</caffeine.version>
@@ -154,6 +154,7 @@
                 <artifactId>gson</artifactId>
                 <version>${google-gson.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2 -->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
@@ -198,9 +199,10 @@
                 <artifactId>slf4j-simple</artifactId>
                 <version>${slf4j-simple.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus -->
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-jsqlparser</artifactId>
+                <artifactId>mybatis-plus</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->

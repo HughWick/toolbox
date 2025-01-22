@@ -30,7 +30,7 @@ JDK >=11
 | [ip2region](https://github.com/lionsoul2014/ip2region) | 2.7.0      | IP地址库             |
 | UserAgentUtils                                         | 1.21       | UserAgent解析工具     |
 | spring-boot-starter-data-mongodb                       | 2.6.13     | Mongodb           |
-| [mybatis-plus-boot-starter](https://www.baomidou.com/) | 3.5.2      | Mybatis plus      |
+| [mybatis-plus](https://www.baomidou.com/)              | 3.5.8      | Mybatis plus      |
 
 ## maven 引入
 
