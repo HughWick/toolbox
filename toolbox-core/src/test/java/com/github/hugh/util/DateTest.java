@@ -1,6 +1,7 @@
 package com.github.hugh.util;
 
 import com.github.hugh.constant.DateCode;
+import com.github.hugh.exception.ToolboxException;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
@@ -62,6 +63,13 @@ class DateTest {
     }
 
     @Test
+    void testToStringTime(){
+        String str = "2020-06-04 13:00:21";
+        assertEquals("20200604130021", DateUtils.toStringTime(str));
+        assertEquals("", DateUtils.toStringTime(null));
+    }
+
+    @Test
     void testDate01() {
         String str = "2020-06-04 13:00:21";
         assertTrue(DateUtils.isDateFormat(str));
@@ -71,8 +79,6 @@ class DateTest {
         assertTrue(dateFormat);
 //        System.out.println("--3->" + );
 //        System.out.println("--4->" + DateUtils.getDate(1));
-        assertEquals("20200604130021", DateUtils.toStringTime(str));
-        assertEquals("", DateUtils.toStringTime(null));
 //        System.out.println("--5->" + DateUtils.getDate(DateUtils.toStringTime(str)));
 //        assertEquals(TimeUtils.getYear() + "" + TimeUtils.getMonth() + "" + TimeUtils.getDay(), DateUtils.getDateSign());
 //        System.out.println("--6->" + DateUtils.getDateSign());
@@ -80,7 +86,7 @@ class DateTest {
         assertTrue(DateUtils.isDateFormat(s));
         assertEquals(null, DateUtils.toStringDate(null));
 //        System.out.println(s);
-        System.out.println("--根据当前时间的一天前的起始时间->" + DateUtils.getDayBeforeStartTime());
+//        System.out.println("--根据当前时间的一天前的起始时间->" + DateUtils.getDayBeforeStartTime());
     }
 
     @Test
@@ -407,5 +413,46 @@ class DateTest {
         assertEquals(59, calendar2.get(Calendar.MINUTE), "Expected minute to be 59");
         assertEquals(59, calendar2.get(Calendar.SECOND), "Expected second to be 59");
         assertEquals(999, calendar2.get(Calendar.MILLISECOND), "Expected millisecond to be 999");
+    }
+
+    @Test
+    void parseDate_EmptyString_ReturnsNull() {
+        Locale locale = Locale.getDefault();
+        Date result = DateUtils.parseDate("", DateCode.YEAR_MONTH_DAY, locale);
+        assertNull(result);
+    }
+
+    @Test
+    void parseDate_MatchesSpecificPattern1_ReturnsDate() throws ParseException {
+        Locale locale = Locale.getDefault();
+        String dateStr = "2023-10-05 14:30:00.123";
+        Date expectedDate = new SimpleDateFormat(DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC_SSS).parse(dateStr);
+        Date result = DateUtils.parseDate(dateStr, DateCode.YEAR_MONTH_DAY, locale);
+        assertEquals(expectedDate, result);
+    }
+
+    @Test
+    void parseDate_MatchesSpecificPattern2_ReturnsDate() throws ParseException {
+//        Locale locale = Locale.getDefault();
+        String dateStr = "Thu Oct 05 14:30:00 CST 2023";
+        Date expectedDate = new SimpleDateFormat(DateCode.CST_FORM, Locale.US).parse(dateStr);
+        Date result = DateUtils.parseDate(dateStr, DateCode.YEAR_MONTH_DAY, Locale.US);
+        assertEquals(expectedDate, result);
+    }
+
+    @Test
+    void parseDate_UsesProvidedFormat_ReturnsDate() throws ParseException {
+        Locale locale = Locale.getDefault();
+        String dateStr = "2023-10-05";
+        Date expectedDate = new SimpleDateFormat(DateCode.YEAR_MONTH_DAY).parse(dateStr);
+        Date result = DateUtils.parseDate(dateStr, DateCode.YEAR_MONTH_DAY, locale);
+        assertEquals(expectedDate, result);
+    }
+
+    @Test
+    void parseDate_InvalidDate_ThrowsToolboxException() {
+        Locale locale = Locale.getDefault();
+        String dateStr = "invalid-date";
+        assertThrows(ToolboxException.class, () -> DateUtils.parseDate(dateStr, DateCode.YEAR_MONTH_DAY, locale));
     }
 }

@@ -40,6 +40,7 @@ public class DateUtils extends DateCode {
      * @param date 日期对象
      * @return String  格式为：yyyy-MM-dd
      */
+    @Deprecated
     public static String format(Date date) {
         return format(date, YEAR_MONTH_DAY);
     }
@@ -179,13 +180,7 @@ public class DateUtils extends DateCode {
      * @return 转换后的Date对象
      */
     public static Date parseDate(String dateStr, String format) {
-        Locale locale;
-        if (CST_FORM.equals(format)) {
-            locale = Locale.US;
-        } else {
-            locale = Locale.getDefault(Locale.Category.FORMAT);
-        }
-        return parseDate(dateStr, format, locale);
+        return parseDate(dateStr, format, Locale.getDefault(Locale.Category.FORMAT));
     }
 
     /**
@@ -205,6 +200,8 @@ public class DateUtils extends DateCode {
         SimpleDateFormat simpleDateFormat;
         if (dateStr.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}")) {
             simpleDateFormat = new SimpleDateFormat(DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC_SSS);
+        } else if (dateStr.matches("\\D{3}\\s\\D{3}\\s\\d{2}\\s\\d{2}:\\d{2}:\\d{2}\\s\\D{3}\\s\\d{4}")) {
+            simpleDateFormat = new SimpleDateFormat(DateCode.CST_FORM, Locale.US);
         } else {
             simpleDateFormat = new SimpleDateFormat(format, locale);
         }
