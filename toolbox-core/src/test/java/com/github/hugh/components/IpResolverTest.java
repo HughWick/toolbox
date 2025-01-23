@@ -1,8 +1,6 @@
 package com.github.hugh.components;
 
-import com.github.hugh.util.ip.Ip2regionUtils;
 import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
@@ -12,7 +10,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
  * @date 2021/2/23 14:23
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Ip2regionUtils.class})
+//@PrepareForTest({Ip2regionUtils.class})
 public class IpResolverTest {
 
     /**
