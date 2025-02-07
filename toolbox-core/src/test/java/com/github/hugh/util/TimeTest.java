@@ -11,6 +11,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -141,6 +142,21 @@ class TimeTest {
         Date date = DateUtils.getDayBeforeStartTime();
         assertEquals(DateUtils.ofPattern(date), TimeUtils.getYesterdayStartTime());
         System.out.println("=4=昨日结束日期==>>" + TimeUtils.getYesterdayEndTime());
+    }
+
+    @Test
+    void getDayBeforeEndTime_ShouldReturnYesterdayEnd() {
+        Date today = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(today);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        Date  expectedYesterdayEnd = calendar.getTime();
+        Date yesterdayEnd = DateUtils.getDayBeforeEndTime();
+        assertEquals(expectedYesterdayEnd, yesterdayEnd, "The end time of yesterday should be calculated correctly.");
     }
 
     @Test
