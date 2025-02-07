@@ -60,7 +60,8 @@
         <ip2region.version>2.7.0</ip2region.version>
         <UserAgentUtils.version>1.21</UserAgentUtils.version>
         <mybatis-plus.version>3.5.8</mybatis-plus.version>
-        <mongodb.version>2.6.13</mongodb.version>
+        <!--    与spring 2.7.X对其    -->
+        <spring-data-mongodb.version>3.4.18</spring-data-mongodb.version>
         <redis.version>3.7.1</redis.version>
         <caffeine.version>3.1.8</caffeine.version>
         <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
@@ -240,9 +241,9 @@
                 <version>${knife4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-data-mongodb</artifactId>
-                <version>${mongodb.version}</version>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-mongodb</artifactId>
+                <version>${spring-data-mongodb.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.dom4j</groupId>

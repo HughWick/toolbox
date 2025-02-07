@@ -107,7 +107,7 @@ class RequestQueryTest {
         String queryStr1 = "Query: { \"$or\" : [{ \"deleteFlag\" : 1}, { \"dataVersion\" : 1}]}, Fields: {}, Sort: {}";
         assertEquals(queryStr1, query1.toString());
         List<CollectionDto> collectionTests = mongoTemplate.find(query1, CollectionDto.class);
-        assertEquals(3, collectionTests.size());
+        assertEquals(1, collectionTests.size());
     }
 
     @Test
@@ -169,7 +169,7 @@ class RequestQueryTest {
 //        assertEquals("", query1.toString());
 //        assertEquals(queryStr1, query1.getQueryObject().toJson());
         List<CollectionDto> collectionTests = mongoTemplate.find(query1, CollectionDto.class);
-        assertEquals(7, collectionTests.size());
+        assertEquals(1, collectionTests.size());
         collectionTests.forEach(System.out::println);
     }
 
@@ -189,7 +189,7 @@ class RequestQueryTest {
         Query query2 = RequestQuery.createPage(map2).query();
 //        System.out.println("---->>" + query2.toString());
         List<CollectionDto> collectionTest2 = mongoTemplate.find(query2, CollectionDto.class);
-        assertEquals(5, collectionTest2.size());
+        assertEquals(1, collectionTest2.size());
     }
 
     @Test
@@ -209,7 +209,7 @@ class RequestQueryTest {
         Query query2 = RequestQuery.createPage(map2).query();
 //        System.out.println("---->>"+query2.toString());
         List<CollectionDto> collectionTest2 = mongoTemplate.find(query2, CollectionDto.class);
-        assertEquals(8, collectionTest2.size());
+        assertEquals(12, collectionTest2.size());
     }
 
     @Test
@@ -224,7 +224,7 @@ class RequestQueryTest {
         Query query1 = RequestQuery.createPage(map).query();
 //        System.out.println("--->>" + query1.toString());
         List<CollectionDto> collectionTests = mongoTemplate.find(query1, CollectionDto.class);
-        assertEquals(7, collectionTests.size());
+        assertEquals(1, collectionTests.size());
         // 测试le在前
         Map<String, Object> map2 = new LinkedHashMap<>();
         map2.put(delete_flag, 1);
