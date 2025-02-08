@@ -29,7 +29,7 @@ JDK >=11
 | [slf4j-simple](https://github.com/qos-ch/slf4j)        | 2.0.9      | 日志工具包             |
 | [ip2region](https://github.com/lionsoul2014/ip2region) | 2.7.0      | IP地址库             |
 | UserAgentUtils                                         | 1.21       | UserAgent解析工具     |
-| spring-boot-starter-data-mongodb                       | 2.6.13     | Mongodb           |
+| spring-data-mongodb                                    | 3.4.18     | Mongodb           |
 | [mybatis-plus](https://www.baomidou.com/)              | 3.5.8      | Mybatis plus      |
 
 ## maven 引入
