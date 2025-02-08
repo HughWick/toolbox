@@ -2,12 +2,12 @@ package com.github.hugh;
 
 import com.github.hugh.util.RandomUtils;
 import com.github.hugh.util.regex.RegexUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,6 +29,8 @@ class RandomTest {
         assertTrue(RegexUtils.isNumeric(RandomUtils.randomNumber(3)));
         int i = RandomUtils.randomInt(600, 900);
         assertTrue(i > 600 && i <= 900);
+        String s = RandomUtils.randomString(0);
+        assertEquals(1, s.length());
     }
 
     @Test
@@ -49,18 +51,19 @@ class RandomTest {
 //        list.add("4");
 //        list.add("5");
         String random = RandomUtils.random(list);
-        assertTrue(s1.equals(random) || "2".equals(random) || "3".equals(random) );
+        assertTrue(s1.equals(random) || "2".equals(random) || "3".equals(random));
+        assertNull(RandomUtils.random(null));
     }
 
-//    public static int number(int length) {
-//        int num = 1;
-//        double random = Math.random();
-//        if (random < 0.1D) {
-//            random += 0.1D;
-//        }
-//        for (int i = 0; i < length; i++) {
-//            num *= 10;
-//        }
-//        return (int) (random * num);
-//    }
+    @Test
+    void getRandom_SecureTrue_ReturnsSecureRandom() {
+        Random random = RandomUtils.getRandom(true);
+        assertTrue(random instanceof SecureRandom, "Expected SecureRandom instance");
+    }
+
+    @Test
+    void getRandom_SecureFalse_ReturnsThreadLocalRandom() {
+        Random random = RandomUtils.getRandom(false);
+        assertTrue(random instanceof ThreadLocalRandom, "Expected ThreadLocalRandom instance");
+    }
 }
