@@ -278,7 +278,6 @@ public class OkHttps {
         // 确保URL不为null或空
         verifyUrlEmpty();
         setBodyFromParams();
-//        String tempUrl = url;
         // 如果提供了查询参数，则将其添加到URL中
         url = UrlUtils.urlParam(url, this.body);
         // 构建请求对象

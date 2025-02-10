@@ -1,7 +1,6 @@
 package com.github.hugh.http.builder;
 
 import com.alibaba.fastjson.JSON;
-import com.github.hugh.http.OkHttpUpdateFileTest;
 import com.github.hugh.http.constant.MediaTypes;
 import com.github.hugh.http.constant.OkHttpCode;
 import com.github.hugh.http.exception.ToolboxHttpException;
@@ -250,7 +249,7 @@ class OkHttpsTest {
     }
 
     private static String getPath(String fileName) {
-        return OkHttpUpdateFileTest.class.getResource(fileName).getPath();
+        return OkHttpsTest.class.getResource(fileName).getPath();
     }
 
     @Test
