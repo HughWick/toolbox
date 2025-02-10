@@ -296,6 +296,7 @@ class EasyRedisTest {
     void dbSizeTest() {
         EasyRedis easyRedis = supplier.get();
         assertEquals(0, easyRedis.dbSize(4));
+        assertEquals(10, easyRedis.dbSize());
     }
 
     @Test
