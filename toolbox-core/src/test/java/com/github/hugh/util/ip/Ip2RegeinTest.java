@@ -57,6 +57,10 @@ public class Ip2RegeinTest {
         String ip4 = "192.168.1.191";
         final String cityInfo4 = Ip2regionUtils.getCityInfo(ip4, easyRedisSupplier.get());
         assertEquals("0|0|0|内网IP|内网IP", cityInfo4);
+        String ip5 = "79.124.58.250";
+        final String cityInfo5 = Ip2regionUtils.getCityInfo(ip5, easyRedisSupplier.get());
+        assertEquals("保加利亚|0|Sofia|0|0", cityInfo5);
+
     }
 
     @Test
