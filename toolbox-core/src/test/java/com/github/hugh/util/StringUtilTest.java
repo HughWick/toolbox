@@ -132,6 +132,55 @@ class StringUtilTest {
         assertFalse(StringUtils.startWith(str2, "a", false));
     }
 
+    @Test
+    public void startWith_BothNull_IgnoreEqualsTrue_ReturnsFalse() {
+        assertFalse(StringUtils.startWith(null, null, false, true));
+    }
+
+    @Test
+    public void startWith_BothNull_IgnoreEqualsFalse_ReturnsTrue() {
+        assertTrue(StringUtils.startWith(null, null, false, false));
+    }
+
+    @Test
+    public void startWith_StrNullPrefixNotNull_ReturnsFalse() {
+        assertFalse(StringUtils.startWith(null, "prefix", false, false));
+    }
+
+    @Test
+    public void startWith_StrNotNullPrefixNull_ReturnsFalse() {
+        assertFalse(StringUtils.startWith("string", null, false, false));
+    }
+
+    @Test
+    public void startWith_StrStartsWithPrefix_IgnoreCaseFalse_ReturnsTrue() {
+        assertTrue(StringUtils.startWith("string", "str", false, false));
+    }
+
+    @Test
+    public void startWith_StrStartsWithPrefix_IgnoreCaseTrue_ReturnsTrue() {
+        assertTrue(StringUtils.startWith("String", "str", true, false));
+    }
+
+    @Test
+    public void startWith_StrDoesNotStartWithPrefix_ReturnsFalse() {
+        assertFalse(StringUtils.startWith("string", "pre", false, false));
+    }
+
+    @Test
+    public void startWith_StrEqualsPrefix_IgnoreEqualsTrue_ReturnsFalse() {
+        assertFalse(StringUtils.startWith("string", "string", false, true));
+    }
+
+    @Test
+    public void startWith_StrEqualsPrefix_IgnoreEqualsFalse_ReturnsTrue() {
+        assertTrue(StringUtils.startWith("string", "string", false, false));
+    }
+
+    @Test
+    public void startWith_StrStartsWithPrefix_IgnoreEqualsTrue_ReturnsTrue() {
+        assertTrue(StringUtils.startWith("string", "str", false, true));
+    }
     // 测试保留小数点后指定位数
     @Test
     void testRetainDecimal() {
