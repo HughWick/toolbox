@@ -344,12 +344,12 @@ class MapTest {
     }
 
     @Test
-    public void testGetDoubleWithMultipleNumbersInString() {
+    void testGetDoubleWithMultipleNumbersInString() {
         String str1 = "12.34.56";
         Map<String, Object> map = new HashMap<>();
         map.put("key", str1);
         Double result = MapUtils.getDouble(map, "key");
-        assertEquals("12.34", result);  // 如果字符串无法被解析为单一数字，应返回 null
+        assertEquals(12.34d, result);  // 如果字符串无法被解析为单一数字，应返回 null
     }
 
     @Test
