@@ -84,4 +84,9 @@ public class StrPool {
      * 字符串常量：中括号（右） {@code "]"}
      */
     public static final String BRACKET_END = "]";
+
+    /**
+     * 字符串常量：空 JSON {@code "{}"}
+     */
+    public static final String EMPTY_JSON = "{}";
 }

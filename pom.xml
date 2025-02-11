@@ -235,10 +235,16 @@
                 <artifactId>pdfbox</artifactId>
                 <version>${pdfbox.version}</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-spring-boot-starter -->
+            <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-spring-ui -->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
-                <artifactId>knife4j-spring-boot-starter</artifactId>
+                <artifactId>knife4j-spring-ui</artifactId>
+                <version>${knife4j.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-spring -->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-spring</artifactId>
                 <version>${knife4j.version}</version>
             </dependency>
             <dependency>

@@ -1,6 +1,7 @@
 package com.github.hugh.util.lang;
 
-import com.github.hugh.constant.enums.StringEnum;
+import com.github.hugh.constant.StrPool;
+import com.github.xiaoymin.knife4j.core.util.StrUtil;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -28,7 +29,7 @@ public class StringFormatter {
      * @return String
      */
     public static String format(String strPattern, Object... argArray) {
-        return formatWith(strPattern, StringEnum.EMPTY_JSON.getValue(), argArray);
+        return formatWith(strPattern, StrPool.EMPTY_JSON, argArray);
     }
 
     /**
@@ -47,9 +48,9 @@ public class StringFormatter {
      * @since 2.4.9
      */
     public static String formatWith(String strPattern, String placeHolder, Object... argArray) {
-//        if (StrUtil.isBlank(strPattern) || StrUtil.isBlank(placeHolder) || ArrayUtil.isEmpty(argArray)) {
-//            return strPattern;
-//        }
+        if (StrUtil.isBlank(strPattern) || StrUtil.isBlank(placeHolder) || argArray == null){
+            return strPattern;
+        }
         final int strPatternLength = strPattern.length();
         final int placeHolderLength = placeHolder.length();
         // 初始化定义好的长度以获得更好的性能
@@ -67,8 +68,8 @@ public class StringFormatter {
                 return stringBuilder.toString();
             }
             // 转义符
-            if (delimIndex > 0 && strPattern.charAt(delimIndex - 1) == StringEnum.BACKSLASH.getValue().toCharArray()[0]) {// 转义符
-                if (delimIndex > 1 && strPattern.charAt(delimIndex - 2) == StringEnum.BACKSLASH.getValue().toCharArray()[0]) {// 双转义符
+            if (delimIndex > 0 && strPattern.charAt(delimIndex - 1) == StrPool.BACKSLASH.toCharArray()[0]) {// 转义符
+                if (delimIndex > 1 && strPattern.charAt(delimIndex - 2) == StrPool.BACKSLASH.toCharArray()[0]) {// 双转义符
                     // 转义符之前还有一个转义符，占位符依旧有效
                     stringBuilder.append(strPattern, handledPosition, delimIndex - 1);
                     stringBuilder.append(str(argArray[argIndex], StandardCharsets.UTF_8));

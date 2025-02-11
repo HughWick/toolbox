@@ -27,12 +27,42 @@ class NamesTest {
     }
 
     @Test
-    void test02() {
+    void testDesensitized() {
         assertNull(NamesUtils.desensitized(null));
         assertEquals("刘*", NamesUtils.desensitized("刘三"));
         assertEquals("王**", NamesUtils.desensitized("王月如"));
         assertEquals("欧阳**", NamesUtils.desensitized("欧阳震华"));
         assertEquals("麦******", NamesUtils.desensitized("麦麦提·赛帕克"));
+    }
+
+    @Test
+    void encrypt_NullInput_ReturnsNull() {
+        assertNull(NamesUtils.encrypt(null));
+    }
+
+    @Test
+    void encrypt_Length1_ReturnsSameString() {
+        assertEquals("张", NamesUtils.encrypt("张"));
+    }
+
+    @Test
+    void encrypt_Length2_ReturnsMaskedFirstCharacter() {
+        assertEquals("*三", NamesUtils.encrypt("张三"));
+    }
+
+    @Test
+    void encrypt_Length3_ReturnsMaskedMiddleCharacter() {
+        assertEquals("王*如", NamesUtils.encrypt("王月如"));
+    }
+
+    @Test
+    void encrypt_Length4_ReturnsMaskedMiddleTwoCharacters() {
+        assertEquals("欧**华", NamesUtils.encrypt("欧阳震华"));
+    }
+
+    @Test
+    void encrypt_LengthGreaterThan4WithDot_ReturnsMaskedAfterDot() {
+        assertEquals("麦麦提·***", NamesUtils.encrypt("麦麦提·赛帕克"));
     }
 
 }
