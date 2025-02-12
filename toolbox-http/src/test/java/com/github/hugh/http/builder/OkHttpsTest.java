@@ -136,21 +136,53 @@ class OkHttpsTest {
     @Test
     void testCookie() throws Exception {
         String url = "http://httpbin.org/cookies/set?username=admin&password=123456";
-        final String responseData = new OkHttps().setUrl(url)
+        OkHttpsResponse okHttpsResponse = new OkHttps().setUrl(url)
                 .sendCookie()
-                .doGet()
-                .getMessage();
+                .doGet();
         URI uri = URI.create(url);
         List<Cookie> cookies = OkHttpCode.COOKIE_STORE.get(uri.getHost());
         assertEquals("[username=admin; path=/, password=123456; path=/]", cookies.toString());
-//        String url2 = "http://httpbin.org/cookies/set?username=user_k2&password=si45";
-//        OkHttps.url(url2)
-//                .isSendCookie(true)
-//                .doPostForm()
-//                .getMessage();
-//        URI uri2 = URI.create(url2);
-//        List<Cookie> cookies2 = OkHttpCode.COOKIE_STORE.get(uri2.getHost());
-//        assertEquals("", cookies2.toString());
+    }
+
+    @Test
+    void testNoCookieSet() throws Exception {
+        String url = "http://httpbin.org/cookies/set?username=admin";
+        OkHttpsResponse okHttpsResponse = new OkHttps().setUrl(url)
+                .doGet();
+        URI uri = URI.create(url);
+        List<Cookie> cookies = OkHttpCode.COOKIE_STORE.get(uri.getHost());
+        // Check that no cookies were set
+        assertNull(cookies);
+    }
+
+    @Test
+    void testMultipleCookiesSet() throws Exception {
+        String url = "http://httpbin.org/cookies/set?username=admin&password=123456&role=admin";
+        OkHttpsResponse okHttpsResponse = new OkHttps().setUrl(url)
+                .sendCookie()
+                .doGet();
+        URI uri = URI.create(url);
+        List<Cookie> cookies = OkHttpCode.COOKIE_STORE.get(uri.getHost());
+        assertEquals("[username=admin; path=/, password=123456; path=/, role=admin; path=/]", cookies.toString());
+    }
+    @Test
+    void testCookieConflict() throws Exception {
+        String url1 = "http://httpbin.org/cookies/set?username=admin";
+        String url2 = "http://httpbin.org/cookies/set?username=user";
+
+        // First request
+        OkHttpsResponse okHttpsResponse1 = new OkHttps().setUrl(url1)
+                .sendCookie()
+                .doGet();
+
+        // Second request with a different cookie value for the same cookie name
+        OkHttpsResponse okHttpsResponse2 = new OkHttps().setUrl(url2)
+                .sendCookie()
+                .doGet();
+
+        URI uri = URI.create(url1);
+        List<Cookie> cookies = OkHttpCode.COOKIE_STORE.get(uri.getHost());
+        assertEquals("[username=user; path=/]", cookies.toString()); // The second cookie should override the first one
     }
 
     // 测试上传单张图片
