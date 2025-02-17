@@ -518,6 +518,60 @@ public class EasyRedis {
     }
 
     /**
+     * 检查哈希表 key 中，字段 field 是否存在。
+     * 此方法允许指定数据库索引 dbIndex。
+     *
+     * @param dbIndex Redis 数据库索引 (0-15)。
+     * @param key     哈希表键名，字符串类型。
+     * @param field   要检查的字段名，字符串类型。
+     * @return {@code Boolean} - 如果哈希表 key 中存在字段 field，则返回 {@code true}，否则返回 {@code false}。
+     * @since 2.8.2
+     */
+    public Boolean hexists(int dbIndex, String key, String field) {
+        return executeWithJedis(dbIndex, jedis -> jedis.hexists(key, field));
+    }
+
+    /**
+     * 检查哈希表 key 中，字段 field 是否不存在。
+     * 此方法允许指定数据库索引 dbIndex。
+     *
+     * @param dbIndex Redis 数据库索引 (0-15)。
+     * @param key     哈希表键名，字符串类型。
+     * @param field   要检查的字段名，字符串类型。
+     * @return {@code Boolean} - 如果哈希表 key 中不存在字段 field，则返回 {@code true}，否则返回 {@code false}。
+     * @since 2.8.2
+     */
+    public Boolean hIsNotExists(int dbIndex, String key, String field) {
+        return !hexists(dbIndex, key, field);
+    }
+
+    /**
+     * 检查哈希表 key 中，字段 field 是否不存在。
+     * 此方法使用默认的数据库索引 {@link #dbIndex}。
+     *
+     * @param key   哈希表键名，字符串类型。
+     * @param field 要检查的字段名，字符串类型。
+     * @return {@code Boolean} - 如果哈希表 key 中不存在字段 field，则返回 {@code true}，否则返回 {@code false}。
+     * @since 2.8.2
+     */
+    public Boolean hIsNotExists(String key, String field) {
+        return hIsNotExists(dbIndex, key, field);
+    }
+
+    /**
+     * 检查哈希表 key 中，字段 field 是否存在。
+     * 此方法使用默认的数据库索引 {@link #dbIndex}。
+     *
+     * @param key   哈希表键名，字符串类型。
+     * @param field 要检查的字段名，字符串类型。
+     * @return {@code Boolean} - 如果哈希表 key 中存在字段 field，则返回 {@code true}，否则返回 {@code false}。
+     * @since 2.8.2
+     */
+    public Boolean hexists(String key, String field) {
+        return hexists(dbIndex, key, field);
+    }
+
+    /**
      * 获取整个路径db下所有key
      * <p>
      * 默认对象创建时的db索引

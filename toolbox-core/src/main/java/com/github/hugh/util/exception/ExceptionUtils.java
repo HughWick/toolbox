@@ -67,11 +67,11 @@ public class ExceptionUtils {
     /**
      * 获取异常链中最尾端的异常的消息，消息格式为：{SimpleClassName}: {ThrowableMessage}
      *
-     * @param th 异常
+     * @param throwable 异常
      * @return 消息
      * @since 2.4.9
      */
-    public static String getRootCauseMessage(final Throwable th) {
-        return getMessage(getRootCause(th));
+    public static String getRootCauseMessage(final Throwable throwable) {
+        return getMessage(getRootCause(throwable));
     }
 }

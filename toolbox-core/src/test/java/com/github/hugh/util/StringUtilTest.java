@@ -153,6 +153,8 @@ class StringUtilTest {
     void before_ValueContainsCha_ReturnsSubstring() {
         String result = StringUtils.before("https://github.com/HughWick/toolbox", "/");
         assertEquals("https://github.com/HughWick", result);
+        String sqlUrl = "jdbc:mysql://192.168.10.244:4139/cmmop";
+        assertEquals("jdbc:mysql://192.168.10.244:4139", StringUtils.before(sqlUrl, "/"));
     }
 
     @Test

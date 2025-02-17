@@ -3,7 +3,6 @@ package com.github.hugh.mq;
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.Executors;
@@ -11,7 +10,7 @@ import java.util.concurrent.Executors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * 测试guava EventBus
+ * 测试guava EventBus 内存消息队列
  * User: AS
  * Date: 2021/10/9 10:47
  */
@@ -65,9 +64,9 @@ class EventListener {
             assertEquals(0, param);
         } else if (count == 1) {
             assertEquals(1, param);
-        }else if (count == 2) {
+        } else if (count == 2) {
             assertEquals(2, param);
-        }else if (count == 3) {
+        } else if (count == 3) {
             assertEquals(3, param);
         }
         try {

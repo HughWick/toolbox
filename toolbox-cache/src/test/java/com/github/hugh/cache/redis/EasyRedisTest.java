@@ -4,6 +4,7 @@ import com.github.hugh.util.ListUtils;
 import com.github.hugh.util.RandomUtils;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.Lists;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * redis 工具类测试
@@ -29,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class EasyRedisTest {
 
     public static final String IP_ADDR = "141.147.176.125";
+    //    public static final String IP_ADDR = "192.168.10.245";
     public static final String PASSWORD = "password123";
     public static final int PORT = 7779;
     public static final int GET_TEST_INDEX = 14;
@@ -61,6 +64,13 @@ class EasyRedisTest {
 //        log.info("初始化redis pool。end...");
         System.out.println("初始化redis pool。end...");
         return jedisPool;
+    }
+
+
+    @BeforeEach
+    public void init() {
+        System.out.println("init...");
+
     }
 
     /**
@@ -276,28 +286,26 @@ class EasyRedisTest {
     @Test
     void hsetTest() {
         String url1 = "www.baidu.com";
-        String key1 = "hset_test_01";
+        String cacheKey1 = "hset_test_01";
         EasyRedis easyRedis = supplier.get();
         String field1 = "json";
         String field2 = "url";
         String field3 = "account";
-        Long hset = easyRedis.hset(key1, field1, "www.google.com");
+        Long hset = easyRedis.hset(cacheKey1, field1, "www.google.com");
         assertEquals(1, hset);
-        easyRedis.hset(key1, field2, url1);
-        assertEquals(url1, easyRedis.hget(key1, field2));
-        easyRedis.hset(key1, field3, "hugh");
-        Long account = easyRedis.hdel(key1, field3);
+        easyRedis.hset(cacheKey1, field2, url1);
+        assertEquals(url1, easyRedis.hget(cacheKey1, field2));
+        easyRedis.hset(cacheKey1, field3, "hugh");
+        assertTrue(easyRedis.hexists(cacheKey1, field2));
+        assertFalse(easyRedis.hIsNotExists(cacheKey1, field2));
+        assertTrue(easyRedis.hIsNotExists(15, cacheKey1, field2));
+        assertFalse(easyRedis.hIsNotExists(1, cacheKey1, field1));
+        Long account = easyRedis.hdel(cacheKey1, field3);
         assertEquals(1, account);
-        Long hdel2 = easyRedis.hdel(key1, field1,field2);
+        Long hdel2 = easyRedis.hdel(cacheKey1, field1, field2);
         assertEquals(2, hdel2);
     }
 
-    @Test
-    void dbSizeTest() {
-        EasyRedis easyRedis = supplier.get();
-        assertEquals(0, easyRedis.dbSize(4));
-        assertEquals(10, easyRedis.dbSize());
-    }
 
     @Test
     void hgetAllTest() {
@@ -313,4 +321,10 @@ class EasyRedisTest {
     }
 
 
+    @Test
+    void dbSizeTest() {
+        EasyRedis easyRedis = supplier.get();
+        assertEquals(0, easyRedis.dbSize(4));
+        assertEquals(4, easyRedis.dbSize());
+    }
 }

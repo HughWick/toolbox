@@ -261,6 +261,7 @@ class GsonUtilTest {
     void testIsJsonArray_throwsJsonParseException_invalidSyntax_missingQuote() {
         assertFalse(GsonUtils.isJsonArray("[\"value]"));
     }
+
     @Test
     void isJsonArray_invalidJsonArray() {
         assertFalse(GsonUtils.isJsonArray(""));
@@ -283,5 +284,15 @@ class GsonUtilTest {
     @Test
     void isJsonArray_nullString() {
         assertFalse(GsonUtils.isJsonArray(null));
+    }
+
+
+    @Test
+    void testList() {
+        String str1 = "{\"code\":\"0000\",\"data\":[{\"template\":1,\"createBy\":\"系统\",\"parentTypeId\":9,\"level\":2,\"children\":[],\"typeName\":\"抓拍单元\",\"id\":45,\"type\":0,\"createDate\":1683567605000}],\"message\":\"操作成功\"}";
+        String strArr1 = "[{\"template\":1,\"createBy\":\"系统\",\"parentTypeId\":9,\"level\":2,\"children\":[],\"typeName\":\"抓拍单元\",\"id\":45,\"type\":0,\"createDate\":1683567605000}]";
+        List<Object> objects = GsonUtils.toArrayList(strArr1);
+        System.out.println(objects.size());
+        List<Object> objects1 = GsonUtils.toArrayList(objects.toString());
     }
 }
