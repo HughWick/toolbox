@@ -1,5 +1,6 @@
 package com.github.hugh.cache.redis;
 
+import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.ListUtils;
 import com.github.hugh.util.RandomUtils;
 import com.google.common.base.Suppliers;
@@ -20,7 +21,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * redis 工具类测试
@@ -30,8 +30,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Configuration
 class EasyRedisTest {
 
-    public static final String IP_ADDR = "141.147.176.125";
-    //    public static final String IP_ADDR = "192.168.10.245";
+        public static final String IP_ADDR = "141.147.176.125";
+//    public static final String IP_ADDR = "192.168.1.45";
     public static final String PASSWORD = "password123";
     public static final int PORT = 7779;
     public static final int GET_TEST_INDEX = 14;
@@ -200,6 +200,8 @@ class EasyRedisTest {
         instance.set(dbIndex, byteKey, value.getBytes(StandardCharsets.UTF_8));
         final byte[] bytes = new byte[]{115, 100, 106, 102, 104, 107, 106};
         assertArrayEquals(bytes, instance.get(dbIndex, byteKey));
+        Long del = instance.del(dbIndex, byteKey);
+        assertEquals(1L, del);
     }
 
     @Test
@@ -306,6 +308,27 @@ class EasyRedisTest {
         assertEquals(2, hdel2);
     }
 
+    @Test
+    void batchHsetMapToHash_success() throws ToolboxException {
+        int dbIndex = 2;
+        String hashKey = "testHashKey";
+        String field1 = "field1";
+        String value1 = "value1";
+        Map<String, String> dataMap = new HashMap<>();
+        dataMap.put(field1, value1);
+        dataMap.put("field2", "value2");
+        EasyRedis easyRedis = supplier.get();
+        easyRedis.batchHashSetMap(dbIndex, hashKey, dataMap);
+        assertEquals(2, easyRedis.hlen(dbIndex, hashKey));
+        assertEquals(-1, easyRedis.ttl(dbIndex, hashKey));
+        assertEquals(value1, easyRedis.hget(dbIndex, hashKey, field1));
+        assertEquals(1, easyRedis.del(dbIndex, hashKey));
+
+        easyRedis.batchHashSetMap(hashKey, dataMap);
+        assertEquals(value1, easyRedis.hget(hashKey, field1));
+        assertEquals(2, easyRedis.hlen( hashKey));
+        assertEquals(1, easyRedis.del(hashKey));
+    }
 
     @Test
     void hgetAllTest() {

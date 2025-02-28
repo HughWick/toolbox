@@ -30,6 +30,8 @@ class IpTest {
         String str2 = "113.218.2.122";
         assertTrue(RegexUtils.isIp(str2));
         assertTrue(RegexUtils.isIp(IpUtils.random()));
+        String str3 = "43.113.33.124";
+        assertTrue(RegexUtils.isIp(str3));
     }
 
     // 测试计算IP地址长度

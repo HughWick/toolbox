@@ -5,6 +5,7 @@ import com.google.common.base.Suppliers;
 import redis.clients.jedis.BinaryJedis;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.Pipeline;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -448,6 +449,89 @@ public class EasyRedis {
         } catch (Exception exception) {
             throw new ToolboxException(exception);
         }
+    }
+
+    /**
+     * 批量将 Map 数据写入 Redis Hash 表 (使用 Pipeline 管道)，Hash Key 永不过期，使用默认数据库 ({@link  #dbIndex})
+     * <p>
+     * 此方法等同于调用 {@link #batchHashSetMap(int, String, Map)} 方法，并设置 dbIndex 参数为 -1，
+     * 使用 Redis 默认数据库 (索引为 0)。
+     *
+     * @param hashKey Redis Hash 表的 key
+     * @param dataMap 要写入的 Map 数据 (key-value 键值对)
+     * @since 2.8.3
+     */
+    public void batchHashSetMap(String hashKey, Map<String, String> dataMap) {
+        batchHashSetMap(dbIndex, hashKey, dataMap);
+    }
+
+    /**
+     * 批量将 Map 数据写入 Redis Hash 表 (使用 Pipeline 管道)，Hash Key 永不过期
+     * <p>
+     * 此方法等同于调用 {@link #batchHashSetMap(int, String, Map, long)} 方法，并设置 timeout 参数为 -1，
+     * 表示 Hash Key 永不过期 (依赖 Redis 默认策略，除非显式删除或被 Redis 内存淘汰策略回收)。
+     *
+     * @param dbIndex Redis 数据库索引 (0-15，默认 0)
+     * @param hashKey Redis Hash 表的 key
+     * @param dataMap 要写入的 Map 数据 (key-value 键值对)
+     * @since 2.8.3
+     */
+    public void batchHashSetMap(int dbIndex, String hashKey, Map<String, String> dataMap) {
+        batchHashSetMap(dbIndex, hashKey, dataMap, -1);
+    }
+
+    /**
+     * 批量将 Map 数据写入 Redis Hash 表 (使用 Pipeline 管道)，并设置 Hash Key 的过期时间
+     *
+     * @param dbIndex Redis 数据库索引 (0-15，默认 0)
+     * @param hashKey Redis Hash 表的 key
+     * @param dataMap 要写入的 Map 数据 (key-value 键值对)
+     * @param timeout 过期时间 (秒)。
+     *                -  大于 0 时，设置 Key 的过期时间为 `timeout` 秒。
+     *                -  等于 -1 时，Key 永不过期 (使用 `PERSIST` 命令)。
+     * @since 2.8.3
+     */
+    public void batchHashSetMap(int dbIndex, String hashKey, Map<String, String> dataMap, long timeout) {
+        try (Jedis jedis = jedisPool.getResource(); // 从连接池获取 Jedis 资源，try-with-resources 确保自动释放
+             Pipeline pipeline = jedis.pipelined()) { // 获取 Pipeline 对象
+            jedis.select(dbIndex); // 选择数据库
+            for (Map.Entry<String, String> entry : dataMap.entrySet()) {
+                pipeline.hset(hashKey, entry.getKey(), entry.getValue()); // 将 hset 命令添加到 Pipeline
+            }
+            pipeline.sync(); // 批量执行 Pipeline 中的命令
+            if (timeout > 0) {
+                jedis.expire(hashKey, timeout); // 设置 Hash Key 的过期时间 (秒)
+            } else if (timeout == -1) {
+                jedis.persist(hashKey); // 设置 Hash Key 永不过期
+            }
+        } catch (Exception exception) {
+            throw new ToolboxException(exception); // 抛出自定义异常，封装原始异常信息
+        }
+    }
+
+    /**
+     * 获取 Hash 表的字段数量 (长度)，使用默认数据库 ({@link  #dbIndex})
+     * <p>
+     * 此方法等同于调用 {@link #hlen(int, String)} 方法
+     *
+     * @param hashKey Hash 表的 key
+     * @return Hash 表的字段数量，如果 Hash 表不存在，则返回 0
+     * @since 2.8.3
+     */
+    public Long hlen(String hashKey) throws ToolboxException {
+        return hlen(dbIndex, hashKey);
+    }
+
+    /**
+     * 获取 Hash 表的字段数量 (长度)
+     *
+     * @param dbIndex 数据库索引
+     * @param hashKey Hash 表的 key
+     * @return Hash 表的字段数量，如果 Hash 表不存在，则返回 0
+     * @since 2.8.3
+     */
+    public Long hlen(int dbIndex, String hashKey) throws ToolboxException {
+        return executeWithJedis(dbIndex, jedis -> jedis.hlen(hashKey));
     }
 
     /**
