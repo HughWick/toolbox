@@ -8,6 +8,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Pipeline;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -436,19 +437,9 @@ public class EasyRedis {
      * @return Long 如果字段是哈希表中的一个新建字段，并且值设置成功，返回{@code 1}。如果哈希表中域字段已经存在且旧值已被新值覆盖，返回 {@code 0}
      */
     public Long hset(int dbIndex, String key, String field, String value, long timeout) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.select(dbIndex);
-            Long result = jedis.hset(key, field, value);
-            if (timeout == -1) {
-                // 永不过期
-                jedis.persist(key);
-            } else {
-                jedis.expire(key, timeout);
-            }
-            return result;
-        } catch (Exception exception) {
-            throw new ToolboxException(exception);
-        }
+        Map<String, String> dataMap = Collections.singletonMap(field, value);
+        batchHashSetMap(dbIndex, key, dataMap, timeout); // 调用批量方法，实现单个 Field-Value 写入
+        return (long) dataMap.size();
     }
 
     /**
@@ -505,7 +496,7 @@ public class EasyRedis {
                 jedis.persist(hashKey); // 设置 Hash Key 永不过期
             }
         } catch (Exception exception) {
-            throw new ToolboxException(exception); // 抛出自定义异常，封装原始异常信息
+            throw new ToolboxException(exception);
         }
     }
 
