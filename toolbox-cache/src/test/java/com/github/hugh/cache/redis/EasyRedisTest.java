@@ -318,13 +318,13 @@ class EasyRedisTest {
         dataMap.put(field1, value1);
         dataMap.put("field2", "value2");
         EasyRedis easyRedis = supplier.get();
-        easyRedis.batchHashSetMap(dbIndex, hashKey, dataMap);
+        easyRedis.batchHashSet(dbIndex, hashKey, dataMap);
         assertEquals(2, easyRedis.hlen(dbIndex, hashKey));
         assertEquals(-1, easyRedis.ttl(dbIndex, hashKey));
         assertEquals(value1, easyRedis.hget(dbIndex, hashKey, field1));
         assertEquals(1, easyRedis.del(dbIndex, hashKey));
 
-        easyRedis.batchHashSetMap(hashKey, dataMap);
+        easyRedis.batchHashSet(hashKey, dataMap);
         assertEquals(value1, easyRedis.hget(hashKey, field1));
         assertEquals(2, easyRedis.hlen( hashKey));
         assertEquals(1, easyRedis.del(hashKey));

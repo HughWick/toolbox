@@ -438,28 +438,28 @@ public class EasyRedis {
      */
     public Long hset(int dbIndex, String key, String field, String value, long timeout) {
         Map<String, String> dataMap = Collections.singletonMap(field, value);
-        batchHashSetMap(dbIndex, key, dataMap, timeout); // 调用批量方法，实现单个 Field-Value 写入
+        batchHashSet(dbIndex, key, dataMap, timeout); // 调用批量方法，实现单个 Field-Value 写入
         return (long) dataMap.size();
     }
 
     /**
      * 批量将 Map 数据写入 Redis Hash 表 (使用 Pipeline 管道)，Hash Key 永不过期，使用默认数据库 ({@link  #dbIndex})
      * <p>
-     * 此方法等同于调用 {@link #batchHashSetMap(int, String, Map)} 方法，并设置 dbIndex 参数为 -1，
+     * 此方法等同于调用 {@link #batchHashSet(int, String, Map)} 方法，并设置 dbIndex 参数为 -1，
      * 使用 Redis 默认数据库 (索引为 0)。
      *
      * @param hashKey Redis Hash 表的 key
      * @param dataMap 要写入的 Map 数据 (key-value 键值对)
      * @since 2.8.3
      */
-    public void batchHashSetMap(String hashKey, Map<String, String> dataMap) {
-        batchHashSetMap(dbIndex, hashKey, dataMap);
+    public void batchHashSet(String hashKey, Map<String, String> dataMap) {
+        batchHashSet(dbIndex, hashKey, dataMap);
     }
 
     /**
      * 批量将 Map 数据写入 Redis Hash 表 (使用 Pipeline 管道)，Hash Key 永不过期
      * <p>
-     * 此方法等同于调用 {@link #batchHashSetMap(int, String, Map, long)} 方法，并设置 timeout 参数为 -1，
+     * 此方法等同于调用 {@link #batchHashSet(int, String, Map, long)} 方法，并设置 timeout 参数为 -1，
      * 表示 Hash Key 永不过期 (依赖 Redis 默认策略，除非显式删除或被 Redis 内存淘汰策略回收)。
      *
      * @param dbIndex Redis 数据库索引 (0-15，默认 0)
@@ -467,8 +467,8 @@ public class EasyRedis {
      * @param dataMap 要写入的 Map 数据 (key-value 键值对)
      * @since 2.8.3
      */
-    public void batchHashSetMap(int dbIndex, String hashKey, Map<String, String> dataMap) {
-        batchHashSetMap(dbIndex, hashKey, dataMap, -1);
+    public void batchHashSet(int dbIndex, String hashKey, Map<String, String> dataMap) {
+        batchHashSet(dbIndex, hashKey, dataMap, -1);
     }
 
     /**
@@ -482,7 +482,7 @@ public class EasyRedis {
      *                -  等于 -1 时，Key 永不过期 (使用 `PERSIST` 命令)。
      * @since 2.8.3
      */
-    public void batchHashSetMap(int dbIndex, String hashKey, Map<String, String> dataMap, long timeout) {
+    public void batchHashSet(int dbIndex, String hashKey, Map<String, String> dataMap, long timeout) {
         try (Jedis jedis = jedisPool.getResource(); // 从连接池获取 Jedis 资源，try-with-resources 确保自动释放
              Pipeline pipeline = jedis.pipelined()) { // 获取 Pipeline 对象
             jedis.select(dbIndex); // 选择数据库
