@@ -2,10 +2,8 @@ package com.github.hugh.bean.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * 统一返回信息实体类
@@ -15,8 +13,6 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @ApiModel("接口统一返回信息对象")
 public class ResultDTO<T> {
 
@@ -26,6 +22,39 @@ public class ResultDTO<T> {
     private String message; // 提示信息
     @ApiModelProperty(required = true, value = "数据")
     private T data; // 数据
+    @ApiModelProperty(required = true, value = "时间戳")
+    private long timestamp;
+
+    public ResultDTO() {
+        this.timestamp = System.currentTimeMillis();
+    }
+
+    /**
+     * code、提示信息
+     *
+     * @param code    code
+     * @param message 提示信息
+     */
+    public ResultDTO(String code, String message) {
+        this.code = code;
+        this.message = message;
+        this.timestamp = System.currentTimeMillis();
+    }
+
+    /**
+     * **新增的四参数构造器**
+     *
+     * @param code    code
+     * @param message 提示信息
+     * @param data    数据
+     * @param timestamp 时间戳
+     */
+    public ResultDTO(String code, String message, T data, long timestamp) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
+        this.timestamp = timestamp;
+    }
 
     /**
      * 判断code码是否一样
@@ -51,16 +80,5 @@ public class ResultDTO<T> {
      */
     public boolean notEqualCode(String code) {
         return !equalCode(code);
-    }
-
-    /**
-     * code、提示信息
-     *
-     * @param code    code
-     * @param message 提示信息
-     */
-    public ResultDTO(String code, String message) {
-        this.code = code;
-        this.message = message;
     }
 }

@@ -1,10 +1,7 @@
 package com.github.hugh.util.lang;
 
 import com.github.hugh.bean.dto.ResultDTO;
-import lombok.val;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,13 +11,18 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author AS
  * @date 2021/2/1 9:52
  */
-public class ResultTest {
+class ResultTest {
 
     @Test
     void test01() {
-        ResultDTO dto1 = new ResultDTO("0000", "ssss");
-        assertTrue(dto1.equalCode("0000"));
-        assertFalse(dto1.notEqualCode("0000"));
+        String code1 = "0000";
+        String message1=  "success";
+        ResultDTO dto1 = new ResultDTO(code1, message1);
+        assertTrue(dto1.equalCode(code1));
+        assertFalse(dto1.notEqualCode(code1));
+        ResultDTO<Object> build = ResultDTO.builder().code(code1).message(message1).timestamp(System.currentTimeMillis()).build();
+        System.out.println(build);
+
     }
 
     // 测试无参构造
@@ -32,21 +34,32 @@ public class ResultTest {
         assertNull(dto2.getData());
     }
 
-    public static void main(String[] args) {
+    @Test
+    void defaultConstructorTest() {
+        ResultDTO<String> resultDTO = new ResultDTO<>();
+        // 验证 timestamp 是否已初始化 (接近当前时间)
+        long currentTimeMillis = System.currentTimeMillis();
+        assertTrue(resultDTO.getTimestamp() <= currentTimeMillis);
+        assertTrue(resultDTO.getTimestamp() > currentTimeMillis - 100); // 允许 100ms 的误差，因为测试执行时间和获取时间戳可能存在细微差别
+        // 验证 code, message, data 字段是否为默认值 (null)
+        assertNull(resultDTO.getCode());
+        assertNull(resultDTO.getMessage());
+        assertNull(resultDTO.getData());
+    }
 
-        ResultDTO dto = new ResultDTO<>("0000", "操作成功");
-//        System.out.println("--1->" + JsonObjectUtils.toJson(dto));
-        System.out.println("---.>>" + dto.toString());
-//        System.out.println("--2->" + ResultUtils.isEquals(dto, "0000"));
-//        System.out.println("--3->" + ResultUtils.isNotEquals(dto, "0000"));
-        val map = new HashMap<>();
-//        System.out.println("--4->" + JsonObjectUtils.toJson(new ResultDTO<>("000", "操作成功", map)));
-//        System.out.println("--5->>" + dto.isEquals("0000"));
-//        System.out.println("--6->>" + dto.isNotEquals("0000"));
-        ResultDTO dto2 = new ResultDTO<>("00200", "操作成功");
-//        System.out.println("--7->>" + dto2.isEquals("0000"));
-//        System.out.println("--8->>" + dto2.isNotEquals("0000"));
-
-
+    @Test
+    void parameterizedConstructorTest() {
+        String testCode = "200";
+        String testMessage = "请求成功";
+        ResultDTO<Integer> resultDTO = new ResultDTO<>(testCode, testMessage);
+        // 验证 timestamp 是否已初始化 (接近当前时间)
+        long currentTimeMillis = System.currentTimeMillis();
+        assertTrue(resultDTO.getTimestamp() <= currentTimeMillis);
+        assertTrue(resultDTO.getTimestamp() > currentTimeMillis - 100); // 允许 100ms 的误差
+        // 验证 code 和 message 字段是否已正确赋值
+        assertEquals(testCode, resultDTO.getCode());
+        assertEquals(testMessage, resultDTO.getMessage());
+        // 验证 data 字段是否为默认值 (null)
+        assertNull(resultDTO.getData());
     }
 }
