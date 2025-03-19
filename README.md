@@ -4,7 +4,7 @@
 
 [![](https://img.shields.io/badge/license-Apache2-FF0080.svg)](https://github.com/hughwick/toolbox/blob/master/LICENSE.txt)
 [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/hughwick/toolbox)
-[![codecov](https://codecov.io/github/HughWick/toolbox/branch/2.7.X/graph/badge.svg?token=U8DM4TQRZZ)](https://codecov.io/github/HughWick/toolbox)
+[![codecov](https://codecov.io/github/HughWick/toolbox/branch/2.8.X/graph/badge.svg?token=U8DM4TQRZZ)](https://codecov.io/github/HughWick/toolbox)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.hughwick/toolbox-all)](https://central.sonatype.com/artifact/com.github.hughwick/toolbox-all)
 
 ## JDK版本
