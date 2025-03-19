@@ -20,6 +20,11 @@ import java.util.regex.Pattern;
  **/
 public class ServletUtils {
 
+    private ServletUtils() {
+    }
+
+    public static final String[] PAGE_PARAMS = {"page", "size"};
+
     /**
      * 循环所有request中的参数放入至map
      *
@@ -54,7 +59,7 @@ public class ServletUtils {
      * @return Map
      */
     public static <K, V> Map<K, V> getParamsDeleteLimit(HttpServletRequest request) {
-        return getParams(request, "page", "size");
+        return getParams(request, PAGE_PARAMS);
     }
 
     /**

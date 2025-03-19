@@ -31,7 +31,7 @@ public class NotEmptyValidator implements ConstraintValidator<NotEmpty, String> 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
         // 如果值为null或空字符串，则禁用默认约束违规提示，并使用指定消息构建自定义约束违规提示
-        if (value == null || value.length() == 0) {
+        if (value == null || value.isEmpty()) {
             constraintValidatorContext.disableDefaultConstraintViolation(); // 禁用默认约束违规提示
             constraintValidatorContext.buildConstraintViolationWithTemplate(message).addConstraintViolation(); // 使用指定消息构建自定义约束违规提示
         }
