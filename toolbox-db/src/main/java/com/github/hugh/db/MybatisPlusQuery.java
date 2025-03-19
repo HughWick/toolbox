@@ -20,7 +20,6 @@ import java.util.Map;
  */
 public class MybatisPlusQuery {
 
-
     /**
      * 是否将查询条件中的键转换为大写。
      * <p>
@@ -44,6 +43,19 @@ public class MybatisPlusQuery {
     }
 
     /**
+     * 构造函数，通过传入的 HttpServletRequest 对象初始化 MybatisPlusQuery 实例。
+     * <p>
+     * 该构造方法会调用默认构造函数进行初始化，然后通过调用 `request` 方法
+     * 来进一步处理请求中的数据并初始化 item。
+     *
+     * @param request HttpServletRequest 对象，包含当前请求的相关信息。
+     */
+    public MybatisPlusQuery(HttpServletRequest request) {
+        this();
+        this.request(request); // 调用 request 方法来初始化 item
+    }
+
+    /**
      * 根据 HttpServletRequest 中的参数设置查询条件。
      * <p>
      * 会调用 ServletUtils.getParams(request) 方法将请求参数填充到 item 中。
@@ -52,8 +64,19 @@ public class MybatisPlusQuery {
      * @return 当前 MybatisPlusQuery 实例
      */
     public MybatisPlusQuery request(HttpServletRequest request) {
-        // 从 request 中获取参数并设置到 item 中
         this.item = ServletUtils.getParams(request);
+        return this;
+    }
+
+    /**
+     * 将给定的参数集合合并到当前对象的 item 中。
+     *
+     * @param params 要添加的参数集合，键是参数名，值是对应的参数值。
+     * @param <V>    参数值的类型。
+     * @return 返回当前对象本身，便于链式调用。
+     */
+    public <V> MybatisPlusQuery addParams(Map<String, V> params) {
+        this.item.putAll(params);
         return this;
     }
 
