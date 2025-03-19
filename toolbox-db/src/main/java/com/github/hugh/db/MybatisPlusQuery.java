@@ -34,6 +34,9 @@ public class MybatisPlusQuery {
      */
     private Map<String, Object> item;
 
+    private String sortBy;
+    private String sortType;
+
     /**
      * 构造方法，初始化 item 为一个空的 HashMap，keyUpper 默认为 false。
      */
@@ -69,14 +72,27 @@ public class MybatisPlusQuery {
     }
 
     /**
-     * 将给定的参数集合合并到当前对象的 item 中。
+     * 将一个包含多个键值对的参数集合添加到查询条件中。
      *
-     * @param params 要添加的参数集合，键是参数名，值是对应的参数值。
-     * @param <V>    参数值的类型。
-     * @return 返回当前对象本身，便于链式调用。
+     * @param params 包含多个键值对的参数集合，将会被添加到查询条件中。
+     * @param <V>    值的类型，可以是任何类型。
+     * @return 当前对象（链式调用）。
      */
     public <V> MybatisPlusQuery addParams(Map<String, V> params) {
-        this.item.putAll(params);
+        this.item.putAll(params);  // 将传入的参数集合添加到查询条件中
+        return this;
+    }
+
+    /**
+     * 将一个键值对参数添加到查询条件中。
+     *
+     * @param key   键，用于标识参数的名称。
+     * @param value 值，与键对应的参数值。
+     * @param <V>   值的类型，可以是任何类型。
+     * @return 当前对象（链式调用）。
+     */
+    public <V> MybatisPlusQuery addParams(String key, V value) {
+        this.item.put(key, value);  // 将传入的键值对添加到查询条件中
         return this;
     }
 
@@ -107,6 +123,25 @@ public class MybatisPlusQuery {
     }
 
     /**
+     * 设置排序字段和排序方式（升序或降序）。
+     * <p>
+     * 该方法用于设置查询时的排序规则，提供字段和排序类型（如升序或降序）进行排序。
+     *
+     * @param sortBy   排序的字段名
+     * @param sortType 排序方式，通常为 "asc" 或 "desc"
+     * @return 当前对象，以支持链式调用
+     */
+    public MybatisPlusQuery setSortOrder(String sortBy, String sortType) {
+        // 验证排序类型是否有效，只有 "asc" 或 "desc" 是合法的
+        if (!"asc".equalsIgnoreCase(sortType) && !"desc".equalsIgnoreCase(sortType)) {
+            throw new IllegalArgumentException("Invalid sortType. Only 'asc' or 'desc' are allowed.");
+        }
+        this.item.put(MybatisPlusQueryUtils.SORT_BY, sortBy);
+        this.item.put(MybatisPlusQueryUtils.SORT_TYPE, sortType);
+        return this;
+    }
+
+    /**
      * 设置查询条件中的键名转换为大写。
      * <p>
      * 该方法会将查询条件中的所有键转换为大写字母。
@@ -117,6 +152,7 @@ public class MybatisPlusQuery {
         this.keyUpper = true;
         return this;
     }
+
 
     /**
      * 处理查询排序和排序字段的默认值设置，并创建一个 MybatisPlus 的 QueryWrapper。

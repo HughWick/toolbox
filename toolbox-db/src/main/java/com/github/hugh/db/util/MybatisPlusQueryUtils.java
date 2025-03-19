@@ -25,10 +25,24 @@ public class MybatisPlusQueryUtils {
 
     public static final String ORDER = "order";
     /**
-     * 排序
+     * 排序字段的常量，表示用于排序的字段名称。
+     * <p>
+     * 用于存储或传递排序时的字段名。
      */
     public static final String SORT = "sort";
+
+    /**
+     * 排序类型的常量，表示排序方式（升序或降序）。
+     * <p>
+     * 可以是 "asc"（升序）或 "desc"（降序）。
+     */
     public static final String SORT_TYPE = "sortType";
+
+    /**
+     * 排序依据的常量，表示具体的排序依据字段。
+     * <p>
+     * 用于指定排序字段，例如 "name"、"age" 等。
+     */
     public static final String SORT_BY = "sortBy";
     /**
      * 大于等于
