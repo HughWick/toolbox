@@ -32,7 +32,7 @@ class ServletTest {
         contentMap.put("hostSerialNumber", "202010260288");
         request.addParameter("content", contentMap.toString());
         Map<String, Object> params = ServletUtils.getParams(request);
-//        assertEquals(params.toString(), "{userId=9001, page=1, size=20}");
+        assertEquals("{userId=9001, page=1, size=20, content={hostSerialNumber=202010260288}}", params.toString());
 //        Map<String, Object> params2 = ServletUtils.getParamsDeleteLimit(request);
 //        assertEquals(params2.toString(), "{userId=9001}");
     }
@@ -65,7 +65,6 @@ class ServletTest {
 //                "Content-Disposition: form-data; name=\"sendDataLength\"\n" +
 //                "\n" +
 //                "700";
-
         String str2 = "------WebKitFormBoundaryRcvXYFKFONUpAB3Z\n" +
                 "Content-Disposition: form-data; name=\"deviceId\"\r\n" +
                 "\r\n" +

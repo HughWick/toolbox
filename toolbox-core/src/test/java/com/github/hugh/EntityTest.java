@@ -33,18 +33,24 @@ class EntityTest {
         map.put("accountName", "真是姓名");
         map.put("birthday", new Date());
         map.put("create", "2019-04-06 12:11:20");
+        Student student;
         try {
-            Student student = MapUtils.toEntityNotEmpty(Student.class, map);
-            Student student2 = new Student();
-            EntityUtils.copy(student, student2);
-            assertEquals(student, student2);
-            assertEquals(student.getAge(), student2.getAge());
-            Student1 copy = EntityUtils.copy(student, Student1::new, "name", "accountName");
-            assertNull(copy.getName());
-            Student1 student3 = EntityUtils.copy(student, Student1::new, (s, t) -> {
-                t.setAccount("银行账号");
-            });
-            assertEquals("银行账号", student3.getAccount());
+            student = MapUtils.toEntityNotEmpty(Student.class, map);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return;
+        }
+        Student copyStudent = new Student();
+        EntityUtils.copy(student, copyStudent);
+        assertEquals(student, copyStudent);
+        assertEquals(student.getAge(), copyStudent.getAge());
+        assertEquals(student.getCreate().getTime(), copyStudent.getCreate().getTime());
+        Student1 copy = EntityUtils.copy(student, Student1::new, "name", "accountName");
+        assertNull(copy.getName());
+        Student1 student3 = EntityUtils.copy(student, Student1::new, (s, t) -> {
+            t.setAccount("银行账号");
+        });
+        assertEquals("银行账号", student3.getAccount());
 //            System.out.println("--1->>" + EntityUtils.copy(student, Student1::new));
 //            System.out.println("--2-忽略>>" + EntityUtils.copy(student, Student1::new, "name", "accountName"));
 //            System.out.println("--3>>" + EntityUtils.copy(student, Student1::new, (s, t) -> {
@@ -55,9 +61,7 @@ class EntityTest {
 //            System.out.println(student + "<----->" + student2);
 //            System.out.println("-1-->>" + JSONObject.fromObject(student));
 //            System.out.println("-2-->>" + JSONObject.fromObject(student2));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
     @Test
@@ -125,7 +129,7 @@ class EntityTest {
             assertEquals(student, o1);
             assertNull(student.getName());
             o1.setName("张三");
-            assertEquals("张三" , o1.getName());
+            assertEquals("张三", o1.getName());
             Student student2 = EntityUtils.deepClone(o1);
             assertEquals(o1, student2);
         } catch (Exception e) {
@@ -149,6 +153,6 @@ class EntityTest {
         List<Student1> student1ss = EntityUtils.copyListProperties(list, Student1::new, (st, student1) -> {
             student1.setName(strName);
         });
-        assertEquals(strName , student1ss.iterator().next().getName());
+        assertEquals(strName, student1ss.iterator().next().getName());
     }
 }

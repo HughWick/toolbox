@@ -49,5 +49,8 @@ class IdCardTest {
         String idCard2 = "43042619991230952X";//
         assertTrue(IdCardUtils.isIdCard(idCard1));
         assertTrue(IdCardUtils.isNotIdCard(idCard2));
+        String str1 = "360602198701280527";
+        System.out.println("===>>"+str1.length());
+        assertTrue(IdCardUtils.isIdCard("360602197701280527"));
     }
 }
