@@ -185,4 +185,13 @@ class CoordinatesTest {
 
     }
 
+
+    @Test
+    void testReal(){
+        String str1 = "$GNGGA,203643.00,2712.02552,N,11127.12077,E\\r\\n\\r\\nOK\\r\\n";
+//        GgaDTO ggaDTO = CoordinatesUtils.parseGga(str1);
+        ToolboxException toolboxException = assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.parseGga(str1));
+        assertEquals("Invalid GGA string, insufficient data.", toolboxException.getMessage());
+    }
+
 }

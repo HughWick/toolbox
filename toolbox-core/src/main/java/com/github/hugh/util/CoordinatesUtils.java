@@ -8,6 +8,7 @@ import com.github.hugh.constant.DateCode;
 import com.github.hugh.constant.StrPool;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.regex.RegexUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
@@ -19,6 +20,7 @@ import java.text.DecimalFormat;
  * @author hugh
  * @since 1.6.3
  */
+@Slf4j
 public class CoordinatesUtils {
 
     /**
@@ -162,6 +164,11 @@ public class CoordinatesUtils {
         }
         GgaDTO ggaDTO = new GgaDTO();
         String[] arr = gga.split(StrPool.COMMA); // 用,分割
+        // 如果分割后的数组长度不够，给出适当的提示或处理
+        if (arr.length < 15) {
+            log.error("Invalid GGA string，data：{}", gga);
+            throw new ToolboxException("Invalid GGA string, insufficient data.");
+        }
         ggaDTO.setName(arr[0]);
         ggaDTO.setDate(arr[1]);
         ggaDTO.setLatitude(arr[2]);
