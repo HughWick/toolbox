@@ -7,11 +7,20 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * {@code TreeNodeUtils} 是一个用于处理树形结构数据的实用工具类。
+ * 它提供了一系列静态方法，用于构建和操作树形节点（{@link TreeNode}）。
+ * 该类包含了递归分配子节点、判断节点是否为子节点以及循环处理节点等功能，
+ * 并支持在分配子节点时进行可选的排序。
+ * <p>
+ * 该类的构造方法是私有的，因此不能被实例化，只能通过其提供的静态方法来使用。
+ *
+ * @since 2.8.5
+ */
 public class TreeNodeUtils {
     private TreeNodeUtils() {
     }
-
-//    private static final Comparator<TreeNode> comparingById = Comparator.comparing(TreeNode::getId);
 
     /**
      * 递归分配子节点并设置排序（可选）。该方法将遍历所有子节点，并将符合条件的子节点分配给当前节点。
@@ -29,21 +38,32 @@ public class TreeNodeUtils {
         if (sortEnable) {
             // 使用Stream流进行过滤和排序，筛选出当前节点的子节点，并根据升序或降序排序
             childNodesList.stream()
-                    .filter(childNode -> temp(node, childNode)) // 判断是否为当前节点的子节点
+                    .filter(childNode -> isChildNode(node, childNode)) // 判断是否为当前节点的子节点
                     .sorted(ascending ? Comparator.comparing(TreeNode::getId) : Comparator.comparing(TreeNode::getId).reversed()) // 根据id进行升序或降序排序
                     .forEach(childNode -> loop(childNodesList, childNode, childNodesHashMap, childList, sortEnable, ascending)); // 对符合条件的子节点进行递归处理
         } else { // 如果没有启用排序
             // 直接过滤出当前节点的子节点，不进行排序
             childNodesList.stream()
-                    .filter(childNode -> temp(node, childNode)) // 判断是否为当前节点的子节点
+                    .filter(childNode -> isChildNode(node, childNode)) // 判断是否为当前节点的子节点
                     .forEach(childNode -> loop(childNodesList, childNode, childNodesHashMap, childList, sortEnable, ascending)); // 对符合条件的子节点进行递归处理
         }
         // 将处理过的子节点列表设置到当前节点
         node.setChildren(childList);
     }
 
-    private static boolean temp(TreeNode currentNode, TreeNode childNode) {
-        return childNode.getParentId().equals(currentNode.getId());
+    /**
+     * 判断一个节点是否为当前节点的子节点。
+     * <p>
+     * 该方法通过比较当前节点的 ID 和子节点的父节点 ID 来判断子节点是否属于当前节点。
+     * 如果当前节点的 ID 等于子节点的父节点 ID，则返回 true，表示该子节点是当前节点的子节点；
+     * 否则返回 false。
+     *
+     * @param currentNode 当前节点，作为父节点进行判断。
+     * @param childNode   子节点，用于判断是否是当前节点的子节点。
+     * @return 如果 childNode 是 currentNode 的子节点，返回 true；否则返回 false。
+     */
+    private static boolean isChildNode(TreeNode currentNode, TreeNode childNode) {
+        return currentNode.getId().equals(childNode.getParentId());
     }
 
     /**

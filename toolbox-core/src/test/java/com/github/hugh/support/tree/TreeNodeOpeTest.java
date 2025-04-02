@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class TreeNodeOpeTest {
     public static final String DATA_FILE_PATH = "/file/json/data.text";
+    public static final String REGION_THREE_DATA_FILE_PATH = "/file/json/RegionThree.text";
     /**
      * 默认测试数据
      */

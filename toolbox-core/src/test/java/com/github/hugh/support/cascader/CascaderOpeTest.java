@@ -27,6 +27,7 @@ class CascaderOpeTest {
     private static String fileData;
     private static List<TreeNodeObject> treeNodeObjects;
     private static List<TreeNodeObject> threeTreeNodeObjects;
+    private static List<TreeNodeObject> threeTreeNodeAll;
 
     @BeforeAll
     static void setUp() {
@@ -36,11 +37,22 @@ class CascaderOpeTest {
         String path = resource.getPath();
         fileData = FileUtils.readContent(path);
         stopWatch.stop();
-        stopWatch.start("解析字符串");
+        stopWatch.start("解析字符串全国四级json字符串");
         treeNodeObjects = JSONArray.parseArray(fileData, TreeNodeObject.class);
         stopWatch.stop();
-        System.out.println(stopWatch.prettyPrint());
+        stopWatch.start("解析字符串部分省市区三级");
         threeTreeNodeObjects = JSONArray.parseArray(three_data, TreeNodeObject.class);
+        stopWatch.stop();
+        stopWatch.start("字符串全国三级");
+        URL resource2 = CascaderOpeTest.class.getResource(TreeNodeOpeTest.REGION_THREE_DATA_FILE_PATH);
+        String path2 = resource2.getPath();
+        threeTreeNodeAll = JSONArray.parseArray(FileUtils.readContent(path2), TreeNodeObject.class);
+        stopWatch.stop();
+
+
+
+
+        System.out.println(stopWatch.prettyPrint());
     }
 
     @Test
@@ -156,7 +168,36 @@ class CascaderOpeTest {
         List<ElementCascader> elementCascaderList = treeNodeOpe.processElement();
         stopWatch.stop();
         assertEquals(2, elementCascaderList.size());
-        System.out.println(JSONArray.toJSON(elementCascaderList));
+//        System.out.println(JSONArray.toJSON(elementCascaderList));
+    }
+
+    @Test
+    void testCustomThreeAll() {
+        StopWatch stopWatch = new StopWatch("处理省市区街道数据");
+        List<TreeNode> rootList = new ArrayList<>();
+        List<TreeNode> childList = new ArrayList<>();
+        stopWatch.start("处理方法所需结构信息");
+        ProcessTreeData.processCustomThree(threeTreeNodeAll, rootList, childList);
+        stopWatch.stop();
+        stopWatch.start("封装结构树-开启排序");
+        TreeNodeOpe<TreeNode, ElementCascader> treeNodeOpe = new CascaderOpe(rootList, childList);
+        stopWatch.stop();
+        treeNodeOpe.setMappingType(1);
+        stopWatch.start("处理为element结构");
+        List<ElementCascader> elementCascaderList = treeNodeOpe.processElement();
+        stopWatch.stop();
+        assertEquals(31, elementCascaderList.size());
+        assertAll("验证树形结构",
+                () -> assertEquals("天津市", elementCascaderList.get(1).getLabel()),
+                () -> assertEquals("河北省", elementCascaderList.get(2).getLabel()),
+                () -> assertEquals("内蒙古自治区", elementCascaderList.get(4).getLabel()),
+                () -> assertEquals("湖南省", elementCascaderList.get(17).getLabel()),
+                () -> assertEquals("益阳市", elementCascaderList.get(17).getChildren().get(8).getLabel()),
+                () -> assertEquals("南县", elementCascaderList.get(17).getChildren().get(8).getChildren().get(1).getLabel()),
+                () -> assertEquals("广东省", elementCascaderList.get(18).getLabel()),
+                () -> assertEquals("广州市", elementCascaderList.get(18).getChildren().get(0).getLabel()),
+                () -> assertEquals("天河区", elementCascaderList.get(18).getChildren().get(0).getChildren().get(3).getLabel())
+        );
 
     }
 

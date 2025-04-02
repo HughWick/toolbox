@@ -301,28 +301,8 @@ public class ProcessTreeData {
             if (nodeMap.containsKey(treeNode.getProvinceCode())) {// 省份
                 if (nodeMap2.containsKey(treeNode.getCityCode())) { // 城 判断城市key是否存在
                     if (nodeMap3.containsKey(treeNode.getAreaCode())) { // 区
-//                        if (nodeMap4.containsKey(treeNode.getStreetCodeEx())) { // 街道
-//                        } else {
-                            // 第四级
-//                            TreeNode childNode4 = new TreeNode();
-//                            childNode4.setId(treeNode.getStreetCodeEx());
-//                            childNode4.setParentId(treeNode.getAreaCode());
-//                            childNode4.setCustomLabel(treeNode.getStreetName());
-//                            childNode4.setCustomValue(treeNode.getStreetCodeEx());
-//                            childList.add(childNode4);
-//                            nodeMap4.put(treeNode.getStreetCodeEx(), true);
-//                        }
                     } else {
-//                        // 保存一次下一级
-//                        TreeNode childNode4 = new TreeNode(treeNode.getStreetCodeEx(), treeNode.getAreaCode(), treeNode.getStreetName(), null);
-//                        TreeNode childNode4 = new TreeNode();
-//                        childNode4.setId(treeNode.getStreetCodeEx());
-//                        childNode4.setParentId(treeNode.getAreaCode());
-//                        childNode4.setCustomLabel(treeNode.getStreetName());
-//                        childNode4.setCustomValue(treeNode.getStreetCodeEx());
-//                        childList.add(childNode4);
-//                        nodeMap4.put(treeNode.getStreetCodeEx(), true);
-//                        TreeNode childNode3 = new TreeNode(treeNode.getAreaCode(), treeNode.getCityCode(), treeNode.getAreaName(), null);
+                        //                        // 保存一次下一级
                         TreeNode childNode3 = new TreeNode();
                         childNode3.setId(treeNode.getAreaCode());
                         childNode3.setParentId(treeNode.getCityCode());
@@ -369,13 +349,6 @@ public class ProcessTreeData {
                 childNode3.setCustomValue(treeNode.getAreaCode());
                 childList.add(childNode3);
                 nodeMap3.put(treeNode.getAreaCode(), true);
-                // 保存一次第四级
-//                TreeNode childNode4 = new TreeNode();
-//                childNode4.setId(treeNode.getStreetCodeEx());
-//                childNode4.setParentId(treeNode.getAreaCode());
-//                childNode4.setCustomLabel(treeNode.getStreetName());
-//                childNode4.setCustomValue(treeNode.getStreetCodeEx());
-//                childList.add(childNode4);
                 nodeMap.put(treeNode.getProvinceCode(), true);
             }
         }
