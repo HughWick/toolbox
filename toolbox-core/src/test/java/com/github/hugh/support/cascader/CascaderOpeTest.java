@@ -230,5 +230,4 @@ class CascaderOpeTest {
                 () -> assertEquals("石嘴山市", elementCascaderList.get(18).getChildren().get(0).getLabel())
         );
     }
-
 }
