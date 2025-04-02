@@ -12,7 +12,6 @@ import java.util.List;
  */
 @Data
 public class TreeNodeObject {
-    //    private String serialNo;//
     @ApiModelProperty(value = "省份编码")
     private String provinceCode;//省份编码
     @ApiModelProperty(value = "省份名称")

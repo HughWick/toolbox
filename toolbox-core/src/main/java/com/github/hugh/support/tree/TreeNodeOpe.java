@@ -8,7 +8,16 @@ import java.util.List;
  * @author hugh
  * @since 2.6.3
  */
-public interface TreeNodeOpe<T , E> {
+public interface TreeNodeOpe<T, E> {
+
+
+    /**
+     * 设置映射类型
+     *
+     * @since 2.8.5
+     */
+    void setMappingType(int mappingType);
+
     /**
      * 设置是否设置父节点ID
      *
@@ -26,8 +35,8 @@ public interface TreeNodeOpe<T , E> {
     /**
      * 设置是否启用排序功能。
      *
-     * @since 2.6.7
      * @param sortEnable true表示启用排序，false表示禁用排序
+     * @since 2.6.7
      */
     void setSortEnable(boolean sortEnable);
 

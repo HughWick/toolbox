@@ -9,6 +9,7 @@ import com.github.hugh.bean.expand.tree.ElementTreeExpand;
 import com.github.hugh.bean.expand.tree.TreeNodeExpand;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.StopWatch;
 
@@ -101,18 +102,36 @@ public class TreeNodeOpeExpandTest {
             "]";
 
 
+    private static List<TreeNodeObject> tree_data_01 = new ArrayList<>();
+    private static List<TreeNodeObject> tree_data_02 = new ArrayList<>();
+
+    @BeforeAll
+    public static void beforeAll() {
+        System.out.println("开始测试");
+        StopWatch stopWatch = new StopWatch("TreeNodeOpeExpandTest--处理省市区街道数据");
+        stopWatch.start("解析字符串json-01");
+        tree_data_01 = JSONArray.parseArray(json_data, TreeNodeObject.class);
+        stopWatch.stop();
+
+        stopWatch.start("解析字符串json-02");
+        tree_data_02 = JSONArray.parseArray(json_data2, TreeNodeObject.class);
+        stopWatch.stop();
+
+    }
+
+
     // 测试拓展字段升序与降序
     @Test
     void testExpandSored() {
         StopWatch stopWatch = new StopWatch("处理省市区街道数据");
-        stopWatch.start("解析字符串");
-        final List<TreeNodeObject> objects = JSONArray.parseArray(json_data, TreeNodeObject.class);
-        stopWatch.stop();
+//        stopWatch.start("解析字符串");
+//        final List<TreeNodeObject> objects = JSONArray.parseArray(json_data, TreeNodeObject.class);
+//        stopWatch.stop();
         //创建节点容器
         List<TreeNodeExpand<String>> rootList = new ArrayList<>();
         List<TreeNodeExpand<String>> childList = new ArrayList<>();
         stopWatch.start("处理方法所需结构信息");
-        ProcessTreeData.processExpandStr(objects, rootList, childList);
+        ProcessTreeData.processExpandStr(tree_data_01, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装element结构树-升序");
         TreeNodeOpe<TreeNodeExpand<String>, ElementTreeExpand<String>> treeNodeOpe1 = new TreeNodeOpeExpand<>(rootList, childList);
@@ -137,14 +156,14 @@ public class TreeNodeOpeExpandTest {
     @Test
     void testExpandParentId() {
         StopWatch stopWatch = new StopWatch("处理省市区街道数据");
-        stopWatch.start("解析字符串");
-        final List<TreeNodeObject> objects = JSONArray.parseArray(json_data, TreeNodeObject.class);
-        stopWatch.stop();
+//        stopWatch.start("解析字符串");
+//        final List<TreeNodeObject> objects = JSONArray.parseArray(json_data, TreeNodeObject.class);
+//        stopWatch.stop();
         //创建节点容器
         List<TreeNodeExpand<String>> rootList = new ArrayList<>();
         List<TreeNodeExpand<String>> childList = new ArrayList<>();
         stopWatch.start("处理方法所需结构信息");
-        ProcessTreeData.processExpandStr(objects, rootList, childList);
+        ProcessTreeData.processExpandStr(tree_data_01, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装element结构树-没有父级ID");
         TreeNodeOpe<TreeNodeExpand<String>, ElementTreeExpand<String>> treeNodeOpe1 = new TreeNodeOpeExpand<>(rootList, childList);
@@ -171,14 +190,14 @@ public class TreeNodeOpeExpandTest {
     @Test
     void testExpandObj() {
         StopWatch stopWatch = new StopWatch("处理省市区街道数据");
-        stopWatch.start("解析字符串");
-        final List<TreeNodeObject> objects = JSONArray.parseArray(json_data, TreeNodeObject.class);
-        stopWatch.stop();
+//        stopWatch.start("解析字符串");
+//        final List<TreeNodeObject> objects = JSONArray.parseArray(json_data, TreeNodeObject.class);
+//        stopWatch.stop();
         //创建节点容器
         List<TreeNodeExpand<EntityCompareResult>> rootList = new ArrayList<>();
         List<TreeNodeExpand<EntityCompareResult>> childList = new ArrayList<>();
         stopWatch.start("处理方法所需结构信息");
-        ProcessTreeData.processExpandObj(objects, rootList, childList);
+        ProcessTreeData.processExpandObj(tree_data_01, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装element结构树-升序");
         TreeNodeOpe<TreeNodeExpand<EntityCompareResult>, ElementTreeExpand<EntityCompareResult>> treeNodeOpe1 = new TreeNodeOpeExpand<>(rootList, childList);
@@ -206,14 +225,14 @@ public class TreeNodeOpeExpandTest {
     @Test
     void testSortEnable() {
         StopWatch stopWatch = new StopWatch("处理省市区街道数据");
-        stopWatch.start("解析字符串");
-        final List<TreeNodeObject> objects = JSONArray.parseArray(json_data2, TreeNodeObject.class);
-        stopWatch.stop();
+//        stopWatch.start("解析字符串");
+//        final List<TreeNodeObject> objects = JSONArray.parseArray(json_data2, TreeNodeObject.class);
+//        stopWatch.stop();
         //创建节点容器
         List<TreeNodeExpand<String>> rootList = new ArrayList<>();
         List<TreeNodeExpand<String>> childList = new ArrayList<>();
         stopWatch.start("处理方法所需结构信息");
-        ProcessTreeData.processExpandStr(objects, rootList, childList);
+        ProcessTreeData.processExpandStr(tree_data_02, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装结构树-开启排序");
         TreeNodeOpe<TreeNodeExpand<String>, ElementTreeExpand<String>> treeNodeOpe1 = new TreeNodeOpeExpand<>(rootList, childList);
@@ -238,14 +257,14 @@ public class TreeNodeOpeExpandTest {
     @Test
     void testSortEnableEle() {
         StopWatch stopWatch = new StopWatch("处理省市区街道数据");
-        stopWatch.start("解析字符串");
-        final List<TreeNodeObject> objects = JSONArray.parseArray(json_data2, TreeNodeObject.class);
-        stopWatch.stop();
+//        stopWatch.start("解析字符串");
+//        final List<TreeNodeObject> objects = JSONArray.parseArray(json_data2, TreeNodeObject.class);
+//        stopWatch.stop();
         //创建节点容器
         List<TreeNodeExpand<String>> rootList = new ArrayList<>();
         List<TreeNodeExpand<String>> childList = new ArrayList<>();
         stopWatch.start("处理方法所需结构信息");
-        ProcessTreeData.processExpandStr(objects, rootList, childList);
+        ProcessTreeData.processExpandStr(tree_data_02, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装结构树-开启排序");
         TreeNodeOpe<TreeNodeExpand<String>, ElementTreeExpand<String>> treeNodeOpe1 = new TreeNodeOpeExpand<>(rootList, childList);

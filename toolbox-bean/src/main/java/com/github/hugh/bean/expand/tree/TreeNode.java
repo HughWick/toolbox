@@ -1,7 +1,7 @@
 package com.github.hugh.bean.expand.tree;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -14,8 +14,8 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-public class TreeNode {
+@EqualsAndHashCode(callSuper = true)
+public class TreeNode extends TreeNodeCustom {
 
     private String id;//节点位移标识
 
@@ -24,4 +24,11 @@ public class TreeNode {
     private String value;//节点属性，按需求可定义多个属性
 
     private List<TreeNode> children;//该节点的子节点对象
+
+    public TreeNode(String id, String parentId, String value, List<TreeNode> children) {
+        this.id = id;
+        this.parentId = parentId;
+        this.value = value;
+        this.children = children;
+    }
 }
