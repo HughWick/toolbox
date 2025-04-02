@@ -193,13 +193,42 @@ class CascaderOpeTest {
                 () -> assertEquals("内蒙古自治区", elementCascaderList.get(4).getLabel()),
                 () -> assertEquals("湖南省", elementCascaderList.get(17).getLabel()),
                 () -> assertEquals("益阳市", elementCascaderList.get(17).getChildren().get(8).getLabel()),
-                () -> assertEquals("南县", elementCascaderList.get(17).getChildren().get(8).getChildren().get(1).getLabel()),
+                () -> assertEquals("赫山区", elementCascaderList.get(17).getChildren().get(8).getChildren().get(1).getLabel()),
                 () -> assertEquals("广东省", elementCascaderList.get(18).getLabel()),
                 () -> assertEquals("广州市", elementCascaderList.get(18).getChildren().get(0).getLabel()),
                 () -> assertEquals("天河区", elementCascaderList.get(18).getChildren().get(0).getChildren().get(3).getLabel())
         );
-
     }
 
+    @Test
+    void testCustomThreeAllNoSort() {
+        StopWatch stopWatch = new StopWatch("处理省市区街道数据");
+        List<TreeNode> rootList = new ArrayList<>();
+        List<TreeNode> childList = new ArrayList<>();
+        stopWatch.start("处理方法所需结构信息");
+        ProcessTreeData.processCustomThree(threeTreeNodeAll, rootList, childList);
+        stopWatch.stop();
+        stopWatch.start("封装结构树-开启排序");
+        TreeNodeOpe<TreeNode, ElementCascader> treeNodeOpe = new CascaderOpe(rootList, childList);
+        stopWatch.stop();
+        treeNodeOpe.setMappingType(CascaderOpe.CUSTOM_MAPPING);
+        treeNodeOpe.setSortEnable(false);
+        stopWatch.start("处理为element结构");
+        List<ElementCascader> elementCascaderList = treeNodeOpe.processElement();
+        stopWatch.stop();
+        assertEquals(31, elementCascaderList.size());
+        assertAll("验证树形结构",
+                () -> assertEquals("广东省", elementCascaderList.get(1).getLabel()),
+                () -> assertEquals("广州市", elementCascaderList.get(1).getChildren().get(16).getLabel()),
+                () -> assertEquals("天河区", elementCascaderList.get(1).getChildren().get(16).getChildren().get(10).getLabel()),
+                () -> assertEquals("河南省", elementCascaderList.get(2).getLabel()),
+                () -> assertEquals("新疆", elementCascaderList.get(4).getLabel()),
+                () -> assertEquals("福建省", elementCascaderList.get(17).getLabel()),
+                () -> assertEquals("漳州市", elementCascaderList.get(17).getChildren().get(8).getLabel()),
+                () -> assertEquals("南靖县", elementCascaderList.get(17).getChildren().get(8).getChildren().get(1).getLabel()),
+                () -> assertEquals("宁夏", elementCascaderList.get(18).getLabel()),
+                () -> assertEquals("石嘴山市", elementCascaderList.get(18).getChildren().get(0).getLabel())
+        );
+    }
 
 }
