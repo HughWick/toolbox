@@ -1,8 +1,10 @@
 package com.github.hugh.support.tree;
 
 import com.github.hugh.bean.dto.EntityCompareResult;
+import com.github.hugh.bean.dto.RegionDto;
 import com.github.hugh.bean.expand.tree.TreeNode;
 import com.github.hugh.bean.expand.tree.TreeNodeExpand;
+import com.github.hugh.constant.StrPool;
 
 import java.util.*;
 
@@ -287,64 +289,146 @@ public class ProcessTreeData {
             }
         }
     }
-
-
     /**
-     * 将 TreeNodeObject 列表处理成三级级联选择器所需的 TreeNode 列表。
-     * <p>
-     * 该方法通过一次遍历输入的 TreeNodeObject 列表，提取省、市、区/县信息，
-     * 并使用 Set 集合来去重，确保每个层级的节点只被创建一次。
-     * 创建的 TreeNode 对象会添加到 rootList（省级节点）和 childList（市级和区/县级节点）中，
-     * 并设置相应的父子关系。
+     * 将地域信息列表转换为树形结构的节点列表（省 -> 市 -> 区）。
+     * 该方法遍历地域信息，为每个省份创建一个根节点，并为每个省份下的城市和区域创建子节点。
+     * 使用 Set 集合来跟踪已处理过的省份、城市和区域，以避免重复添加。
      *
-     * @param objects   包含省、市、区/县信息的 TreeNodeObject 列表。
-     * @param rootList  用于存储处理后的省级 TreeNode 对象的列表。
-     * @param childList 用于存储处理后的市级和区/县级 TreeNode 对象的列表。
+     * @param objects   包含地域信息的 RegionsDo 对象列表。每个对象应包含省份、城市和区域的代码及名称。
+     * @param rootList  用于存储生成的根节点（省份）的列表。
+     * @param childList 用于存储生成的子节点（城市和区域）的列表。
      */
-    public static void processCustomThree(List<TreeNodeObject> objects, List<TreeNode> rootList, List<TreeNode> childList) {
-        Set<String> processedProvinces = new LinkedHashSet<>();
-        Set<String> processedCities = new LinkedHashSet<>();
-        Set<String> processedAreas = new LinkedHashSet<>();
-
-        for (TreeNodeObject treeNode : objects) {
-            String provinceCode = treeNode.getProvinceCode();
-            String provinceName = treeNode.getProvinceName();
-            String cityCode = treeNode.getCityCode();
-            String cityName = treeNode.getCityName();
-            String areaCode = treeNode.getAreaCode();
-            String areaName = treeNode.getAreaName();
-
-            // 处理省级节点
-            if (!processedProvinces.contains(provinceCode)) {
-                TreeNode rootNode = new TreeNode();
-                rootNode.setId(provinceCode);
-                rootNode.setCustomLabel(provinceName);
-                rootNode.setCustomValue(provinceCode);
-                rootList.add(rootNode);
-                processedProvinces.add(provinceCode);
-            }
-
-            // 处理市级节点
-            if (!processedCities.contains(cityCode)) {
-                TreeNode cityNode = new TreeNode();
-                cityNode.setId(cityCode);
-                cityNode.setParentId(provinceCode);
-                cityNode.setCustomLabel(cityName);
-                cityNode.setCustomValue(cityCode);
-                childList.add(cityNode);
-                processedCities.add(cityCode);
-            }
-
-            // 处理区/县级节点
-            if (!processedAreas.contains(areaCode)) {
-                TreeNode areaNode = new TreeNode();
-                areaNode.setId(areaCode);
-                areaNode.setParentId(cityCode);
-                areaNode.setCustomLabel(areaName);
-                areaNode.setCustomValue(areaCode);
-                childList.add(areaNode);
-                processedAreas.add(areaCode);
+    public static void processCustomThree(List<RegionDto> objects, List<TreeNode> rootList, List<TreeNode> childList) {
+        // 用于存储已处理过的省份代码，避免重复添加
+        Set<String> processedProvinces = new HashSet<>();
+        // 用于存储已处理过的城市代码，避免重复添加
+        Set<String> processedCities = new HashSet<>();
+        // 用于存储已处理过的区域 ID，避免重复添加
+        Set<String> processedAreas = new HashSet<>();
+        for (RegionDto region : objects) {
+            // 生成区域节点的唯一 ID
+            String areaId = generateAreaId(region.getAreaCode(), region.getAreaName());
+            // 如果当前省份已经被处理过
+            if (processedProvinces.contains(region.getProvinceCode())) {
+                // 如果当前城市尚未被处理过
+                if (!processedCities.contains(region.getCityCode())) {
+                    // 添加城市节点
+                    addCityNode(region, childList, processedCities);
+                    // 添加区域节点
+                    addAreaNode(region, areaId, childList, processedAreas);
+                }
+                // 如果当前城市已经被处理过，但当前区域尚未被处理过
+                else if (!processedAreas.contains(areaId)) {
+                    // 添加区域节点
+                    addAreaNode(region, areaId, childList, processedAreas);
+                }
+            } else { // 如果当前省份尚未被处理过
+                // 添加省份节点
+                addProvinceNode(region, rootList, processedProvinces);
+                // 添加城市节点
+                addCityNode(region, childList, processedCities);
+                // 添加区域节点
+                addAreaNode(region, areaId, childList, processedAreas);
             }
         }
     }
+
+    /**
+     * 生成区域节点的唯一 ID。
+     *
+     * @param areaCode 区域代码
+     * @param areaName 区域名称
+     * @return 区域节点的 ID
+     */
+    private static String generateAreaId(String areaCode, String areaName) {
+        return areaCode + StrPool.UNDERLINE + areaName;
+    }
+
+    private static void addProvinceNode(RegionDto region, List<TreeNode> rootList, Set<String> processedProvinces) {
+        TreeNode provinceNode = new TreeNode();
+        provinceNode.setId(region.getProvinceCode());
+        provinceNode.setCustomLabel(region.getProvinceName());
+        provinceNode.setCustomValue(region.getProvinceCode());
+        rootList.add(provinceNode);
+        processedProvinces.add(region.getProvinceCode());
+    }
+
+    private static void addCityNode(RegionDto region, List<TreeNode> childList, Set<String> processedCities) {
+        TreeNode cityNode = new TreeNode();
+        cityNode.setId(region.getCityCode());
+        cityNode.setParentId(region.getProvinceCode());
+        cityNode.setCustomLabel(region.getCityName());
+        cityNode.setCustomValue(region.getCityCode());
+        childList.add(cityNode);
+        processedCities.add(region.getCityCode());
+    }
+
+    private static void addAreaNode(RegionDto region, String areaId, List<TreeNode> childList, Set<String> processedAreas) {
+        TreeNode areaNode = new TreeNode();
+        areaNode.setId(areaId);
+        areaNode.setParentId(region.getCityCode());
+        areaNode.setCustomLabel(region.getAreaName());
+        areaNode.setCustomValue(region.getAreaCode());
+        childList.add(areaNode);
+        processedAreas.add(areaId);
+    }
+
+//    /**
+//     * 将 TreeNodeObject 列表处理成三级级联选择器所需的 TreeNode 列表。
+//     * <p>
+//     * 该方法通过一次遍历输入的 TreeNodeObject 列表，提取省、市、区/县信息，
+//     * 并使用 Set 集合来去重，确保每个层级的节点只被创建一次。
+//     * 创建的 TreeNode 对象会添加到 rootList（省级节点）和 childList（市级和区/县级节点）中，
+//     * 并设置相应的父子关系。
+//     *
+//     * @param objects   包含省、市、区/县信息的 TreeNodeObject 列表。
+//     * @param rootList  用于存储处理后的省级 TreeNode 对象的列表。
+//     * @param childList 用于存储处理后的市级和区/县级 TreeNode 对象的列表。
+//     */
+//    public static void processCustomThree(List<TreeNodeObject> objects, List<TreeNode> rootList, List<TreeNode> childList) {
+//        Set<String> processedProvinces = new LinkedHashSet<>();
+//        Set<String> processedCities = new LinkedHashSet<>();
+//        Set<String> processedAreas = new LinkedHashSet<>();
+//
+//        for (TreeNodeObject treeNode : objects) {
+//            String provinceCode = treeNode.getProvinceCode();
+//            String provinceName = treeNode.getProvinceName();
+//            String cityCode = treeNode.getCityCode();
+//            String cityName = treeNode.getCityName();
+//            String areaCode = treeNode.getAreaCode();
+//            String areaName = treeNode.getAreaName();
+//
+//            // 处理省级节点
+//            if (!processedProvinces.contains(provinceCode)) {
+//                TreeNode rootNode = new TreeNode();
+//                rootNode.setId(provinceCode);
+//                rootNode.setCustomLabel(provinceName);
+//                rootNode.setCustomValue(provinceCode);
+//                rootList.add(rootNode);
+//                processedProvinces.add(provinceCode);
+//            }
+//
+//            // 处理市级节点
+//            if (!processedCities.contains(cityCode)) {
+//                TreeNode cityNode = new TreeNode();
+//                cityNode.setId(cityCode);
+//                cityNode.setParentId(provinceCode);
+//                cityNode.setCustomLabel(cityName);
+//                cityNode.setCustomValue(cityCode);
+//                childList.add(cityNode);
+//                processedCities.add(cityCode);
+//            }
+//
+//            // 处理区/县级节点
+//            if (!processedAreas.contains(areaCode)) {
+//                TreeNode areaNode = new TreeNode();
+//                areaNode.setId(areaCode);
+//                areaNode.setParentId(cityCode);
+//                areaNode.setCustomLabel(areaName);
+//                areaNode.setCustomValue(areaCode);
+//                childList.add(areaNode);
+//                processedAreas.add(areaCode);
+//            }
+//        }
+//    }
 }
