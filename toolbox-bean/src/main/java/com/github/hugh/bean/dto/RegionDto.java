@@ -13,6 +13,7 @@ import lombok.Data;
 @Data
 @ApiModel(value = "省市区四级信息")
 public class RegionDto {
+    private String id;
     @ApiModelProperty(value = "省份编码")
     private String provinceCode;
     @ApiModelProperty(value = "省份名称")
