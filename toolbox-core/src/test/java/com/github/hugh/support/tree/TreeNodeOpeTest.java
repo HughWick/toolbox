@@ -24,6 +24,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TreeNodeOpeTest {
     public static final String DATA_FILE_PATH = "/file/json/data.text";
     public static final String REGION_THREE_DATA_FILE_PATH = "/file/json/RegionThree.text";
+
+    // 2025-04-03 测试数据
+    /**
+     * 修正了下面区域的街道信息
+     * 湖北： 天门、潜江、仙桃
+     * 广东： 中山、东莞
+     * 河南：济源市
+     */
+    public static final String REGION_DATA_V1_FILE_PATH = "/file/region/v1.json";
     /**
      * 默认测试数据
      */

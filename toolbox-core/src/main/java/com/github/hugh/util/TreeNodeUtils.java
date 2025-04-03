@@ -1,11 +1,10 @@
 package com.github.hugh.util;
 
+import com.github.hugh.bean.dto.RegionDto;
 import com.github.hugh.bean.expand.tree.TreeNode;
+import com.github.hugh.constant.StrPool;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -83,5 +82,132 @@ public class TreeNodeUtils {
         childNodesHashMap.put(childNode.getId(), childNode.getParentId()); // 添加处理子节点信息
         assignChildNodes(childNodesList, childNode, childNodesHashMap, sortEnable, ascending); // 递归设置该子节点的子节点列表
         childList.add(childNode); // 添加该子节点到对应的根节点列表
+    }
+
+    /**
+     * 将地域信息列表转换为树形结构的节点列表（省 -> 市 -> 区）。
+     * 该方法遍历地域信息，为每个省份创建一个根节点，并为每个省份下的城市和区域创建子节点。
+     * 使用 Set 集合来跟踪已处理过的省份、城市和区域，以避免重复添加。
+     *
+     * @param objects   包含地域信息的 RegionsDo 对象列表。每个对象应包含省份、城市和区域的代码及名称。
+     * @param rootList  用于存储生成的根节点（省份）的列表。
+     * @param childList 用于存储生成的子节点（城市和区域）的列表。
+     * @since 2.8.6
+     */
+    public static void processCustomThree(List<RegionDto> objects, List<TreeNode> rootList, List<TreeNode> childList) {
+        // 用于存储已处理过的省份代码，避免重复添加
+        Set<String> processedProvinces = new HashSet<>();
+        // 用于存储已处理过的城市代码，避免重复添加
+        Set<String> processedCities = new HashSet<>();
+        // 用于存储已处理过的区域 ID，避免重复添加
+        Set<String> processedAreas = new HashSet<>();
+        for (RegionDto region : objects) {
+            // 生成区域节点的唯一 ID
+            String areaId = generateAreaId(region.getAreaCode(), region.getAreaName());
+            // 如果当前省份已经被处理过
+            if (processedProvinces.contains(region.getProvinceCode())) {
+                // 如果当前城市尚未被处理过
+                if (!processedCities.contains(region.getCityCode())) {
+                    // 添加城市节点
+                    addCityNode(region, childList, processedCities);
+                    // 添加区域节点
+                    addAreaNode(region, areaId, childList, processedAreas);
+                }
+                // 如果当前城市已经被处理过，但当前区域尚未被处理过
+                else if (!processedAreas.contains(areaId)) {
+                    // 添加区域节点
+                    addAreaNode(region, areaId, childList, processedAreas);
+                }
+            } else { // 如果当前省份尚未被处理过
+                // 添加省份节点
+                addProvinceNode(region, rootList, processedProvinces);
+                // 添加城市节点
+                addCityNode(region, childList, processedCities);
+                // 添加区域节点
+                addAreaNode(region, areaId, childList, processedAreas);
+            }
+        }
+    }
+
+    /**
+     * 生成区域节点的唯一 ID。
+     *
+     * @param areaCode 区域代码
+     * @param areaName 区域名称
+     * @return 区域节点的 ID
+     * @since 2.8.6
+     */
+    private static String generateAreaId(String areaCode, String areaName) {
+        return areaCode + StrPool.UNDERLINE + areaName;
+    }
+
+    /**
+     * 根据 RegionDto 对象创建一个表示省份的 TreeNode 对象。
+     * 该方法仅负责创建 TreeNode 对象并设置其基本属性。
+     *
+     * @param region 包含省份信息的 RegionDto 对象。
+     * @return 创建好的表示省份的 TreeNode 对象。
+     * @since 2.8.6
+     */
+    private static TreeNode createProvinceNode(RegionDto region) {
+        TreeNode node = new TreeNode();
+        node.setId(region.getProvinceCode());
+        node.setCustomLabel(region.getProvinceName());
+        node.setCustomValue(region.getProvinceCode());
+        return node;
+    }
+
+    /**
+     * 创建省份 TreeNode 对象并将其添加到根节点列表，同时标记该省份为已处理。
+     * 该方法调用 {@link #createProvinceNode(RegionDto)} 创建节点，然后将其添加到提供的 rootList 和 processedProvinces 集合中。
+     *
+     * @param region             包含省份信息的 RegionDto 对象。
+     * @param rootList           用于存储根节点（省份）的列表。
+     * @param processedProvinces 用于存储已处理过的省份代码的 Set 集合。
+     * @since 2.8.6
+     */
+    private static void addProvinceNode(RegionDto region, List<TreeNode> rootList, Set<String> processedProvinces) {
+        TreeNode provinceNode = createProvinceNode(region);
+        rootList.add(provinceNode);
+        processedProvinces.add(region.getProvinceCode());
+    }
+
+    /**
+     * 创建城市 TreeNode 对象并将其添加到子节点列表，同时标记该城市为已处理。
+     * 该方法创建一个表示城市的 TreeNode 对象，设置其父节点 ID 为省份代码，然后将其添加到提供的 childList 和 processedCities 集合中。
+     *
+     * @param region          包含城市信息的 RegionDto 对象。
+     * @param childList       用于存储子节点（城市、区域、街道）的列表。
+     * @param processedCities 用于存储已处理过的城市代码的 Set 集合。
+     * @since 2.8.6
+     */
+    private static void addCityNode(RegionDto region, List<TreeNode> childList, Set<String> processedCities) {
+        TreeNode cityNode = new TreeNode();
+        cityNode.setId(region.getCityCode());
+        cityNode.setParentId(region.getProvinceCode());
+        cityNode.setCustomLabel(region.getCityName());
+        cityNode.setCustomValue(region.getCityCode());
+        childList.add(cityNode);
+        processedCities.add(region.getCityCode());
+    }
+
+    /**
+     * 创建区域 TreeNode 对象并将其添加到子节点列表，同时标记该区域为已处理。
+     * 该方法创建一个表示区域的 TreeNode 对象，设置其父节点 ID 为城市代码，然后将其添加到提供的 childList 和 processedAreas 集合中。
+     *
+     * @param region         包含区域信息的 RegionDto 对象。
+     * @param areaId         区域节点的 ID。
+     * @param childList      用于存储子节点（城市、区域、街道）的列表。
+     * @param processedAreas 用于存储已处理过的区域 ID 的 Set 集合。
+     * @since 2.8.6
+     */
+    private static void addAreaNode(RegionDto region, String areaId, List<TreeNode> childList, Set<String> processedAreas) {
+        TreeNode areaNode = new TreeNode();
+        areaNode.setId(areaId);
+        areaNode.setParentId(region.getCityCode());
+        areaNode.setCustomLabel(region.getAreaName());
+        areaNode.setCustomValue(region.getAreaCode());
+        childList.add(areaNode);
+        processedAreas.add(areaId);
     }
 }
