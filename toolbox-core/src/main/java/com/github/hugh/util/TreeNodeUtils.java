@@ -3,6 +3,7 @@ package com.github.hugh.util;
 import com.github.hugh.bean.dto.RegionDto;
 import com.github.hugh.bean.expand.tree.TreeNode;
 import com.github.hugh.constant.StrPool;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
@@ -17,6 +18,7 @@ import java.util.*;
  *
  * @since 2.8.5
  */
+@Slf4j
 public class TreeNodeUtils {
     private TreeNodeUtils() {
     }
