@@ -1,4 +1,4 @@
-package com.github.hugh.util;
+package com.github.hugh.support.tree;
 
 import com.github.hugh.bean.dto.RegionDto;
 import com.github.hugh.bean.expand.tree.TreeNode;

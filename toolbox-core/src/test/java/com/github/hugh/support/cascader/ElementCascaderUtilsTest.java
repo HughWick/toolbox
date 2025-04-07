@@ -6,7 +6,7 @@ import com.github.hugh.bean.expand.cascader.ElementCascader;
 import com.github.hugh.bean.expand.tree.TreeNode;
 import com.github.hugh.support.tree.TreeNodeOpe;
 import com.github.hugh.support.tree.TreeNodeOpeTest;
-import com.github.hugh.util.TreeNodeUtils;
+import com.github.hugh.support.tree.TreeNodeUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

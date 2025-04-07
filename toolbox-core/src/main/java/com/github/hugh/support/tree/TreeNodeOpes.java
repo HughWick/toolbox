@@ -3,7 +3,6 @@ package com.github.hugh.support.tree;
 import com.github.hugh.bean.expand.tree.ElementTree;
 import com.github.hugh.bean.expand.tree.TreeNode;
 import com.github.hugh.util.ListUtils;
-import com.github.hugh.util.TreeNodeUtils;
 
 import java.util.Comparator;
 import java.util.List;
