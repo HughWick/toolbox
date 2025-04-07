@@ -7,8 +7,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * <p>
+ * {@code ElementCascaderUtils} 类提供了一系列用于处理级联选择器（Cascader）数据结构的实用工具方法。
+ * 主要功能包括检查给定的级联选择器列表及其所有子节点中是否存在重复的 value 值。
+ * </p>
+ *
+ * @since 2.8.6
+ */
 @Slf4j
 public class ElementCascaderUtils {
+
+    private ElementCascaderUtils() {
+    }
 
     /**
      * 检查给定的 ElementCascader 列表及其所有子节点中是否存在重复的 value 值。
@@ -18,7 +29,6 @@ public class ElementCascaderUtils {
      *
      * @param elements 要检查的 ElementCascader 对象列表。
      * @return 如果在列表及其子节点中找到任何重复的 value 值，则返回 true；否则返回 false。
-     * @since 2.8.6
      */
     public static boolean hasDuplicateValue(List<ElementCascader> elements) {
         Set<String> seenValues = new HashSet<>();
@@ -37,7 +47,6 @@ public class ElementCascaderUtils {
      * @param element    当前要检查的 ElementCascader 对象。
      * @param seenValues 用于存储已经遇到的 value 值的 Set 集合，用于检测重复。
      * @return 如果在当前节点或其任何子节点中找到重复的 value 值，则返回 true；否则返回 false。
-     * @since 2.8.6
      */
     private static boolean hasDuplicateValueRecursive(ElementCascader element, Set<String> seenValues) {
         if (element == null) {
