@@ -78,7 +78,7 @@ public class QueryCode {
      *
      * @since 2.7.15
      */
-    public static final String APPKEY = "appkey";
+    public static final String APPKEY = "APPKEY";
 
     /**
      * 小写

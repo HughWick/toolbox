@@ -15,20 +15,16 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class TreeNode extends TreeNodeCustom {
+public class TreeNode extends BaseTreeNode<TreeNode> {
 
-    private String id;//节点位移标识
-
-    private String parentId;//父节点id
-
-    private String value;//节点属性，按需求可定义多个属性
-
-    private List<TreeNode> children;//该节点的子节点对象
+    private String customLabel;// 自定义标签（element、）
+    private String customValue;// 自定义的值
 
     public TreeNode(String id, String parentId, String value, List<TreeNode> children) {
-        this.id = id;
-        this.parentId = parentId;
-        this.value = value;
-        this.children = children;
+        super(); // 调用父类的无参构造器
+        this.setId(id);
+        this.setParentId(parentId);
+        this.setValue(value);
+        this.setChildren(children);
     }
 }
