@@ -7,12 +7,14 @@ import com.github.hugh.bean.expand.tree.ElementTreeExpand;
 import com.github.hugh.bean.expand.tree.TreeNode;
 import com.github.hugh.bean.expand.tree.TreeNodeExpand;
 import com.github.hugh.util.file.FileUtils;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.StopWatch;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -22,8 +24,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Date 2023/6/25 17:40
  */
 public class TreeNodeOpeTest {
+
+    // 第一版本省市区街道四级数据路径、没有处理东莞、中山这种特殊没有第四级的数据
+    public static String FULL_FILE_PATH_DATA_1;
+    private static List<TreeNodeObject> treeNodeObjectsV1;
     public static final String DATA_FILE_PATH = "/file/json/data.text";
+
+    private static List<TreeNodeObject> treeNodeJsonData1;
+    private static List<TreeNodeObject> treeNodeJsonData2;
+    // 四级数据
     public static final String REGION_THREE_DATA_FILE_PATH = "/file/json/RegionThree.text";
+
 
     // 2025-04-03 测试数据
     /**
@@ -108,27 +119,36 @@ public class TreeNodeOpeTest {
             ",{\"id\":0,\"provinceCode\":\"430000\",\"provinceName\":\"湖南省\",\"cityCode\":\"430900\",\"cityName\":\"益阳市\",\"areaCode\":\"430902\",\"areaName\":\"资阳区\",\"streetCode\":\"430902\",\"streetName\":\"长春工业园\",\"streetCodeEx\":\"43090208\"}" +
             "]";
 
+    @BeforeAll
+    public static void beforeAll() {
+        StopWatch stopWatch = new StopWatch("TreeNodeOpeTest--处理省市区街道数据");
+        stopWatch.start("读取第一版文件耗时");
+        FULL_FILE_PATH_DATA_1 = TreeNodeOpeTest.class.getResource(DATA_FILE_PATH).getPath();
+        stopWatch.stop();
+        stopWatch.start("解析字符串");
+        final String fileData = FileUtils.readContent(FULL_FILE_PATH_DATA_1);
+        treeNodeObjectsV1 = JSONArray.parseArray(fileData, TreeNodeObject.class);
+        stopWatch.stop();
+        System.out.println(stopWatch.prettyPrint());
+        stopWatch.start("解析简版v1字符串");
+        treeNodeJsonData1 = JSONArray.parseArray(json, TreeNodeObject.class);
+        stopWatch.stop();
+        stopWatch.start("解析字符串");
+        treeNodeJsonData2 = JSONArray.parseArray(json_data2, TreeNodeObject.class);
+        stopWatch.stop();
+    }
 
     /**
      * 处理全国省市区街道数据
      */
     @Test
     void testNation() {
-        StopWatch stopWatch = new StopWatch("处理省市区街道数据");
-        stopWatch.start("读取文件耗时");
-//        String data1 = "/file/json/data.txt";
-        String path = TreeNodeOpeTest.class.getResource(DATA_FILE_PATH).getPath();
-        stopWatch.stop();
-        stopWatch.start("解析字符串");
-        final String fileData = FileUtils.readContent(path);
-        final List<TreeNodeObject> objects = JSONArray.parseArray(fileData, TreeNodeObject.class);
-        stopWatch.stop();
-//        System.out.println("---->>" + objects.size());
+        StopWatch stopWatch = new StopWatch("testNation-处理省市区街道数据");
         //创建节点容器
         List<TreeNode> rootList = new ArrayList<>();
         List<TreeNode> childList = new ArrayList<>();
         stopWatch.start("处理方法所需结构信息");
-        ProcessTreeData.process(objects, rootList, childList);
+        ProcessTreeData.process(treeNodeObjectsV1, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装结构树");
 //        final TreeNodeOpe treeNodeOpe = TreeNodeOpe.on(rootList, childList);
@@ -138,21 +158,17 @@ public class TreeNodeOpeTest {
         stopWatch.stop();
         String s1 = JSON.toJSONString(process);
         assertEquals(3014109, s1.length());
-//        System.out.println("---->" + s1.length());
         System.out.println(stopWatch.prettyPrint());
     }
 
     @Test
     void testChild() {
         StopWatch stopWatch = new StopWatch("处理省市区街道数据");
-        stopWatch.start("解析字符串");
-        final List<TreeNodeObject> objects = JSONArray.parseArray(json, TreeNodeObject.class);
-        stopWatch.stop();
         //创建节点容器
         List<TreeNode> rootList = new ArrayList<>();
         List<TreeNode> childList = new ArrayList<>();
         stopWatch.start("处理方法所需结构信息");
-        ProcessTreeData.process(objects, rootList, childList);
+        ProcessTreeData.process(treeNodeJsonData1, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装结构树");
         TreeNodeOpe<TreeNode, ElementTree> treeNodeOpe1 = new TreeNodeOpes(rootList, childList);
@@ -165,26 +181,28 @@ public class TreeNodeOpeTest {
         stopWatch.stop();
         System.out.println(stopWatch.prettyPrint());
         String s2 = JSON.toJSONString(elementTrees);
-//        System.out.println("---->" + s2);
         assertEquals(6815, s2.length());
+        assertAll("验证排序是否成功",
+                () -> assertEquals("湖南省", elementTrees.get(1).getLabel()),
+                () -> assertEquals("益阳市", elementTrees.get(1).getChildren().get(1).getLabel()),
+                () -> assertEquals("望城区", elementTrees.get(1).getChildren().get(0).getChildren().get(5).getLabel()),
+                () -> assertEquals("吉林省", elementTrees.get(0).getLabel()),
+                () -> assertEquals("四川省", elementTrees.get(2).getLabel())
+        );
     }
 
     // 测试排序排序
     @Test
     void testChildAscend() {
         StopWatch stopWatch = new StopWatch("处理省市区街道数据");
-        stopWatch.start("解析字符串");
-        final List<TreeNodeObject> objects = JSONArray.parseArray(json, TreeNodeObject.class);
-        stopWatch.stop();
         //创建节点容器
         List<TreeNode> rootList = new ArrayList<>();
         List<TreeNode> childList = new ArrayList<>();
         stopWatch.start("处理方法所需结构信息");
-        ProcessTreeData.process(objects, rootList, childList);
+        ProcessTreeData.process(treeNodeJsonData1, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装element结构树");
         TreeNodeOpe<TreeNode, ElementTree> treeNodeOpe1 = new TreeNodeOpes(rootList, childList);
-//        final TreeNodeOpe treeNodeOpe = TreeNodeOpe.on(rootList, childList);
         treeNodeOpe1.setAscending(false);
         final List<ElementTree> elementTrees = treeNodeOpe1.processElement();
         stopWatch.stop();
@@ -193,21 +211,24 @@ public class TreeNodeOpeTest {
         String desStr = "[{\"children\":[{\"children\":[{\"children\":[{\"id\":\"51342705\",\"label\":\"披砂镇\"}],\"id\":\"513427\",\"label\":\"宁南县\"}],\"id\":\"513400\",\"label\":\"凉山彝族自治州\"}],\"id\":\"510000\",\"label\":\"四川省\"},{\"children\":[{\"children\":[{\"children\":[{\"id\":\"43092201\",\"label\":\"灰山港镇\"}],\"id\":\"430922\",\"label\":\"桃江县\"},{\"id\":\"430902\",\"label\":\"资阳区\"}],\"id\":\"430900\",\"label\":\"益阳市\"},{\"children\":[{\"children\":[{\"id\":\"43018229\",\"label\":\"双江口镇\"},{\"id\":\"43018228\",\"label\":\"菁华铺乡\"},{\"id\":\"43018227\",\"label\":\"坝塘镇\"},{\"id\":\"43018226\",\"label\":\"灰汤镇\"},{\"id\":\"43018225\",\"label\":\"喻家坳乡\"},{\"id\":\"43018224\",\"label\":\"流沙河镇\"},{\"id\":\"43018223\",\"label\":\"龙田镇\"},{\"id\":\"43018222\",\"label\":\"历经铺乡\"},{\"id\":\"43018221\",\"label\":\"煤炭坝镇\"},{\"id\":\"43018220\",\"label\":\"金洲镇\"},{\"id\":\"43018219\",\"label\":\"横市镇\"},{\"id\":\"43018218\",\"label\":\"东湖塘镇\"},{\"id\":\"43018217\",\"label\":\"玉潭镇\"},{\"id\":\"43018216\",\"label\":\"回龙铺镇\"},{\"id\":\"43018215\",\"label\":\"沙田乡\"},{\"id\":\"43018214\",\"label\":\"老粮仓镇\"},{\"id\":\"43018213\",\"label\":\"沩山乡\"},{\"id\":\"43018212\",\"label\":\"资福镇\"},{\"id\":\"43018211\",\"label\":\"青山桥镇\"},{\"id\":\"43018210\",\"label\":\"大成桥镇\"},{\"id\":\"43018209\",\"label\":\"黄材镇\"},{\"id\":\"43018208\",\"label\":\"白马桥乡\"},{\"id\":\"43018207\",\"label\":\"双凫铺镇\"},{\"id\":\"43018206\",\"label\":\"道林镇\"},{\"id\":\"43018205\",\"label\":\"城郊街道\"},{\"id\":\"43018204\",\"label\":\"巷子口镇\"},{\"id\":\"43018203\",\"label\":\"大屯营镇\"},{\"id\":\"43018202\",\"label\":\"花明楼镇\"},{\"id\":\"43018201\",\"label\":\"夏铎铺镇\"}],\"id\":\"430182\",\"label\":\"宁乡市\"},{\"children\":[{\"id\":\"43018132\",\"label\":\"永和镇\"},{\"id\":\"43018131\",\"label\":\"大瑶镇\"},{\"id\":\"43018130\",\"label\":\"古港镇\"},{\"id\":\"43018129\",\"label\":\"集里街道\"},{\"id\":\"43018128\",\"label\":\"关口街道\"},{\"id\":\"43018127\",\"label\":\"高坪镇\"},{\"id\":\"43018126\",\"label\":\"柏加镇\"},{\"id\":\"43018125\",\"label\":\"淳口镇\"},{\"id\":\"43018124\",\"label\":\"小河乡\"},{\"id\":\"43018123\",\"label\":\"蕉溪镇\"},{\"id\":\"43018122\",\"label\":\"镇头镇\"},{\"id\":\"43018121\",\"label\":\"龙伏镇\"},{\"id\":\"43018120\",\"label\":\"官渡镇\"},{\"id\":\"43018119\",\"label\":\"中和镇\"},{\"id\":\"43018118\",\"label\":\"达浒镇\"},{\"id\":\"43018117\",\"label\":\"洞阳镇\"},{\"id\":\"43018116\",\"label\":\"枨冲镇\"},{\"id\":\"43018115\",\"label\":\"荷花街道\"},{\"id\":\"43018114\",\"label\":\"普迹镇\"},{\"id\":\"43018113\",\"label\":\"淮川街道\"},{\"id\":\"43018112\",\"label\":\"金刚镇\"},{\"id\":\"43018111\",\"label\":\"张坊镇\"},{\"id\":\"43018110\",\"label\":\"永安镇\"},{\"id\":\"43018109\",\"label\":\"北盛镇\"},{\"id\":\"43018108\",\"label\":\"沙市镇\"},{\"id\":\"43018107\",\"label\":\"葛家镇\"},{\"id\":\"43018106\",\"label\":\"官桥镇\"},{\"id\":\"43018105\",\"label\":\"文家市镇\"},{\"id\":\"43018104\",\"label\":\"大围山镇\"},{\"id\":\"43018103\",\"label\":\"社港镇\"},{\"id\":\"43018102\",\"label\":\"沿溪镇\"},{\"id\":\"43018101\",\"label\":\"澄潭江镇\"}],\"id\":\"430181\",\"label\":\"浏阳市\"},{\"children\":[{\"id\":\"43012118\",\"label\":\"开慧镇\"},{\"id\":\"43012117\",\"label\":\"黄兴镇\"},{\"id\":\"43012116\",\"label\":\"金井镇\"},{\"id\":\"43012115\",\"label\":\"榔梨街道\"},{\"id\":\"43012114\",\"label\":\"泉塘街道\"},{\"id\":\"43012113\",\"label\":\"北山镇\"},{\"id\":\"43012112\",\"label\":\"福临镇\"},{\"id\":\"43012111\",\"label\":\"果园镇\"},{\"id\":\"43012110\",\"label\":\"青山铺镇\"},{\"id\":\"43012109\",\"label\":\"星沙街道\"},{\"id\":\"43012108\",\"label\":\"江背镇\"},{\"id\":\"43012107\",\"label\":\"路口镇\"},{\"id\":\"43012106\",\"label\":\"春华镇\"},{\"id\":\"43012105\",\"label\":\"黄花镇\"},{\"id\":\"43012104\",\"label\":\"安沙镇\"},{\"id\":\"43012103\",\"label\":\"湘龙街道\"},{\"id\":\"43012102\",\"label\":\"长龙街道\"},{\"id\":\"43012101\",\"label\":\"高桥镇\"}],\"id\":\"430121\",\"label\":\"长沙县\"},{\"children\":[{\"id\":\"43011215\",\"label\":\"乔口镇\"},{\"id\":\"43011214\",\"label\":\"靖港镇\"},{\"id\":\"43011213\",\"label\":\"铜官街道\"},{\"id\":\"43011212\",\"label\":\"乌山街道\"},{\"id\":\"43011211\",\"label\":\"雷锋街道\"},{\"id\":\"43011210\",\"label\":\"茶亭镇\"},{\"id\":\"43011209\",\"label\":\"高塘岭街道\"},{\"id\":\"43011208\",\"label\":\"月亮岛街道\"},{\"id\":\"43011207\",\"label\":\"桥驿镇\"},{\"id\":\"43011206\",\"label\":\"丁字湾街道\"},{\"id\":\"43011205\",\"label\":\"大泽湖街道\"},{\"id\":\"43011204\",\"label\":\"金山桥街道\"},{\"id\":\"43011203\",\"label\":\"白箬铺镇\"},{\"id\":\"43011202\",\"label\":\"黄金园街道\"},{\"id\":\"43011201\",\"label\":\"白沙洲街道\"}],\"id\":\"430112\",\"label\":\"望城区\"},{\"children\":[{\"id\":\"43011114\",\"label\":\"黎托街道\"},{\"id\":\"43011113\",\"label\":\"洞井街道\"},{\"id\":\"43011112\",\"label\":\"侯家塘街道\"},{\"id\":\"43011111\",\"label\":\"高桥街道\"},{\"id\":\"43011110\",\"label\":\"同升街道\"},{\"id\":\"43011109\",\"label\":\"雨花亭街道\"},{\"id\":\"43011108\",\"label\":\"砂子塘街道\"},{\"id\":\"43011107\",\"label\":\"东塘街道\"},{\"id\":\"43011106\",\"label\":\"东山街道\"},{\"id\":\"43011105\",\"label\":\"左家塘街道\"},{\"id\":\"43011104\",\"label\":\"跳马镇\"},{\"id\":\"43011103\",\"label\":\"井湾子街道\"},{\"id\":\"43011102\",\"label\":\"圭塘街道\"},{\"id\":\"43011101\",\"label\":\"长沙雨花经济开发区\"}],\"id\":\"430111\",\"label\":\"雨花区\"},{\"children\":[{\"id\":\"43010516\",\"label\":\"青竹湖街道\"},{\"id\":\"43010515\",\"label\":\"湘雅路街道\"},{\"id\":\"43010514\",\"label\":\"洪山街道\"},{\"id\":\"43010513\",\"label\":\"沙坪街道\"},{\"id\":\"43010512\",\"label\":\"秀峰街道\"},{\"id\":\"43010511\",\"label\":\"捞刀河街道\"},{\"id\":\"43010510\",\"label\":\"望麓园街道\"},{\"id\":\"43010509\",\"label\":\"浏阳河街道\"},{\"id\":\"43010508\",\"label\":\"芙蓉北路街道\"},{\"id\":\"43010507\",\"label\":\"新河街道\"},{\"id\":\"43010506\",\"label\":\"通泰街街道\"},{\"id\":\"43010505\",\"label\":\"东风路街道\"},{\"id\":\"43010504\",\"label\":\"伍家岭街道\"},{\"id\":\"43010503\",\"label\":\"清水塘街道\"},{\"id\":\"43010502\",\"label\":\"四方坪街道\"},{\"id\":\"43010501\",\"label\":\"月湖街道\"}],\"id\":\"430105\",\"label\":\"开福区\"},{\"children\":[{\"id\":\"43010418\",\"label\":\"西湖街道\"},{\"id\":\"43010417\",\"label\":\"梅溪湖街道\"},{\"id\":\"43010416\",\"label\":\"麓谷街道\"},{\"id\":\"43010415\",\"label\":\"含浦街道\"},{\"id\":\"43010414\",\"label\":\"望城坡街道\"},{\"id\":\"43010413\",\"label\":\"银盆岭街道\"},{\"id\":\"43010412\",\"label\":\"岳麓街道\"},{\"id\":\"43010411\",\"label\":\"望岳街道\"},{\"id\":\"43010410\",\"label\":\"坪塘街道\"},{\"id\":\"43010409\",\"label\":\"观沙岭街道\"},{\"id\":\"43010408\",\"label\":\"洋湖街道\"},{\"id\":\"43010407\",\"label\":\"咸嘉湖街道\"},{\"id\":\"43010406\",\"label\":\"天顶街道\"},{\"id\":\"43010405\",\"label\":\"望月湖街道\"},{\"id\":\"43010404\",\"label\":\"桔子洲街道\"},{\"id\":\"43010403\",\"label\":\"雨敞坪镇\"},{\"id\":\"43010402\",\"label\":\"学士街道\"},{\"id\":\"43010401\",\"label\":\"莲花镇\"}],\"id\":\"430104\",\"label\":\"岳麓区\"},{\"children\":[{\"id\":\"43010314\",\"label\":\"暮云街道\"},{\"id\":\"43010313\",\"label\":\"南托街道\"},{\"id\":\"43010312\",\"label\":\"坡子街街道\"},{\"id\":\"43010311\",\"label\":\"新开铺街道\"},{\"id\":\"43010310\",\"label\":\"青园街道\"},{\"id\":\"43010309\",\"label\":\"文源街道\"},{\"id\":\"43010308\",\"label\":\"赤岭路街道\"},{\"id\":\"43010307\",\"label\":\"先锋街道\"},{\"id\":\"43010306\",\"label\":\"裕南街街道\"},{\"id\":\"43010305\",\"label\":\"城南路街道\"},{\"id\":\"43010304\",\"label\":\"大托铺街道\"},{\"id\":\"43010303\",\"label\":\"桂花坪街道\"},{\"id\":\"43010302\",\"label\":\"黑石铺街道\"},{\"id\":\"43010301\",\"label\":\"金盆岭街道\"}],\"id\":\"430103\",\"label\":\"天心区\"},{\"children\":[{\"id\":\"43010214\",\"label\":\"东湖街道\"},{\"id\":\"43010213\",\"label\":\"马坡岭街道\"},{\"id\":\"43010212\",\"label\":\"湘湖街道\"},{\"id\":\"43010211\",\"label\":\"定王台街道\"},{\"id\":\"43010210\",\"label\":\"五里牌街道\"},{\"id\":\"43010209\",\"label\":\"马王堆街道\"},{\"id\":\"43010208\",\"label\":\"东岸街道\"},{\"id\":\"43010207\",\"label\":\"隆平高科技园\"},{\"id\":\"43010206\",\"label\":\"荷花园街道\"},{\"id\":\"43010205\",\"label\":\"东屯渡街道\"},{\"id\":\"43010204\",\"label\":\"朝阳街街道\"},{\"id\":\"43010203\",\"label\":\"韭菜园街道\"},{\"id\":\"43010202\",\"label\":\"火星街道\"},{\"id\":\"43010201\",\"label\":\"文艺路街道\"}],\"id\":\"430102\",\"label\":\"芙蓉区\"}],\"id\":\"430100\",\"label\":\"长沙市\"}],\"id\":\"430000\",\"label\":\"湖南省\"},{\"children\":[{\"children\":[{\"children\":[{\"id\":\"22088202\",\"label\":\"联合乡\"},{\"id\":\"22088201\",\"label\":\"安北街道\"}],\"id\":\"220882\",\"label\":\"大安市\"},{\"children\":[{\"id\":\"22088127\",\"label\":\"万宝镇\"}],\"id\":\"220881\",\"label\":\"洮南市\"}],\"id\":\"220800\",\"label\":\"白城市\"},{\"children\":[{\"id\":\"220281\",\"label\":\"蛟河市\"}],\"id\":\"220200\",\"label\":\"吉林市\"},{\"children\":[{\"id\":\"220112\",\"label\":\"双阳区\"}],\"id\":\"220100\",\"label\":\"长春市\"}],\"id\":\"220000\",\"label\":\"吉林省\"}]";
 //        System.out.println("---->" + s2);
         assertEquals(desStr, s2);
-        // 验证排序是否成功
+        assertAll("验证排序是否成功",
+                () -> assertEquals("湖南省", elementTrees.get(1).getLabel()),
+                () -> assertEquals("长沙市", elementTrees.get(1).getChildren().get(1).getLabel()),
+                () -> assertEquals("开福区", elementTrees.get(1).getChildren().get(1).getChildren().get(5).getLabel()),
+                () -> assertEquals("四川省", elementTrees.get(0).getLabel()),
+                () -> assertEquals("吉林省", elementTrees.get(2).getLabel())
+        );
     }
 
     //     测试是否多一个父级ID属性
     @Test
     void testChildSetParenId() {
         StopWatch stopWatch = new StopWatch("处理省市区街道数据");
-        stopWatch.start("解析字符串");
-        final List<TreeNodeObject> objects = JSONArray.parseArray(json, TreeNodeObject.class);
-        stopWatch.stop();
         //创建节点容器
         List<TreeNode> rootList = new ArrayList<>();
         List<TreeNode> childList = new ArrayList<>();
         stopWatch.start("处理方法所需结构信息");
-        ProcessTreeData.process(objects, rootList, childList);
+        ProcessTreeData.process(treeNodeJsonData1, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装element结构树");
         TreeNodeOpe<?, ElementTree> treeNodeOpe1 = new TreeNodeOpes(rootList, childList);
@@ -233,14 +254,14 @@ public class TreeNodeOpeTest {
     @Test
     void testSortEnable() {
         StopWatch stopWatch = new StopWatch("处理省市区街道数据");
-        stopWatch.start("解析字符串");
-        final List<TreeNodeObject> objects = JSONArray.parseArray(json_data2, TreeNodeObject.class);
-        stopWatch.stop();
+//        stopWatch.start("解析字符串");
+//        final List<TreeNodeObject> objects = JSONArray.parseArray(json_data2, TreeNodeObject.class);
+//        stopWatch.stop();
         //创建节点容器
         List<TreeNode> rootList = new ArrayList<>();
         List<TreeNode> childList = new ArrayList<>();
         stopWatch.start("处理方法所需结构信息");
-        ProcessTreeData.process(objects, rootList, childList);
+        ProcessTreeData.process(treeNodeJsonData2, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装结构树-开启排序");
         TreeNodeOpe<TreeNode, ElementTree> treeNodeOpe1 = new TreeNodeOpes(rootList, childList);
@@ -265,14 +286,11 @@ public class TreeNodeOpeTest {
     @Test
     void testSortEnableEle() {
         StopWatch stopWatch = new StopWatch("处理省市区街道数据");
-        stopWatch.start("解析字符串");
-        final List<TreeNodeObject> objects = JSONArray.parseArray(json_data2, TreeNodeObject.class);
-        stopWatch.stop();
         //创建节点容器
         List<TreeNodeExpand<String>> rootList = new ArrayList<>();
         List<TreeNodeExpand<String>> childList = new ArrayList<>();
         stopWatch.start("处理方法所需结构信息");
-        ProcessTreeData.processExpandStr(objects, rootList, childList);
+        ProcessTreeData.processExpandStr(treeNodeJsonData2, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装结构树-开启排序");
         TreeNodeOpe<TreeNodeExpand<String>, ElementTreeExpand<String>> treeNodeOpe1 = new TreeNodeOpeExpand<>(rootList, childList);
@@ -283,6 +301,15 @@ public class TreeNodeOpeTest {
 //        System.out.println("---sort enable true>>" + s2);
         assertEquals(ascStr, s2);
         assertEquals(10412, s2.length());
+        assertAll("验证排序是否成功",
+                () -> assertEquals("湖南省", elementTrees.get(1).getLabel()),
+                () -> assertEquals("长沙市", elementTrees.get(1).getChildren().get(0).getLabel()),
+                () -> assertEquals("岳麓区", elementTrees.get(1).getChildren().get(0).getChildren().get(2).getLabel()),
+                () -> assertEquals("银盆岭街道", elementTrees.get(1).getChildren().get(0).getChildren().get(2).getChildren().get(12).getLabel()),
+                () -> assertEquals(18, elementTrees.get(1).getChildren().get(0).getChildren().get(2).getChildren().size()),
+                () -> assertEquals("吉林省", elementTrees.get(0).getLabel()),
+                () -> assertEquals("四川省", elementTrees.get(2).getLabel())
+        );
         treeNodeOpe1.setSortEnable(false);
         stopWatch.start("封装结构树-不排序");
         final List<ElementTreeExpand<String>> elementTrees2 = treeNodeOpe1.processElement();
@@ -290,10 +317,19 @@ public class TreeNodeOpeTest {
         String notSortJson3 = JSON.toJSONString(elementTrees2);
 //        System.out.println("--sort enable false->>" + notSortJson3);
         String resultNotSortStr1 = "[{\"children\":[{\"children\":[{\"children\":[{\"expand\":\"oneJson\",\"id\":\"51342705\",\"label\":\"披砂镇\"}],\"expand\":\"\",\"id\":\"513427\",\"label\":\"宁南县\"}],\"expand\":\"\",\"id\":\"513400\",\"label\":\"凉山彝族自治州\"}],\"expand\":\"\",\"id\":\"510000\",\"label\":\"四川省\"},{\"children\":[{\"children\":[{\"children\":[{\"expand\":\"oneJson\",\"id\":\"22088127\",\"label\":\"万宝镇\"}],\"expand\":\"\",\"id\":\"220881\",\"label\":\"洮南市\"},{\"children\":[{\"expand\":\"oneJson\",\"id\":\"22088202\",\"label\":\"联合乡\"},{\"expand\":\"json\",\"id\":\"22088201\",\"label\":\"安北街道\"}],\"expand\":\"\",\"id\":\"220882\",\"label\":\"大安市\"}],\"expand\":\"\",\"id\":\"220800\",\"label\":\"白城市\"},{\"children\":[{\"expand\":\"\",\"id\":\"220112\",\"label\":\"双阳区\"}],\"expand\":\"\",\"id\":\"220100\",\"label\":\"长春市\"},{\"children\":[{\"expand\":\"\",\"id\":\"220281\",\"label\":\"蛟河市\"}],\"expand\":\"\",\"id\":\"220200\",\"label\":\"吉林市\"}],\"expand\":\"\",\"id\":\"220000\",\"label\":\"吉林省\"},{\"children\":[{\"children\":[{\"children\":[{\"expand\":\"oneJson\",\"id\":\"43010501\",\"label\":\"月湖街道\"},{\"expand\":\"json\",\"id\":\"43010502\",\"label\":\"四方坪街道\"},{\"expand\":\"json\",\"id\":\"43010503\",\"label\":\"清水塘街道\"},{\"expand\":\"json\",\"id\":\"43010504\",\"label\":\"伍家岭街道\"},{\"expand\":\"json\",\"id\":\"43010505\",\"label\":\"东风路街道\"},{\"expand\":\"json\",\"id\":\"43010506\",\"label\":\"通泰街街道\"},{\"expand\":\"json\",\"id\":\"43010507\",\"label\":\"新河街道\"},{\"expand\":\"json\",\"id\":\"43010508\",\"label\":\"芙蓉北路街道\"},{\"expand\":\"json\",\"id\":\"43010509\",\"label\":\"浏阳河街道\"},{\"expand\":\"json\",\"id\":\"43010510\",\"label\":\"望麓园街道\"},{\"expand\":\"json\",\"id\":\"43010511\",\"label\":\"捞刀河街道\"},{\"expand\":\"json\",\"id\":\"43010512\",\"label\":\"秀峰街道\"},{\"expand\":\"json\",\"id\":\"43010513\",\"label\":\"沙坪街道\"},{\"expand\":\"json\",\"id\":\"43010514\",\"label\":\"洪山街道\"},{\"expand\":\"json\",\"id\":\"43010515\",\"label\":\"湘雅路街道\"},{\"expand\":\"json\",\"id\":\"43010516\",\"label\":\"青竹湖街道\"}],\"expand\":\"\",\"id\":\"430105\",\"label\":\"开福区\"},{\"children\":[{\"expand\":\"oneJson\",\"id\":\"43010416\",\"label\":\"麓谷街道\"},{\"expand\":\"json\",\"id\":\"43010402\",\"label\":\"学士街道\"},{\"expand\":\"json\",\"id\":\"43010401\",\"label\":\"莲花镇\"},{\"expand\":\"json\",\"id\":\"43010404\",\"label\":\"桔子洲街道\"},{\"expand\":\"json\",\"id\":\"43010403\",\"label\":\"雨敞坪镇\"},{\"expand\":\"json\",\"id\":\"43010406\",\"label\":\"天顶街道\"},{\"expand\":\"json\",\"id\":\"43010407\",\"label\":\"咸嘉湖街道\"},{\"expand\":\"json\",\"id\":\"43010408\",\"label\":\"洋湖街道\"},{\"expand\":\"json\",\"id\":\"43010409\",\"label\":\"观沙岭街道\"},{\"expand\":\"json\",\"id\":\"43010410\",\"label\":\"坪塘街道\"},{\"expand\":\"json\",\"id\":\"43010411\",\"label\":\"望岳街道\"},{\"expand\":\"json\",\"id\":\"43010405\",\"label\":\"望月湖街道\"},{\"expand\":\"json\",\"id\":\"43010413\",\"label\":\"银盆岭街道\"},{\"expand\":\"json\",\"id\":\"43010414\",\"label\":\"望城坡街道\"},{\"expand\":\"json\",\"id\":\"43010415\",\"label\":\"含浦街道\"},{\"expand\":\"json\",\"id\":\"43010412\",\"label\":\"岳麓街道\"},{\"expand\":\"json\",\"id\":\"43010418\",\"label\":\"西湖街道\"},{\"expand\":\"json\",\"id\":\"43010417\",\"label\":\"梅溪湖街道\"}],\"expand\":\"\",\"id\":\"430104\",\"label\":\"岳麓区\"},{\"children\":[{\"expand\":\"oneJson\",\"id\":\"43010301\",\"label\":\"金盆岭街道\"},{\"expand\":\"json\",\"id\":\"43010302\",\"label\":\"黑石铺街道\"},{\"expand\":\"json\",\"id\":\"43010303\",\"label\":\"桂花坪街道\"},{\"expand\":\"json\",\"id\":\"43010304\",\"label\":\"大托铺街道\"},{\"expand\":\"json\",\"id\":\"43010305\",\"label\":\"城南路街道\"},{\"expand\":\"json\",\"id\":\"43010306\",\"label\":\"裕南街街道\"},{\"expand\":\"json\",\"id\":\"43010307\",\"label\":\"先锋街道\"},{\"expand\":\"json\",\"id\":\"43010308\",\"label\":\"赤岭路街道\"},{\"expand\":\"json\",\"id\":\"43010309\",\"label\":\"文源街道\"},{\"expand\":\"json\",\"id\":\"43010310\",\"label\":\"青园街道\"},{\"expand\":\"json\",\"id\":\"43010311\",\"label\":\"新开铺街道\"},{\"expand\":\"json\",\"id\":\"43010312\",\"label\":\"坡子街街道\"},{\"expand\":\"json\",\"id\":\"43010313\",\"label\":\"南托街道\"},{\"expand\":\"json\",\"id\":\"43010314\",\"label\":\"暮云街道\"}],\"expand\":\"\",\"id\":\"430103\",\"label\":\"天心区\"},{\"children\":[{\"expand\":\"oneJson\",\"id\":\"43018101\",\"label\":\"澄潭江镇\"},{\"expand\":\"json\",\"id\":\"43018102\",\"label\":\"沿溪镇\"},{\"expand\":\"json\",\"id\":\"43018103\",\"label\":\"社港镇\"},{\"expand\":\"json\",\"id\":\"43018104\",\"label\":\"大围山镇\"},{\"expand\":\"json\",\"id\":\"43018105\",\"label\":\"文家市镇\"},{\"expand\":\"json\",\"id\":\"43018106\",\"label\":\"官桥镇\"},{\"expand\":\"json\",\"id\":\"43018107\",\"label\":\"葛家镇\"},{\"expand\":\"json\",\"id\":\"43018108\",\"label\":\"沙市镇\"},{\"expand\":\"json\",\"id\":\"43018109\",\"label\":\"北盛镇\"},{\"expand\":\"json\",\"id\":\"43018110\",\"label\":\"永安镇\"},{\"expand\":\"json\",\"id\":\"43018111\",\"label\":\"张坊镇\"},{\"expand\":\"json\",\"id\":\"43018112\",\"label\":\"金刚镇\"},{\"expand\":\"json\",\"id\":\"43018113\",\"label\":\"淮川街道\"},{\"expand\":\"json\",\"id\":\"43018114\",\"label\":\"普迹镇\"},{\"expand\":\"json\",\"id\":\"43018115\",\"label\":\"荷花街道\"},{\"expand\":\"json\",\"id\":\"43018116\",\"label\":\"枨冲镇\"},{\"expand\":\"json\",\"id\":\"43018117\",\"label\":\"洞阳镇\"},{\"expand\":\"json\",\"id\":\"43018118\",\"label\":\"达浒镇\"},{\"expand\":\"json\",\"id\":\"43018119\",\"label\":\"中和镇\"},{\"expand\":\"json\",\"id\":\"43018120\",\"label\":\"官渡镇\"},{\"expand\":\"json\",\"id\":\"43018121\",\"label\":\"龙伏镇\"},{\"expand\":\"json\",\"id\":\"43018122\",\"label\":\"镇头镇\"},{\"expand\":\"json\",\"id\":\"43018123\",\"label\":\"蕉溪镇\"},{\"expand\":\"json\",\"id\":\"43018124\",\"label\":\"小河乡\"},{\"expand\":\"json\",\"id\":\"43018125\",\"label\":\"淳口镇\"},{\"expand\":\"json\",\"id\":\"43018126\",\"label\":\"柏加镇\"},{\"expand\":\"json\",\"id\":\"43018127\",\"label\":\"高坪镇\"},{\"expand\":\"json\",\"id\":\"43018128\",\"label\":\"关口街道\"},{\"expand\":\"json\",\"id\":\"43018129\",\"label\":\"集里街道\"},{\"expand\":\"json\",\"id\":\"43018130\",\"label\":\"古港镇\"},{\"expand\":\"json\",\"id\":\"43018131\",\"label\":\"大瑶镇\"},{\"expand\":\"json\",\"id\":\"43018132\",\"label\":\"永和镇\"}],\"expand\":\"\",\"id\":\"430181\",\"label\":\"浏阳市\"},{\"children\":[{\"expand\":\"oneJson\",\"id\":\"43012101\",\"label\":\"高桥镇\"},{\"expand\":\"json\",\"id\":\"43012102\",\"label\":\"长龙街道\"},{\"expand\":\"json\",\"id\":\"43012103\",\"label\":\"湘龙街道\"},{\"expand\":\"json\",\"id\":\"43012104\",\"label\":\"安沙镇\"},{\"expand\":\"json\",\"id\":\"43012105\",\"label\":\"黄花镇\"},{\"expand\":\"json\",\"id\":\"43012106\",\"label\":\"春华镇\"},{\"expand\":\"json\",\"id\":\"43012107\",\"label\":\"路口镇\"},{\"expand\":\"json\",\"id\":\"43012108\",\"label\":\"江背镇\"},{\"expand\":\"json\",\"id\":\"43012109\",\"label\":\"星沙街道\"},{\"expand\":\"json\",\"id\":\"43012110\",\"label\":\"青山铺镇\"},{\"expand\":\"json\",\"id\":\"43012111\",\"label\":\"果园镇\"},{\"expand\":\"json\",\"id\":\"43012112\",\"label\":\"福临镇\"},{\"expand\":\"json\",\"id\":\"43012113\",\"label\":\"北山镇\"},{\"expand\":\"json\",\"id\":\"43012114\",\"label\":\"泉塘街道\"},{\"expand\":\"json\",\"id\":\"43012115\",\"label\":\"榔梨街道\"},{\"expand\":\"json\",\"id\":\"43012116\",\"label\":\"金井镇\"},{\"expand\":\"json\",\"id\":\"43012117\",\"label\":\"黄兴镇\"},{\"expand\":\"json\",\"id\":\"43012118\",\"label\":\"开慧镇\"}],\"expand\":\"\",\"id\":\"430121\",\"label\":\"长沙县\"},{\"children\":[{\"expand\":\"oneJson\",\"id\":\"43011201\",\"label\":\"白沙洲街道\"},{\"expand\":\"json\",\"id\":\"43011202\",\"label\":\"黄金园街道\"},{\"expand\":\"json\",\"id\":\"43011203\",\"label\":\"白箬铺镇\"},{\"expand\":\"json\",\"id\":\"43011204\",\"label\":\"金山桥街道\"},{\"expand\":\"json\",\"id\":\"43011205\",\"label\":\"大泽湖街道\"},{\"expand\":\"json\",\"id\":\"43011206\",\"label\":\"丁字湾街道\"},{\"expand\":\"json\",\"id\":\"43011207\",\"label\":\"桥驿镇\"},{\"expand\":\"json\",\"id\":\"43011208\",\"label\":\"月亮岛街道\"},{\"expand\":\"json\",\"id\":\"43011209\",\"label\":\"高塘岭街道\"},{\"expand\":\"json\",\"id\":\"43011210\",\"label\":\"茶亭镇\"},{\"expand\":\"json\",\"id\":\"43011211\",\"label\":\"雷锋街道\"},{\"expand\":\"json\",\"id\":\"43011212\",\"label\":\"乌山街道\"},{\"expand\":\"json\",\"id\":\"43011213\",\"label\":\"铜官街道\"},{\"expand\":\"json\",\"id\":\"43011214\",\"label\":\"靖港镇\"},{\"expand\":\"json\",\"id\":\"43011215\",\"label\":\"乔口镇\"}],\"expand\":\"\",\"id\":\"430112\",\"label\":\"望城区\"},{\"children\":[{\"expand\":\"oneJson\",\"id\":\"43018201\",\"label\":\"夏铎铺镇\"},{\"expand\":\"json\",\"id\":\"43018202\",\"label\":\"花明楼镇\"},{\"expand\":\"json\",\"id\":\"43018203\",\"label\":\"大屯营镇\"},{\"expand\":\"json\",\"id\":\"43018204\",\"label\":\"巷子口镇\"},{\"expand\":\"json\",\"id\":\"43018205\",\"label\":\"城郊街道\"},{\"expand\":\"json\",\"id\":\"43018206\",\"label\":\"道林镇\"},{\"expand\":\"json\",\"id\":\"43018207\",\"label\":\"双凫铺镇\"},{\"expand\":\"json\",\"id\":\"43018208\",\"label\":\"白马桥乡\"},{\"expand\":\"json\",\"id\":\"43018209\",\"label\":\"黄材镇\"},{\"expand\":\"json\",\"id\":\"43018210\",\"label\":\"大成桥镇\"},{\"expand\":\"json\",\"id\":\"43018211\",\"label\":\"青山桥镇\"},{\"expand\":\"json\",\"id\":\"43018212\",\"label\":\"资福镇\"},{\"expand\":\"json\",\"id\":\"43018213\",\"label\":\"沩山乡\"},{\"expand\":\"json\",\"id\":\"43018214\",\"label\":\"老粮仓镇\"},{\"expand\":\"json\",\"id\":\"43018215\",\"label\":\"沙田乡\"},{\"expand\":\"json\",\"id\":\"43018216\",\"label\":\"回龙铺镇\"},{\"expand\":\"json\",\"id\":\"43018217\",\"label\":\"玉潭镇\"},{\"expand\":\"json\",\"id\":\"43018218\",\"label\":\"东湖塘镇\"},{\"expand\":\"json\",\"id\":\"43018219\",\"label\":\"横市镇\"},{\"expand\":\"json\",\"id\":\"43018220\",\"label\":\"金洲镇\"},{\"expand\":\"json\",\"id\":\"43018221\",\"label\":\"煤炭坝镇\"},{\"expand\":\"json\",\"id\":\"43018222\",\"label\":\"历经铺乡\"},{\"expand\":\"json\",\"id\":\"43018223\",\"label\":\"龙田镇\"},{\"expand\":\"json\",\"id\":\"43018224\",\"label\":\"流沙河镇\"},{\"expand\":\"json\",\"id\":\"43018225\",\"label\":\"喻家坳乡\"},{\"expand\":\"json\",\"id\":\"43018226\",\"label\":\"灰汤镇\"},{\"expand\":\"json\",\"id\":\"43018227\",\"label\":\"坝塘镇\"},{\"expand\":\"json\",\"id\":\"43018228\",\"label\":\"菁华铺乡\"},{\"expand\":\"json\",\"id\":\"43018229\",\"label\":\"双江口镇\"}],\"expand\":\"\",\"id\":\"430182\",\"label\":\"宁乡市\"},{\"children\":[{\"expand\":\"oneJson\",\"id\":\"43010201\",\"label\":\"文艺路街道\"},{\"expand\":\"json\",\"id\":\"43010202\",\"label\":\"火星街道\"},{\"expand\":\"json\",\"id\":\"43010203\",\"label\":\"韭菜园街道\"},{\"expand\":\"json\",\"id\":\"43010204\",\"label\":\"朝阳街街道\"},{\"expand\":\"json\",\"id\":\"43010205\",\"label\":\"东屯渡街道\"},{\"expand\":\"json\",\"id\":\"43010206\",\"label\":\"荷花园街道\"},{\"expand\":\"json\",\"id\":\"43010207\",\"label\":\"隆平高科技园\"},{\"expand\":\"json\",\"id\":\"43010208\",\"label\":\"东岸街道\"},{\"expand\":\"json\",\"id\":\"43010209\",\"label\":\"马王堆街道\"},{\"expand\":\"json\",\"id\":\"43010210\",\"label\":\"五里牌街道\"},{\"expand\":\"json\",\"id\":\"43010211\",\"label\":\"定王台街道\"},{\"expand\":\"json\",\"id\":\"43010212\",\"label\":\"湘湖街道\"},{\"expand\":\"json\",\"id\":\"43010213\",\"label\":\"马坡岭街道\"},{\"expand\":\"json\",\"id\":\"43010214\",\"label\":\"东湖街道\"}],\"expand\":\"\",\"id\":\"430102\",\"label\":\"芙蓉区\"},{\"children\":[{\"expand\":\"oneJson\",\"id\":\"43011101\",\"label\":\"长沙雨花经济开发区\"},{\"expand\":\"json\",\"id\":\"43011102\",\"label\":\"圭塘街道\"},{\"expand\":\"json\",\"id\":\"43011103\",\"label\":\"井湾子街道\"},{\"expand\":\"json\",\"id\":\"43011104\",\"label\":\"跳马镇\"},{\"expand\":\"json\",\"id\":\"43011105\",\"label\":\"左家塘街道\"},{\"expand\":\"json\",\"id\":\"43011106\",\"label\":\"东山街道\"},{\"expand\":\"json\",\"id\":\"43011107\",\"label\":\"东塘街道\"},{\"expand\":\"json\",\"id\":\"43011108\",\"label\":\"砂子塘街道\"},{\"expand\":\"json\",\"id\":\"43011109\",\"label\":\"雨花亭街道\"},{\"expand\":\"json\",\"id\":\"43011110\",\"label\":\"同升街道\"},{\"expand\":\"json\",\"id\":\"43011111\",\"label\":\"高桥街道\"},{\"expand\":\"json\",\"id\":\"43011112\",\"label\":\"侯家塘街道\"},{\"expand\":\"json\",\"id\":\"43011113\",\"label\":\"洞井街道\"},{\"expand\":\"json\",\"id\":\"43011114\",\"label\":\"黎托街道\"}],\"expand\":\"\",\"id\":\"430111\",\"label\":\"雨花区\"}],\"expand\":\"\",\"id\":\"430100\",\"label\":\"长沙市\"},{\"children\":[{\"children\":[{\"expand\":\"oneJson\",\"id\":\"43090202\",\"label\":\"新桥河镇\"},{\"expand\":\"json\",\"id\":\"43090201\",\"label\":\"张家塞乡\"},{\"expand\":\"json\",\"id\":\"43090205\",\"label\":\"迎风桥镇\"},{\"expand\":\"json\",\"id\":\"43090203\",\"label\":\"大码头街道\"},{\"expand\":\"json\",\"id\":\"43090206\",\"label\":\"沙头镇\"},{\"expand\":\"json\",\"id\":\"43090207\",\"label\":\"茈湖口镇\"},{\"expand\":\"json\",\"id\":\"43090204\",\"label\":\"汽车路街道\"},{\"expand\":\"json\",\"id\":\"43090209\",\"label\":\"长春镇\"},{\"expand\":\"json\",\"id\":\"43090208\",\"label\":\"长春工业园\"}],\"expand\":\"\",\"id\":\"430902\",\"label\":\"资阳区\"},{\"children\":[{\"expand\":\"oneJson\",\"id\":\"43092201\",\"label\":\"灰山港镇\"}],\"expand\":\"\",\"id\":\"430922\",\"label\":\"桃江县\"}],\"expand\":\"\",\"id\":\"430900\",\"label\":\"益阳市\"}],\"expand\":\"\",\"id\":\"430000\",\"label\":\"湖南省\"}]";
+
         assertEquals(resultNotSortStr1, notSortJson3);
+        assertAll("验证排序是否成功",
+                () -> assertEquals("湖南省", elementTrees2.get(2).getLabel()),
+                () -> assertEquals("长沙市", elementTrees2.get(2).getChildren().get(0).getLabel()),
+                () -> assertEquals("望城区", elementTrees2.get(2).getChildren().get(0).getChildren().get(5).getLabel()),
+                () -> assertEquals(15, elementTrees2.get(2).getChildren().get(0).getChildren().get(5).getChildren().size()),
+                () -> assertEquals("月亮岛街道", elementTrees2.get(2).getChildren().get(0).getChildren().get(5).getChildren().get(7).getLabel()),
+                () -> assertEquals("吉林省", elementTrees2.get(1).getLabel()),
+                () -> assertEquals("四川省", elementTrees2.get(0).getLabel())
+        );
         System.out.println(stopWatch.prettyPrint());
     }
-
 }
 
 
