@@ -2,6 +2,7 @@ package com.github.hugh.support.tree;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.github.hugh.bean.dto.RegionDto;
 import com.github.hugh.bean.expand.tree.ElementTree;
 import com.github.hugh.bean.expand.tree.ElementTreeExpand;
 import com.github.hugh.bean.expand.tree.TreeNode;
@@ -27,11 +28,13 @@ public class TreeNodeOpeTest {
 
     // 第一版本省市区街道四级数据路径、没有处理东莞、中山这种特殊没有第四级的数据
     public static String FULL_FILE_PATH_DATA_1;
-    private static List<TreeNodeObject> treeNodeObjectsV1;
+//    private static List<TreeNodeObject> treeNodeObjectsV1;
+    private static List<RegionDto> regionV1;
     public static final String DATA_FILE_PATH = "/file/json/data.text";
 
-    private static List<TreeNodeObject> treeNodeJsonData1;
+    private static List<RegionDto> regionJsonData1;
     private static List<TreeNodeObject> treeNodeJsonData2;
+    private static List<RegionDto> regionJsonJsonData2;
     // 四级数据
     public static final String REGION_THREE_DATA_FILE_PATH = "/file/json/RegionThree.text";
 
@@ -127,13 +130,14 @@ public class TreeNodeOpeTest {
         stopWatch.stop();
         stopWatch.start("解析字符串");
         final String fileData = FileUtils.readContent(FULL_FILE_PATH_DATA_1);
-        treeNodeObjectsV1 = JSONArray.parseArray(fileData, TreeNodeObject.class);
+        regionV1 = JSONArray.parseArray(fileData, RegionDto.class);
         stopWatch.stop();
         System.out.println(stopWatch.prettyPrint());
         stopWatch.start("解析简版v1字符串");
-        treeNodeJsonData1 = JSONArray.parseArray(json, TreeNodeObject.class);
+        regionJsonData1 = JSONArray.parseArray(json, RegionDto.class);
         stopWatch.stop();
         stopWatch.start("解析字符串");
+        regionJsonJsonData2 = JSONArray.parseArray(json_data2, RegionDto.class);
         treeNodeJsonData2 = JSONArray.parseArray(json_data2, TreeNodeObject.class);
         stopWatch.stop();
     }
@@ -148,10 +152,9 @@ public class TreeNodeOpeTest {
         List<TreeNode> rootList = new ArrayList<>();
         List<TreeNode> childList = new ArrayList<>();
         stopWatch.start("处理方法所需结构信息");
-        ProcessTreeData.process(treeNodeObjectsV1, rootList, childList);
+        ProcessTreeData.processRegionDto(regionV1, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装结构树");
-//        final TreeNodeOpe treeNodeOpe = TreeNodeOpe.on(rootList, childList);
         TreeNodeOpe<TreeNode, ElementTree> treeNodeOpe = new TreeNodeOpes(rootList, childList);
         final List<TreeNode> process = treeNodeOpe.process();
 //        final List<ElementTree> elementTreeList = treeNodeOpe.processElement();
@@ -168,7 +171,7 @@ public class TreeNodeOpeTest {
         List<TreeNode> rootList = new ArrayList<>();
         List<TreeNode> childList = new ArrayList<>();
         stopWatch.start("处理方法所需结构信息");
-        ProcessTreeData.process(treeNodeJsonData1, rootList, childList);
+        ProcessTreeData.processRegionDto(regionJsonData1, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装结构树");
         TreeNodeOpe<TreeNode, ElementTree> treeNodeOpe1 = new TreeNodeOpes(rootList, childList);
@@ -199,7 +202,7 @@ public class TreeNodeOpeTest {
         List<TreeNode> rootList = new ArrayList<>();
         List<TreeNode> childList = new ArrayList<>();
         stopWatch.start("处理方法所需结构信息");
-        ProcessTreeData.process(treeNodeJsonData1, rootList, childList);
+        ProcessTreeData.processRegionDto(regionJsonData1, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装element结构树");
         TreeNodeOpe<TreeNode, ElementTree> treeNodeOpe1 = new TreeNodeOpes(rootList, childList);
@@ -228,7 +231,7 @@ public class TreeNodeOpeTest {
         List<TreeNode> rootList = new ArrayList<>();
         List<TreeNode> childList = new ArrayList<>();
         stopWatch.start("处理方法所需结构信息");
-        ProcessTreeData.process(treeNodeJsonData1, rootList, childList);
+        ProcessTreeData.processRegionDto(regionJsonData1, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装element结构树");
         TreeNodeOpe<?, ElementTree> treeNodeOpe1 = new TreeNodeOpes(rootList, childList);
@@ -254,14 +257,11 @@ public class TreeNodeOpeTest {
     @Test
     void testSortEnable() {
         StopWatch stopWatch = new StopWatch("处理省市区街道数据");
-//        stopWatch.start("解析字符串");
-//        final List<TreeNodeObject> objects = JSONArray.parseArray(json_data2, TreeNodeObject.class);
-//        stopWatch.stop();
         //创建节点容器
         List<TreeNode> rootList = new ArrayList<>();
         List<TreeNode> childList = new ArrayList<>();
         stopWatch.start("处理方法所需结构信息");
-        ProcessTreeData.process(treeNodeJsonData2, rootList, childList);
+        ProcessTreeData.processRegionDto(regionJsonJsonData2, rootList, childList);
         stopWatch.stop();
         stopWatch.start("封装结构树-开启排序");
         TreeNodeOpe<TreeNode, ElementTree> treeNodeOpe1 = new TreeNodeOpes(rootList, childList);
