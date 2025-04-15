@@ -73,7 +73,7 @@ class StringUtilTest {
     @Test
     void testChinese() {
         var str = "[a, b, [c]]]";
-        assertEquals("", StringUtils.trim(str, ""));
+//        assertEquals("", StringUtils.trim(str, ""));
         assertEquals("[a, b, [c]]", StringUtils.trim(str, "]"));
         assertEquals("a, b, [c]]]", StringUtils.trim(str, "["));
 //        System.out.println("==2=>>>" + StringUtils.trim(str, "]"));

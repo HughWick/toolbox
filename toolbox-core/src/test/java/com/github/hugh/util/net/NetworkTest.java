@@ -21,11 +21,12 @@ class NetworkTest {
     @Test
     void testPing() {
         try {
-            assertTrue(NetworkUtils.ping("www.amazon.com"));
-        } catch (Exception e) {
-            System.out.println("Error pinging www.amazon.com: " + e.getMessage());
+            boolean ping = NetworkUtils.ping("www.cloudflare.com");
+            assertTrue(ping);
+        } catch (Exception exception) {
+            System.out.println("Error pinging www.amazon.com: " + exception.getMessage());
         }
-        assertFalse(NetworkUtils.ping("www.google321.com", 500));
+        assertFalse(NetworkUtils.ping("www.google321.com", 300));
         assertTrue(NetworkUtils.ping(CLOUD_FLARE_DNS , 400));
     }
 //

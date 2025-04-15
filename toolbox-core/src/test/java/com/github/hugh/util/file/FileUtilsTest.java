@@ -173,7 +173,7 @@ class FileUtilsTest {
 
     @Test
     void testReadContent() {
-        String filePath = "/file/json/data.txt";
+        String filePath = "/file/json/data.text";
         final String path1 = getPath(filePath);
         final File file1 = new File(path1);
         final String s1 = FileUtils.readContent(file1);
