@@ -2,9 +2,9 @@ package com.github.hugh.util;
 
 import com.github.hugh.constant.StrPool;
 import com.github.hugh.exception.ToolboxException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.util.Assert;
 
-import javax.servlet.http.HttpServletRequest;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;

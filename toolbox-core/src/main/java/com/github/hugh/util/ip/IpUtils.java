@@ -2,8 +2,8 @@ package com.github.hugh.util.ip;
 
 import com.github.hugh.constant.StrPool;
 import com.github.hugh.util.regex.RegexUtils;
+import jakarta.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

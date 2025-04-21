@@ -41,8 +41,8 @@ class OkHttpGetTest {
         final SocketTimeoutException socketTimeoutException2 = assertThrowsExactly(SocketTimeoutException.class, () -> {
             OkHttpUtils.getReJsonObjects(url, null, 5);
         });
-        assertEquals("connect timed out", socketTimeoutException.getMessage());
-        assertEquals("connect timed out", socketTimeoutException2.getMessage());
+        assertEquals("Connect timed out", socketTimeoutException.getMessage());
+        assertEquals("Connect timed out", socketTimeoutException2.getMessage());
     }
 
     @Test
@@ -53,7 +53,7 @@ class OkHttpGetTest {
         final SocketTimeoutException socketTimeoutException = assertThrowsExactly(SocketTimeoutException.class, () -> {
             String result3 = OkHttpUtils.get(url, 8);
         });
-        assertEquals("connect timed out", socketTimeoutException.getMessage());
+        assertEquals("Connect timed out", socketTimeoutException.getMessage());
     }
 
     @Test

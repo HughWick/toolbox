@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.hughwick</groupId>
     <artifactId>toolbox-parent</artifactId>
-    <version>2.8.7</version>
+    <version>3.0.0</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -29,13 +29,12 @@
 
     <properties>
         <!--============================== MAIN ==============================-->
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit-jupiter.version>5.9.2</junit-jupiter.version>
         <!--========================== All Plugins START =====================-->
         <plugin.compiler.version>3.8.1</plugin.compiler.version>
         <plugin.sonar.version>3.1.1</plugin.sonar.version>
-        <!--        <plugin.surefire.version>2.22.2</plugin.surefire.version>-->
         <plugin.surefire.version>3.5.2</plugin.surefire.version>
         <plugin.jacoco.version>0.8.12</plugin.jacoco.version>
         <plugin.surefire.skip-it>false</plugin.surefire.skip-it>
@@ -45,7 +44,8 @@
         <plugin.maven-gpg-plugin.version>1.6</plugin.maven-gpg-plugin.version>
         <!--============================== other ==============================-->
         <lombok.version>1.18.24</lombok.version>
-        <spring.version>5.3.23</spring.version>
+<!--        <spring.version>5.3.23</spring.version>-->
+        <spring.version>6.1.17</spring.version>
         <powermock.version>2.0.9</powermock.version>
         <!--============================== 第三方工具类 ==============================-->
         <!--   gson再往上的版本测试用例会出现问题     -->
@@ -54,6 +54,7 @@
         <!--        <fastjson.version>2.0.54</fastjson.version>-->
         <okhttp.version>4.9.3</okhttp.version>
         <servlet-api.version>4.0.1</servlet-api.version>
+        <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
         <google-guava.version>33.1.0-jre</google-guava.version>
         <kryo.version>4.0.2</kryo.version>
         <slf4j-simple.version>2.0.16</slf4j-simple.version>
@@ -171,6 +172,12 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
                 <version>${servlet-api.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
+            <dependency>
+                <groupId>jakarta.servlet</groupId>
+                <artifactId>jakarta.servlet-api</artifactId>
+                <version>${jakarta.servlet-api.version}</version>
             </dependency>
             <!-- Kryo是一个快速高效的Java序列化框架 https://mvnrepository.com/artifact/com.esotericsoftware/kryo -->
             <dependency>

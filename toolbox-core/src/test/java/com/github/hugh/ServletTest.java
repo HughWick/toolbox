@@ -1,12 +1,12 @@
 package com.github.hugh;
 
 import com.github.hugh.util.ServletUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;

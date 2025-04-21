@@ -39,6 +39,7 @@ class MapTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println(map.getOrDefault("id" , "13d"));
         map.clear();
         assertTrue(MapUtils.isEmpty(map));
         assertFalse(MapUtils.isNotEmpty(map));
@@ -51,6 +52,7 @@ class MapTest {
         assertTrue(MapUtils.isEquals(map, "code", "0000"));
 //        assertTrue(MapUtils.isFailure(map, "code", "00100"));
         assertTrue(MapUtils.isNotEquals(map, "code", "00100"));
+        System.out.println(map.getOrDefault("id1" , "13d"));
     }
 
     // 测试map获取值

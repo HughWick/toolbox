@@ -6,8 +6,8 @@ import com.github.hugh.db.util.MybatisPlusQueryUtils;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.MapUtils;
 import com.github.hugh.util.ServletUtils;
+import jakarta.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 

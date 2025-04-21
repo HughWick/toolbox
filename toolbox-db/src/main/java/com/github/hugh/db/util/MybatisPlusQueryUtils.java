@@ -9,8 +9,8 @@ import com.github.hugh.util.ListUtils;
 import com.github.hugh.util.ServletUtils;
 import com.github.hugh.util.StringUtils;
 import com.google.common.base.CaseFormat;
+import jakarta.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
