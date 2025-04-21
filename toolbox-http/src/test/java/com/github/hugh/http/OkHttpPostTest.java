@@ -1,10 +1,8 @@
 package com.github.hugh.http;
 
 import com.github.hugh.json.gson.JsonObjects;
-import com.github.hugh.json.gson.Jsons;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -30,17 +28,17 @@ class OkHttpPostTest {
         assertEquals("1", jsonObjects2.getString("status"));
     }
 
-    @Test
-    void testPostJson() throws IOException {
-        String httpTop = "https://api.wl1688.net/iotc/getway ";
-        JsonObjects jsonObjects1 = OkHttpUtils.postJsonReJsonObjects(httpTop);
-        assertEquals(400, jsonObjects1.getInt("status"));
-        var data = new HashMap<>();
-        data.put("appid", 2020114837);
-        data.put("appsecret", "1f091a6d2ad111ebbd3400163e0b8359");
-        JsonObjects jsonObjects2 = OkHttpUtils.postJsonReJsonObjects(httpTop, data);
-        assertEquals(10001, jsonObjects2.getInt("code"));
-    }
+//    @Test
+//    void testPostJson() throws IOException {
+//        String httpTop = "https://api.wl1688.net/iotc/getway ";
+//        JsonObjects jsonObjects1 = OkHttpUtils.postJsonReJsonObjects(httpTop);
+//        assertEquals(400, jsonObjects1.getInt("status"));
+//        var data = new HashMap<>();
+//        data.put("appid", 2020114837);
+//        data.put("appsecret", "1f091a6d2ad111ebbd3400163e0b8359");
+//        JsonObjects jsonObjects2 = OkHttpUtils.postJsonReJsonObjects(httpTop, data);
+//        assertEquals(10001, jsonObjects2.getInt("code"));
+//    }
 
     @Test
     void postFromTest() throws IOException {

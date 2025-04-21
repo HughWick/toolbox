@@ -146,6 +146,7 @@ class OkHttpsTest {
 
     @Test
     void testNoCookieSet() throws Exception {
+        OkHttpCode.COOKIE_STORE.clear();
         String url = "http://httpbin.org/cookies/set?username=admin";
         OkHttpsResponse okHttpsResponse = new OkHttps().setUrl(url)
                 .doGet();
@@ -165,6 +166,7 @@ class OkHttpsTest {
         List<Cookie> cookies = OkHttpCode.COOKIE_STORE.get(uri.getHost());
         assertEquals("[username=admin; path=/, password=123456; path=/, role=admin; path=/]", cookies.toString());
     }
+
     @Test
     void testCookieConflict() throws Exception {
         String url1 = "http://httpbin.org/cookies/set?username=admin";
