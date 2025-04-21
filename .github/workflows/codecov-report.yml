@@ -2,7 +2,6 @@ on:
   workflow_dispatch:
   push: # 当有代码推送时触发
     branches:
-      - 2.8.X
       - 3.0.X
 
 jobs: # 定义工作流中的任务
@@ -12,10 +11,10 @@ jobs: # 定义工作流中的任务
       TZ: Asia/Shanghai # 设置时区为上海 (UTC+8)
     steps: # 定义任务中的步骤
       - uses: actions/checkout@v4 # 使用 actions/checkout@v4 这个 Action，用于检出代码
-      - name: Set up JDK 11 # 步骤名称：安装 JDK 11
+      - name: Set up JDK 17 # 步骤名称：安装 JDK 11
         uses: actions/setup-java@v4 # 使用 actions/setup-java@v4 这个 Action，用于安装 Java 环境
         with: # 配置参数
-          java-version: '11' # Java 版本设置为 11
+          java-version: '17' # Java 版本设置为 11
           distribution: 'temurin' # 使用 Temurin 发行版的 JDK
           cache: maven
       - name: Build with Maven
