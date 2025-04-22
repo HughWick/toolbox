@@ -44,7 +44,9 @@
         <plugin.maven-gpg-plugin.version>1.6</plugin.maven-gpg-plugin.version>
         <!--============================== other ==============================-->
         <lombok.version>1.18.24</lombok.version>
+        <!--    与spring 对其    -->
         <spring.version>6.1.17</spring.version>
+        <spring-data-mongodb.version>4.3.9</spring-data-mongodb.version>
         <!--============================== 第三方工具类 ==============================-->
         <!--   gson再往上的版本测试用例会出现问题     -->
         <google-gson.version>2.10.1</google-gson.version>
@@ -57,9 +59,7 @@
         <ip2region.version>2.7.0</ip2region.version>
         <UserAgentUtils.version>1.21</UserAgentUtils.version>
         <mybatis-plus.version>3.5.8</mybatis-plus.version>
-        <!--    与spring 对其    -->
-        <spring-data-mongodb.version>4.3.9</spring-data-mongodb.version>
-        <mongodb-driver-sync.version>5.0.1</mongodb-driver-sync.version>
+
         <redis.version>3.7.1</redis.version>
         <caffeine.version>3.1.8</caffeine.version>
         <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
@@ -71,6 +71,7 @@
         <!--    test powermock 版本号与mockito版本号对等  -->
         <powermock.version>2.0.2</powermock.version>
         <mockito.version>2.23.4</mockito.version>
+        <mongodb-driver-sync.version>5.0.1</mongodb-driver-sync.version>
     </properties>
 
     <dependencies>
@@ -417,15 +418,6 @@
                 </plugins>
             </build>
             <distributionManagement>
-                <!--      旧平台       -->
-                <!--                <snapshotRepository>-->
-                <!--                    <id>Hugh</id>-->
-                <!--                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>-->
-                <!--                </snapshotRepository>-->
-                <!--                <repository>-->
-                <!--                    <id>Hugh</id>-->
-                <!--                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
-                <!--                </repository>-->
                 <!--      新中央平台      -->
                 <snapshotRepository>
                     <id>central</id>
