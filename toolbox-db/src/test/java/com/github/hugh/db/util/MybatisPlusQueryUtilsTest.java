@@ -1,7 +1,7 @@
 package com.github.hugh.db.util;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.github.hugh.db.constants.QueryCode;
+import com.github.hugh.constant.QueryCode;
 import com.google.common.base.CaseFormat;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;

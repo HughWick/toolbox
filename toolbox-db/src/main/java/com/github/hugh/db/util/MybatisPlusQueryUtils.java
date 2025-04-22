@@ -2,8 +2,8 @@ package com.github.hugh.db.util;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.github.hugh.constant.QueryCode;
 import com.github.hugh.constant.StrPool;
-import com.github.hugh.db.constants.QueryCode;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.ListUtils;
 import com.github.hugh.util.ServletUtils;

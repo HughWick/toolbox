@@ -57,9 +57,9 @@
         <ip2region.version>2.7.0</ip2region.version>
         <UserAgentUtils.version>1.21</UserAgentUtils.version>
         <mybatis-plus.version>3.5.8</mybatis-plus.version>
-        <!--    与spring 2.7.X对其    -->
-        <spring-data-mongodb.version>3.4.18</spring-data-mongodb.version>
-        <mongodb-driver-sync.version>4.6.1</mongodb-driver-sync.version>
+        <!--    与spring 对其    -->
+        <spring-data-mongodb.version>4.3.9</spring-data-mongodb.version>
+        <mongodb-driver-sync.version>5.0.1</mongodb-driver-sync.version>
         <redis.version>3.7.1</redis.version>
         <caffeine.version>3.1.8</caffeine.version>
         <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
