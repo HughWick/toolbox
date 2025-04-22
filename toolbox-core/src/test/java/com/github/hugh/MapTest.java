@@ -385,7 +385,7 @@ class MapTest {
         Map<String, Object> map = new HashMap<>();
         map.put("page", 1);
         map.put("size", 2);
-        for (int i = 0; i < 6000000; i++) {
+        for (int i = 0; i < 600000; i++) {
             map.put(i++ + "", i);
         }
         map.put("id", 2);

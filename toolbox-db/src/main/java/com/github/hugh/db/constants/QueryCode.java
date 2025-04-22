@@ -9,7 +9,6 @@ package com.github.hugh.db.constants;
  */
 @Deprecated
 public class QueryCode {
-
     /**
      * 序列号
      */
