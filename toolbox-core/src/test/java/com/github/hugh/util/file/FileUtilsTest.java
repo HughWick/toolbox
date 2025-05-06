@@ -80,17 +80,6 @@ class FileUtilsTest {
         assertFalse(new File(TEMP_PATH).exists());
     }
 
-
-    // 测试url中的文件是否存在
-    @Test
-    void testUrlFileExist() {
-        String url = "https://ym.191ec.com/img/goodsContent/901015857951990381/b632537a5b884ecc8309222fca1d835b_1588148150570.jpg";
-        assertTrue(FileUtils.urlFileExist(url));
-        assertFalse(FileUtils.urlFileExist(url + "1"));
-        assertFalse(FileUtils.urlNotFileExist(url));
-        assertTrue(FileUtils.urlNotFileExist(url + "1"));
-    }
-
     // 测试下载文件
     @Test
     void testDownloadFile() {

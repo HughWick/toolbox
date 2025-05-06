@@ -3,9 +3,9 @@ package com.github.hugh.util.file;
 import com.github.hugh.constant.StrPool;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.DoubleMathUtils;
-import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.StringUtils;
 import com.github.hugh.util.io.StreamUtils;
+import com.github.hugh.util.net.UrlUtils;
 import com.github.hugh.util.regex.RegexUtils;
 import com.google.common.io.Files;
 import lombok.Cleanup;
@@ -13,7 +13,6 @@ import lombok.Cleanup;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.text.DecimalFormat;
@@ -44,39 +43,39 @@ public class FileUtils {
         file.mkdirs();
     }
 
-    /**
-     * 根据url链接判断对应图片是否存在
-     *
-     * @param url 网址链接
-     * @return boolean {@code true}存在返回
-     */
-    public static boolean urlFileExist(String url) {
-        if (EmptyUtils.isEmpty(url)) {
-            return false;
-        }
-        try {
-            URL u = new URL(url);
-            URLConnection uc = u.openConnection();
-            InputStream in = uc.getInputStream();
-            if (url.equalsIgnoreCase(uc.getURL().toString())) {
-                in.close();
-            }
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
+//    /**
+//     * 根据url链接判断对应图片是否存在
+//     *
+//     * @param urlStr 网址链接
+//     * @return boolean {@code true}存在返回
+//     */
+//    public static boolean urlFileExist(String urlStr) {
+//        if (EmptyUtils.isEmpty(urlStr)) {
+//            return false;
+//        }
+//        try {
+//            URL url = new URL(urlStr);
+//            URLConnection urlConnection = url.openConnection();
+//            InputStream in = urlConnection.getInputStream();
+//            if (urlStr.equalsIgnoreCase(urlConnection.getURL().toString())) {
+//                in.close();
+//            }
+//            return true;
+//        } catch (Exception exception) {
+//            return false;
+//        }
+//    }
 
-    /**
-     * URL 文件不存在
-     *
-     * @param url 网址链接
-     * @return boolean {@code true} 文件不存在返回
-     * @since 1.4.15
-     */
-    public static boolean urlNotFileExist(String url) {
-        return !urlFileExist(url);
-    }
+//    /**
+//     * URL 文件不存在
+//     *
+//     * @param url 网址链接
+//     * @return boolean {@code true} 文件不存在返回
+//     * @since 1.4.15
+//     */
+//    public static boolean urlNotFileExist(String url) {
+//        return !urlFileExist(url);
+//    }
 
     /**
      * 删除文件下所有空文件夹
@@ -176,7 +175,7 @@ public class FileUtils {
             /* 将网络资源地址传给,即赋值给url */
             /* 此为联系获得网络资源的固定格式用法，以便后面的in变量获得url截取网络资源的输入流 */
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            var dataInputStream = new DataInputStream(httpURLConnection.getInputStream());
+            DataInputStream dataInputStream = new DataInputStream(httpURLConnection.getInputStream());
             /* 此处也可用BufferedInputStream与BufferedOutputStream  需要保存的路径*/
             var dataOutputStream = new DataOutputStream(new FileOutputStream(savePath));
             try (dataInputStream; dataOutputStream) {
@@ -191,8 +190,7 @@ public class FileUtils {
                 httpURLConnection.disconnect();
                 return true;/* 网络资源截取并存储本地成功返回true */
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
             return false;
         }
     }
@@ -208,7 +206,7 @@ public class FileUtils {
      * @since 1.5.1
      */
     public static boolean downloadByNio(String uri, String path) throws IOException {
-        if (urlNotFileExist(uri)) {
+        if (UrlUtils.resourceNotExists(uri)) {
             return false;
         }
         try (InputStream inputStream = new URL(uri).openStream();
