@@ -81,7 +81,8 @@ public class UrlUtils {
         try {
             connection = openConnectionWithTimeout(urlStr); // 调用公共方法获取连接
             // --- 针对 HTTP/HTTPS 的优化：检查状态码 ---
-            if (connection instanceof HttpURLConnection httpConnection) {
+            if (connection instanceof HttpURLConnection) {
+                HttpURLConnection httpConnection = (HttpURLConnection) connection;
                 // 明确使用 GET 方法 (通常也适用于 HEAD)
                 httpConnection.setRequestMethod("GET");
                 // 获取响应状态码。
@@ -152,7 +153,7 @@ public class UrlUtils {
             }
         }
         // 移除末尾可能的换行符，以避免多余空行
-        if (!content.isEmpty() && (content.charAt(content.length() - 1) == '\n' || content.charAt(content.length() - 1) == '\r')) {
+        if (content.length() > 0 && (content.charAt(content.length() - 1) == '\n' || content.charAt(content.length() - 1) == '\r')) {
             content.delete(content.length() - System.lineSeparator().length(), content.length());
         }
         return content.toString();
