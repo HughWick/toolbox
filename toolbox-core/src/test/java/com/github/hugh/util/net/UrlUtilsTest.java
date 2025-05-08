@@ -10,7 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UrlUtilsTest {
     @Test
     void test() {
-        String str1 = "https://minio.dev.hnlot.com.cn/svmp-dev/trip/Event/20250430/DC2E97CCD813@1746001629@LeaveSeat.json";
+        String head = "https://minio.dev.hnlot.com.cn/svmp-dev/";
+        String str1 = head + "trip/Event/20250430/DC2E97CCD813@1746001629@LeaveSeat.json";
         try {
             URL url = new URL(str1);
             String s = UrlUtils.readContent(str1);
