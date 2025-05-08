@@ -548,26 +548,6 @@ public class GsonUtils {
     }
 
     /**
-     * 将字符串转化为指定实体类
-     * <p>该方法主要作用与解析日期时、json字符串中的值为时间戳(long)类型时</p>
-     * <p>版本2.2.5 之后入参更新为泛型</p>
-     *
-     * @param value    json字符串
-     * @param classOfT 类
-     * @param <E>      入参类型
-     * @param <T>      实体类型
-     * @return T 实体
-     * @since 2.2.5
-     */
-    @Deprecated
-    public static <E, T> T fromJsonTimeStamp(E value, Class<T> classOfT) {
-        GsonBuilder builder = new GsonBuilder();
-        //注册一个日期解析器、将时间戳转换为Date 类型
-        builder.registerTypeAdapter(Date.class, new CustomDateTypeAdapter());
-        return fromJson(builder, value, classOfT);
-    }
-
-    /**
      * 以空值安全的方式从JsonObject中获取一个Long后转换为{@link Date}}对象.
      *
      * @param jsonObject JsonObject
