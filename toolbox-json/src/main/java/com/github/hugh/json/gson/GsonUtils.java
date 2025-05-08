@@ -9,6 +9,7 @@ import com.github.hugh.json.gson.adapter.MapTypeAdapter;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.MapUtils;
+import com.github.hugh.util.net.UrlUtils;
 import com.github.hugh.util.regex.RegexUtils;
 import com.google.common.base.Suppliers;
 import com.google.gson.*;
@@ -20,6 +21,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -631,14 +633,22 @@ public class GsonUtils {
      * @param <T>         出参类型
      * @return T
      */
-    private static <E, T> T fromJson(GsonBuilder gsonBuilder, E json, Class<T> classOfT) {
+    private static <E, T> T fromJson(GsonBuilder gsonBuilder, E object, Class<T> classOfT) {
         Gson gson = gsonBuilder.create();
-        if (json instanceof JsonElement) {
-            return gson.fromJson((JsonElement) json, classOfT);
-        } else if (json instanceof String) {
-            return gson.fromJson((String) json, classOfT);
+        if (object instanceof JsonElement) {
+            return gson.fromJson((JsonElement) object, classOfT);
+        } else if (object instanceof String) {
+            String strObject = (String) object;
+            if (RegexUtils.isDomain(strObject)) {
+                try {
+                    strObject = UrlUtils.readContent(strObject);
+                } catch (IOException ioException) {
+                    throw new RuntimeException(ioException);
+                }
+            }
+            return gson.fromJson(strObject, classOfT);
         }
-        String jsonStr = toJson(json);
+        String jsonStr = toJson(object);
         return gson.fromJson(jsonStr, classOfT);
     }
 
