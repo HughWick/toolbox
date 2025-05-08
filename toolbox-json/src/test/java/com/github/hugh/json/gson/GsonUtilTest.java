@@ -1,5 +1,6 @@
 package com.github.hugh.json.gson;
 
+import com.github.hugh.json.exception.ToolboxJsonException;
 import com.github.hugh.json.model.Command;
 import com.github.hugh.json.model.ResponseData;
 import com.github.hugh.json.model.Student;
@@ -302,12 +303,17 @@ class GsonUtilTest {
         // 测试URL
         String head = "https://minio.dev.hnlot.com.cn/svmp-dev/";
         String url = head + "trip/Trip/20250507/DC2E97CCD813@1746608504.json";
+        System.out.println(GsonUtils.toJson(url));
         C200TripVo c200TripVo = GsonUtils.fromJson(url, C200TripVo.class);
         System.out.println(GsonUtils.toJson(c200TripVo));
         String url2 = "https://jsonplaceholder.typicode.com/users/1";
         UsersJsonBo usersJsonBo = GsonUtils.fromJson(url2, UsersJsonBo.class);
         assertEquals("Leanne Graham", usersJsonBo.getName());
-        String url3 = "https://www.400unkown.cn";
-         GsonUtils.fromJson(url3, UsersJsonBo.class);
+
+        final ToolboxJsonException toolboxHttpException = assertThrowsExactly(ToolboxJsonException.class, () -> {
+            String url3 = "https://www.400unkown.cn";
+            GsonUtils.fromJson(url3, UsersJsonBo.class);
+        });
+        assertTrue(toolboxHttpException.getMessage().contains("java.net.UnknownHostException: www.400unkown.cn"));
     }
 }

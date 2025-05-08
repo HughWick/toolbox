@@ -643,7 +643,7 @@ public class GsonUtils {
                 try {
                     strObject = UrlUtils.readContent(strObject);
                 } catch (IOException ioException) {
-                    throw new RuntimeException(ioException);
+                    throw new ToolboxJsonException(ioException);
                 }
             }
             return gson.fromJson(strObject, classOfT);

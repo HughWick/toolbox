@@ -3,7 +3,6 @@ package com.github.hugh.util.net;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,9 +12,10 @@ public class UrlUtilsTest {
         String head = "https://minio.dev.hnlot.com.cn/svmp-dev/";
         String str1 = head + "trip/Event/20250430/DC2E97CCD813@1746001629@LeaveSeat.json";
         try {
-            URL url = new URL(str1);
             String s = UrlUtils.readContent(str1);
-            System.out.println("====>>>" + s);
+            System.out.println(s);
+            assertNotNull(s);
+            assertEquals(s.length(), 478);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
