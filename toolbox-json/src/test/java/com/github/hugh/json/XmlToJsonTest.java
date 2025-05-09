@@ -38,7 +38,7 @@ class XmlToJsonTest {
                 "  <HostId>dd9025bab4ad464b049177c95eb6ebf374d3b3fd1af9251148b658df7ac2e3e8</HostId>\n" +
                 "</Error>";
         Jsons jsons2 = GsonUtils.xmlToJson(str2);
-        System.out.println(jsons2);
+//        System.out.println(jsons2);
         Jsons error2 = jsons2.getThis("Error");
         assertTrue(error2.isEquals("BucketName", "apk"));
     }
@@ -127,7 +127,7 @@ class XmlToJsonTest {
                 "    <status>Shipped</status>\n" +
                 "</order>";
         Jsons jsons = GsonUtils.xmlToJson(str1);
-        System.out.println(jsons.toJson());
+//        System.out.println(jsons.toJson());
 
     }
 }
