@@ -607,7 +607,7 @@ public class GsonUtils {
      * json对象转换为实体类
      *
      * @param gsonBuilder gson 指定转换参数类
-     * @param json        json
+     * @param object      json对象
      * @param classOfT    目标类
      * @param <E>         入参类型
      * @param <T>         出参类型
