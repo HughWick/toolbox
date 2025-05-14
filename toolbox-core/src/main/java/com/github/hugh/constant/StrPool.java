@@ -94,4 +94,9 @@ public class StrPool {
      * 字符串常量：冒号 {@code ":"}
      */
     public static final String COLON = ":";
+
+    /**
+     * 符号常量：分号 {@code ";"}
+     */
+    public static final String SEMICOLON = ";";
 }
