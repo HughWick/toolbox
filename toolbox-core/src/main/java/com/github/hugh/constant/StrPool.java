@@ -51,16 +51,6 @@ public class StrPool {
     /**
      * 常量：下划线字符 "_"
      *
-     * <p>
-     * 该常量表示一个下划线字符，在Java中通常用作标识符的一部分，而不是作为一个特殊的命名方式。
-     * </p>
-     * <p>
-     * 示例用法：
-     * <pre>
-     * String name = "John" + StrPool.UNDERLINE + "Doe";
-     * // 输出结果："John_Doe"
-     * </pre>
-     *
      * @since 2.7.0
      */
     public static final String UNDERLINE = "_";
@@ -97,11 +87,15 @@ public class StrPool {
 
     /**
      * 符号常量：分号 {@code ";"}
+     *
+     * @since 3.0.3
      */
     public static final String SEMICOLON = ";";
 
     /**
      * 符号常量：竖线 {@code "|"}
+     *
+     * @since 3.0.3
      */
     public static final String PIPE = "|";
 }
