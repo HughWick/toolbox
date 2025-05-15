@@ -99,4 +99,9 @@ public class StrPool {
      * 符号常量：分号 {@code ";"}
      */
     public static final String SEMICOLON = ";";
+
+    /**
+     * 符号常量：竖线 {@code "|"}
+     */
+    public static final String PIPE = "|";
 }
