@@ -1,15 +1,15 @@
-package com.github.hugh.crypto.dec;
+package com.github.hugh.crypto.des;
 
 import com.github.hugh.crypto.DesEncDecUtils;
+import com.github.hugh.crypto.components.CryptoCore;
 import org.junit.jupiter.api.Test;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * des enc 加密测试
@@ -22,8 +22,9 @@ class DesEncDecTest {
     // 先获取加密实体进行加密解密
     @Test
     void testEncryptDecode() {
-        String keys = "cmmop_app";
-        DesEncDecUtils desEnc = DesEncDecUtils.getInstance(keys);
+        String key = "cmmop_app";
+//        DesEncDecUtils desEnc = DesEncDecUtils.getInstance(keys);
+        CryptoCore desEnc = CryptoCore.getDesInstance(key);
         try {
             String str1 = "0ec4dbfdfb7945f0a6ca61fd14065a77";
             String t1 = desEnc.encrypt(str1);
@@ -41,7 +42,9 @@ class DesEncDecTest {
     // URL 加密解密测试
     @Test
     void urlEncryptTest() {
-        DesEncDecUtils desEnc = DesEncDecUtils.getInstance("box_security");
+        String key = "box_security";
+//        DesEncDecUtils desEnc = DesEncDecUtils.getInstance("box_security");
+        CryptoCore desEnc = CryptoCore.getDesInstance(key);
         try {
             String urlStr1 = "http://qr.hnlot.com.cn/box/openDoor?boxCode=19FE0E30CF";
             String encrypt1 = desEnc.encrypt(urlStr1);
@@ -62,7 +65,8 @@ class DesEncDecTest {
     @Test
     void testDecode() {
         String key = "box_security";
-        DesEncDecUtils desEnc = DesEncDecUtils.getInstance(key);
+        CryptoCore desEnc = CryptoCore.getDesInstance(key);
+//        DesEncDecUtils desEnc = DesEncDecUtils.getInstance(key);
         try {
             String str = "vpYJRBSOYCmNanjH0Oe2Ul1BiSuZ6VQG7QvqCQMDqftMBe2YnvzJfx7Es2rvl0kAzxCzD9Pd5os%3D";
             String result1 = "http://qr.hnlot.com.cn/box/openDoor?boxCode=8EBFA26E46";
@@ -77,11 +81,28 @@ class DesEncDecTest {
         }
     }
 
+    // 第二种加密解密方式
+    //十六进制des加密
+    @Test
+    void testDecrypt() {
+        try {
+            String user = "root";
+            String key = "johnfnash";
+            String encrypt = DesEncDecUtils.encrypt(user, key);
+            assertEquals("8B524C34459FA1BF", encrypt);
+            assertEquals(user, DesEncDecUtils.decrypt(encrypt, key));
+            String str1 = "http://qr.hnlot.com.cn/box/openDoor?boxCode=19FE0E30CF";
+            assertEquals("BE960944148E60298D6A78C7D0E7B6525D41892B99E95406ED0BEA090303A9FB4C05ED989EFCC97F183CCC0C0C28A9388039A6AE21B38EDD", DesEncDecUtils.encrypt(str1, "box_security"));
+        } catch (Exception exception) {
+            throw new RuntimeException(exception);
+        }
+    }
     // 校验
     @Test
-    void testCheck() throws BadPaddingException, IllegalBlockSizeException {
+    void testCheck() {
         String key = "yinmeng0000w";
-        DesEncDecUtils Des = DesEncDecUtils.getInstance(key);
+//        DesEncDecUtils Des = DesEncDecUtils.getInstance(key);
+        CryptoCore Des = CryptoCore.getDesInstance(key);
         assertEquals("JDOq2XbTaBBv0cTG+csoDQ==", Des.encrypt("13825004872"));
         String string1 = "md5pass";
         String md5pass = Des.encrypt(string1);
