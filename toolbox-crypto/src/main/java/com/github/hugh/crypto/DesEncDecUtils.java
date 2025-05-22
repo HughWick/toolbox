@@ -184,16 +184,16 @@ public class DesEncDecUtils {
      */
     private static byte[] operate(byte[] data, byte[] key, int opMode) throws InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
         // DES算法要求有一个可信任的随机数源
-        SecureRandom sr = new SecureRandom();
+        SecureRandom secureRandom = new SecureRandom();
         // 从原始密钥数据创建DESKeySpec对象
-        DESKeySpec dks = new DESKeySpec(key);
+        DESKeySpec desKeySpec = new DESKeySpec(key);
         // 创建一个密钥工厂，然后用它把DESKeySpec转换成一个SecretKey对象
         SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(ENCRYPTION_METHOD_DES);
-        SecretKey secretKey = keyFactory.generateSecret(dks);
+        SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
         // Cipher对象实际完成加密/解密操作
         Cipher cipher = Cipher.getInstance(ENCRYPTION_METHOD_DES);
         // 用密钥初始化Cipher对象
-        cipher.init(opMode, secretKey, sr);
+        cipher.init(opMode, secretKey, secureRandom);
         // 获取数据并加密/解密
         return cipher.doFinal(data);
     }
