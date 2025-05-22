@@ -542,4 +542,15 @@ class OkHttpsTest {
         OkHttpsResponse okHttpsResponse = OkHttps.url(url2).doGet();
         assertTrue(okHttpsResponse.getMessage().contains("<Code>NoSuchKey</Code>"));
     }
+
+    @Test
+    void testAMap() throws IOException {
+        Map<String, Object> map = new HashMap<>();
+        map.put("appkey", "a9d3b14e97534966ace0e4883131859a");
+        map.put("locations", "112.850501,28.304445|112.850503,28.304445");
+        map.put("coordsys", "gps");
+        String url1 = "https://gateway.hnlot.com.cn/map/amap/convert";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url1).setBody(map).doGet();
+        assertTrue(okHttpsResponse.is200());
+    }
 }
