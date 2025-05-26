@@ -42,34 +42,10 @@ public class RegexUtils {
      * C：其他字符
      * <p>
      * 相关信息：
-     * http://www.unicode.org/reports/tr18/
-     * http://www.unicode.org/Public/UNIDATA/UnicodeData.txt
+     * <a href="http://www.unicode.org/reports/tr18/">...</a>
+     * <a href="http://www.unicode.org/Public/UNIDATA/UnicodeData.txt">...</a>
      */
     private static final Pattern PUNCTUATION_PATTERN = Pattern.compile("\\p{P}");
-
-    /**
-     * 字母-正则模式
-     */
-    private static final Pattern LETTER_PATTERN = Pattern.compile("\\p{L}");
-
-    /**
-     * 标记性-正则模式
-     */
-    private static final Pattern MARKABLE_PATTERN = Pattern.compile("\\p{M}");
-
-    /**
-     * 分隔符-正则模式
-     * <p>
-     * 空格、换行等
-     */
-    private static final Pattern DELIMITER_PATTERN = Pattern.compile("\\p{Z}");
-
-    /**
-     * 符号-正则模式
-     * <p>
-     * 数学符号、货币符号
-     */
-    private static final Pattern SYMBOL_PATTERN = Pattern.compile("\\p{S}");
 
     /**
      * 数字-正则模式
@@ -86,18 +62,11 @@ public class RegexUtils {
     /**
      * 邮箱正则表达式
      * <p>
-     * https://blog.csdn.net/Architect_CSDN/article/details/89478042
+     * <a href="https://blog.csdn.net/Architect_CSDN/article/details/89478042">...</a>
      * <p>
      * 只有英文的邮箱。
      */
     private static final Pattern EMAIL_ENGLISH_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$");
-
-    /**
-     * 允许中文前缀的邮箱正则表达式
-     * <p>
-     * https://www.cnblogs.com/lst619247/p/9289719.html
-     */
-    private static final Pattern EMAIL_CHINESE_PATTERN = Pattern.compile("^[A-Za-z0-9\\u4e00-\\u9fa5]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$");
 
     /**
      * 电话号码正则表达式
@@ -114,7 +83,7 @@ public class RegexUtils {
      * <li>广电号段：179、192</li>
      * </ul>
      */
-    public static final String PHONE_PATTERN_STR = "^((13[\\d])|(14[5-9])|(15([0-3]|[5-9]))|(16[2,5-7])|(17[0-9])|(18[0-9])|(19[0-3,5,7,8,9]))\\d{8}$";
+    public static final String PHONE_PATTERN_STR = "^((13\\d)|(14[5-9])|(15([0-3]|[5-9]))|(16[2,5-7])|(17[0-9])|(18[0-9])|(19[0-3,5789]))\\d{8}$";
     public static final Pattern PHONE_PATTERN = Pattern.compile(PHONE_PATTERN_STR);
 
     /**
@@ -160,11 +129,6 @@ public class RegexUtils {
      * 全中文-正则
      */
     private static final Pattern FULL_CHINESE_PATTERN = Pattern.compile("[\\u4e00-\\u9fa5]+");
-
-    /**
-     * 特殊字符-正则
-     */
-    private static final Pattern SPECIAL_CHAR_PATTERN = Pattern.compile("[ _`~!@#$%^&*()+=|{}':;,\\[\\].<>/?！￥…（）—【】‘；：”“’。，、？]|\n|\r|\t");
 
     /**
      * 用于匹配 Base64 编码字符串的正则表达式。
@@ -260,33 +224,13 @@ public class RegexUtils {
 
     /**
      * 是否为标点符号
-     * 中文符号：参考：https://blog.csdn.net/ztf312/article/details/54310542
+     * 中文符号：参考：<a href="https://blog.csdn.net/ztf312/article/details/54310542">...</a>
      *
      * @param string 字符
      * @return boolean 结果
      */
     public static boolean isPunctuation(String string) {
         return isPatternMatch(string, PUNCTUATION_PATTERN);
-    }
-
-    /**
-     * 是否为可标记的符号
-     *
-     * @param string 字符
-     * @return boolean 结果
-     */
-    public static boolean isMarkable(String string) {
-        return isPatternMatch(string, MARKABLE_PATTERN);
-    }
-
-    /**
-     * 是否为字符
-     *
-     * @param string 字符
-     * @return boolean 结果
-     */
-    public static boolean isSymbol(String string) {
-        return isPatternMatch(string, SYMBOL_PATTERN);
     }
 
     /**
@@ -604,7 +548,7 @@ public class RegexUtils {
         if (EmptyUtils.isEmpty(longitude)) {
             return false;
         }
-        String longitudePattern = "^[\\-+]?(0?\\d{1,2}\\.\\d{1,8}|1[0-7]?\\d{1}\\.\\d{1,8}|180\\.0{1,8})$";
+        String longitudePattern = "^[\\-+]?(0?\\d{1,2}\\.\\d{1,8}|1[0-7]?\\d\\.\\d{1,8}|180\\.0{1,8})$";
         longitude = longitude.strip();
         return Pattern.matches(longitudePattern, longitude);
     }
@@ -635,7 +579,7 @@ public class RegexUtils {
         if (EmptyUtils.isEmpty(latitude)) {
             return false;
         }
-        String latitudePattern = "^[\\-+]?([0-8]?\\d{1}\\.\\d{1,8}|90\\.0{1,8})$";
+        String latitudePattern = "^[\\-+]?([0-8]?\\d\\.\\d{1,8}|90\\.0{1,8})$";
         latitude = latitude.strip();
         return Pattern.matches(latitudePattern, latitude);
     }
