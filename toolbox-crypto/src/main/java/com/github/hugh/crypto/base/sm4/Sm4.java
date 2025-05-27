@@ -6,6 +6,7 @@ import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.base.Base64;
 import com.github.hugh.util.base.BaseConvertUtils;
+import lombok.Getter;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -18,6 +19,14 @@ import java.util.Arrays;
  */
 public class Sm4 {
 
+    /**
+     * -- GETTER --
+     * 获取加密密钥
+     * <p>
+     * 该方法返回当前对象中存储的加密密钥字符串。
+     * </p>
+     */
+    @Getter
     private final String key;
     private String encryptKeyType; // 加密key 数据类型
 
@@ -93,18 +102,6 @@ public class Sm4 {
     public Sm4 encryptKeyTypeByHex() {
         this.encryptKeyType = Sm4Enum.HEX.getCode();
         return this;
-    }
-
-    /**
-     * 获取加密密钥
-     * <p>
-     * 该方法返回当前对象中存储的加密密钥字符串。
-     * </p>
-     *
-     * @return 返回加密密钥的字符串表示。
-     */
-    public String getKey() {
-        return this.key;
     }
 
     /**
