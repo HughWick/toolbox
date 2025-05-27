@@ -43,40 +43,6 @@ public class FileUtils {
         file.mkdirs();
     }
 
-//    /**
-//     * 根据url链接判断对应图片是否存在
-//     *
-//     * @param urlStr 网址链接
-//     * @return boolean {@code true}存在返回
-//     */
-//    public static boolean urlFileExist(String urlStr) {
-//        if (EmptyUtils.isEmpty(urlStr)) {
-//            return false;
-//        }
-//        try {
-//            URL url = new URL(urlStr);
-//            URLConnection urlConnection = url.openConnection();
-//            InputStream in = urlConnection.getInputStream();
-//            if (urlStr.equalsIgnoreCase(urlConnection.getURL().toString())) {
-//                in.close();
-//            }
-//            return true;
-//        } catch (Exception exception) {
-//            return false;
-//        }
-//    }
-
-//    /**
-//     * URL 文件不存在
-//     *
-//     * @param url 网址链接
-//     * @return boolean {@code true} 文件不存在返回
-//     * @since 1.4.15
-//     */
-//    public static boolean urlNotFileExist(String url) {
-//        return !urlFileExist(url);
-//    }
-
     /**
      * 删除文件下所有空文件夹
      *

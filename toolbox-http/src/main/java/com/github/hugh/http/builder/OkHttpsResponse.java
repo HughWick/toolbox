@@ -27,7 +27,10 @@ public class OkHttpsResponse {
      * 该字段可能包含一些简单的状态描述，如“OK”, “Not Found” 或“Internal Server Error”等。
      * 具体的消息内容通常由服务器根据响应的状态码设置。
      * </p>
+     * -- GETTER --
+     * 获取 HTTP 响应消息的字符串形式。
      */
+    @Getter
     private final String message;
 
     /**
@@ -103,15 +106,6 @@ public class OkHttpsResponse {
             return null;
         }
         return GsonUtils.fromJson(this.message, clazz);
-    }
-
-    /**
-     * 获取 HTTP 响应消息的字符串形式。
-     *
-     * @return 返回 HTTP 响应消息的字符串形式。
-     */
-    public String getMessage() {
-        return this.message;
     }
 
     /**

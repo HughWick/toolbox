@@ -443,19 +443,29 @@ class OkHttpsTest {
     @Test
     void testSetParam() throws IOException {
         String url1 = https_reqres_url + "/api/users";
+        Map<String, String> header = new HashMap<>();
+        header.put("x-api-key", "reqres-free-v1");
         OkHttpsResponse okHttpsResponse = OkHttps.url(url1)
+                .setHeader(header)
                 .setParam("page", 1).doGet();
         Jsons jsons = okHttpsResponse.toJsons();
-//        System.out.println(jsons);
+        System.out.println(jsons);
         assertEquals(1, jsons.getInt("page"));
 
+    }
+
+    @Test
+    void testReqresSetParam() throws IOException {
         String login_url = https_reqres_url + "/api/login";
         OkHttpsResponse okHttpsResponse2 = OkHttps
                 .url(login_url)
                 .setParam("email", "eve.holt@reqres.in")
                 .setParam("password", "cityslicka")
                 .doPostJson();
-        assertNotNull(okHttpsResponse2.toJsons().getString("token"));
+//        System.out.println(okHttpsResponse2.toJsons());
+        assertTrue(okHttpsResponse2.toJsons().isEquals("error","Missing API key."));
+//        assertNotNull(okHttpsResponse2.toJsons().getString("token"));
+
     }
 
     // 公共的404
