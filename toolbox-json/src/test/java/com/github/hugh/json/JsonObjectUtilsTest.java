@@ -123,7 +123,8 @@ class JsonObjectUtilsTest {
         assertNotNull(servers);
         assertEquals(jsonArray.toString(), servers.toString());
 //        System.out.println("=--3->>" + servers);
-        assertEquals(JsonObjectUtils.toArrayList(servers).toString(), arrayList.toString());
+        List<Object> arrayList1 = JsonObjectUtils.toArrayList(servers);
+        assertEquals(arrayList1.toString(), arrayList.toString());
         assertEquals(JsonObjectUtils.fromJson(servers, LinkedList.class).toString(), arrayList.toString());
         assertEquals("12.3456", JsonObjectUtils.getBigDecimal(json2, "money").toString());
 //        System.out.println("=--4->>" +);

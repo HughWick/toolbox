@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class JsonKeyFinderTest {
     @Test
-    void test032() {
+    void testGetAllKeys() {
         String str1 = "{\n" +
                 "  \"action\": \"time\",\n" +
                 "  \"00010001\": \"12.38\",\n" +

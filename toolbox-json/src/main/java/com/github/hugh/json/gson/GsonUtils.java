@@ -26,6 +26,7 @@ import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 /**
@@ -37,6 +38,27 @@ import java.util.function.Supplier;
 @Slf4j
 public class GsonUtils {
     public GsonUtils() {
+    }
+
+    // **核心优化：缓存不同 Map<K, V> 类型的 Gson 实例**
+    // ConcurrentHashMap 保证了线程安全
+//    private static final Map<Type, Gson> GSON_INSTANCE_CACHE = new ConcurrentHashMap<>();
+    // 缓存 Gson 实例，键是日期格式字符串
+    private static final Map<String, Gson> GSON_CACHE = new ConcurrentHashMap<>();
+
+    /**
+     * 获取一个配置了特定日期格式且禁用HTML转义的 Gson 实例。
+     * 如果缓存中存在，则直接返回；否则创建并放入缓存。
+     *
+     * @param dateFormat 日期格式字符串，例如 "yyyy-MM-dd HH:mm:ss"
+     * @return 配置好的 Gson 实例
+     */
+    public static Gson getGsonInstance(String dateFormat) {
+        // 使用 computeIfAbsent 保证原子性操作
+        return GSON_CACHE.computeIfAbsent(dateFormat, format -> new GsonBuilder()
+                .setDateFormat(format)
+                .disableHtmlEscaping()
+                .create());
     }
 
     /**
@@ -303,8 +325,7 @@ public class GsonUtils {
      */
     public static <T> List<T> toArrayList(JsonArray jsonArray) {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        Type type = new TypeToken<ArrayList<T>>() {
-        }.getType();
+        Type type = TypeToken.getParameterized(ArrayList.class, Object.class).getType();
         Gson gson = gsonBuilder
                 .registerTypeAdapter(type, new MapTypeAdapter()).create();
         return gson.fromJson(jsonArray, type);
@@ -323,11 +344,7 @@ public class GsonUtils {
         List<T> resultList = new ArrayList<>();
         for (JsonElement jsonElement : jsonArray) {
             T result;
-//            if (clazz == null) {
-//                result = (T) new Jsons(jsonElement);
-//            } else {
             result = JSON.parseObject(jsonElement.toString(), clazz);
-//            }
             resultList.add(result);
         }
         return resultList;
@@ -377,6 +394,39 @@ public class GsonUtils {
      * @since 1.4.0
      */
     public static <K, V, E> Map<K, V> toMap(E object) {
+        return (Map<K, V>) toMap(object, String.class, Object.class);
+    }
+
+    /**
+     * 将给定的对象转换为指定键值类型的 Map。
+     * 该方法首先尝试将输入对象转换为 JsonObject，然后将其序列化为 JSON 字符串，
+     * 最后再使用 Gson 反序列化为目标 Map 类型。
+     *
+     * <p>请注意：
+     * 1. 每次调用此方法都会创建一个新的 {@code GsonBuilder} 和 {@code Gson} 实例，
+     * 这可能会导致性能开销，尤其是在高频调用时。
+     * 如果需要优化，建议在类级别维护一个共享的 {@code Gson} 实例。
+     * </p>
+     * <p>
+     * 2. {@code MapTypeAdapter} 的注册逻辑需要与实际业务需求匹配，
+     * 它会影响 Map 内部复杂对象的反序列化行为。
+     * </p>
+     * <p>
+     * 3. 传入的 {@code object} 必须能够被内部的 {@code parse} 方法正确处理，
+     * 转换为一个 JSON 对象。
+     * </p>
+     *
+     * @param <E>       输入对象的类型，可以是 {@code JsonObject}、JSON 字符串、或一个普通的 Java 对象。
+     * @param <K>       目标 Map 的键类型。
+     * @param <V>       目标 Map 的值类型。
+     * @param object    要转换的源对象，它将被视为一个 JSON 对象的表示。
+     * @param keyType   目标 Map 的键的 {@code Class} 类型。
+     * @param valueType 目标 Map 的值的 {@code Class} 类型。
+     * @return 转换后的 Map 对象，键类型为 {@code K}，值类型为 {@code V}。
+     * @throws com.google.gson.JsonSyntaxException 如果输入对象无法解析为有效的 JSON 结构。
+     * @throws java.lang.IllegalArgumentException  如果 {@code keyType} 或 {@code valueType} 包含类型变量。
+     */
+    public static <E, K, V> Map<K, V> toMap(E object, Class<K> keyType, Class<V> valueType) {
         JsonObject jsonObject;
         if (object instanceof JsonObject) {
             jsonObject = (JsonObject) object;
@@ -384,8 +434,14 @@ public class GsonUtils {
             jsonObject = parse(object);
         }
         String strJson = toJson(jsonObject);
-        Type type = new TypeToken<Map<K, V>>() {
-        }.getType();
+        Type type = TypeToken.getParameterized(Map.class, keyType, valueType).getType();
+//        // 从缓存获取或创建 Gson 实例
+//        Gson gson = GSON_INSTANCE_CACHE.computeIfAbsent(type, k -> {
+//            // 如果缓存中没有，则创建并注册 TypeAdapter
+//            // MapTypeAdapter 传入 SHARED_BASIC_GSON 来处理其内部的值转换
+//            return new GsonBuilder()
+//                    .registerTypeAdapter(type, new MapTypeAdapter()).create();
+//        });
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(type, new MapTypeAdapter()).create();
         return gson.fromJson(strJson, type);
@@ -543,7 +599,8 @@ public class GsonUtils {
      * @since 1.3.12
      */
     public static <T> String toJson(T entity, String dateFormat) {
-        Gson gson = new GsonBuilder().setDateFormat(dateFormat).disableHtmlEscaping().create();
+//        Gson gson = new GsonBuilder().setDateFormat(dateFormat).disableHtmlEscaping().create();
+        Gson gson = getGsonInstance(dateFormat);
         return gson.toJson(entity);
     }
 

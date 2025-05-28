@@ -343,5 +343,4 @@ class GsonUtilTest {
         assertEquals(userUrl3, usersJsonBo2.getWebsite());
     }
 
-
 }

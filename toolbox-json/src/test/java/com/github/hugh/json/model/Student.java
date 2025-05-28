@@ -10,15 +10,6 @@ import java.util.Date;
  */
 @Data
 public class Student {
-    public Student() {
-
-    }
-
-    public Student(int id, String name, int age) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-    }
 
     private long id;
     private int age;
@@ -26,11 +17,9 @@ public class Student {
     private double amount;
     private Date birthday;
     private Date create;
-    //    private List list;
+    private String city;
     private String sex;
     private long system;
-
-
     private String account;
     private String accountName;
     private String accountType;
@@ -41,6 +30,5 @@ public class Student {
 
     private String role;
     private String authorization;//权限
-
 
 }

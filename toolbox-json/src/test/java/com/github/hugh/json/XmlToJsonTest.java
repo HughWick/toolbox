@@ -80,7 +80,7 @@ class XmlToJsonTest {
 
 
     @Test
-    void test02() {
+    void testXmlToJson() {
         String str1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<order>\n" +
                 "    <orderId>12345</orderId>\n" +
