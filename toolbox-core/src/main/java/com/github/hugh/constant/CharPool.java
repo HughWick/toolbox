@@ -51,12 +51,12 @@ public class CharPool {
     public static final char UNDERLINE = '_';
 
     /**
-     * 字符常量：花括号（左） {@code '{'}
+     * 字符常量：花括号（左）
      */
     public static final char CURLY_BRACKETS_START = '{';
 
     /**
-     * 字符常量：花括号（右） {@code '}'}
+     * 字符常量：花括号（右）
      */
     public static final char CURLY_BRACKETS_END = '}';
 

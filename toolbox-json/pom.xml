@@ -8,7 +8,7 @@
         <artifactId>toolbox-parent</artifactId>
        <version>3.0.3</version>
     </parent>
-
+    <name>Toolbox JSON</name>
     <artifactId>toolbox-json</artifactId>
     <packaging>jar</packaging>
     <description>toolbox 工具类JSON包</description>

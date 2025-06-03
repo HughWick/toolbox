@@ -8,7 +8,7 @@
         <artifactId>toolbox-parent</artifactId>
        <version>3.0.3</version>
     </parent>
-
+    <name>Toolbox mongodb</name>
     <artifactId>toolbox-mongodb</artifactId>
     <packaging>jar</packaging>
     <description>toolbox mongodb数据库工具包</description>

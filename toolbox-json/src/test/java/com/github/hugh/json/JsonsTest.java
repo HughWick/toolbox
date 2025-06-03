@@ -63,6 +63,164 @@ public class JsonsTest {
         final Jsons jsons = Jsons.on(str);
         assertNotNull(jsons);
         assertEquals("John Doe", jsons.getString("name"));
+        String str2 = "{\n" +
+                "  \"stepList\":[\n" +
+                "  {\n" +
+                "    \"step\": 1,\n" +
+                "    \"description\": \"初始阀门配置\",\n" +
+                "    \"actions\": [\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 13, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 14, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 16, \"state\": 1}\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"step\": 2,\n" +
+                "    \"description\": \"2S后执行主要操作，特定操作后有独立延时，并标记同步操作\",\n" +
+                "    \"delay_ms\": 2000,\n" +
+                "    \"actions\": [\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 20, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 10, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 1, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 27, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 2, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 5, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 7, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 8, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 3, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 4, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 6, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 9, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 22, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 13, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 14, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 15, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 16, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 17, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 19, \"state\": 1},\n" +
+                "      {\"device_type\": \"P\", \"device_id\": 1, \"state\": \"run\", \"is_synchronous\": true, \"post_action_delay_ms\": 300},\n" +
+                "      {\"device_type\": \"P\", \"device_id\": 2, \"state\": \"run\", \"is_synchronous\": true, \"post_action_delay_ms\": 350},\n" +
+                "      {\n" +
+                "        \"device_type\": \"UFP\",\n" +
+                "        \"device_id\": null,\n" +
+                "        \"state\": \"run\",\n" +
+                "        \"parameters\": {\n" +
+                "          \"flow_rate_value\": 3.00,\n" +
+                "          \"flow_rate_volume_unit\": \"L\",\n" +
+                "          \"flow_rate_time_unit\": \"h\"\n" +
+                "        }\n" +
+                "      },\n" +
+                "      {\"device_type\": \"SV_GROUP\", \"device_id\": \"2-9\", \"state\": \"normal_operation_switch\", \"comment\": \"（SV2，SV3，SV4，SV5，SV6，SV7，SV8，SV9）正常运行切换\"}\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"step\": 3,\n" +
+                "    \"description\": \"5S后切换SV11和SV10，并开始周期性切换\",\n" +
+                "    \"delay_ms\": 5000,\n" +
+                "    \"actions\": [\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 11, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 10, \"state\": 0}\n" +
+                "    ],\n" +
+                "    \"notes\": \"每5S切换 (这部分逻辑需要在Java中实现为循环或定时器)\"\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"step\": 4,\n" +
+                "    \"description\": \"SV19关闭，SV2-SV9组切换，SV10开，SV11关，SV18开\",\n" +
+                "    \"actions\": [\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 19, \"state\": 0, \"comment\": \"（SV19打开和关闭时间）\"},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 2, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 5, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 7, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 8, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 3, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 4, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 6, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 9, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 10, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 11, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 18, \"state\": 1}\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"step\": 5,\n" +
+                "    \"description\": \"5S后关闭SV10和SV18，开启SV11, SV26, SV25\",\n" +
+                "    \"delay_ms\": 5000,\n" +
+                "    \"actions\": [\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 10, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 11, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 18, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 26, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 25, \"state\": 1}\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"step\": 6,\n" +
+                "    \"description\": \"5S后，主要阀门状态切换和泵控制\",\n" +
+                "    \"delay_ms\": 5000,\n" +
+                "    \"actions\": [\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 13, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 14, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 10, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 11, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 15, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 23, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 24, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 26, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 25, \"state\": 0}\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"step\": 7,\n" +
+                "    \"description\": \"5S后，SV17关，SV16开，SV19开\",\n" +
+                "    \"delay_ms\": 5000,\n" +
+                "    \"actions\": [\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 17, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 16, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 19, \"state\": 1}\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"step\": 8,\n" +
+                "    \"description\": \"8S后，SV19关\",\n" +
+                "    \"delay_ms\": 8000,\n" +
+                "    \"actions\": [\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 19, \"state\": 0}\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"step\": 9,\n" +
+                "    \"description\": \"SV2-SV9组切换，SV13-15和SV23-24状态调整\",\n" +
+                "    \"actions\": [\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 2, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 5, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 7, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 8, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 3, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 4, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 6, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 9, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 13, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 14, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 15, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 23, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 24, \"state\": 0}\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"step\": 10,\n" +
+                "    \"description\": \"5S后，SV10关，SV11开，SV18关，SV26开，SV25开\",\n" +
+                "    \"delay_ms\": 5000,\n" +
+                "    \"actions\": [\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 10, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 11, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 18, \"state\": 0},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 26, \"state\": 1},\n" +
+                "      {\"device_type\": \"SV\", \"device_id\": 25, \"state\": 1}\n" +
+                "    ]\n" +
+                "  }\n" +
+                "  ]\n" +
+                "}\n";
+        Jsons on = Jsons.on(str2);
     }
 
     @Test

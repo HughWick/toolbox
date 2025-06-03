@@ -8,7 +8,7 @@
         <artifactId>toolbox-parent</artifactId>
        <version>3.0.3</version>
     </parent>
-
+    <name>Toolbox Cache</name>
     <artifactId>toolbox-cache</artifactId>
     <packaging>jar</packaging>
     <description>toolbox 缓存操作工具包</description>

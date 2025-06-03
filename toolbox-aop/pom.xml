@@ -8,7 +8,7 @@
         <artifactId>toolbox-parent</artifactId>
        <version>3.0.3</version>
     </parent>
-
+    <name>Toolbox AOP</name>
     <artifactId>toolbox-aop</artifactId>
     <packaging>jar</packaging>
     <description>toolbox-aop工具包</description>
