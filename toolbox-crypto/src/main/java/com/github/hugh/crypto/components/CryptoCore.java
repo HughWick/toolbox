@@ -25,6 +25,7 @@ import java.util.Base64;
  *
  * <p>
  * **重要安全提示：**
+ * </p>
  * <ul>
  * <li>直接使用字符串的 {@code getBytes()} 作为密钥通常不安全，且对于 AES，字节长度可能不匹配算法要求。
  * 生产环境应使用 {@link javax.crypto.KeyGenerator} 生成安全密钥，或使用 {@link javax.crypto.SecretKeyFactory}
@@ -33,7 +34,6 @@ import java.util.Base64;
  * 使用了 JVM 默认设置，可能不是最安全的选择 (如 ECB 模式)。生产环境强烈建议明确指定模式和填充，
  * 并在使用如 CBC 模式时妥善处理 IV (Initialization Vector)。</li>
  * </ul>
- * </p>
  *
  * @version 3.0.3
  */
@@ -230,10 +230,10 @@ public class CryptoCore {
      * </p>
      *
      * @param data 待解密的 Base64 编码字符串。如果为 null，则返回 null。
-     * 该字符串应是由加密后的字节数组进行 Base64 编码得到的。
+     *             该字符串应是由加密后的字节数组进行 Base64 编码得到的。
      * @return 解密后的原始字符串（使用 UTF-8 编码），如果输入为 null 则返回 null。
      * @throws IllegalArgumentException 如果输入的字符串不是有效的 Base64 编码格式。
-     * @throws ToolboxException 如果 Base64 解码后的字节数组在解密过程中发生错误（例如，密钥不匹配、数据损坏或填充错误）。
+     * @throws ToolboxException         如果 Base64 解码后的字节数组在解密过程中发生错误（例如，密钥不匹配、数据损坏或填充错误）。
      */
     public String decrypt(String data) {
         if (data == null) {

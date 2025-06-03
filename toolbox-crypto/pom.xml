@@ -8,7 +8,7 @@
         <artifactId>toolbox-parent</artifactId>
        <version>2.8.8</version>
     </parent>
-
+    <name>Toolbox Crypto</name>
     <artifactId>toolbox-crypto</artifactId>
     <packaging>jar</packaging>
     <description>toolbox-crypto 加密解密</description>
