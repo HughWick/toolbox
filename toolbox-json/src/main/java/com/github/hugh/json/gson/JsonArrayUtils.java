@@ -13,13 +13,13 @@ public class JsonArrayUtils {
 
     /**
      * 判断{@link JsonArray} 是否为空
-     * <p>先调用{@link JsonObjectUtils#isJsonNull(JsonElement)}判断是否为空，不为空后再判断{@link JsonArray#size()}小于等于0</p>
+     * <p>先调用{@link GsonUtils#isJsonNull(JsonElement)}判断是否为空，不为空后再判断{@link JsonArray#size()}小于等于0</p>
      *
      * @param jsonArray 数组
      * @return boolean {@code true}空返回
      */
     public static boolean isEmpty(JsonArray jsonArray) {
-        return JsonObjectUtils.isJsonNull(jsonArray) || jsonArray.size() <= 0;
+        return GsonUtils.isJsonNull(jsonArray) || jsonArray.size() <= 0;
     }
 
     /**

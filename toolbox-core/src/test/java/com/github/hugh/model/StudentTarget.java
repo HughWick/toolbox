@@ -9,7 +9,7 @@ import java.util.Date;
  * @date 2020/8/31 9:24
  */
 @Data
-public class Student1 {
+public class StudentTarget {
 
     private long id;
     private int age;
