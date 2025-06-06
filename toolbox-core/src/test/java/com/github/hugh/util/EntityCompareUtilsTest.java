@@ -2,7 +2,7 @@ package com.github.hugh.util;
 
 import com.github.hugh.bean.dto.EntityCompareResult;
 import com.github.hugh.model.Student;
-import com.github.hugh.model.Student1;
+import com.github.hugh.model.StudentTarget;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -40,8 +40,8 @@ class EntityCompareUtilsTest {
     @Test
     void testCompareNotClass() {
         Student p1 = new Student();
-        Student1 p2 = new Student1();
-        final List<EntityCompareResult> compare = EntityCompareUtils.compare(p1, p2);
+        StudentTarget studentTarget = new StudentTarget();
+        final List<EntityCompareResult> compare = EntityCompareUtils.compare(p1, studentTarget);
         assertTrue(compare.isEmpty());
     }
 
