@@ -9,10 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 日期测试类
@@ -115,6 +113,9 @@ class DateTest {
         assertTrue(DateUtils.isToday(date1));
         assertTrue(DateUtils.isToday(DateUtils.ofPattern(date1)));
         assertFalse(DateUtils.isToday(DateUtils.parse("2022-01-03 22:11:22")));
+        Date parseData1 = DateUtils.parse(date1.toString(), DateCode.CST_FORM);
+        assertNotNull(parseData1);
+        assertInstanceOf(Date.class, parseData1);
         assertInstanceOf(Date.class, DateUtils.dateStrToDate(date1.toString()));
     }
 

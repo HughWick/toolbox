@@ -618,7 +618,7 @@ public class GsonUtils {
         } else if (RegexUtils.isNumeric(string)) {
             date = DateUtils.parseTimestamp(Long.parseLong(string));
         } else {
-            date = DateUtils.dateStrToDate(string);
+            date = DateUtils.parse(string, DateCode.CST_FORM);
         }
         return date == null ? null : DateUtils.format(date, pattern);
     }
