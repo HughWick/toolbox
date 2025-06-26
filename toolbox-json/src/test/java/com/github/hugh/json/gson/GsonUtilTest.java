@@ -36,9 +36,9 @@ class GsonUtilTest {
         String strJson1 = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"birthday\":null,\"create\":\"" + create + "\"}";
         Student student1 = GsonUtils.fromJson(strJson1, Student.class);
         assertEquals(student1.toString(), student1.toString());
-        String jsonStr2 = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"create\":\"2021-06-30 11:45:13\",\"system\":0}";
+        String jsonStr2 = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"balance\":0.0,\"create\":\"2021-06-30 11:45:13\",\"system\":0}";
         assertEquals(jsonStr2, GsonUtils.toJson(student1));
-        String jsonStr3 = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"create\":" + create + ",\"system\":0}";
+        String jsonStr3 = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"balance\":0.0,\"create\":1625024713000,\"system\":0}";
         assertEquals(jsonStr3, GsonUtils.toJsonTimestamp(student1));
         // 假设 `in` 是一个 JSON 解析器或输入流，可以模拟输入字符串
         String input = "SomeRandomText";

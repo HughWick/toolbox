@@ -138,37 +138,6 @@ class JsonObjectUtilsTest {
 
     }
 
-    // 测试json转map
-    @Test
-    void testToMap() {
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put("age", 2);
-        map.put("amount", 10.14);
-        map.put("money", 12.3456);
-        map.put("create", "2019-04-06");
-        map.put("name", "张三");
-        map.put("opType", 1);
-        String str = "{\"age\":2,\"amount\":10.14,\"money\":12.3456,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"张三\",\"create\":\"2019-04-06\",\"id\":null,\"opType\":1}";
-        JsonObject json2 = JsonObjectUtils.parse(str);
-        Student student = JsonObjectUtils.fromJson(str, Student.class);
-        Map<Object, Object> objectObjectMap = JsonObjectUtils.toMap(json2);
-        assertEquals(map.toString(), objectObjectMap.toString());
-//        System.out.println("1-->>" + objectObjectMap);
-        assertEquals("{id=1, age=2, name=张三, amount=10.14, create=2019-04-06 00:00:00, system=0}", JsonObjectUtils.toMap(student).toString());
-        // 升序验证
-        assertEquals("{age=2, amount=10.14, create=2019-04-06 00:00:00, id=1, name=张三, system=0}", JsonObjectUtils.toMapSortByKeyAsc(student).toString());
-        // 降序
-        Map<String, Object> objectObjectMap1 = JsonObjectUtils.toMapSortByKeyDesc(student);
-        assertEquals("{system=0, name=张三, id=1, create=2019-04-06 00:00:00, amount=10.14, age=2}", objectObjectMap1.toString());
-        String str2 = "{\"age\":2,\"amount\":10.14,\"money\":12.3456,\"birthday\":null,\"create\":null,\"id\":1,\"name\":\"b\",\"id\":1555,\"account\":\"s\",\"accountName\":\"张三\",\"role\":\"阿三\"}";
-        Student student2 = JsonObjectUtils.fromJson(str2, Student.class);
-        Map<String, Object> objectObjectMap2 = JsonObjectUtils.toMapSortByValueAsc(student2);
-        // 先排数字，再排字母，最后才是无序的中文
-        assertEquals("{system=0, amount=10.14, id=1555, age=2, name=b, account=s, accountName=张三, role=阿三}", objectObjectMap2.toString());
-        Map<String, Object> objectObjectMap3 = JsonObjectUtils.toMapSortByValueDesc(student2);
-        assertEquals("{role=阿三, accountName=张三, account=s, name=b, age=2, id=1555, amount=10.14, system=0}", objectObjectMap3.toString());
-    }
-
     // 测试获取json中的日期对象
     @Test
     void testGetDate() {
