@@ -3,7 +3,7 @@ on:
   push: # 当有代码推送时触发
     branches:
       - 3.0.X
-
+      - 2.8.X
 jobs: # 定义工作流中的任务
   report: # 任务名称为 report
     runs-on: ubuntu-latest
