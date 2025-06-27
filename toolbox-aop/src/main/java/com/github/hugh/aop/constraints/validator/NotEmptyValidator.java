@@ -15,9 +15,10 @@ import javax.validation.ConstraintValidatorContext;
 public class NotEmptyValidator implements ConstraintValidator<NotEmpty, String> {
 
     private String message;
+
     @Override
     public void initialize(NotEmpty notEmpty) {
-        this.message = notEmpty.value(); // 获取注解的 value 属性值
+        this.message = notEmpty.message();
     }
 
     /**
