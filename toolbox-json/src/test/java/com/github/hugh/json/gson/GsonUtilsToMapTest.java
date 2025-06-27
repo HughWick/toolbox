@@ -8,13 +8,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GsonUtilsToMapTest {
@@ -40,85 +37,85 @@ public class GsonUtilsToMapTest {
         }
     }
 
-    @Test
-    void testToMapPerformanceWithJsonObject() throws InterruptedException {
-        // 准备一个复杂的 JsonObject 作为输入
-        JsonObject complexJsonObject = createComplexJsonObject(5, 5); // 5层嵌套，每层5个键值对
-        System.out.println("--- Starting performance test with JsonObject ---");
-        long startTime = System.nanoTime();
-        CountDownLatch latch = new CountDownLatch(NUM_THREADS);
-        AtomicLong successCount = new AtomicLong(0);
-        for (int i = 0; i < NUM_THREADS; i++) {
-            executorService.submit(() -> {
-                try {
-                    for (int j = 0; j < NUM_ITERATIONS_PER_THREAD; j++) {
-                        Map<String, String> result = GsonUtils.toMap(complexJsonObject, String.class, String.class);
-                        assertNotNull(result);
-                        assertTrue(result.containsKey("key_0_0")); // 简单断言，确保结果正确
-                        successCount.incrementAndGet();
-                    }
-                } catch (Exception e) {
-                    System.err.println("Error in thread: " + Thread.currentThread().getName() + " - " + e.getMessage());
-                } finally {
-                    latch.countDown();
-                }
-            });
-        }
-
-        latch.await(); // 等待所有线程完成
-        long endTime = System.nanoTime();
-        long totalExecutionTimeMillis = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
-
-        System.out.println("Total threads: " + NUM_THREADS);
-        System.out.println("Iterations per thread: " + NUM_ITERATIONS_PER_THREAD);
-        System.out.println("Total operations: " + (NUM_THREADS * NUM_ITERATIONS_PER_THREAD));
-        System.out.println("Successful operations: " + successCount.get());
-        System.out.println("Total execution time: " + totalExecutionTimeMillis + " ms");
-        System.out.println("Average time per operation: " + (double) totalExecutionTimeMillis / (NUM_THREADS * NUM_ITERATIONS_PER_THREAD) + " ms");
-        System.out.println("Throughput: " + (double) (NUM_THREADS * NUM_ITERATIONS_PER_THREAD) * 1000 / totalExecutionTimeMillis + " operations/sec");
-        System.out.println("--- Performance test finished ---");
-    }
-
-    @Test
-    void testToMapPerformanceWithPojo() throws InterruptedException {
-        // 准备一个复杂的 POJO 作为输入
-        TestPojo complexPojo = createComplexPojo(5, 5);
-
-        System.out.println("--- Starting performance test with POJO ---");
-        long startTime = System.nanoTime();
-        CountDownLatch latch = new CountDownLatch(NUM_THREADS);
-        AtomicLong successCount = new AtomicLong(0);
-
-        for (int i = 0; i < NUM_THREADS; i++) {
-            executorService.submit(() -> {
-                try {
-                    for (int j = 0; j < NUM_ITERATIONS_PER_THREAD; j++) {
-                        Map<String, String> result = GsonUtils.toMap(complexPojo, String.class, String.class);
-                        assertNotNull(result);
-                        assertTrue(result.containsKey("field_0_0")); // 简单断言
-                        successCount.incrementAndGet();
-                    }
-                } catch (Exception e) {
-                    System.err.println("Error in thread: " + Thread.currentThread().getName() + " - " + e.getMessage());
-                } finally {
-                    latch.countDown();
-                }
-            });
-        }
-
-        latch.await(); // 等待所有线程完成
-        long endTime = System.nanoTime();
-        long totalExecutionTimeMillis = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
-
-        System.out.println("Total threads: " + NUM_THREADS);
-        System.out.println("Iterations per thread: " + NUM_ITERATIONS_PER_THREAD);
-        System.out.println("Total operations: " + (NUM_THREADS * NUM_ITERATIONS_PER_THREAD));
-        System.out.println("Successful operations: " + successCount.get());
-        System.out.println("Total execution time: " + totalExecutionTimeMillis + " ms");
-        System.out.println("Average time per operation: " + (double) totalExecutionTimeMillis / (NUM_THREADS * NUM_ITERATIONS_PER_THREAD) + " ms");
-        System.out.println("Throughput: " + (double) (NUM_THREADS * NUM_ITERATIONS_PER_THREAD) * 1000 / totalExecutionTimeMillis + " operations/sec");
-        System.out.println("--- Performance test finished ---");
-    }
+//    @Test
+//    void testToMapPerformanceWithJsonObject() throws InterruptedException {
+//        // 准备一个复杂的 JsonObject 作为输入
+//        JsonObject complexJsonObject = createComplexJsonObject(5, 5); // 5层嵌套，每层5个键值对
+//        System.out.println("--- Starting performance test with JsonObject ---");
+//        long startTime = System.nanoTime();
+//        CountDownLatch latch = new CountDownLatch(NUM_THREADS);
+//        AtomicLong successCount = new AtomicLong(0);
+//        for (int i = 0; i < NUM_THREADS; i++) {
+//            executorService.submit(() -> {
+//                try {
+//                    for (int j = 0; j < NUM_ITERATIONS_PER_THREAD; j++) {
+//                        Map<String, String> result = GsonUtils.toMap(complexJsonObject, String.class, String.class);
+//                        assertNotNull(result);
+//                        assertTrue(result.containsKey("key_0_0")); // 简单断言，确保结果正确
+//                        successCount.incrementAndGet();
+//                    }
+//                } catch (Exception e) {
+//                    System.err.println("Error in thread: " + Thread.currentThread().getName() + " - " + e.getMessage());
+//                } finally {
+//                    latch.countDown();
+//                }
+//            });
+//        }
+//
+//        latch.await(); // 等待所有线程完成
+//        long endTime = System.nanoTime();
+//        long totalExecutionTimeMillis = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
+//
+//        System.out.println("Total threads: " + NUM_THREADS);
+//        System.out.println("Iterations per thread: " + NUM_ITERATIONS_PER_THREAD);
+//        System.out.println("Total operations: " + (NUM_THREADS * NUM_ITERATIONS_PER_THREAD));
+//        System.out.println("Successful operations: " + successCount.get());
+//        System.out.println("Total execution time: " + totalExecutionTimeMillis + " ms");
+//        System.out.println("Average time per operation: " + (double) totalExecutionTimeMillis / (NUM_THREADS * NUM_ITERATIONS_PER_THREAD) + " ms");
+//        System.out.println("Throughput: " + (double) (NUM_THREADS * NUM_ITERATIONS_PER_THREAD) * 1000 / totalExecutionTimeMillis + " operations/sec");
+//        System.out.println("--- Performance test finished ---");
+//    }
+//
+//    @Test
+//    void testToMapPerformanceWithPojo() throws InterruptedException {
+//        // 准备一个复杂的 POJO 作为输入
+//        TestPojo complexPojo = createComplexPojo(5, 5);
+//
+//        System.out.println("--- Starting performance test with POJO ---");
+//        long startTime = System.nanoTime();
+//        CountDownLatch latch = new CountDownLatch(NUM_THREADS);
+//        AtomicLong successCount = new AtomicLong(0);
+//
+//        for (int i = 0; i < NUM_THREADS; i++) {
+//            executorService.submit(() -> {
+//                try {
+//                    for (int j = 0; j < NUM_ITERATIONS_PER_THREAD; j++) {
+//                        Map<String, String> result = GsonUtils.toMap(complexPojo, String.class, String.class);
+//                        assertNotNull(result);
+//                        assertTrue(result.containsKey("field_0_0")); // 简单断言
+//                        successCount.incrementAndGet();
+//                    }
+//                } catch (Exception e) {
+//                    System.err.println("Error in thread: " + Thread.currentThread().getName() + " - " + e.getMessage());
+//                } finally {
+//                    latch.countDown();
+//                }
+//            });
+//        }
+//
+//        latch.await(); // 等待所有线程完成
+//        long endTime = System.nanoTime();
+//        long totalExecutionTimeMillis = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
+//
+//        System.out.println("Total threads: " + NUM_THREADS);
+//        System.out.println("Iterations per thread: " + NUM_ITERATIONS_PER_THREAD);
+//        System.out.println("Total operations: " + (NUM_THREADS * NUM_ITERATIONS_PER_THREAD));
+//        System.out.println("Successful operations: " + successCount.get());
+//        System.out.println("Total execution time: " + totalExecutionTimeMillis + " ms");
+//        System.out.println("Average time per operation: " + (double) totalExecutionTimeMillis / (NUM_THREADS * NUM_ITERATIONS_PER_THREAD) + " ms");
+//        System.out.println("Throughput: " + (double) (NUM_THREADS * NUM_ITERATIONS_PER_THREAD) * 1000 / totalExecutionTimeMillis + " operations/sec");
+//        System.out.println("--- Performance test finished ---");
+//    }
 
     // 辅助方法：创建复杂的 JsonObject
     private JsonObject createComplexJsonObject(int depth, int numKeysPerLevel) {

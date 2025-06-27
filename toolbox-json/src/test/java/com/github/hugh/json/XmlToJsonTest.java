@@ -127,8 +127,11 @@ class XmlToJsonTest {
                 "    <status>Shipped</status>\n" +
                 "</order>";
         Jsons jsons = GsonUtils.xmlToJson(str1);
+        Jsons order = jsons.getThis("order");
+        assertNotNull(order);
+        assertEquals(order.getString("orderId") , "12345");
+        assertEquals(order.getThis("customer").getString("name") , "John Doe");
 //        System.out.println(jsons.toJson());
-
     }
 }
 
