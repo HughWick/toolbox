@@ -51,10 +51,10 @@
         <!--   gson再往上的版本测试用例会出现问题     -->
 <!--        <google-gson.version>2.10.1</google-gson.version>-->
         <google-gson.version>2.11.0</google-gson.version>
+        <google-guava.version>33.1.0-jre</google-guava.version>
+
         <fastjson.version>2.0.57</fastjson.version>
         <okhttp.version>4.9.3</okhttp.version>
-        <servlet-api.version>4.0.1</servlet-api.version>
-        <google-guava.version>33.1.0-jre</google-guava.version>
         <kryo.version>4.0.2</kryo.version>
         <slf4j-simple.version>2.0.16</slf4j-simple.version>
         <ip2region.version>2.7.0</ip2region.version>
@@ -63,16 +63,17 @@
 
         <redis.version>3.7.1</redis.version>
         <caffeine.version>3.1.8</caffeine.version>
+<!--        <servlet-api.version>4.0.1</servlet-api.version>-->
         <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
         <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
         <pdfbox.version>2.0.29</pdfbox.version>
         <knife4j.version>3.0.3</knife4j.version>
         <bcprov-jdk18on.version>1.78.1</bcprov-jdk18on.version>
         <dom4j.version>2.1.4</dom4j.version>
+        <mongodb-driver-sync.version>5.0.1</mongodb-driver-sync.version>
         <!--    test powermock 版本号与mockito版本号对等  -->
         <powermock.version>2.0.2</powermock.version>
         <mockito.version>2.23.4</mockito.version>
-        <mongodb-driver-sync.version>5.0.1</mongodb-driver-sync.version>
     </properties>
 
     <dependencies>
@@ -167,11 +168,11 @@
                 <artifactId>okhttp</artifactId>
                 <version>${okhttp.version}</version>
             </dependency>
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>${servlet-api.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>javax.servlet</groupId>-->
+<!--                <artifactId>javax.servlet-api</artifactId>-->
+<!--                <version>${servlet-api.version}</version>-->
+<!--            </dependency>-->
             <!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
             <dependency>
                 <groupId>jakarta.servlet</groupId>
