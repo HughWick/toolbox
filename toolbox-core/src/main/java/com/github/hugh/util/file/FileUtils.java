@@ -11,7 +11,6 @@ import com.google.common.io.Files;
 import lombok.Cleanup;
 
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -123,41 +122,6 @@ public class FileUtils {
         if (file.exists() && file.delete()) { // 文件存在，并且删除成功
             String directory = StringUtils.before(file.getCanonicalPath(), File.separator);
             delEmptyDir(directory);//删除目录
-        }
-    }
-
-    /**
-     * 通过url访问图片信息后、存储到本地
-     * <p>V1.5.1 后多线程使用{@link FileUtils#downloadByNio(String, String)}</p>
-     *
-     * @param fileUrl  网络资源地址
-     * @param savePath 保存路径
-     * @return boolean 成功返回true
-     */
-    @Deprecated
-    public static boolean downloadByStream(String fileUrl, String savePath) {
-        try {
-            URL url = new URL(fileUrl);
-            /* 将网络资源地址传给,即赋值给url */
-            /* 此为联系获得网络资源的固定格式用法，以便后面的in变量获得url截取网络资源的输入流 */
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            DataInputStream dataInputStream = new DataInputStream(httpURLConnection.getInputStream());
-            /* 此处也可用BufferedInputStream与BufferedOutputStream  需要保存的路径*/
-            var dataOutputStream = new DataOutputStream(new FileOutputStream(savePath));
-            try (dataInputStream; dataOutputStream) {
-                /* 将参数savePath，即将截取的图片的存储在本地地址赋值给out输出流所指定的地址 */
-                byte[] buffer = new byte[4096];
-                int count;
-                /* 将输入流以字节的形式读取并写入buffer中 */
-                while ((count = dataInputStream.read(buffer)) > 0) {
-                    dataOutputStream.write(buffer, 0, count);
-                }
-                /* 关闭输入输出流以及网络资源的固定格式 */
-                httpURLConnection.disconnect();
-                return true;/* 网络资源截取并存储本地成功返回true */
-            }
-        } catch (Exception exception) {
-            return false;
         }
     }
 

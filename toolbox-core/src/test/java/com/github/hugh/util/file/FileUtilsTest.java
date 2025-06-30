@@ -82,20 +82,17 @@ class FileUtilsTest {
 
     // 测试下载文件
     @Test
-    void testDownloadFile() {
+    void testDownloadFile() throws IOException {
         String str = "https://vilipix.oss-cn-beijing.aliyuncs.com/release/user/1100171014/1667786977146_share-1667786931.jpg?x-oss-process=image/resize,m_fill,w_1000";
         //图片保存路径
         String filePath = "D:\\";
         String fileName = filePath + new Date().getTime() + ".png";
-        try {
-            FileUtils.downloadByNio(str, fileName);
-            assertTrue(new File(fileName).exists());
-            // 下载成功后删除文件
-            FileUtils.delFile(fileName);
-            assertFalse(new File(fileName).exists());
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
+        boolean download = FileUtils.downloadByNio(str, fileName);
+        assertTrue(download);
+        assertTrue(new File(fileName).exists());
+        // 下载成功后删除文件
+        FileUtils.delFile(fileName);
+        assertFalse(new File(fileName).exists());
     }
 
 
