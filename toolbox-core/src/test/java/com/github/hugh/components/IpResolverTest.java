@@ -72,19 +72,25 @@ public class IpResolverTest {
         String ip3 = "154.18.161.64";
         final String str3 = IpResolver.on(ip3, easyRedisSupplier.get()).getComplete();
         assertNull(str3);
+        String ip4 = "47.79.38.215";
+        final String str4 = IpResolver.on(ip4, easyRedisSupplier.get()).setSpare("|").getComplete();
+        assertEquals("加利福尼亚|圣克拉拉", str4);
     }
 
     @Test
-    public void simpleTest() {
+    public void cityTest() {
         String ip1 = "192.168.1.191";
-        final String str1 = IpResolver.on(ip1, easyRedisSupplier.get()).getSimple();
+        final String str1 = IpResolver.on(ip1, easyRedisSupplier.get()).getCity();
         assertEquals("内网IP", str1);
         String ip2 = "175.8.167.6";
-        final String str2 = IpResolver.on(ip2, easyRedisSupplier.get()).getSimple();
+        final String str2 = IpResolver.on(ip2, easyRedisSupplier.get()).getCity();
         assertEquals("长沙市", str2);
         String ip3 = "154.18.161.64";
-        final String str3 = IpResolver.on(ip3, easyRedisSupplier.get()).getSimple();
+        final String str3 = IpResolver.on(ip3, easyRedisSupplier.get()).getCity();
         assertNull(str3);
+        String ip4 = "103.41.232.82";
+        final String str4 = IpResolver.on(ip4, easyRedisSupplier.get()).getCity();
+        assertEquals("贵阳市", str4);
     }
 
     @Test
@@ -93,6 +99,6 @@ public class IpResolverTest {
         IpResolver ipResolver = IpResolver.on("8.0.25.", easyRedisSupplier.get());
         ToolboxException exception = assertThrows(ToolboxException.class, ipResolver::getComplete);
         assertEquals("failed to create content cached searcher:", exception.getMessage());
-        assertEquals("invalid ip address `8.0.25.`" , exception.getCause().getMessage());
+        assertEquals("invalid ip address `8.0.25.`", exception.getCause().getMessage());
     }
 }
