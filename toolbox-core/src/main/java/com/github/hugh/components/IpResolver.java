@@ -103,7 +103,7 @@ public class IpResolver {
      * @return IP 地址对应的城市信息，如果解析失败返回 null
      * @since 2.7.5
      */
-    public String getSimple() {
+    public String getCity() {
         Ip2regionDTO parse = parse();
         if (parse == null) {
             throw new ToolboxException("解析失败，IP：" + ip);
