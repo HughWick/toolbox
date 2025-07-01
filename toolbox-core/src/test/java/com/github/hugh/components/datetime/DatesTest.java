@@ -25,9 +25,6 @@ class DatesTest {
         assertEquals(DateUtils.parse(str2).getTime(), date2.getTime());
 //        String str3 = "NaN-NaN-NaN NaN:NaN:NaN";
 //        Date date3 = Dates.on(str3).setFormat("yyyy-MM-dd HH:mm:00").toDate();
-        String str3 = "1713152121";
-//        Date date3 = Dates.on(str3).parse().toDate();
-        assertEquals("2024-04-15 11:35:21", Dates.on(str3).parse().format());
 //        String temp = "1779832902356332544";
 //        System.out.println("====>>"+temp.length());
     }
@@ -43,10 +40,15 @@ class DatesTest {
 
     @Test
     void testSetFormat() {
+        // 毫秒级时间戳
         String str1 = "1713747819635";
+        assertEquals("2024-04-22 09:03:39", Dates.on(str1).parse().format());
         String str2 = "2024-04-15";
         String format = Dates.on(str2).setFormat(DateCode.YEAR_MONTH_DAY).parse().format();
         assertEquals("2024-04-15 00:00:00", format);
+        // 秒级时间戳
+        String str3 = "1713152121";
+        assertEquals("2024-04-15 11:35:21", Dates.on(str3).parse().format());
     }
 
     @Test
