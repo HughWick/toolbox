@@ -57,7 +57,7 @@ class XmlToJsonTest {
             GsonUtils.xmlToJson(str3);
         });
         // 验证异常消息中是否包含特定的错误信息
-        assertTrue(exception.getMessage().contains("文档中根元素后面的标记必须格式正确"));
+        assertEquals("org.dom4j.DocumentException: Error on line 2 of document  : 文档中根元素后面的标记必须格式正确。", exception.getMessage());
     }
 
     @Test
@@ -129,8 +129,8 @@ class XmlToJsonTest {
         Jsons jsons = GsonUtils.xmlToJson(str1);
         Jsons order = jsons.getThis("order");
         assertNotNull(order);
-        assertEquals(order.getString("orderId") , "12345");
-        assertEquals(order.getThis("customer").getString("name") , "John Doe");
+        assertEquals(order.getString("orderId"), "12345");
+        assertEquals(order.getThis("customer").getString("name"), "John Doe");
 //        System.out.println(jsons.toJson());
     }
 }
