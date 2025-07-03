@@ -496,7 +496,7 @@ public class GsonUtils {
             gsonBuilder.registerTypeAdapter(Date.class, new CustomDateTypeAdapter());
             return fromJson(gsonBuilder, json, classOfT);
         } catch (JsonParseException jsonParseException) {
-            log.error("JSON解析实体失败，内容：{}", json);
+//            log.error("JSON解析实体失败，内容：{}", json);
             throw jsonParseException;
         }
     }
@@ -886,11 +886,11 @@ public class GsonUtils {
         Jsons jsons = xmlToJson(xml);
         // 如果根元素为空，则直接将 XML 转换为目标 Java 对象
         if (EmptyUtils.isEmpty(rootKey)) {
-            return jsons.formJson(clazz);
+            return JSON.parseObject(jsons.toJson(), clazz);
         } else {
             // 如果指定了根元素，获取该根元素的内容并转换为目标 Java 对象
             Jsons aThis = jsons.getThis(rootKey);
-            return aThis.formJson(clazz);
+            return JSON.parseObject(aThis.toJson(), clazz);
         }
     }
 
