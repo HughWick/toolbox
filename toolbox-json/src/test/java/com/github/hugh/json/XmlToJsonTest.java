@@ -1,12 +1,15 @@
 package com.github.hugh.json;
 
+import com.alibaba.fastjson.JSON;
 import com.github.hugh.json.gson.GsonUtils;
 import com.github.hugh.json.gson.Jsons;
 import com.github.hugh.json.model.XmlError;
+import com.github.hugh.json.model.kml.KmlVo;
 import com.github.hugh.util.file.FileUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -150,7 +153,15 @@ class XmlToJsonTest {
         String string2 = FileUtils.readContent(getPath(kml2));
         Jsons jsons2 = GsonUtils.xmlToJson(string2);
         assertEquals(jsons.toJson(), jsons2.toJson());
-
+//        KmlVo kmlVo1 = jsons.formJson(KmlVo.class);
+        // 当默认都是数组对象时， 但是实际内容是单个，fastjson可以进行解析
+        KmlVo kmlVo1 = JSON.parseObject(json, KmlVo.class);
+        assertEquals(kmlVo1.getKml().getXmlnsAtom(), "http://www.w3.org/2005/Atom");
+        KmlVo.KmlDTO.DocumentDTO.FolderDTO folder = kmlVo1.getKml().getDocument().getFolder();
+        KmlVo.KmlDTO.DocumentDTO.FolderDTO.FolderDTO2 folderDTO2 = folder.getFolder().get(6);
+        // 原始数据中是单个对象，并不是数组
+        List<KmlVo.KmlDTO.DocumentDTO.FolderDTO.FolderDTO2.PlacemarkDTO> placemark = folderDTO2.getPlacemark();
+        assertEquals("HJ", placemark.get(0).getName());
     }
 
 
