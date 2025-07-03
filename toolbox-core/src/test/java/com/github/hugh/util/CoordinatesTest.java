@@ -187,11 +187,27 @@ class CoordinatesTest {
 
 
     @Test
-    void testReal(){
+    void testReal() {
         String str1 = "$GNGGA,203643.00,2712.02552,N,11127.12077,E\\r\\n\\r\\nOK\\r\\n";
 //        GgaDTO ggaDTO = CoordinatesUtils.parseGga(str1);
         ToolboxException toolboxException = assertThrowsExactly(ToolboxException.class, () -> CoordinatesUtils.parseGga(str1));
         assertEquals("Invalid GGA string, insufficient data.", toolboxException.getMessage());
     }
 
+
+    @Test
+    void testConvertDMStoDD() {
+        String latDMS1 = "36°17'41\"N";
+        String lonDMS1 = "102°53'46\"E";
+        try {
+            double latDD = CoordinatesUtils.dmsToGps(latDMS1);
+            double lonDD = CoordinatesUtils.dmsToGps(lonDMS1);
+            assertEquals(36.29472222222222, latDD);
+            assertEquals(102.89611111111111, lonDD);
+            System.out.println("Latitude (DMS): " + latDMS1 + " -> Latitude (DD): " + latDD);
+            System.out.println("Longitude (DMS): " + lonDMS1 + " -> Longitude (DD): " + lonDD);
+        } catch (IllegalArgumentException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
 }
