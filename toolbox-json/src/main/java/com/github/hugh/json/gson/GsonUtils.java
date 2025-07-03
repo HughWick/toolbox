@@ -9,7 +9,6 @@ import com.github.hugh.json.gson.adapter.MapTypeAdapter;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.MapUtils;
-import com.github.hugh.util.file.FileUtils;
 import com.github.hugh.util.net.UrlUtils;
 import com.github.hugh.util.regex.RegexUtils;
 import com.google.common.base.Suppliers;
@@ -20,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.json.XML;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -920,38 +918,38 @@ public class GsonUtils {
      * @since 2.7.16
      */
     public static <T> T xmlToObject(String xml, Class<T> clazz, String rootKey) {
-        Jsons jsons = xmlToJson(xml);
+        JSONObject jsonObject = XML.toJSONObject(xml);
         // 如果根元素为空，则直接将 XML 转换为目标 Java 对象
         if (EmptyUtils.isEmpty(rootKey)) {
-            return JSON.parseObject(jsons.toJson(), clazz);
+            return JSON.parseObject(jsonObject.toString(), clazz);
         } else {
             // 如果指定了根元素，获取该根元素的内容并转换为目标 Java 对象
-            Jsons aThis = jsons.getThis(rootKey);
-            return JSON.parseObject(aThis.toJson(), clazz);
+            JSONObject jsonObject1 = jsonObject.getJSONObject(rootKey);
+            return JSON.parseObject(jsonObject1.toString(), clazz);
         }
     }
 
-    /**
-     * 将 XML 文件转换为 Jsons 对象。
-     * 此方法会自动处理文件的读取和关闭，并能正确处理 UTF-8 BOM。
-     *
-     * @param file 待解析的 XML 文件对象
-     * @return 转换后的 Jsons 对象
-     * @since 3.0.5
-     */
-    public static Jsons xmlToJson(File file) {
-        return xmlToJson(FileUtils.readContent(file));
-    }
-
-    /**
-     * XML字符串转JSON对象
-     *
-     * @param xml xml字符串
-     * @return Jsons
-     * @since 2.7.16
-     */
-    public static Jsons xmlToJson(String xml) {
-        JSONObject jsonObject = XML.toJSONObject(xml);
-        return Jsons.on(jsonObject.toString());
-    }
+//    /**
+//     * 将 XML 文件转换为 Jsons 对象。
+//     * 此方法会自动处理文件的读取和关闭，并能正确处理 UTF-8 BOM。
+//     *
+//     * @param file 待解析的 XML 文件对象
+//     * @return 转换后的 Jsons 对象
+//     * @since 3.0.5
+//     */
+//    public static Jsons xmlToJson(File file) {
+//        return xmlToJson(FileUtils.readContent(file));
+//    }
+//
+//    /**
+//     * XML字符串转JSON对象
+//     *
+//     * @param xml xml字符串
+//     * @return Jsons
+//     * @since 2.7.16
+//     */
+//    public static Jsons xmlToJson(String xml) {
+//        JSONObject jsonObject = XML.toJSONObject(xml);
+//        return Jsons.on(jsonObject.toString());
+//    }
 }
