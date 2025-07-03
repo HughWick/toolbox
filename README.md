@@ -25,6 +25,7 @@ JDK >=17
 | [guava](https://github.com/google/guava)               | 33.1.0-jre | 谷歌套件              |
 | [gson](https://github.com/google/gson)                 | 2.10.1     | Google Gson       |
 | [fastjson2](https://github.com/alibaba/fastjson2)      | 2.0.57     | 阿里高性能json         |
+| [json ](https://github.com/stleary/JSON-java)          | 20250517   | JSON In Java          |
 | [slf4j-simple](https://github.com/qos-ch/slf4j)        | 2.0.9      | 日志工具包             |
 | [ip2region](https://github.com/lionsoul2014/ip2region) | 2.7.0      | IP地址库             |
 | UserAgentUtils                                         | 1.21       | UserAgent解析工具     |
