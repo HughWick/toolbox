@@ -98,4 +98,18 @@ public class StrPool {
      * @since 3.0.3
      */
     public static final String PIPE = "|";
+
+    /**
+     * 符号常量：单引号 {@code "'"}
+     *
+     * @since 3.0.5
+     */
+    public static final String SINGLE_QUOTE = "'";
+
+    /**
+     * 符号常量：双引号 {@code "\""}
+     *
+     * @since 3.0.5
+     */
+    public static final String DOUBLE_QUOTE = "\"";
 }

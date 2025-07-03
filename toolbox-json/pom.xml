@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.github.hughwick</groupId>
         <artifactId>toolbox-parent</artifactId>
-       <version>3.0.5</version>
+        <version>3.0.5</version>
     </parent>
     <name>Toolbox JSON</name>
     <artifactId>toolbox-json</artifactId>
@@ -27,9 +27,13 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.dom4j</groupId>-->
+<!--            <artifactId>dom4j</artifactId>-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>org.dom4j</groupId>
-            <artifactId>dom4j</artifactId>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
         </dependency>
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
