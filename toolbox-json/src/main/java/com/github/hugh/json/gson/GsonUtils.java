@@ -9,6 +9,7 @@ import com.github.hugh.json.gson.adapter.MapTypeAdapter;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.MapUtils;
+import com.github.hugh.util.file.FileUtils;
 import com.github.hugh.util.net.UrlUtils;
 import com.github.hugh.util.regex.RegexUtils;
 import com.google.common.base.Suppliers;
@@ -16,13 +17,11 @@ import com.google.gson.*;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
+import org.json.JSONObject;
+import org.json.XML;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.*;
@@ -896,6 +895,18 @@ public class GsonUtils {
     }
 
     /**
+     * 将 XML 文件转换为 Jsons 对象。
+     * 此方法会自动处理文件的读取和关闭，并能正确处理 UTF-8 BOM。
+     *
+     * @param file 待解析的 XML 文件对象
+     * @return 转换后的 Jsons 对象
+     * @since 3.0.5
+     */
+    public static Jsons xmlToJson(File file) {
+        return xmlToJson(FileUtils.readContent(file));
+    }
+
+    /**
      * XML字符串转JSON对象
      *
      * @param xml xml字符串
@@ -903,36 +914,7 @@ public class GsonUtils {
      * @since 2.7.16
      */
     public static Jsons xmlToJson(String xml) {
-        Map<String, Object> map = new HashMap<>();
-        SAXReader reader = new SAXReader();
-        Document document;
-        try {
-            document = reader.read(new StringReader(xml));
-        } catch (DocumentException documentException) {
-            throw new ToolboxJsonException(documentException);
-        }
-        Element root = document.getRootElement();
-        map.put(root.getName(), elementToMap(root));
-        return Jsons.on(map);
-    }
-
-    /**
-     * Element对象转map对象
-     *
-     * @param element Element对象
-     * @return map
-     * @since 2.7.16
-     */
-    public static Map<String, Object> elementToMap(Element element) {
-        Map<String, Object> map = new HashMap<>();
-        for (Object child : element.elements()) {
-            Element element1 = (Element) child;
-            if (element1.elements().isEmpty()) {
-                map.put(element1.getName(), element1.getText());
-            } else {
-                map.put(element1.getName(), elementToMap(element1));
-            }
-        }
-        return map;
+        JSONObject jsonObject = XML.toJSONObject(xml);
+        return Jsons.on(jsonObject.toString());
     }
 }
