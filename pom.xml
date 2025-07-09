@@ -63,13 +63,11 @@
 
         <redis.version>3.7.1</redis.version>
         <caffeine.version>3.1.8</caffeine.version>
-<!--        <servlet-api.version>4.0.1</servlet-api.version>-->
         <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
-        <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
+        <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
         <pdfbox.version>2.0.29</pdfbox.version>
         <knife4j.version>3.0.3</knife4j.version>
         <bcprov-jdk18on.version>1.78.1</bcprov-jdk18on.version>
-<!--        <dom4j.version>2.1.4</dom4j.version>-->
         <mongodb-driver-sync.version>5.0.1</mongodb-driver-sync.version>
         <!--    test powermock 版本号与mockito版本号对等  -->
         <powermock.version>2.0.2</powermock.version>
@@ -226,6 +224,7 @@
                 <artifactId>caffeine</artifactId>
                 <version>${caffeine.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
             <dependency>
                 <groupId>jakarta.validation</groupId>
                 <artifactId>jakarta.validation-api</artifactId>

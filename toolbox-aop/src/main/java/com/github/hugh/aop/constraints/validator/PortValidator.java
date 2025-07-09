@@ -2,9 +2,9 @@ package com.github.hugh.aop.constraints.validator;
 
 import com.github.hugh.aop.constraints.Port;
 import com.github.hugh.util.regex.RegexUtils;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 
 /**
  * 端口验证

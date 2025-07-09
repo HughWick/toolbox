@@ -1,7 +1,6 @@
 package com.github.hugh.bean.vo;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.List;
@@ -13,12 +12,12 @@ import java.util.List;
  * @since 2.1.13
  */
 @Data
-@Api("统一返回data对象")
+@Schema(description = "统一返回data对象")
 public class ResultDataVO<T> {
 
-    @ApiModelProperty(required = true, value = "对象集合")
+    @Schema(required = true, description = "对象集合")
     private List<T> list;//
-    @ApiModelProperty(required = true, value = "总数")
+    @Schema(required = true, description = "总数")
     private long totalCount;
  
 }

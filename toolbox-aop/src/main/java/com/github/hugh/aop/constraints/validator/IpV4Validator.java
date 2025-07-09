@@ -2,9 +2,9 @@ package com.github.hugh.aop.constraints.validator;
 
 import com.github.hugh.aop.constraints.IpV4;
 import com.github.hugh.util.regex.RegexUtils;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 
 /**
  * IpV4 校验实现

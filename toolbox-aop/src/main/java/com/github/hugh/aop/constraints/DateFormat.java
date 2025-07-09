@@ -2,9 +2,9 @@ package com.github.hugh.aop.constraints;
 
 
 import com.github.hugh.aop.constraints.validator.DateFormatValidator;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -29,7 +29,7 @@ public @interface DateFormat {
      *
      * @return String
      */
-    String message() default "日期格式不正确！"; //这边可以标注默认的验证失败消息
+    String message() default "日期格式不正确"; //这边可以标注默认的验证失败消息
 
     /**
      * 日期格式

@@ -1,9 +1,9 @@
 package com.github.hugh.aop.constraints;
 
 import com.github.hugh.aop.constraints.validator.IpV4Validator;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -37,6 +37,7 @@ public @interface IpV4 {
      * @return boolean
      */
     boolean nullable() default false;
+    String value() default "";
 
     /**
      * 约束注解在验证时所属的组别

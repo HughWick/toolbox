@@ -1,9 +1,9 @@
 package com.github.hugh.aop.constraints;
 
 import com.github.hugh.aop.constraints.validator.NotEmptyValidator;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -15,20 +15,22 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * 自定义的不为空验证注解
  *
  * @author hugh
- * @since  1.0.5
+ * @since 1.0.5
  */
 @Target({METHOD, FIELD, PARAMETER})
 @Retention(RUNTIME)
 @Documented
 @Constraint(validatedBy = NotEmptyValidator.class)//指向自定义验证类
 public @interface NotEmpty {
+    // ！！！ 必须重新添加 message 方法 ！！！
+    String message() default "参数不能为空"; // 这是 Bean Validation 规范要求的
 
     /**
      * 失败消息
      *
      * @return String
      */
-    String message() default "{com.github.hugh.aop.constraints.NotEmpty.message}";
+    String value() default "参数不能为空";
 
     /**
      * 约束注解在验证时所属的组别

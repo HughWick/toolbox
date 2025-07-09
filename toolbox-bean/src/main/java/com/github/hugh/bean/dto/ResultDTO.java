@@ -1,7 +1,6 @@
 package com.github.hugh.bean.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,16 +12,16 @@ import lombok.Data;
  */
 @Data
 @Builder
-@ApiModel("接口统一返回信息对象")
+@Schema(description = "接口统一返回信息对象")
 public class ResultDTO<T> {
 
-    @ApiModelProperty(required = true, value = "接口状态码", example = "0")
+    @Schema(required = true, description = "接口状态码", example = "0")
     private String code; // code
-    @ApiModelProperty(required = true, value = "提示信息", example = "success")
+    @Schema(required = true, description = "提示信息", example = "success")
     private String message; // 提示信息
-    @ApiModelProperty(required = true, value = "数据")
+    @Schema(required = true, description = "数据")
     private T data; // 数据
-    @ApiModelProperty(required = true, value = "时间戳")
+    @Schema(required = true, description = "时间戳")
     private long timestamp;
 
     public ResultDTO() {

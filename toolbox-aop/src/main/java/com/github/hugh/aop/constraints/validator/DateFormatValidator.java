@@ -2,9 +2,9 @@ package com.github.hugh.aop.constraints.validator;
 
 import com.github.hugh.aop.constraints.DateFormat;
 import com.github.hugh.util.DateUtils;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 
 /**
  * 日期格式验证拦截

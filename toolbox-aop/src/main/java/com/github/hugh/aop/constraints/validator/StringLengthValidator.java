@@ -2,9 +2,9 @@ package com.github.hugh.aop.constraints.validator;
 
 import com.github.hugh.aop.constraints.StringLength;
 import com.github.hugh.util.StringUtils;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 
 /**
  * 检查一个数组的长度是否在min和max之间

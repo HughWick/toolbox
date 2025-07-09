@@ -14,16 +14,11 @@
     <description>toolbox 工具类实体类包</description>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-spring -->
+        <!-- https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-core-jakarta -->
         <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-spring</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>guava</artifactId>
-                    <groupId>com.google.guava</groupId>
-                </exclusion>
-            </exclusions>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-core-jakarta</artifactId>
+            <version>2.2.34</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
         <dependency>
