@@ -1,6 +1,6 @@
 package com.github.hugh.util.lang;
 
-import com.github.hugh.bean.dto.ResponseDTO;
+import com.github.hugh.bean.dto.ResponseDto;
 import com.github.hugh.util.TimeUtils;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +17,7 @@ class ResponseTest {
 
     @Test
     void test() {
-        ResponseDTO dto1 = new ResponseDTO("0000", "ssss", "/", TimeUtils.now());
+        ResponseDto dto1 = new ResponseDto("0000", "ssss", "/", TimeUtils.now());
         System.out.println(dto1);
         assertTrue(dto1.equalCode("0000"));
         assertFalse(dto1.notEqualCode("0000"));
