@@ -7,6 +7,7 @@ import com.github.hugh.bean.dto.EntityCompareResult;
 import com.github.hugh.bean.expand.tree.ElementTreeExpand;
 import com.github.hugh.bean.expand.tree.TreeNodeExpand;
 import com.github.hugh.pojo.MenuDo;
+import com.github.hugh.pojo.TreeNodeObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.StopWatch;
