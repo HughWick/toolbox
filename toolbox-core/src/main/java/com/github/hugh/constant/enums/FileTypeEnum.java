@@ -42,13 +42,24 @@ public enum FileTypeEnum {
      */
     PNG("89504E47"),
 
+    // 下面的这几个格式都是9-12位进制数，并不是文件起始位
     /**
      * 高效率图像文件格式
-     *
-     * @since 2.4.7
      */
-    HEIF("0000001C66747970"),
+    MIF1("6d696631"), // mif1 (HEIF)
+    ISOM("69736f6d"), // isom
+    HEIC("68656963"), // heic (HEIF)
+    AVIF("61766966"), // avif (AVIF)
+    /**
+     * m4a（Apple Lossless Audio Codec file）、m4v（QuickTime M4A/M4V file）
+     */
+    M4A("4d344120"),
 
+    /**
+     * MP4  MPEG-4 video files
+     */
+    MP4("6d703432"),
+    //------------
     /**
      * WEBP
      */
@@ -269,16 +280,6 @@ public enum FileTypeEnum {
      * MIDI.
      */
     MID("4D546864"),
-
-    /**
-     * m4a（Apple Lossless Audio Codec file）、m4v（QuickTime M4A/M4V file）
-     */
-    M4A("0000002066747970"),
-
-    /**
-     * MP4  MPEG-4 video files
-     */
-    MP4("0000001866747970"),
 
     /**
      * MP3.
