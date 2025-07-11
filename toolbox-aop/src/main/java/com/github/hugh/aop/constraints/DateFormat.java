@@ -39,6 +39,12 @@ public @interface DateFormat {
     String pattern() default "yyyy-MM-dd HH:mm:ss";
 
     /**
+     * 失败消息
+     *
+     * @return String
+     */
+    String value() default "";
+    /**
      * 约束注解在验证时所属的组别
      *
      * @return Class

@@ -29,6 +29,12 @@ public @interface Port {
      * @return String
      */
     String message() default "端口错误";
+    /**
+     * 失败消息
+     *
+     * @return String
+     */
+    String value() default "";
 
     /**
      * 是否允许为空

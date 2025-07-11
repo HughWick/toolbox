@@ -31,6 +31,13 @@ public @interface NotEmpty {
     String message() default "{com.github.hugh.aop.constraints.NotEmpty.message}";
 
     /**
+     * 失败消息
+     *
+     * @return String
+     */
+    String value() default "参数不能为空";
+
+    /**
      * 约束注解在验证时所属的组别
      *
      * @return Class
