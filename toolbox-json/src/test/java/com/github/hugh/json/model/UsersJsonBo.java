@@ -1,6 +1,5 @@
 package com.github.hugh.json.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -39,7 +38,6 @@ public class UsersJsonBo {
     public static class CompanyDTO {
         private String name;
         private String catchPhrase;
-        @JsonProperty("bs")
         private String bs;
     }
 }
