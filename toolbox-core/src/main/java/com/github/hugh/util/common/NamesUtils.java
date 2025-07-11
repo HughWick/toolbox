@@ -1,7 +1,6 @@
 package com.github.hugh.util.common;
 
 import com.google.common.base.Strings;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * 姓名工具类
@@ -128,17 +127,27 @@ public class NamesUtils {
      * @since 1.2.9
      */
     public static String desensitized(String fullName) {
+        // 1. 处理空字符串或 null 的情况
         if (Strings.isNullOrEmpty(fullName)) {
             return fullName;
         }
-        int index;
         int length = fullName.length();
+        int retainLength; // 要保留的字符长度
+        // 2. 根据姓名长度确定保留的字符数
         if (length == 4) {
-            index = 2;
+            retainLength = 2; // 姓名长度为 4 时，保留前两位
         } else {
-            index = 1;
+            retainLength = 1; // 其他长度时，保留第一位
         }
-        String name = StringUtils.left(fullName, index);
-        return StringUtils.rightPad(name, StringUtils.length(fullName), "*");
+        // 确保 retainLength 不会超过实际姓名长度，防止索引越界
+        if (retainLength > length) {
+            retainLength = length;
+        }
+        // 3. 获取要保留的姓名部分
+        String retainedName = fullName.substring(0, retainLength);
+        // 4. 计算需要填充的星号数量
+        int starsToPad = length - retainedName.length();
+        // 组合保留部分和星号填充部分
+        return retainedName + "*".repeat(starsToPad);
     }
 }

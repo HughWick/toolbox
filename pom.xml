@@ -67,7 +67,7 @@
         <caffeine.version>3.1.8</caffeine.version>
         <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
         <pdfbox.version>2.0.29</pdfbox.version>
-        <knife4j.version>3.0.3</knife4j.version>
+        <swagger-annotations.version>1.6.16</swagger-annotations.version>
         <bcprov-jdk18on.version>1.78.1</bcprov-jdk18on.version>
         <dom4j.version>2.1.4</dom4j.version>
         <!--    test powermock 版本号与mockito版本号对等  -->
@@ -168,6 +168,12 @@
                 <artifactId>json</artifactId>
                 <version>${org-json.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>okhttp</artifactId>
@@ -241,17 +247,11 @@
                 <artifactId>pdfbox</artifactId>
                 <version>${pdfbox.version}</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-spring-ui -->
+            <!-- https://mvnrepository.com/artifact/io.swagger/swagger-annotations -->
             <dependency>
-                <groupId>com.github.xiaoymin</groupId>
-                <artifactId>knife4j-spring-ui</artifactId>
-                <version>${knife4j.version}</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-spring -->
-            <dependency>
-                <groupId>com.github.xiaoymin</groupId>
-                <artifactId>knife4j-spring</artifactId>
-                <version>${knife4j.version}</version>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger-annotations.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.data</groupId>
@@ -264,11 +264,6 @@
                 <artifactId>mongodb-driver-sync</artifactId>
                 <version>${mongodb-driver-sync.version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>org.dom4j</groupId>-->
-<!--                <artifactId>dom4j</artifactId>-->
-<!--                <version>${dom4j.version}</version>-->
-<!--            </dependency>-->
         </dependencies>
     </dependencyManagement>
     <build>

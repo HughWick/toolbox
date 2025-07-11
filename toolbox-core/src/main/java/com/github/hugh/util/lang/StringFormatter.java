@@ -1,7 +1,7 @@
 package com.github.hugh.util.lang;
 
 import com.github.hugh.constant.StrPool;
-import com.github.xiaoymin.knife4j.core.util.StrUtil;
+import com.github.hugh.util.EmptyUtils;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -48,7 +48,7 @@ public class StringFormatter {
      * @since 2.4.9
      */
     public static String formatWith(String strPattern, String placeHolder, Object... argArray) {
-        if (StrUtil.isBlank(strPattern) || StrUtil.isBlank(placeHolder) || argArray == null){
+        if (EmptyUtils.isEmpty(strPattern) || EmptyUtils.isEmpty(placeHolder) || argArray == null){
             return strPattern;
         }
         final int strPatternLength = strPattern.length();
