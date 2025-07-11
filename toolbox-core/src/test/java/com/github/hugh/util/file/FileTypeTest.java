@@ -53,7 +53,7 @@ class FileTypeTest {
         assertEquals(SuffixCode.MP4.toLowerCase(), mp4Type);
         String imageHeif = "/file/image/heif/share_a4b448c4f972858f42640e36ffc3a8e6.png";
         final String picTypHeif = FileTypeUtils.getType(getPath(imageHeif));
-        assertEquals(SuffixCode.HEIF_LOWER_CASE, picTypHeif);
+        assertEquals(SuffixCode.MIF1_LOWER_CASE, picTypHeif);
     }
 
     // 测试压缩包
@@ -119,7 +119,7 @@ class FileTypeTest {
         // 无法正确读取文件格式
         final String picTyp9 = FileTypeUtils.getType(getPath(image9));
 //        assertNull(picTyp9);
-        assertEquals(SuffixCode.HEIF_LOWER_CASE, picTyp9);
+        assertEquals(SuffixCode.MIF1_LOWER_CASE, picTyp9);
         assertFalse(ImageUtils.isImage(getPath(image9)));
     }
 
@@ -152,11 +152,20 @@ class FileTypeTest {
 
     @Test
     void testIsMp4() throws FileNotFoundException {
-        String mp4_1 = "/file/mp4/1cbf9f6b76484cbb96515f8ecef16efd.mp4";
+        String mp4_1 = "/file/mp4/test.mp4";
         String path1 = getPath(mp4_1);
         FileType on1 = FileType.on(path1);
-//        assertTrue(FileTypeUtils.isMp4(new File(path1)));
-        assertTrue(on1.isMp4());
+        String type = on1.getType();
+        assertEquals(SuffixCode.MP4.toLowerCase(), type);
+        String mp4_2 = "/file/mp4/test.mp4";
+        String path2 = getPath(mp4_2);
+        FileType fileType2 = FileType.on(path2);
+        String type2 = fileType2.getType();
+        assertEquals("mp4", type2);
+        String mp4_3 = "/file/mp4/1cbf9f6b76484cbb96515f8ecef16efd.mp4";
+        String path3 = getPath(mp4_3);
+        FileType fileType3 = FileType.on(path3);
+        assertTrue(fileType3.isMp4());
     }
 
     @Test
@@ -166,7 +175,6 @@ class FileTypeTest {
         FileType on1 = FileType.on(path1);
         assertFalse(on1.isPng());
         assertTrue(FileType.on(path1).isWebp());
-//        on1.closeStream();
     }
 
     @Test
@@ -174,6 +182,30 @@ class FileTypeTest {
         String pdf1 = "/file/pdf/work.pdf";
         String path1 = getPath(pdf1);
         assertTrue(FileType.on(path1).isPdf());
+    }
+
+    @Test
+    void testIsHeic() throws FileNotFoundException {
+        String heic1 = "/file/image/heic/share-imageonline.co-1616470.heic";
+        String path1 = getPath(heic1);
+        FileType fileType = FileType.on(path1);
+        assertEquals(SuffixCode.HEIC.toLowerCase(), fileType.getType());
+    }
+
+    @Test
+    void testIsHeif() throws FileNotFoundException {
+        String heif1 = "/file/image/heif/share-imageonline.co-7100532.png";
+        String path1 = getPath(heif1);
+        FileType fileType = FileType.on(path1);
+        assertEquals(SuffixCode.HEIC.toLowerCase(), fileType.getType());
+    }
+
+    @Test
+    void testIsM4a() throws FileNotFoundException {
+        String m4a1 = "/file/m4a/1718873863_sample1.m4a";
+        String path1 = getPath(m4a1);
+        FileType fileType = FileType.on(path1);
+        assertEquals(SuffixCode.M4A.toLowerCase(), fileType.getType());
     }
 
     private static String getPath(String fileName) {
