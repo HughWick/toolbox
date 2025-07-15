@@ -5,9 +5,6 @@ import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.base.BaseConvertUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -62,43 +59,6 @@ public class Md5Utils {
         } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
             throw new ToolboxException(noSuchAlgorithmException);
         }
-    }
-
-    /**
-     * 获取文件的md5值
-     *
-     * @param file 文件
-     * @return String 小写的md5字符串
-     * @since 2.3.4
-     */
-    public static String encryptFile(File file) {
-        try (FileInputStream fileInputStream = new FileInputStream(file)) {
-            byte[] buffer = new byte[1024];
-            MessageDigest md5 = MessageDigest.getInstance(EncryptCode.MD5);
-            int numRead;
-            while ((numRead = fileInputStream.read(buffer)) > 0) {
-                md5.update(buffer, 0, numRead);
-            }
-            byte[] digest = md5.digest();
-            StringBuilder result = new StringBuilder();
-            for (byte b : digest) {
-                result.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
-            }
-            return result.toString();
-        } catch (NoSuchAlgorithmException | IOException e) {
-            throw new ToolboxException(e);
-        }
-    }
-
-    /**
-     * 获取文件的md5值
-     *
-     * @param filePath 文件路径
-     * @return String 小写的md5字符串
-     * @since 2.3.5
-     */
-    public static String encryptFile(String filePath) {
-        return encryptFile(new File(filePath));
     }
 
     /**

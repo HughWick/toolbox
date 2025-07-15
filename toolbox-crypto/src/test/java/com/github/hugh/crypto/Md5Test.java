@@ -1,9 +1,7 @@
 package com.github.hugh.crypto;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
@@ -24,7 +22,7 @@ class Md5Test {
         String str1 = "";
         // 1234
         String str4 = "81DC9BDB52D04DC20036DBD8313ED055";
-        assertEquals(str1 ,Md5Utils.lowerCase(str1) );
+        assertEquals(str1, Md5Utils.lowerCase(str1));
         assertEquals(str4.toLowerCase(), Md5Utils.lowerCase(password1));
         assertEquals(str4, Md5Utils.upperCase(password1));
         // 八个8
@@ -36,24 +34,6 @@ class Md5Test {
         assertEquals(32, Md5Utils.upperCase("1234").length());
     }
 
-    @Test
-    void testFile() {
-        String ip2DbPath = Md5Test.class.getResource("/logo.png").getFile();
-        Assertions.assertNotNull(ip2DbPath);
-        File file = new File(ip2DbPath);
-        String md5Result = "559e0c4bd56eb91202e60b398b8c556d";
-        assertEquals(md5Result, Md5Utils.encryptFile(file));
-        assertEquals(md5Result, Md5Utils.encryptFile(ip2DbPath));
-    }
-
-    @Test
-    void testFileBin() {
-        String ip2DbPath = Md5Test.class.getResource("/host_display_gd32.bin").getFile();
-        Assertions.assertNotNull(ip2DbPath);
-        File file = new File(ip2DbPath);
-        String md5Result = "018f36293f3c4ed46674e19e87f731f4";
-        assertEquals(md5Result, Md5Utils.encryptFile(file));
-    }
     @Test
     void testEncryptBytes_emptyInput() {
         byte[] input = new byte[0];
@@ -120,7 +100,7 @@ class Md5Test {
         byte[] utf8Bytes = inputString.getBytes(StandardCharsets.UTF_8);
         byte[] gbkBytes = inputString.getBytes("GBK"); // Assuming GBK is supported
 
-        String md5Utf8 =Md5Utils.encryptBytes(utf8Bytes);
+        String md5Utf8 = Md5Utils.encryptBytes(utf8Bytes);
         String md5Gbk = Md5Utils.encryptBytes(gbkBytes);
 
         assertNotEquals(md5Utf8, md5Gbk, "MD5 should be different for different encodings");
