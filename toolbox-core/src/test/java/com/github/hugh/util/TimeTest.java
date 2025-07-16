@@ -3,6 +3,7 @@ package com.github.hugh.util;
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.support.TimeoutOperation;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -449,5 +450,107 @@ class TimeTest {
 
         // 断言返回的日期格式是否与预期相符
         assertEquals(expectedDate, earlyLastMonthCustomDate);
+    }
+    /**
+     * 辅助方法：创建一个指定年、月、日的Date对象
+     * 注意：Calendar.MONTH 是 0-based (0 for January)
+     */
+    private Date createDate(int year, int month, int day) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month - 1, day, 0, 0, 0); // month - 1 因为 Calendar.MONTH 是 0-based
+        calendar.set(Calendar.MILLISECOND, 0); // 清除毫秒，确保比较精确
+        return calendar.getTime();
+    }
+
+    @Test
+    @DisplayName("shouldReturnTrueWhenDatesAreInSameYearAndMonth")
+    void testIsSameMonth_SameYearSameMonth() {
+        Date date1 = createDate(2023, 3, 10); // 2023年3月10日
+        Date date2 = createDate(2023, 3, 25); // 2023年3月25日
+        assertTrue(DateUtils.isSameMonth(date1, date2), "在同一年同一个月时应返回true");
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenMonthsAreDifferentInSameYear")
+    void testIsSameMonth_SameYearDifferentMonth() {
+        Date date1 = createDate(2023, 3, 10); // 2023年3月
+        Date date2 = createDate(2023, 4, 15); // 2023年4月
+        assertFalse(DateUtils.isSameMonth(date1, date2), "在同一年但不同月时应返回false");
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenYearsAreDifferent")
+    void testIsSameMonth_DifferentYears() {
+        Date date1 = createDate(2023, 3, 10); // 2023年3月
+        Date date2 = createDate(2024, 3, 20); // 2024年3月
+        assertFalse(DateUtils.isSameMonth(date1, date2), "在不同年时应返回false");
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenMonthsAndYearsAreDifferent")
+    void testIsSameMonth_DifferentYearsAndMonths() {
+        Date date1 = createDate(2023, 3, 10); // 2023年3月
+        Date date2 = createDate(2024, 5, 20); // 2024年5月
+        assertFalse(DateUtils.isSameMonth(date1, date2), "在不同年不同月时应返回false");
+    }
+
+    @Test
+    @DisplayName("shouldReturnTrueWhenDatesAreAtMonthBoundary")
+    void testIsSameMonth_MonthBoundary() {
+        Date date1 = createDate(2023, 1, 1); // 2023年1月1日
+        Date date2 = createDate(2023, 1, 31); // 2023年1月31日
+        assertTrue(DateUtils.isSameMonth(date1, date2), "在月份边界也应返回true");
+    }
+
+    @Test
+    @DisplayName("shouldReturnTrueWhenDatesAreAtYearBoundary")
+    void testIsSameMonth_YearBoundary() {
+        Date date1 = createDate(2023, 12, 15); // 2023年12月
+        Date date2 = createDate(2023, 12, 30); // 2023年12月
+        assertTrue(DateUtils.isSameMonth(date1, date2), "在年份边界（同年12月）也应返回true");
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenDatesCrossYearBoundary")
+    void testIsSameMonth_AcrossYearBoundary() {
+        Date date1 = createDate(2023, 12, 25); // 2023年12月
+        Date date2 = createDate(2024, 1, 5);  // 2024年1月
+        assertFalse(DateUtils.isSameMonth(date1, date2), "跨越年份时应返回false");
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenBeginDateIsNull")
+    void testIsSameMonth_BeginDateIsNull() {
+        Date endDate = createDate(2023, 3, 10);
+        assertFalse(DateUtils.isSameMonth(null, endDate), "起始日期为null时应返回false");
+        // 如果你的业务逻辑是抛出异常，则使用 assertThrows
+        // assertThrows(IllegalArgumentException.class, () -> DateUtils.isSameMonth(null, endDate));
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenEndDateIsNull")
+    void testIsSameMonth_EndDateIsNull() {
+        Date beginDate = createDate(2023, 3, 10);
+        assertFalse(DateUtils.isSameMonth(beginDate, null), "结束日期为null时应返回false");
+        // 如果你的业务逻辑是抛出异常，则使用 assertThrows
+        // assertThrows(IllegalArgumentException.class, () -> DateUtils.isSameMonth(beginDate, null));
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenBothDatesAreNull")
+    void testIsSameMonth_BothDatesAreNull() {
+        assertFalse(DateUtils.isSameMonth(null, null), "两个日期都为null时应返回false");
+        // 如果你的业务逻辑是抛出异常，则使用 assertThrows
+        // assertThrows(IllegalArgumentException.class, () -> DateUtils.isSameMonth(null, null));
+    }
+
+    @Test
+    @DisplayName("shouldHandleLeapYearCorrectly")
+    void testIsSameMonth_LeapYear() {
+        Date date1 = createDate(2024, 2, 15); // 闰年2月
+        Date date2 = createDate(2024, 2, 29); // 闰年2月
+        assertTrue(DateUtils.isSameMonth(date1, date2), "闰年2月也应返回true");
+        Date date3 = createDate(2024, 3, 1); // 闰年3月
+        assertFalse(DateUtils.isSameMonth(date1, date3), "闰年跨月应返回false");
     }
 }
