@@ -1170,24 +1170,6 @@ public class DateUtils extends DateCode {
     }
 
     /**
-     * 日期对象的字符串 转 日期对象
-     * 直接使用{@link  #parse(Object, String)}
-     *
-     * @param dataStr 日期对象字符串 @{code Fri Oct 09 00:00:00 CST 2020}
-     * @return Date
-     * @since 1.2.8
-     */
-    @Deprecated
-    public static Date dateStrToDate(String dataStr) {
-        try {
-            return new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US).parse(dataStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
      * 计算两个时间之间相差多少分钟
      * <p>2.5.13 后,使用{@link TimeCalc#minutesDiff()}</p>
      *
