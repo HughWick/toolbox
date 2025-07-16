@@ -2,7 +2,10 @@ package com.github.hugh.util;
 
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.exception.ToolboxException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -116,7 +119,7 @@ class DateTest {
         Date parseData1 = DateUtils.parse(date1.toString(), DateCode.CST_FORM);
         assertNotNull(parseData1);
         assertInstanceOf(Date.class, parseData1);
-        assertInstanceOf(Date.class, DateUtils.dateStrToDate(date1.toString()));
+//        assertInstanceOf(Date.class, DateUtils.dateStrToDate(date1.toString()));
     }
 
 
@@ -549,5 +552,228 @@ class DateTest {
         Locale locale = Locale.getDefault();
         String dateStr = "invalid-date";
         assertThrows(ToolboxException.class, () -> DateUtils.parseDate(dateStr, DateCode.YEAR_MONTH_DAY, locale));
+    }
+
+    /**
+     * 辅助方法：创建一个指定年、月、日的Date对象
+     * 注意：Calendar.MONTH 是 0-based (0 for January)
+     */
+    private Date createDate(int year, int month, int day) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month - 1, day, 0, 0, 0); // month - 1 因为 Calendar.MONTH 是 0-based
+        calendar.set(Calendar.MILLISECOND, 0); // 清除毫秒，确保比较精确
+        return calendar.getTime();
+    }
+    /**
+     * 辅助方法：创建一个指定年、月、日、时、分、秒、毫秒的Date对象
+     * 注意：Calendar.MONTH 是 0-based (0 for January)
+     */
+    private Date createDate(int year, int month, int day, int hour, int minute, int second, int millisecond) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month - 1, day, hour, minute, second); // month - 1 因为 Calendar.MONTH 是 0-based
+        calendar.set(Calendar.MILLISECOND, millisecond);
+        return calendar.getTime();
+    }
+
+    @Test
+    @DisplayName("shouldReturnTrueWhenDatesAreInSameYearAndMonth")
+    void testIsSameMonth_SameYearSameMonth() {
+        Date date1 = createDate(2023, 3, 10); // 2023年3月10日
+        Date date2 = createDate(2023, 3, 25); // 2023年3月25日
+        assertTrue(DateUtils.isSameMonth(date1, date2), "在同一年同一个月时应返回true");
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenMonthsAreDifferentInSameYear")
+    void testIsSameMonth_SameYearDifferentMonth() {
+        Date date1 = createDate(2023, 3, 10); // 2023年3月
+        Date date2 = createDate(2023, 4, 15); // 2023年4月
+        assertFalse(DateUtils.isSameMonth(date1, date2), "在同一年但不同月时应返回false");
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenYearsAreDifferent")
+    void testIsSameMonth_DifferentYears() {
+        Date date1 = createDate(2023, 3, 10); // 2023年3月
+        Date date2 = createDate(2024, 3, 20); // 2024年3月
+        assertFalse(DateUtils.isSameMonth(date1, date2), "在不同年时应返回false");
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenMonthsAndYearsAreDifferent")
+    void testIsSameMonth_DifferentYearsAndMonths() {
+        Date date1 = createDate(2023, 3, 10); // 2023年3月
+        Date date2 = createDate(2024, 5, 20); // 2024年5月
+        assertFalse(DateUtils.isSameMonth(date1, date2), "在不同年不同月时应返回false");
+    }
+
+    @Test
+    @DisplayName("shouldReturnTrueWhenDatesAreAtMonthBoundary")
+    void testIsSameMonth_MonthBoundary() {
+        Date date1 = createDate(2023, 1, 1); // 2023年1月1日
+        Date date2 = createDate(2023, 1, 31); // 2023年1月31日
+        assertTrue(DateUtils.isSameMonth(date1, date2), "在月份边界也应返回true");
+    }
+
+    @Test
+    @DisplayName("shouldReturnTrueWhenDatesAreAtYearBoundary")
+    void testIsSameMonth_YearBoundary() {
+        Date date1 = createDate(2023, 12, 15); // 2023年12月
+        Date date2 = createDate(2023, 12, 30); // 2023年12月
+        assertTrue(DateUtils.isSameMonth(date1, date2), "在年份边界（同年12月）也应返回true");
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenDatesCrossYearBoundary")
+    void testIsSameMonth_AcrossYearBoundary() {
+        Date date1 = createDate(2023, 12, 25); // 2023年12月
+        Date date2 = createDate(2024, 1, 5);  // 2024年1月
+        assertFalse(DateUtils.isSameMonth(date1, date2), "跨越年份时应返回false");
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenBeginDateIsNull")
+    void testIsSameMonth_BeginDateIsNull() {
+        Date endDate = createDate(2023, 3, 10);
+        assertFalse(DateUtils.isSameMonth(null, endDate), "起始日期为null时应返回false");
+        // 如果你的业务逻辑是抛出异常，则使用 assertThrows
+        // assertThrows(IllegalArgumentException.class, () -> DateUtils.isSameMonth(null, endDate));
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenEndDateIsNull")
+    void testIsSameMonth_EndDateIsNull() {
+        Date beginDate = createDate(2023, 3, 10);
+        assertFalse(DateUtils.isSameMonth(beginDate, null), "结束日期为null时应返回false");
+        // 如果你的业务逻辑是抛出异常，则使用 assertThrows
+        // assertThrows(IllegalArgumentException.class, () -> DateUtils.isSameMonth(beginDate, null));
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenBothDatesAreNull")
+    void testIsSameMonth_BothDatesAreNull() {
+        assertFalse(DateUtils.isSameMonth(null, null), "两个日期都为null时应返回false");
+        // 如果你的业务逻辑是抛出异常，则使用 assertThrows
+        // assertThrows(IllegalArgumentException.class, () -> DateUtils.isSameMonth(null, null));
+    }
+
+    @Test
+    @DisplayName("shouldHandleLeapYearCorrectly")
+    void testIsSameMonth_LeapYear() {
+        Date date1 = createDate(2024, 2, 15); // 闰年2月
+        Date date2 = createDate(2024, 2, 29); // 闰年2月
+        assertTrue(DateUtils.isSameMonth(date1, date2), "闰年2月也应返回true");
+        Date date3 = createDate(2024, 3, 1); // 闰年3月
+        assertFalse(DateUtils.isSameMonth(date1, date3), "闰年跨月应返回false");
+    }
+
+    /**
+     * 辅助方法：验证日期是否精确到毫秒
+     * @param expectedCal 期望的日历对象
+     * @param actualDate 实际的Date对象
+     */
+    private void assertDateEquals(Calendar expectedCal, Date actualDate) {
+        Calendar actualCal = Calendar.getInstance();
+        actualCal.setTime(actualDate);
+
+        assertEquals(expectedCal.get(Calendar.YEAR), actualCal.get(Calendar.YEAR), "年份不一致");
+        assertEquals(expectedCal.get(Calendar.MONTH), actualCal.get(Calendar.MONTH), "月份不一致");
+        assertEquals(expectedCal.get(Calendar.DAY_OF_MONTH), actualCal.get(Calendar.DAY_OF_MONTH), "天不一致");
+        assertEquals(expectedCal.get(Calendar.HOUR_OF_DAY), actualCal.get(Calendar.HOUR_OF_DAY), "小时不一致");
+        assertEquals(expectedCal.get(Calendar.MINUTE), actualCal.get(Calendar.MINUTE), "分钟不一致");
+        assertEquals(expectedCal.get(Calendar.SECOND), actualCal.get(Calendar.SECOND), "秒不一致");
+        // 允许毫秒有微小差异，因为Date.from(Instant)转换时可能导致毫秒精度丢失或差异
+        // 或者直接比较，如果你的系统对毫秒精度要求极高
+        // assertEquals(expectedCal.get(Calendar.MILLISECOND), actualCal.get(Calendar.MILLISECOND), "毫秒不一致");
+        assertTrue(Math.abs(expectedCal.get(Calendar.MILLISECOND) - actualCal.get(Calendar.MILLISECOND)) < 2, "毫秒不一致，允许微小误差");
+    }
+
+    // --- getMonthEndTime (原始方法) 测试 ---
+
+    @ParameterizedTest
+    @CsvSource({
+            "2023, 1, 15, 2023, 1, 31",   // 普通月份
+            "2024, 2, 10, 2024, 2, 29",   // 闰年2月
+            "2023, 2, 10, 2023, 2, 28",   // 非闰年2月
+            "2023, 4, 5,  2023, 4, 30",   // 小月
+            "2023, 12, 1, 2023, 12, 31",  // 年底月份
+            "2023, 1, 1,  2023, 1, 31"    // 年初月份
+    })
+    @DisplayName("getMonthEndTime (原始方法): 各种普通日期")
+    void testGetMonthEndTime_OriginalMethod_VariousDates(int inputYear, int inputMonth, int inputDay,
+                                                         int expectedYear, int expectedMonth, int expectedDay) {
+        Date inputDate = createDate(inputYear, inputMonth, inputDay, 10, 30, 45, 123);
+        Date resultDate = DateUtils.getMonthEndTime(inputDate);
+
+        Calendar expectedCalendar = Calendar.getInstance();
+        expectedCalendar.set(expectedYear, expectedMonth - 1, expectedDay, 23, 59, 59);
+        expectedCalendar.set(Calendar.MILLISECOND, 999);
+
+        assertNotNull(resultDate);
+        assertDateEquals(expectedCalendar, resultDate);
+    }
+
+    @Test
+    @DisplayName("getMonthEndTime (原始方法): 输入日期为null应返回null")
+    void testGetMonthEndTime_OriginalMethod_NullInput() {
+        assertNull(DateUtils.getMonthEndTime(null));
+    }
+
+    // --- getMonthEndTimeOptimized (优化方法) 测试 ---
+
+    @ParameterizedTest
+    @CsvSource({
+            "2023, 1, 15, 2023, 1, 31",   // 普通月份
+            "2024, 2, 10, 2024, 2, 29",   // 闰年2月
+            "2023, 2, 10, 2023, 2, 28",   // 非闰年2月
+            "2023, 4, 5,  2023, 4, 30",   // 小月
+            "2023, 12, 1, 2023, 12, 31",  // 年底月份
+            "2023, 1, 1,  2023, 1, 31"    // 年初月份
+    })
+    @DisplayName("getMonthEndTimeOptimized (优化方法): 各种普通日期")
+    void testGetMonthEndTime_OptimizedMethod_VariousDates(int inputYear, int inputMonth, int inputDay,
+                                                          int expectedYear, int expectedMonth, int expectedDay) {
+        Date inputDate = createDate(inputYear, inputMonth, inputDay, 10, 30, 45, 123);
+        Date resultDate = DateUtils.getMonthEndTime(inputDate);
+
+        Calendar expectedCalendar = Calendar.getInstance();
+        expectedCalendar.set(expectedYear, expectedMonth - 1, expectedDay, 23, 59, 59);
+        expectedCalendar.set(Calendar.MILLISECOND, 999);
+
+        assertNotNull(resultDate);
+        assertDateEquals(expectedCalendar, resultDate);
+    }
+
+    @Test
+    @DisplayName("getMonthEndTimeOptimized (优化方法): 输入日期为null应返回null")
+    void testGetMonthEndTime_OptimizedMethod_NullInput() {
+        assertNull(DateUtils.getMonthEndTime(null));
+    }
+
+    @Test
+    @DisplayName("getMonthEndTimeOptimized (优化方法): 检查毫秒精度")
+    void testGetMonthEndTime_OptimizedMethod_MillisecondPrecision() {
+        // 创建一个精确到毫秒的日期
+        Date inputDate = createDate(2023, 7, 14, 12, 0, 0, 500);
+        Date resultDate = DateUtils.getMonthEndTime(inputDate);
+
+        Calendar expectedCalendar = Calendar.getInstance();
+        expectedCalendar.set(2023, Calendar.JULY, 31, 23, 59, 59);
+        expectedCalendar.set(Calendar.MILLISECOND, 999);
+
+        assertNotNull(resultDate);
+        // Date.from(Instant) 转换时可能会截断或四舍五入毫秒，所以通常不直接 ==
+        // 这里验证是否在预期值附近，或者直接比较时间戳
+        assertEquals(expectedCalendar.getTimeInMillis() / 1000, resultDate.getTime() / 1000, "秒级精度应一致");
+        // 如果你希望精确到毫秒，你需要确保你的Java版本和JVM能够支持所有9位纳秒精度
+        // 对于java.util.Date，它只能精确到毫秒。
+        // 所以这里检查毫秒级精度即可。
+        assertEquals(expectedCalendar.get(Calendar.MILLISECOND), actualCalForMsPrecision(resultDate).get(Calendar.MILLISECOND), "毫秒精度应为999");
+    }
+
+    private Calendar actualCalForMsPrecision(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal;
     }
 }

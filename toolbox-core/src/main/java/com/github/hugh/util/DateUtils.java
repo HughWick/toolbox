@@ -6,7 +6,7 @@ import com.github.hugh.exception.ToolboxException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
+import java.time.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -857,14 +857,24 @@ public class DateUtils extends DateCode {
         if (date == null) {
             return null;
         }
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        int month = getMonth(date);
-        calendar.set(Calendar.MONTH, month - 1);
-        // 获取最后一天
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-        set(calendar, 23, 59, 59, 999);
-        return calendar.getTime();
+        // 1. 将 java.util.Date 转换为 LocalDate (只保留日期部分)
+        // 推荐指定时区，否则会使用系统默认时区，可能导致跨时区问题
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        // 2. 获取该月最后一天的日期
+        LocalDate endOfMonth = localDate.withDayOfMonth(localDate.lengthOfMonth());
+        // 3. 构建该天的结束时间 (23:59:59.999999999)
+        // LocalTime.MAX 表示 23:59:59.999999999
+        LocalDateTime endOfMonthDateTime = endOfMonth.atTime(LocalTime.MAX);
+        // 4. 将 LocalDateTime 转换回 java.util.Date
+        return Date.from(endOfMonthDateTime.atZone(ZoneId.systemDefault()).toInstant());
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(date);
+//        int month = getMonth(date);
+//        calendar.set(Calendar.MONTH, month - 1);
+//        // 获取最后一天
+//        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+//        set(calendar, 23, 59, 59, 999);
+//        return calendar.getTime();
     }
 
     /**
