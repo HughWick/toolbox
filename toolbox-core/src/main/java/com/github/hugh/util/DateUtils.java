@@ -1,15 +1,12 @@
 package com.github.hugh.util;
 
+import com.github.hugh.components.datetime.TimeCalc;
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.exception.ToolboxException;
-import com.github.hugh.components.datetime.TimeCalc;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -411,19 +408,17 @@ public class DateUtils extends DateCode {
      * @return boolean @{code true} 同一月
      */
     public static boolean isSameMonth(Date beginDate, Date endDate) {
-        try {
-            Calendar cal1 = Calendar.getInstance();
-            cal1.setTime(beginDate);
-            int month1 = cal1.get(Calendar.MONTH) + 1;
-            Calendar cal2 = Calendar.getInstance();
-            cal2.setTime(endDate);
-            int month2 = cal2.get(Calendar.MONTH) + 1;
-            boolean isSameYear = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
-            return isSameYear && month1 == month2;
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (beginDate == null || endDate == null) {
+            return false;
         }
-        return false;
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(beginDate);
+        int month1 = cal1.get(Calendar.MONTH) + 1;
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(endDate);
+        int month2 = cal2.get(Calendar.MONTH) + 1;
+        boolean isSameYear = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
+        return isSameYear && month1 == month2;
     }
 
     /**
