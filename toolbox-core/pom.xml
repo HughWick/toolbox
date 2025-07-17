@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.github.hughwick</groupId>
         <artifactId>toolbox-parent</artifactId>
-       <version>3.0.8</version>
+       <version>3.0.9</version>
     </parent>
     <name>Toolbox Core</name>
     <artifactId>toolbox-core</artifactId>
