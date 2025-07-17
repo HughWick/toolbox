@@ -56,26 +56,82 @@ public class ImageWaterMark {
 
     /**
      * 封装水印各个部分的计算尺寸，方便在方法间传递。
+     * 此内部类用于存储在绘制水印之前计算好的所有尺寸和度量信息，
+     * 包括标题、内容、公司信息区域的宽度、高度、起始位置等，
+     * 以及整体水印图像的最终尺寸，以便于在不同的绘制方法中共享这些计算结果。
      */
     private static class WatermarkLayout {
+        /**
+         * 水印标题文本的显示宽度（像素）。
+         */
         int titleWidth;
+        /**
+         * 水印标题文本的高度（像素），基于字体度量。
+         */
         int titleHeight;
+        /**
+         * 水印标题背景区域的总高度（像素），包括标题文本高度和垂直内边距。
+         */
         int titleBgHeight;
+        /**
+         * 所有内容行中键（key）部分的最大宽度（像素）。
+         * 用于对齐键值对中的值（value）。
+         */
         int maxKeyWidth;
+        /**
+         * 所有内容行中值（value）部分的最大宽度（像素）。
+         */
         int maxValWidth;
+        /**
+         * 内容区域中单行文本的最大宽度（像素），可以是键值对的组合宽度或独立文本行的宽度。
+         */
         int maxContentLineWidth;
+        /**
+         * 水印内容文本的行数（不包括标题行和公司信息行）。
+         */
         int contentTextLineCount;
+        /**
+         * 所有内容文本行（不含公司信息）的总高度（像素），不包括行与行之间的额外内边距。
+         */
         int contentLinesHeightExcludingPadding;
+        /**
+         * 公司信息文本的高度（像素）。
+         */
         int companyInfoHeight;
+        /**
+         * 公司信息文本的宽度（像素）。
+         */
         int companyInfoWidth;
+        /**
+         * 所有内容文本行和公司信息文本的总高度（像素），包括它们之间的行间距，但不包括最上下的内边距。
+         */
         int totalContentAndCompanyTextHeight;
+        /**
+         * 白色内容背景区域的总高度（像素），包括所有内容文本、公司信息以及其上下的内边距。
+         */
         int contentTotalHeight;
+        /**
+         * 整个水印图像的最终总宽度（像素）。
+         */
         int watermarkWidth;
+        /**
+         * 整个水印图像的最终总高度（像素）。
+         */
         int watermarkHeight;
+        /**
+         * 标题字体对应的 {@code FontMetrics} 对象，用于计算标题文本的尺寸。
+         */
         FontMetrics titleFontMetrics;
+        /**
+         * 内容字体对应的 {@code FontMetrics} 对象，用于计算内容文本和公司信息文本的尺寸。
+         */
         FontMetrics contentFontMetrics;
 
-        // 构造函数用于初始化所有计算后的尺寸
+        /**
+         * 构造函数用于初始化水印布局对象，并传入标题和内容字体的 {@code FontMetrics}。
+         * * @param titleFm 标题字体的 {@code FontMetrics} 对象。
+         * @param contentFm 内容字体的 {@code FontMetrics} 对象。
+         */
         public WatermarkLayout(FontMetrics titleFm, FontMetrics contentFm) {
             this.titleFontMetrics = titleFm;
             this.contentFontMetrics = contentFm;
@@ -129,7 +185,7 @@ public class ImageWaterMark {
      * @param complexWatermarkBuilder 包含所有水印配置信息的建造者对象。
      * @throws IOException 如果在处理图片或字体时发生I/O错误。
      */
-    public static void addComplexWatermark(ComplexWatermarkBuilder complexWatermarkBuilder) throws IOException {
+    public static void addComplex(ComplexWatermarkBuilder complexWatermarkBuilder) throws IOException {
         // 1. 获取必要的字体度量信息
         BufferedImage tempGfxImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2dTemp = tempGfxImage.createGraphics();
@@ -353,7 +409,6 @@ public class ImageWaterMark {
             if (line.key != null) {
                 // 如果是键值对类型
                 String keyWithColon = line.key + ": "; // 格式化键文本，加上冒号和空格
-
                 g2d.setColor(CONTENT_TEXT_COLOR); // 设置键的颜色为默认内容文本颜色
                 // 绘制键文本：位于左侧内边距处
                 g2d.drawString(keyWithColon, PADDING, currentYPos + contentFm.getAscent());

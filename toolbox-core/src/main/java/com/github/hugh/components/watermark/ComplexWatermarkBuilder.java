@@ -8,6 +8,9 @@ import net.coobird.thumbnailator.geometry.Positions;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -16,6 +19,8 @@ import java.util.List;
  * 使得构建复杂水印所需的所有参数变得清晰和便捷。
  * 用户可以通过链式调用 {@code setXxx()} 方法逐步设置水印的各项属性，
  * 然后将构建好的此对象传递给水印生成方法。
+ *
+ * @since 3.0.8
  */
 @Setter // 为所有字段自动生成公共的 setter 方法 (例如: setTargetImage(...))
 @Getter // 为所有字段自动生成公共的 getter 方法 (例如: getTargetImage())
@@ -67,10 +72,46 @@ public class ComplexWatermarkBuilder {
      * 然后通过链式 {@code setXxx()} 方法设置各项参数。
      */
     public ComplexWatermarkBuilder() {
-        // 可以在此设置字段的默认值，如果它们没有在字段声明时直接初始化。
-        // 例如：
-        // this.opacity = 1.0f;
-        // this.position = Positions.BOTTOM_RIGHT;
-        // this.watermarkContent = new ArrayList<>();
+    }
+
+    // --- 新增的重载方法，允许直接传入文件路径、File 对象或 InputStream ---
+
+    /**
+     * 设置要添加水印的目标图片，通过图片文件的完整路径。
+     * 此方法内部会调用 {@link ImageWaterMark#loadImage(String)} 来加载图片。
+     *
+     * @param imagePath 图片文件的完整路径。
+     * @return 当前建造者实例，支持链式调用。
+     * @throws IOException 如果图片文件不存在或无法读取。
+     */
+    public ComplexWatermarkBuilder setTargetImage(String imagePath) throws IOException {
+        this.targetImage = ImageWaterMark.loadImage(imagePath);
+        return this;
+    }
+
+    /**
+     * 设置要添加水印的目标图片，通过 {@code File} 对象。
+     * 此方法内部会调用 {@link ImageWaterMark#loadImage(File)} 来加载图片。
+     *
+     * @param imageFile 图片文件对象。
+     * @return 当前建造者实例，支持链式调用。
+     * @throws IOException 如果文件不存在、无法读取、或者文件内容不是有效的图片格式。
+     */
+    public ComplexWatermarkBuilder setTargetImage(File imageFile) throws IOException {
+        this.targetImage = ImageWaterMark.loadImage(imageFile);
+        return this;
+    }
+
+    /**
+     * 设置要添加水印的目标图片，通过 {@code InputStream} 流。
+     * 此方法内部会调用 {@link ImageWaterMark#loadImage(InputStream)} 来加载图片。
+     *
+     * @param inputStream 包含图片数据的输入流。
+     * @return 当前建造者实例，支持链式调用。
+     * @throws IOException 如果读取流时发生I/O错误，或者流中的数据不是有效的图片格式。
+     */
+    public ComplexWatermarkBuilder setTargetImage(InputStream inputStream) throws IOException {
+        this.targetImage = ImageWaterMark.loadImage(inputStream);
+        return this;
     }
 }
