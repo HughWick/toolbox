@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.github.hughwick</groupId>
         <artifactId>toolbox-parent</artifactId>
-       <version>2.8.11</version>
+       <version>2.8.12</version>
     </parent>
     <name>Toolbox Crypto</name>
     <artifactId>toolbox-crypto</artifactId>
