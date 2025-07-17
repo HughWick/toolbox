@@ -5,6 +5,8 @@ package com.github.hugh.components.watermark;
  * 该类用于定义水印中的每一行文本数据，支持两种类型的内容：
  * 1. 键值对形式 (key: value)，其中值可以选择高亮显示。
  * 2. 完整文本形式，用于标题或不需要键值对格式的独立行。
+ *
+ * @since 3.0.8
  */
 public class WatermarkLine {
     /**
