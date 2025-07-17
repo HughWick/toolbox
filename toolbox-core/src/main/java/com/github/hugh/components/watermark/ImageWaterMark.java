@@ -3,10 +3,12 @@ package com.github.hugh.components.watermark;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -80,9 +82,44 @@ public class ImageWaterMark {
         }
     }
 
-    // 辅助方法：加载图片 (仅用于测试)
+    /**
+     * 从文件系统加载 {@code BufferedImage} 图片。
+     * 此方法是一个通用的图片加载辅助方法，适用于任何需要读取本地图片文件的场景。
+     * 它通过 Java 的 ImageIO 库高效地将图片文件读取为 {@code BufferedImage} 对象。
+     *
+     * @param imagePath 图片文件的完整路径（例如："C:/images/input.jpg" 或 "/home/user/img.png"）。
+     * @return 加载成功的 {@code BufferedImage} 对象。
+     * @throws IOException 如果指定的图片文件不存在、无法访问、或者文件内容不是有效的图片格式，则抛出此异常。
+     */
     public static BufferedImage loadImage(String imagePath) throws IOException {
-        return Thumbnails.of(new File(imagePath)).scale(1.0).asBufferedImage();
+        // 将路径字符串转换为 File 对象，并调用loadImage(File file)重载方法。
+        return loadImage(new File(imagePath));
+    }
+
+    /**
+     * 从 {@code File} 对象加载 {@code BufferedImage} 图片。
+     * 此方法适用于已知图片文件对象的场景。
+     *
+     * @param imageFile 图片文件对象。
+     * @return 加载成功的 {@code BufferedImage} 对象。
+     * @throws IOException 如果文件不存在、无法读取、或者文件内容不是有效的图片格式，则抛出此异常。
+     */
+    public static BufferedImage loadImage(File imageFile) throws IOException {
+        // 使用 Java 标准库的 ImageIO.read 方法直接从文件加载图片。
+        return ImageIO.read(imageFile);
+    }
+
+    /**
+     * 从 {@code InputStream} 流加载 {@code BufferedImage} 图片。
+     * 此方法适用于从网络、数据库或内存中读取图片流的场景。
+     *
+     * @param inputStream 包含图片数据的输入流。
+     * @return 加载成功的 {@code BufferedImage} 对象。
+     * @throws IOException 如果读取流时发生I/O错误，或者流中的数据不是有效的图片格式，则抛出此异常。
+     */
+    public static BufferedImage loadImage(InputStream inputStream) throws IOException {
+        // 使用 Java 标准库的 ImageIO.read 方法直接从输入流加载图片。
+        return ImageIO.read(inputStream);
     }
 
     /**
@@ -122,7 +159,7 @@ public class ImageWaterMark {
             // 7. 绘制内容行
             drawContentLines(g2d, complexWatermarkBuilder.getWatermarkContent(), complexWatermarkBuilder.getContentFont(), layout.titleBgHeight, layout.maxKeyWidth, layout.contentFontMetrics);
             // 8. 绘制公司信息行
-            drawCompanyInfo(g2d, complexWatermarkBuilder.getCompanyInfo(), complexWatermarkBuilder.getContentFont(), layout.titleBgHeight, layout.contentTextLineCount, layout.totalContentAndCompanyTextHeight, layout.contentFontMetrics);
+            drawCompanyInfo(g2d, complexWatermarkBuilder.getCompanyInfo(), complexWatermarkBuilder.getContentFont(), layout.titleBgHeight, layout.contentTextLineCount, layout.contentFontMetrics);
         } finally {
             g2d.dispose(); // 确保Graphics2D资源被释放
         }
@@ -349,12 +386,11 @@ public class ImageWaterMark {
      * @param contentFont                      内容字体。
      * @param titleBgHeight                    标题背景高度。
      * @param contentTextLineCount             内容文本行数。
-     * @param totalContentAndCompanyTextHeight 总内容文本和公司信息高度（不含padding）。
      * @param contentFm                        内容字体的 FontMetrics。
      */
     private static void drawCompanyInfo(Graphics2D g2d, String companyInfo, Font contentFont,
                                         int titleBgHeight, int contentTextLineCount,
-                                        int totalContentAndCompanyTextHeight, FontMetrics contentFm) {
+                                        FontMetrics contentFm) {
         if (companyInfo != null && !companyInfo.isEmpty()) {
             g2d.setFont(contentFont);
             g2d.setColor(CONTENT_TEXT_COLOR);
