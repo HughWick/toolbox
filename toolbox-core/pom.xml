@@ -42,7 +42,6 @@
             <groupId>org.lionsoul</groupId>
             <artifactId>ip2region</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/eu.bitwalker/UserAgentUtils -->
         <dependency>
             <groupId>eu.bitwalker</groupId>
             <artifactId>UserAgentUtils</artifactId>
@@ -56,6 +55,10 @@
             <artifactId>minilzo-java</artifactId>
             <version>0.0.2</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
         </dependency>
     </dependencies>
 </project>
