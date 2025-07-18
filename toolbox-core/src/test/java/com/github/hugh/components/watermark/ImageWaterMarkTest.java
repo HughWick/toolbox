@@ -3,38 +3,37 @@ package com.github.hugh.components.watermark;
 import com.github.hugh.util.TimeUtils;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImageWaterMarkTest {
-    /**
-     * 从类路径加载字体文件。
-     *
-     * @param fontPath  类路径下的字体文件路径，例如 "fonts/Microsoft_YaHei.ttf"。
-     * @param fontSize  字体大小。
-     * @param fontStyle 字体样式（Font.PLAIN, Font.BOLD, Font.ITALIC）。
-     * @return 加载的 Font 对象，如果失败则返回 null。
-     * @throws IOException         如果字体文件无法读取。
-     * @throws FontFormatException 如果字体文件格式不正确。
-     */
-    private static Font loadFontFromClasspath(String fontPath, int fontSize, int fontStyle) throws IOException, FontFormatException {
-        try (InputStream is = ImageWaterMarkTest.class.getClassLoader().getResourceAsStream(fontPath)) {
-            if (is == null) {
-                System.err.println("未在类路径中找到字体文件: " + fontPath);
-                return null; // 或者抛出 IllegalArgumentException
-            }
-            // 使用 Font.createFont 从 InputStream 创建 Font 对象
-            Font baseFont = Font.createFont(Font.TRUETYPE_FONT, is); // 假设是 TTF 字体
-            // 基于创建的字体设置样式和大小
-            return baseFont.deriveFont(fontStyle, (float) fontSize);
-        }
-    }
+//    /**
+//     * 从类路径加载字体文件。
+//     *
+//     * @param fontPath  类路径下的字体文件路径，例如 "fonts/Microsoft_YaHei.ttf"。
+//     * @param fontSize  字体大小。
+//     * @param fontStyle 字体样式（Font.PLAIN, Font.BOLD, Font.ITALIC）。
+//     * @return 加载的 Font 对象，如果失败则返回 null。
+//     * @throws IOException         如果字体文件无法读取。
+//     * @throws FontFormatException 如果字体文件格式不正确。
+//     */
+//    private static Font loadFontFromClasspath(String fontPath, int fontSize, int fontStyle) throws IOException, FontFormatException {
+//        try (InputStream is = ImageWaterMarkTest.class.getClassLoader().getResourceAsStream(fontPath)) {
+//            if (is == null) {
+//                System.err.println("未在类路径中找到字体文件: " + fontPath);
+//                return null; // 或者抛出 IllegalArgumentException
+//            }
+//            // 使用 Font.createFont 从 InputStream 创建 Font 对象
+//            Font baseFont = Font.createFont(Font.TRUETYPE_FONT, is); // 假设是 TTF 字体
+//            // 基于创建的字体设置样式和大小
+//            return baseFont.deriveFont(fontStyle, (float) fontSize);
+//        }
+//    }
 
     /**
      * 为图片添加具有复杂样式的多行水印（模拟工程记录UI样式）。
@@ -266,8 +265,9 @@ public class ImageWaterMarkTest {
         try {
             tempDir = Files.createTempDirectory("watermark_test_output_");
             System.out.println("测试输出目录: " + tempDir.toAbsolutePath());
-
-            String inputImagePath = "D:\\360极速浏览器X下载\\4ac38054b49c421ab47b5397693d8965.jpg";
+            String inputImagePath1 = "/file/watermark/593c3fc5592e42d09da01edf57fd0b79.jpg";
+            String inputImagePath2 = "/file/watermark/5085ef6c750a48a49107e2b0a117ca4c.jpg";
+            String inputImagePath3 = "/file/watermark/8eaab21ebd1a4d658920bf771de4e7dd.jpg";
             String outputFileName1 = "output_image_with_complex_watermark.jpg";
             String outputFileName2 = "output_image_with_complex_watermark2.jpg";
             String outputFileName3 = "output_image_with_complex_watermark3.jpg";
@@ -287,10 +287,8 @@ public class ImageWaterMarkTest {
 //            int contentFontSize = 18;
 //            String titleFontName = "SourceHanSansCN-Bold.otf";
 //            String contentFontName = "SourceHanSansCN-Regular.otf";
-//
 //            Font titleFont = loadFontFromClasspath("fonts/" + titleFontName, titleFontSize, Font.BOLD);
 //            Font contentFont = loadFontFromClasspath("fonts/" + contentFontName, contentFontSize, Font.PLAIN);
-//
 //            if (titleFont == null || contentFont == null) {
 //                System.err.println("错误：未能加载所需字体。请确保字体文件存在于 'src/main/resources/fonts/' 目录下，并且名称正确。");
 //                titleFont = new Font("SansSerif", Font.BOLD, titleFontSize);
@@ -299,12 +297,12 @@ public class ImageWaterMarkTest {
             // ================================================================
             // === 核心修改：使用 ComplexWatermarkBuilder 构建参数并调用新方法 ===
             // ================================================================
-
+            String path1 = getPath(inputImagePath1);
             // 调用方式一：使用 Lombok @Builder 自动生成的 builder() 方法
             // 这也是最推荐的方式
             // 构建第一个水印的配置
             ComplexWatermarkBuilder builder1 = new ComplexWatermarkBuilder() // 实例化
-                    .setTargetImage(inputImagePath) // 使用 setXxx 链式调用
+                    .setTargetImage(path1) // 使用 setXxx 链式调用
                     .setWatermarkContent(content)
 //                    .setTitleFont(titleFont)
 //                    .setContentFont(contentFont)
@@ -316,12 +314,12 @@ public class ImageWaterMarkTest {
 
             // 调用 ImageWaterMark 中接受 ComplexWatermarkBuilder 的重载方法
             ImageWaterMark.addComplex(builder1);
-            System.out.println("复杂水印图片已生成: " + outputPath1.toAbsolutePath());
-
+            System.out.println("复杂水印图片已生成（公司签名）: " + outputPath1.toAbsolutePath());
+            String path2 = getPath(inputImagePath2);
             // ----------------------------------------------------------------
             // 调用方式二：第二个水印，无公司信息
             ComplexWatermarkBuilder builder2 = new ComplexWatermarkBuilder()
-                    .setTargetImage(new File(inputImagePath))
+                    .setTargetImage(new File(path2))
                     .setWatermarkContent(content)
 //                    .setTitleFont(titleFont)
 //                    .setContentFont(contentFont)
@@ -331,14 +329,16 @@ public class ImageWaterMarkTest {
                     .setCompanyInfo(""); // 不设置公司信息，或设置为 ""
 
             ImageWaterMark.addComplex(builder2);
-            System.out.println("复杂水印图片已生成: " + outputPath2.toAbsolutePath());
+            System.out.println("复杂水印图片已生成（没有公司签名）: " + outputPath2.toAbsolutePath());
             // ================================================================
             org.junit.jupiter.api.Assertions.assertTrue(Files.exists(outputPath1));
             org.junit.jupiter.api.Assertions.assertTrue(Files.exists(outputPath2));
+            String path3 = getPath(inputImagePath3);
+            FileInputStream fileInputStream = new FileInputStream(path3);
             // ================================================================
             // 新增测试用例：通过 InputStream 加载图片
             ComplexWatermarkBuilder builder3 = new ComplexWatermarkBuilder()
-                    .setTargetImage(Files.newInputStream(Path.of(inputImagePath)))
+                    .setTargetImage(fileInputStream)
                     .setWatermarkContent(content)
                     .setOpacity(0.9f)
 //                    .setPosition(Positions.CENTER) // 设置不同位置以区分
@@ -376,4 +376,7 @@ public class ImageWaterMarkTest {
         }
     }
 
+    private static String getPath(String fileName) {
+        return ImageWaterMarkTest.class.getResource(fileName).getPath();
+    }
 }
