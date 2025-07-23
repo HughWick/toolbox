@@ -5,7 +5,6 @@ import com.github.hugh.json.model.Command;
 import com.github.hugh.json.model.ResponseData;
 import com.github.hugh.json.model.Student;
 import com.github.hugh.json.model.UsersJsonBo;
-import com.github.hugh.json.model.c200.C200TripVo;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -311,9 +310,9 @@ class GsonUtilTest {
         // 测试URL
         String head = "https://minio.dev.hnlot.com.cn/svmp-dev/";
         String url = head + "trip/Trip/20250507/DC2E97CCD813@1746608504.json";
-        System.out.println(GsonUtils.toJson(url));
-        C200TripVo c200TripVo = GsonUtils.fromJson(url, C200TripVo.class);
-        System.out.println(GsonUtils.toJson(c200TripVo));
+//        System.out.println(GsonUtils.toJson(url));
+//        C200TripVo c200TripVo = GsonUtils.fromJson(url, C200TripVo.class);
+//        System.out.println(GsonUtils.toJson(c200TripVo));
         String url2 = "https://jsonplaceholder.typicode.com/users/1";
         UsersJsonBo usersJsonBo = GsonUtils.fromJson(url2, UsersJsonBo.class);
         assertEquals("Leanne Graham", usersJsonBo.getName());
