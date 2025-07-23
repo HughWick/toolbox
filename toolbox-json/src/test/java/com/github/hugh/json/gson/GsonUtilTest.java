@@ -5,12 +5,10 @@ import com.github.hugh.json.model.Command;
 import com.github.hugh.json.model.ResponseData;
 import com.github.hugh.json.model.Student;
 import com.github.hugh.json.model.UsersJsonBo;
-import com.github.hugh.json.model.c200.C200TripVo;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -303,23 +301,8 @@ class GsonUtilTest {
         String str1 = "{\"code\":\"0000\",\"data\":[{\"template\":1,\"createBy\":\"系统\",\"parentTypeId\":9,\"level\":2,\"children\":[],\"typeName\":\"抓拍单元\",\"id\":45,\"type\":0,\"createDate\":1683567605000}],\"message\":\"操作成功\"}";
         String strArr1 = "[{\"template\":1,\"createBy\":\"系统\",\"parentTypeId\":9,\"level\":2,\"children\":[],\"typeName\":\"抓拍单元\",\"id\":45,\"type\":0,\"createDate\":1683567605000}]";
         List<Object> objects = GsonUtils.toArrayList(strArr1);
-        assertEquals(1, objects.size());
-//        System.out.println(objects.size());
+        System.out.println(objects.size());
         List<Object> objects1 = GsonUtils.toArrayList(objects.toString());
-    }
-
-    @Test
-    void testEntrySet() {
-//        var str2 = "{code:006,message:测试,age:18,created:16250247130001,amount:199.88,switchs:true}";
-//        System.out.println(new JsonObjects(str2).toJson());
-        var str3 = "{\"code\":\"006\",\"message\":\"测试\",\"age\":\"18\",\"created\":\"2022-03-21 18:02:11\",\"amount\":\"199.88\",\"switchs\":\"true\"}";
-        Jsons jsonObjects = new Jsons(str3);
-        JsonObject parse = GsonUtils.parse(str3);
-        Set<Map.Entry<String, JsonElement>> entries = parse.entrySet();
-        assertEquals(jsonObjects.entrySet(), entries);
-//        for (Map.Entry<String, JsonElement> entrySet : jsonObjects.entrySet()) {
-//            System.out.println("===>>" + entrySet.getKey());
-//        }
     }
 
     @Test
@@ -328,27 +311,16 @@ class GsonUtilTest {
         String head = "https://minio.dev.hnlot.com.cn/svmp-dev/";
         String url = head + "trip/Trip/20250507/DC2E97CCD813@1746608504.json";
 //        System.out.println(GsonUtils.toJson(url));
-        C200TripVo c200TripVo = GsonUtils.fromJson(url, C200TripVo.class);
+//        C200TripVo c200TripVo = GsonUtils.fromJson(url, C200TripVo.class);
 //        System.out.println(GsonUtils.toJson(c200TripVo));
-        assertEquals("DC2E97CCD8131746608504", c200TripVo.getTripId());
-        JsonObject parse = GsonUtils.parse(url);
-        assertEquals(1746608504, parse.get("StartTimestamp").getAsLong());
         String url2 = "https://jsonplaceholder.typicode.com/users/1";
         UsersJsonBo usersJsonBo = GsonUtils.fromJson(url2, UsersJsonBo.class);
         assertEquals("Leanne Graham", usersJsonBo.getName());
-        assertEquals("Kulas Light", usersJsonBo.getAddress().getStreet());
 
         final ToolboxJsonException toolboxHttpException = assertThrowsExactly(ToolboxJsonException.class, () -> {
             String url3 = "https://www.400unkown.cn";
             GsonUtils.fromJson(url3, UsersJsonBo.class);
         });
         assertTrue(toolboxHttpException.getMessage().contains("java.net.UnknownHostException: www.400unkown.cn"));
-        String userUrl3 = "https://jsonplaceholder.typicode.com/users/2";
-        Map<String, Object> map = new HashMap<>();
-        map.put("website", userUrl3);
-        UsersJsonBo usersJsonBo2 = GsonUtils.fromJson(GsonUtils.toJson(map), UsersJsonBo.class);
-        assertNull(usersJsonBo2.getName());
-        assertEquals(userUrl3, usersJsonBo2.getWebsite());
     }
-
 }

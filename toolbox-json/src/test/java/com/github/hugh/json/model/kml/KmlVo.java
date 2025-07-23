@@ -1,6 +1,6 @@
 package com.github.hugh.json.model.kml;
 
-import com.google.gson.annotations.SerializedName;
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,67 +15,67 @@ public class KmlVo {
     @NoArgsConstructor
     @Data
     public static class KmlDTO {
-        @SerializedName("xmlns")
+        @JSONField(name = "xmlns")
         private String xmlns;
-        @SerializedName("xmlns:atom")
+        @JSONField(name = "xmlns:atom")
         private String xmlnsAtom;
-        @SerializedName("Document")
+        @JSONField(name = "Document")
         private DocumentDTO document;
-        @SerializedName("xmlns:gx")
+        @JSONField(name = "xmlns:gx")
         private String xmlnsGx;
 
         @NoArgsConstructor
         @Data
         public static class DocumentDTO {
-            @SerializedName("name")
+            @JSONField(name = "name")
             private String name;
-            @SerializedName("Folder")
+            @JSONField(name = "Folder")
             private FolderDTO folder;
 
             @NoArgsConstructor
             @Data
             public static class FolderDTO {
-                @SerializedName("name")
+                @JSONField(name ="name")
                 private String name;
-                @SerializedName("Folder")
+                @JSONField(name ="Folder")
                 private List<FolderDTO2> folder;
 
                 @NoArgsConstructor
                 @Data
                 public static class FolderDTO2 {
-                    @SerializedName("Placemark")
+                    @JSONField(name ="Placemark")
                     private List<PlacemarkDTO> placemark;
-                    @SerializedName("name")
+                    @JSONField(name ="name")
                     private String name;
-                    @SerializedName("Folder")
+                    @JSONField(name ="Folder")
                     private List<FolderDTO3> folder;
 
                     @NoArgsConstructor
                     @Data
                     public static class PlacemarkDTO {
-                        @SerializedName("OvCoordType")
+                        @JSONField(name ="OvCoordType")
                         private String ovCoordType;
-                        @SerializedName("name")
+                        @JSONField(name ="name")
                         private String name;
-                        @SerializedName("Style")
+                        @JSONField(name ="Style")
                         private StyleDTO style;
-                        @SerializedName("MultiGeometry")
+                        @JSONField(name ="MultiGeometry")
                         private MultiGeometryDTO multiGeometry;
-                        @SerializedName("Point")
+                        @JSONField(name ="Point")
                         private PointDTO point;
 
                         @NoArgsConstructor
                         @Data
                         public static class StyleDTO {
-                            @SerializedName("LineStyle")
+                            @JSONField(name ="LineStyle")
                             private LineStyleDTO lineStyle;
 
                             @NoArgsConstructor
                             @Data
                             public static class LineStyleDTO {
-                                @SerializedName("color")
+                                @JSONField(name ="color")
                                 private String color;
-                                @SerializedName("width")
+                                @JSONField(name ="width")
                                 private Integer width;
                             }
                         }
@@ -83,13 +83,13 @@ public class KmlVo {
                         @NoArgsConstructor
                         @Data
                         public static class MultiGeometryDTO {
-                            @SerializedName("LineString")
+                            @JSONField(name ="LineString")
                             private List<LineStringDTO> lineString;
 
                             @NoArgsConstructor
                             @Data
                             public static class LineStringDTO {
-                                @SerializedName("coordinates")
+                                @JSONField(name ="coordinates")
                                 private String coordinates;
                             }
                         }
@@ -97,7 +97,7 @@ public class KmlVo {
                         @NoArgsConstructor
                         @Data
                         public static class PointDTO {
-                            @SerializedName("coordinates")
+                            @JSONField(name ="coordinates")
                             private String coordinates;
                         }
                     }
@@ -105,48 +105,48 @@ public class KmlVo {
                     @NoArgsConstructor
                     @Data
                     public static class FolderDTO3 {
-                        @SerializedName("Placemark")
+                        @JSONField(name ="Placemark")
                         private List<PlacemarkDTO2> placemark;
-                        @SerializedName("name")
+                        @JSONField(name ="name")
                         private String name;
 
                         @NoArgsConstructor
                         @Data
                         public static class PlacemarkDTO2 {
-                            @SerializedName("OvCoordType")
+                            @JSONField(name ="OvCoordType")
                             private String ovCoordType;
-                            @SerializedName("name")
+                            @JSONField(name ="name")
                             private String name;
-                            @SerializedName("Style")
+                            @JSONField(name ="Style")
                             private StyleDTO style;
-                            @SerializedName("Polygon")
+                            @JSONField(name ="Polygon")
                             private PolygonDTO polygon;
-                            @SerializedName("LineString")
+                            @JSONField(name ="LineString")
                             private LineStringDTO lineString;
-                            @SerializedName("OvStyle")
+                            @JSONField(name ="OvStyle")
                             private OvStyleDTO ovStyle;
 
                             @NoArgsConstructor
                             @Data
                             public static class StyleDTO {
-                                @SerializedName("LineStyle")
+                                @JSONField(name ="LineStyle")
                                 private LineStyleDTO lineStyle;
-                                @SerializedName("PolyStyle")
+                                @JSONField(name ="PolyStyle")
                                 private PolyStyleDTO polyStyle;
 
                                 @NoArgsConstructor
                                 @Data
                                 public static class LineStyleDTO {
-                                    @SerializedName("color")
+                                    @JSONField(name ="color")
                                     private String color;
-                                    @SerializedName("width")
+                                    @JSONField(name ="width")
                                     private Integer width;
                                 }
 
                                 @NoArgsConstructor
                                 @Data
                                 public static class PolyStyleDTO {
-                                    @SerializedName("color")
+                                    @JSONField(name ="color")
                                     private String color;
                                 }
                             }
@@ -154,21 +154,21 @@ public class KmlVo {
                             @NoArgsConstructor
                             @Data
                             public static class PolygonDTO {
-                                @SerializedName("tessellate")
+                                @JSONField(name ="tessellate")
                                 private Integer tessellate;
-                                @SerializedName("outerBoundaryIs")
+                                @JSONField(name ="outerBoundaryIs")
                                 private OuterBoundaryIsDTO outerBoundaryIs;
 
                                 @NoArgsConstructor
                                 @Data
                                 public static class OuterBoundaryIsDTO {
-                                    @SerializedName("LinearRing")
+                                    @JSONField(name ="LinearRing")
                                     private LinearRingDTO linearRing;
 
                                     @NoArgsConstructor
                                     @Data
                                     public static class LinearRingDTO {
-                                        @SerializedName("coordinates")
+                                        @JSONField(name ="coordinates")
                                         private String coordinates;
                                     }
                                 }
@@ -177,22 +177,22 @@ public class KmlVo {
                             @NoArgsConstructor
                             @Data
                             public static class LineStringDTO {
-                                @SerializedName("coordinates")
+                                @JSONField(name ="coordinates")
                                 private String coordinates;
                             }
 
                             @NoArgsConstructor
                             @Data
                             public static class OvStyleDTO {
-                                @SerializedName("TrackStyle")
+                                @JSONField(name ="TrackStyle")
                                 private TrackStyleDTO trackStyle;
 
                                 @NoArgsConstructor
                                 @Data
                                 public static class TrackStyleDTO {
-                                    @SerializedName("width")
+                                    @JSONField(name ="width")
                                     private Integer width;
-                                    @SerializedName("type")
+                                    @JSONField(name ="type")
                                     private Integer type;
                                 }
                             }
