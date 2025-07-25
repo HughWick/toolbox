@@ -1,5 +1,6 @@
 package com.github.hugh.json.gson;
 
+import com.github.hugh.components.watermark.WatermarkLine;
 import com.github.hugh.json.exception.ToolboxJsonException;
 import com.github.hugh.json.model.Command;
 import com.github.hugh.json.model.ResponseData;
@@ -144,10 +145,10 @@ class GsonUtilTest {
 
     // 测试断包json数据
     @Test
-    void testDecidedlyJson(){
+    void testDecidedlyJson() {
         String str1 = "{\"command\":\"303\",\"deviceId\":\"device_01\",\"requestId\":\"f0d04d5b-0a9a-4436-99a2-d540cd5c52cf\",\"timestamp\":1748936316924,\"payload\":{}},\"versionCode\":\"1\"";
         List<Object> objectList = GsonUtils.parseMultipleJson(str1);
-        assertEquals(1 ,objectList.size());
+        assertEquals(1, objectList.size());
     }
 
     // 同字符串多个json解析
@@ -322,5 +323,17 @@ class GsonUtilTest {
             GsonUtils.fromJson(url3, UsersJsonBo.class);
         });
         assertTrue(toolboxHttpException.getMessage().contains("java.net.UnknownHostException: www.400unkown.cn"));
+    }
+
+
+    @Test
+    void testToList() {
+        String str1 = "[{\"overallText\":\"工程记录\"} ,{\"key\":\"天气\", \"value\":\"阴 高温 38℃\" , \"highlightValue\":\"true\"}]";
+        String str2 = "[{ \"overallText\": \"工程记录\"} ,{\"key\":\"天气\", \"value\":\"阴 高温 38℃\" , \"highlightValue\":\"true\"}]";
+        List<WatermarkLine> arrayList = GsonUtils.toArrayList(str1, WatermarkLine.class);
+//        System.out.println(arrayList.size());
+        List<WatermarkLine> arrayList2 = GsonUtils.toArrayList(str2, WatermarkLine.class);
+//        System.out.println(arrayList2.size());
+        assertEquals("工程记录", arrayList2.get(0).getOverallText());
     }
 }
