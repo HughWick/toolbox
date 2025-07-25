@@ -1,5 +1,8 @@
 package com.github.hugh.components.watermark;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * 结构化水印内容行，方便传入和绘制。
  * 该类用于定义水印中的每一行文本数据，支持两种类型的内容：
@@ -8,6 +11,8 @@ package com.github.hugh.components.watermark;
  *
  * @since 3.0.8
  */
+@Setter
+@Getter
 public class WatermarkLine {
     /**
      * 文本的键部分，例如“地点”、“海拔”等。
