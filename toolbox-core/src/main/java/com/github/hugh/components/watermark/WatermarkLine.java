@@ -1,6 +1,7 @@
 package com.github.hugh.components.watermark;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -13,6 +14,7 @@ import lombok.Setter;
  */
 @Setter
 @Getter
+@NoArgsConstructor
 public class WatermarkLine {
     /**
      * 文本的键部分，例如“地点”、“海拔”等。
