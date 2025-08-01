@@ -62,6 +62,7 @@ class BaseConvertTest {
         assertEquals(result, BaseConvertUtils.hexBytesToString(dec));
         String result2 = "54 30 01 00 04 31 32 33 34";
         assertEquals(result2, BaseConvertUtils.hexBytesToString(dec, " "));
+        String result3 = "251631370000000000000000";
     }
 
     // 十进制转二进制
@@ -277,5 +278,70 @@ class BaseConvertTest {
         byte[] hexBytes = BaseConvertUtils.decToHexBytes(decBytes);
         // Assert
         assertArrayEquals(expectedHexBytes, hexBytes);
+    }
+
+    /* 测试一个正常的正数。
+            */
+    @Test
+    void testPositiveShort() {
+        short s = 114; // 0x0072
+        String expected = "0072";
+        String actual = BaseConvertUtils.shortToHex(s);
+        assertEquals(expected, actual, "对于正数114的转换应为'0072'");
+    }
+
+    /**
+     * 测试带有前导零的正数。
+     */
+    @Test
+    void testLeadingZeroShort() {
+        short s = 255; // 0x00FF
+        String expected = "00ff";
+        String actual = BaseConvertUtils.shortToHex(s);
+        assertEquals(expected, actual, "对于正数255的转换应为'00ff'");
+    }
+
+    /**
+     * 测试short的最大值。
+     */
+    @Test
+    void testMaxShortValue() {
+        short s = 32767; // 0x7FFF
+        String expected = "7fff";
+        String actual = BaseConvertUtils.shortToHex(s);
+        assertEquals(expected, actual, "对于short最大值32767的转换应为'7fff'");
+    }
+
+    /**
+     * 测试short的最小值。
+     */
+    @Test
+    void testMinShortValue() {
+        short s = -32768; // 0x8000
+        String expected = "8000";
+        String actual = BaseConvertUtils.shortToHex(s);
+        assertEquals(expected, actual, "对于short最小值-32768的转换应为'8000'");
+    }
+
+    /**
+     * 测试一个普通的负数。
+     */
+    @Test
+    void testNegativeShort() {
+        short s = -1; // 0xFFFF
+        String expected = "ffff";
+        String actual = BaseConvertUtils.shortToHex(s);
+        assertEquals(expected, actual, "对于负数-1的转换应为'ffff'");
+    }
+
+    /**
+     * 测试0值。
+     */
+    @Test
+    void testZeroShort() {
+        short s = 0; // 0x0000
+        String expected = "0000";
+        String actual = BaseConvertUtils.shortToHex(s);
+        assertEquals(expected, actual, "对于0的转换应为'0000'");
     }
 }
