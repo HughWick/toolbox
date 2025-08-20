@@ -376,6 +376,96 @@ public class ImageWaterMarkTest {
         }
     }
 
+    // 测试不同分辨率的图片
+    @Test
+    void testWatermarkGeneration2() {
+        Path tempDir = null;
+        try {
+            tempDir = Files.createTempDirectory("watermark_test_output_");
+            System.out.println("测试输出目录: " + tempDir.toAbsolutePath());
+            String inputImagePath1 = "/file/watermark/864_1980/e0dfddbcae6328e0124b9d63e11b4159.jpg";
+            String inputImagePath2 = "/file/watermark/960_1280/47d728e0cd5f8298997676703d93610f.jpg";
+            String inputImagePath3 = "/file/watermark/3072_4096/dbdda5027c87787ee31da4f4a5c7e292.jpg";
+            String outputFileName1 = "output_image_with_complex_watermark.jpg";
+            String outputFileName2 = "output_image_with_complex_watermark2.jpg";
+            String outputFileName3 = "output_image_with_complex_watermark3.jpg";
+
+            Path outputPath1 = tempDir.resolve(outputFileName1);
+            Path outputPath2 = tempDir.resolve(outputFileName2);
+            Path outputPath3 = tempDir.resolve(outputFileName3);
+            List<WatermarkLine> content = new ArrayList<>();
+            content.add(new WatermarkLine("工程记录"));
+            content.add(new WatermarkLine("天  气", "阴 高温 35℃", true));
+            content.add(new WatermarkLine("地  点", "湖南省湘西花垣县猫儿乡086乡道", false));
+            content.add(new WatermarkLine("海  拔", "273.3米", false));
+            content.add(new WatermarkLine("经  度", "109.929794°E", false));
+            content.add(new WatermarkLine("纬  度", "28.734864°N", false));
+            content.add(new WatermarkLine("时  间", TimeUtils.now(), false));
+
+            // ================================================================
+            // === 核心修改：使用 ComplexWatermarkBuilder 构建参数并调用新方法 ===
+            // ================================================================
+            String path1 = getPath(inputImagePath1);
+            // 调用方式一：使用 Lombok @Builder 自动生成的 builder() 方法
+            // 这也是最推荐的方式
+            // 构建第一个水印的配置
+            ComplexWatermarkBuilder builder1 = new ComplexWatermarkBuilder() // 实例化
+                    .setTargetImage(path1) // 使用 setXxx 链式调用
+                    .setWatermarkContent(content)
+//                    .setTitleFont(titleFont)
+//                    .setContentFont(contentFont)
+//                    .setOpacity(0.8f)
+//                    .setPosition(Positions.BOTTOM_LEFT)
+                    .setOutPath(outputPath1.toString())
+                    .setCompanyInfo("@湖南同恒信息技术有限公司");
+            // 或者一个包含配置的普通对象（如果@Builder在方法上或自定义了build方法）
+
+            // 调用 ImageWaterMark 中接受 ComplexWatermarkBuilder 的重载方法
+            ImageWaterMark.addComplex(builder1);
+            System.out.println("复杂水印图片已生成（公司签名）: " + outputPath1.toAbsolutePath());
+            String path2 = getPath(inputImagePath2);
+//            // ----------------------------------------------------------------
+//            // 调用方式二：第二个水印，无公司信息
+            ComplexWatermarkBuilder builder2 = new ComplexWatermarkBuilder()
+                    .setTargetImage(new File(path2))
+                    .setWatermarkContent(content)
+//                    .setTitleFont(titleFont)
+//                    .setContentFont(contentFont)
+//                    .setOpacity(0.8f)
+//                    .setPosition(Positions.BOTTOM_LEFT)
+                    .setOutPath(outputPath2.toString())
+                    .setCompanyInfo(""); // 不设置公司信息，或设置为 ""
+
+            ImageWaterMark.addComplex(builder2);
+//            System.out.println("复杂水印图片已生成（没有公司签名）: " + outputPath2.toAbsolutePath());
+            // ================================================================
+            org.junit.jupiter.api.Assertions.assertTrue(Files.exists(outputPath1));
+            org.junit.jupiter.api.Assertions.assertTrue(Files.exists(outputPath2));
+            String path3 = getPath(inputImagePath3);
+            FileInputStream fileInputStream = new FileInputStream(path3);
+            // ================================================================
+            // 新增测试用例：通过 InputStream 加载图片
+            ComplexWatermarkBuilder builder3 = new ComplexWatermarkBuilder()
+                    .setTargetImage(fileInputStream)
+                    .setWatermarkContent(content)
+                    .setOpacity(0.9f)
+//                    .setPosition(Positions.CENTER) // 设置不同位置以区分
+                    .setOutPath(outputPath3.toString())
+                    .setCompanyInfo("测试来自文件流"); // 设置公司信息以区分
+            ImageWaterMark.addComplex(builder3);
+            System.out.println("复杂水印图片已生成 (InputStream加载): " + outputPath3.toAbsolutePath());
+            // ================================================================
+        } catch (IOException e) {
+            System.err.println("处理图片时发生错误: " + e.getMessage());
+            e.printStackTrace();
+            org.junit.jupiter.api.Assertions.fail("测试失败：处理图片时发生IOException " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("发生未知错误: " + e.getMessage());
+            e.printStackTrace();
+            org.junit.jupiter.api.Assertions.fail("测试失败：发生未知错误 " + e.getMessage());
+        }
+    }
+
     private static String getPath(String fileName) {
         return ImageWaterMarkTest.class.getResource(fileName).getPath();
     }
