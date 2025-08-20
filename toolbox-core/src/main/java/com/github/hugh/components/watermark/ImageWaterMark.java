@@ -129,7 +129,8 @@ public class ImageWaterMark {
 
         /**
          * 构造函数用于初始化水印布局对象，并传入标题和内容字体的 {@code FontMetrics}。
-         * * @param titleFm 标题字体的 {@code FontMetrics} 对象。
+         *
+         * @param titleFm   标题字体的 {@code FontMetrics} 对象。
          * @param contentFm 内容字体的 {@code FontMetrics} 对象。
          */
         public WatermarkLayout(FontMetrics titleFm, FontMetrics contentFm) {
@@ -179,8 +180,9 @@ public class ImageWaterMark {
     }
 
     /**
-     * 为目标图片添加复杂的结构化水印。
-     * 该方法封装了水印尺寸计算、图形绘制以及最终应用水印的整个流程。
+     * 为目标图片添加复杂的、支持多分辨率的结构化水印。
+     * 该方法封装了水印尺寸计算、图形绘制、动态缩放以及最终应用水印的整个流程。
+     * 水印将根据目标图片的尺寸进行缩放，占据其宽度和高度的各四分之一，并固定在左下角。
      *
      * @param complexWatermarkBuilder 包含所有水印配置信息的建造者对象。
      * @throws IOException 如果在处理图片或字体时发生I/O错误。
@@ -194,14 +196,14 @@ public class ImageWaterMark {
         g2dTemp.setFont(complexWatermarkBuilder.getContentFont());
         FontMetrics contentFm = g2dTemp.getFontMetrics();
         g2dTemp.dispose(); // 立即释放临时Graphics2D资源
-        // 2. 计算水印的布局尺寸
+        // 2. 计算水印的原始布局尺寸
         WatermarkLayout layout = calculateWatermarkLayout(
                 complexWatermarkBuilder.getWatermarkContent(),
                 complexWatermarkBuilder.getCompanyInfo(),
                 titleFm,
                 contentFm
         );
-        // 3. 创建水印图像并获取其Graphics2D对象
+        // 3. 创建原始水印图像并获取其Graphics2D对象
         BufferedImage complexWatermarkImage = new BufferedImage(layout.watermarkWidth, layout.watermarkHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = complexWatermarkImage.createGraphics();
         configureGraphics(g2d); // 配置绘图质量
@@ -219,14 +221,45 @@ public class ImageWaterMark {
         } finally {
             g2d.dispose(); // 确保Graphics2D资源被释放
         }
-        // 9. 将生成的水印应用到目标图片并保存
+        // 9. 【新增】根据目标图片尺寸缩放水印
+        BufferedImage targetImage = complexWatermarkBuilder.getTargetImage();
+        int targetWatermarkWidth = targetImage.getWidth() / 4;
+        int targetWatermarkHeight = targetImage.getHeight() / 4;
+        // 保持水印的原始宽高比进行缩放
+        double widthRatio = (double) targetWatermarkWidth / complexWatermarkImage.getWidth();
+        double heightRatio = (double) targetWatermarkHeight / complexWatermarkImage.getHeight();
+        double scaleRatio = Math.min(widthRatio, heightRatio); // 取较小的比例以确保水印能完全容纳
+        int finalWatermarkWidth = (int) (complexWatermarkImage.getWidth() * scaleRatio);
+        int finalWatermarkHeight = (int) (complexWatermarkImage.getHeight() * scaleRatio);
+        BufferedImage resizedWatermark = resizeWatermark(complexWatermarkImage, finalWatermarkWidth, finalWatermarkHeight);
+        // 10. 将生成并缩放后的水印应用到目标图片并保存
         applyAndSaveWatermark(
-                complexWatermarkBuilder.getTargetImage(),
-                complexWatermarkBuilder.getPosition(),
-                complexWatermarkImage,
+                targetImage,
+                resizedWatermark,
                 complexWatermarkBuilder.getOpacity(),
                 complexWatermarkBuilder.getOutPath()
         );
+    }
+
+    /**
+     * 【新增】缩放 BufferedImage 到指定尺寸。
+     *
+     * @param originalImage 原始图像
+     * @param targetWidth   目标宽度
+     * @param targetHeight  目标高度
+     * @return 缩放后的新图像
+     */
+    private static BufferedImage resizeWatermark(BufferedImage originalImage, int targetWidth, int targetHeight) {
+        BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = resizedImage.createGraphics();
+        // 设置高质量的渲染提示
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        // 绘制缩放后的图像
+        g2d.drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
+        g2d.dispose();
+        return resizedImage;
     }
 
     /**
@@ -335,11 +368,11 @@ public class ImageWaterMark {
     private static void drawWatermarkBackground(Graphics2D g2d, int watermarkWidth, int watermarkHeight,
                                                 int titleBgHeight, int contentTotalHeight) {
         // 1. 绘制整个水印的底层蓝色圆角矩形（作为基础层和上部圆角）。
-        g2d.setColor(TITLE_BACKGROUND_COLOR); //
-        g2d.fillRoundRect(0, 0, watermarkWidth, watermarkHeight, ARC_SIZE, ARC_SIZE); //
+        g2d.setColor(TITLE_BACKGROUND_COLOR);
+        g2d.fillRoundRect(0, 0, watermarkWidth, watermarkHeight, ARC_SIZE, ARC_SIZE);
         // 2. 在蓝色背景之上绘制白色内容区域。
-        if (contentTotalHeight > 0) { //
-            g2d.setColor(CONTENT_BACKGROUND_COLOR); //
+        if (contentTotalHeight > 0) {
+            g2d.setColor(CONTENT_BACKGROUND_COLOR);
             // 绘制白色矩形，从标题背景下方开始，延伸到整个水印的底部，
             // 但其顶部是平直的，底部保持圆角。
             // 这通过绘制一个普通的矩形覆盖顶部，然后用 fillRoundRect 覆盖整个内容区域来实现。
@@ -436,12 +469,12 @@ public class ImageWaterMark {
     /**
      * 绘制公司信息行。
      *
-     * @param g2d                              绘图上下文。
-     * @param companyInfo                      公司信息字符串。
-     * @param contentFont                      内容字体。
-     * @param titleBgHeight                    标题背景高度。
-     * @param contentTextLineCount             内容文本行数。
-     * @param contentFm                        内容字体的 FontMetrics。
+     * @param g2d                  绘图上下文。
+     * @param companyInfo          公司信息字符串。
+     * @param contentFont          内容字体。
+     * @param titleBgHeight        标题背景高度。
+     * @param contentTextLineCount 内容文本行数。
+     * @param contentFm            内容字体的 FontMetrics。
      */
     private static void drawCompanyInfo(Graphics2D g2d, String companyInfo, Font contentFont,
                                         int titleBgHeight, int contentTextLineCount,
@@ -465,19 +498,20 @@ public class ImageWaterMark {
 
     /**
      * 将生成的水印图像应用到目标图片上并保存到指定路径。
+     * 【修改】此方法现在固定将水印放置在左下角。
      *
      * @param targetImg      目标图片。
-     * @param position       水印在目标图片上的位置。
      * @param watermarkImage 要应用的水印图像。
      * @param opacity        水印的透明度。
      * @param outPath        输出图片的文件路径。
      * @throws IOException 如果在保存图片时发生I/O错误。
      */
-    private static void applyAndSaveWatermark(BufferedImage targetImg, Positions position,
-                                              BufferedImage watermarkImage, float opacity, String outPath) throws IOException {
+    private static void applyAndSaveWatermark(BufferedImage targetImg, BufferedImage watermarkImage,
+                                              float opacity, String outPath) throws IOException {
         Thumbnails.of(targetImg)
                 .size(targetImg.getWidth(), targetImg.getHeight())
-                .watermark(position, watermarkImage, opacity)
+                // 固定位置为左下角
+                .watermark(Positions.BOTTOM_LEFT, watermarkImage, opacity)
                 .outputQuality(1.0)
                 .toFile(new File(outPath));
     }

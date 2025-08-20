@@ -27,6 +27,7 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
         </dependency>
+        <!--  专门用于解析XML转json    -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
