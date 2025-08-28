@@ -1,9 +1,8 @@
 name: Publish package to Maven Central Repository
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - 3.0.X
+  release:
+    types: [published]
 jobs:
   publish:
     runs-on: ubuntu-latest
