@@ -23,6 +23,27 @@ import java.util.stream.Collectors;
  */
 public class MybatisPlusQueryUtils {
 
+    public static final String ORDER = "order";
+    /**
+     * 排序字段的常量，表示用于排序的字段名称。
+     * <p>
+     * 用于存储或传递排序时的字段名。
+     */
+    public static final String SORT = "sort";
+
+    /**
+     * 排序类型的常量，表示排序方式（升序或降序）。
+     * <p>
+     * 可以是 "asc"（升序）或 "desc"（降序）。
+     */
+    public static final String SORT_TYPE = "sortType";
+
+    /**
+     * 排序依据的常量，表示具体的排序依据字段。
+     * <p>
+     * 用于指定排序字段，例如 "name"、"age" 等。
+     */
+    public static final String SORT_BY = "sortBy";
     /**
      * 大于等于
      */
@@ -42,11 +63,6 @@ public class MybatisPlusQueryUtils {
      * in 多个等于
      */
     private static final String IN_FIELD_NAME = "_in";
-
-    /**
-     * 排序
-     */
-    private static final String SORT = "sort";
     /**
      * 表示开始日期。
      */
@@ -150,13 +166,17 @@ public class MybatisPlusQueryUtils {
             String key = entry.getKey();
             String value = String.valueOf(entry.getValue());
             String tableField = conversion(key, keyUpper);//将key转化为与数据库列一致的名称
-            if (EmptyUtils.isEmpty(value) || SORT.equals(key)) {
+            // 如果 value 为空，或者是排序字段（SORT 或 SORT_BY），则跳过本次循环
+            if (EmptyUtils.isEmpty(value) || SORT.equals(key) || SORT_BY.equals(key)) {
                 //空时不操作
             } else if (tableField.endsWith(LIKE)) {//判断结尾是否为模糊查询
                 tableField = tableField.replace(LIKE, StrPool.EMPTY);//移除掉识别key
                 queryWrapper.like(tableField, value);
-            } else if ("order".equals(key)) {
-                String sortValue = String.valueOf(params.get(SORT));
+            } else if (SORT_TYPE.equals(key)) { // 判断 key 是否是预定义的排序类型字段名（SORT_TYPE）
+                String sortValue = String.valueOf(params.get(SORT_BY)); // 从另一个名为 params 的 Map 中获取排序字段名（SORT_BY）对应的值
+                appendOrderSql(queryWrapper, value, sortValue); // 调用 appendOrderSql 方法拼接排序 SQL，value 是排序类型（ASC/DESC），sortValue 是排序字段
+            } else if (ORDER.equals(key)) { // 判断 key 是否是预定义的旧版本排序类型字段名（ORDER）
+                String sortValue = String.valueOf(params.get(SORT)); // 从另一个名为 params 的 Map 中获取旧版本排序字段名（SORT）对应的值
                 appendOrderSql(queryWrapper, value, sortValue);
             } else if (key.endsWith("_or")) { // 结尾是否为or
                 appendOrSql(queryWrapper, key, value, keyUpper);

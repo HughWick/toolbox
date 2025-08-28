@@ -9,7 +9,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * MybatisPlusQueryUtils 测试类
@@ -19,6 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class MybatisPlusQueryUtilsTest {
 
 //    private MockHttpServletRequest request;
+
+    @Test
+    void testNull(){
+        assertThrowsExactly(NullPointerException.class, () ->  MybatisPlusQueryUtils.create(null,true));
+    }
 
     @Test
     void testCode() {
@@ -139,7 +144,30 @@ class MybatisPlusQueryUtilsTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("serialNo", "9001"); //直接添加request参数，相当简单
         QueryWrapper<Object> objectQueryWrapper = MybatisPlusQueryUtils.createLowerCase(request);
-        System.out.println(objectQueryWrapper.getSqlSelect());
+//        System.out.println(objectQueryWrapper.getSqlSelect());
         assertEquals("(serial_no = ?)", objectQueryWrapper.getTargetSql());
+    }
+
+    @Test
+    void testSortType() {
+        Map<String, String> map = new HashMap<>();
+        map.put("model", "12V");
+        map.put(MybatisPlusQueryUtils.SORT_TYPE, "DESC");
+        map.put(MybatisPlusQueryUtils.SORT_BY, "serialNumber");
+        assertEquals("(MODEL = ?) ORDER BY SERIAL_NUMBER DESC", MybatisPlusQueryUtils.create(map).getTargetSql());
+    }
+
+    @Test
+    void testIsAcronym() {
+        assertTrue(MybatisPlusQueryUtils.isAcronym("ABC"));
+        assertFalse(MybatisPlusQueryUtils.isAcronym("Abc"));
+        assertFalse(MybatisPlusQueryUtils.isAcronym("Abc"));
+        assertFalse(MybatisPlusQueryUtils.isAcronym(""));
+    }
+
+    @Test
+    void testIsAsc(){
+        assertTrue(MybatisPlusQueryUtils.isAsc("asc"));
+        assertFalse(MybatisPlusQueryUtils.isAsc(""));
     }
 }

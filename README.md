@@ -2,10 +2,10 @@
 
 收集日常工作中常用的工具类
 
-[![codecov](https://codecov.io/github/HughWick/toolbox/branch/2.7.X/graph/badge.svg?token=U8DM4TQRZZ)](https://codecov.io/github/HughWick/toolbox)
-[![Maven Central](https://img.shields.io/maven-central/v/com.github.hughwick/toolbox-all)](https://central.sonatype.com/artifact/com.github.hughwick/toolbox-all)
 [![](https://img.shields.io/badge/license-Apache2-FF0080.svg)](https://github.com/hughwick/toolbox/blob/master/LICENSE.txt)
 [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/hughwick/toolbox)
+[![codecov](https://codecov.io/github/HughWick/toolbox/branch/3.0.X/graph/badge.svg?token=U8DM4TQRZZ)](https://codecov.io/github/HughWick/toolbox)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.hughwick/toolbox-all)](https://central.sonatype.com/artifact/com.github.hughwick/toolbox-all)
 
 ## JDK版本
 
@@ -17,7 +17,6 @@ JDK >=11
 |--------------------------------------------------------|------------|-------------------|
 | validation-api                                         | 2.0.2      | 注解                |
 | knife4j                                                | 3.0.3      | Swagger生成Api文档的增强 |
-| spring-beans                                           | 5.3.23     | spring 实体类工具      |
 | jedis                                                  | 3.7.1      | redis clients     |
 | [caffeine](https://github.com/ben-manes/caffeine)      | 3.1.8      | 高性能本地缓存           |
 | [okhttp3](https://github.com/square/okhttp)            | 4.9.3      | 高性能http           |
@@ -29,8 +28,9 @@ JDK >=11
 | [slf4j-simple](https://github.com/qos-ch/slf4j)        | 2.0.9      | 日志工具包             |
 | [ip2region](https://github.com/lionsoul2014/ip2region) | 2.7.0      | IP地址库             |
 | UserAgentUtils                                         | 1.21       | UserAgent解析工具     |
-| spring-boot-starter-data-mongodb                       | 2.6.13     | Mongodb           |
-| [mybatis-plus-boot-starter](https://www.baomidou.com/) | 3.5.2      | Mybatis plus      |
+| [mybatis-plus](https://www.baomidou.com/)              | 3.5.8      | Mybatis plus      |
+| spring-beans                                           | 5.3.23     | spring 实体类工具      |
+| spring-data-mongodb                                    | 3.4.18     | Mongodb           |
 
 ## maven 引入
 
@@ -38,7 +38,7 @@ JDK >=11
 <dependency>
     <groupId>com.github.hughwick</groupId>
     <artifactId>toolbox-all</artifactId>
-    <version>2.7.24</version>
+   <version>2.8.15</version>
 </dependency>
 ```
 

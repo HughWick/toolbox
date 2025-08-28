@@ -3,12 +3,12 @@ package com.github.hugh.components.datetime;
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.DateUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * 日期计算工具类
@@ -21,7 +21,7 @@ class TimeCalcTest {
     void testFormat() {
         String start1 = "2023-07-18";
         String end1 = "2023-07-17";
-        final String message = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+        final String message = assertThrows(IllegalArgumentException.class, () -> {
             TimeCalc.on(start1, end1, DateCode.YEAR_MONTH_DAY).toHours();
         }).getMessage();
         assertEquals("结束日期不能早于开始日期", message);
@@ -133,15 +133,14 @@ class TimeCalcTest {
         String end1 = "2023-07-18 11:50:10";
         final TimeCalc on1 = TimeCalc.on(start1, end1);
         assertEquals(45, on1.minutesDiff());
-
-        final String message = Assertions.assertThrows(ToolboxException.class, () -> {
+        final String message = assertThrows(ToolboxException.class, () -> {
             TimeCalc.on(null, end1, DateCode.YEAR_MONTH_DAY).minutesDiff();
         }).getMessage();
-        assertEquals(" start date is null ", message);
-        final String message2 = Assertions.assertThrows(ToolboxException.class, () -> {
+        assertEquals("java.text.ParseException: Unparseable date: \"null\"", message);
+        final String message2 = assertThrows(ToolboxException.class, () -> {
             TimeCalc.on(start1, null, DateCode.YEAR_MONTH_DAY).minutesDiff();
         }).getMessage();
-        assertEquals(" end date is null ", message2);
+        assertEquals("java.text.ParseException: Unparseable date: \"null\"", message2);
     }
 
 }

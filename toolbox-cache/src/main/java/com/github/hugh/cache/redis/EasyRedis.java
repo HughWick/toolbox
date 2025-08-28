@@ -5,8 +5,10 @@ import com.google.common.base.Suppliers;
 import redis.clients.jedis.BinaryJedis;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.Pipeline;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -435,19 +437,92 @@ public class EasyRedis {
      * @return Long 如果字段是哈希表中的一个新建字段，并且值设置成功，返回{@code 1}。如果哈希表中域字段已经存在且旧值已被新值覆盖，返回 {@code 0}
      */
     public Long hset(int dbIndex, String key, String field, String value, long timeout) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.select(dbIndex);
-            Long result = jedis.hset(key, field, value);
-            if (timeout == -1) {
-                // 永不过期
-                jedis.persist(key);
-            } else {
-                jedis.expire(key, timeout);
+        Map<String, String> dataMap = Collections.singletonMap(field, value);
+        batchHashSet(dbIndex, key, dataMap, timeout); // 调用批量方法，实现单个 Field-Value 写入
+        return (long) dataMap.size();
+    }
+
+    /**
+     * 批量将 Map 数据写入 Redis Hash 表 (使用 Pipeline 管道)，Hash Key 永不过期，使用默认数据库 ({@link  #dbIndex})
+     * <p>
+     * 此方法等同于调用 {@link #batchHashSet(int, String, Map)} 方法，并设置 dbIndex 参数为 -1，
+     * 使用 Redis 默认数据库 (索引为 0)。
+     *
+     * @param hashKey Redis Hash 表的 key
+     * @param dataMap 要写入的 Map 数据 (key-value 键值对)
+     * @since 2.8.3
+     */
+    public void batchHashSet(String hashKey, Map<String, String> dataMap) {
+        batchHashSet(dbIndex, hashKey, dataMap);
+    }
+
+    /**
+     * 批量将 Map 数据写入 Redis Hash 表 (使用 Pipeline 管道)，Hash Key 永不过期
+     * <p>
+     * 此方法等同于调用 {@link #batchHashSet(int, String, Map, long)} 方法，并设置 timeout 参数为 -1，
+     * 表示 Hash Key 永不过期 (依赖 Redis 默认策略，除非显式删除或被 Redis 内存淘汰策略回收)。
+     *
+     * @param dbIndex Redis 数据库索引 (0-15，默认 0)
+     * @param hashKey Redis Hash 表的 key
+     * @param dataMap 要写入的 Map 数据 (key-value 键值对)
+     * @since 2.8.3
+     */
+    public void batchHashSet(int dbIndex, String hashKey, Map<String, String> dataMap) {
+        batchHashSet(dbIndex, hashKey, dataMap, -1);
+    }
+
+    /**
+     * 批量将 Map 数据写入 Redis Hash 表 (使用 Pipeline 管道)，并设置 Hash Key 的过期时间
+     *
+     * @param dbIndex Redis 数据库索引 (0-15，默认 0)
+     * @param hashKey Redis Hash 表的 key
+     * @param dataMap 要写入的 Map 数据 (key-value 键值对)
+     * @param timeout 过期时间 (秒)。
+     *                -  大于 0 时，设置 Key 的过期时间为 `timeout` 秒。
+     *                -  等于 -1 时，Key 永不过期 (使用 `PERSIST` 命令)。
+     * @since 2.8.3
+     */
+    public void batchHashSet(int dbIndex, String hashKey, Map<String, String> dataMap, long timeout) {
+        try (Jedis jedis = jedisPool.getResource(); // 从连接池获取 Jedis 资源，try-with-resources 确保自动释放
+             Pipeline pipeline = jedis.pipelined()) { // 获取 Pipeline 对象
+            jedis.select(dbIndex); // 选择数据库
+            for (Map.Entry<String, String> entry : dataMap.entrySet()) {
+                pipeline.hset(hashKey, entry.getKey(), entry.getValue()); // 将 hset 命令添加到 Pipeline
             }
-            return result;
+            pipeline.sync(); // 批量执行 Pipeline 中的命令
+            if (timeout > 0) {
+                jedis.expire(hashKey, timeout); // 设置 Hash Key 的过期时间 (秒)
+            } else if (timeout == -1) {
+                jedis.persist(hashKey); // 设置 Hash Key 永不过期
+            }
         } catch (Exception exception) {
             throw new ToolboxException(exception);
         }
+    }
+
+    /**
+     * 获取 Hash 表的字段数量 (长度)，使用默认数据库 ({@link  #dbIndex})
+     * <p>
+     * 此方法等同于调用 {@link #hlen(int, String)} 方法
+     *
+     * @param hashKey Hash 表的 key
+     * @return Hash 表的字段数量，如果 Hash 表不存在，则返回 0
+     * @since 2.8.3
+     */
+    public Long hlen(String hashKey) throws ToolboxException {
+        return hlen(dbIndex, hashKey);
+    }
+
+    /**
+     * 获取 Hash 表的字段数量 (长度)
+     *
+     * @param dbIndex 数据库索引
+     * @param hashKey Hash 表的 key
+     * @return Hash 表的字段数量，如果 Hash 表不存在，则返回 0
+     * @since 2.8.3
+     */
+    public Long hlen(int dbIndex, String hashKey) throws ToolboxException {
+        return executeWithJedis(dbIndex, jedis -> jedis.hlen(hashKey));
     }
 
     /**
@@ -515,6 +590,60 @@ public class EasyRedis {
      */
     public Long hdel(int dbIndex, String key, String... fields) {
         return executeWithJedis(dbIndex, jedis -> jedis.hdel(key, fields));
+    }
+
+    /**
+     * 检查哈希表 key 中，字段 field 是否存在。
+     * 此方法允许指定数据库索引 dbIndex。
+     *
+     * @param dbIndex Redis 数据库索引 (0-15)。
+     * @param key     哈希表键名，字符串类型。
+     * @param field   要检查的字段名，字符串类型。
+     * @return {@code Boolean} - 如果哈希表 key 中存在字段 field，则返回 {@code true}，否则返回 {@code false}。
+     * @since 2.8.2
+     */
+    public Boolean hexists(int dbIndex, String key, String field) {
+        return executeWithJedis(dbIndex, jedis -> jedis.hexists(key, field));
+    }
+
+    /**
+     * 检查哈希表 key 中，字段 field 是否不存在。
+     * 此方法允许指定数据库索引 dbIndex。
+     *
+     * @param dbIndex Redis 数据库索引 (0-15)。
+     * @param key     哈希表键名，字符串类型。
+     * @param field   要检查的字段名，字符串类型。
+     * @return {@code Boolean} - 如果哈希表 key 中不存在字段 field，则返回 {@code true}，否则返回 {@code false}。
+     * @since 2.8.2
+     */
+    public Boolean hIsNotExists(int dbIndex, String key, String field) {
+        return !hexists(dbIndex, key, field);
+    }
+
+    /**
+     * 检查哈希表 key 中，字段 field 是否不存在。
+     * 此方法使用默认的数据库索引 {@link #dbIndex}。
+     *
+     * @param key   哈希表键名，字符串类型。
+     * @param field 要检查的字段名，字符串类型。
+     * @return {@code Boolean} - 如果哈希表 key 中不存在字段 field，则返回 {@code true}，否则返回 {@code false}。
+     * @since 2.8.2
+     */
+    public Boolean hIsNotExists(String key, String field) {
+        return hIsNotExists(dbIndex, key, field);
+    }
+
+    /**
+     * 检查哈希表 key 中，字段 field 是否存在。
+     * 此方法使用默认的数据库索引 {@link #dbIndex}。
+     *
+     * @param key   哈希表键名，字符串类型。
+     * @param field 要检查的字段名，字符串类型。
+     * @return {@code Boolean} - 如果哈希表 key 中存在字段 field，则返回 {@code true}，否则返回 {@code false}。
+     * @since 2.8.2
+     */
+    public Boolean hexists(String key, String field) {
+        return hexists(dbIndex, key, field);
     }
 
     /**

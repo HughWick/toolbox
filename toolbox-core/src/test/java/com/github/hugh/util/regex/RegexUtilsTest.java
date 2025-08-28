@@ -66,9 +66,11 @@ class RegexUtilsTest {
         assertTrue(RegexUtils.isNotLonLat(longitude, latitude));
         assertTrue(RegexUtils.isNotLonLat(longitude + "," + latitude));
 
+        assertFalse(RegexUtils.isLongitude(""));
         assertFalse(RegexUtils.isLongitude(longitude));
         assertFalse(RegexUtils.isLongitude(longitude2));
         assertTrue(RegexUtils.isLongitude(str3));
+        assertFalse(RegexUtils.isLatitude(""));
         assertFalse(RegexUtils.isLatitude(latitude));
         assertFalse(RegexUtils.isLatitude(latitude2));
         assertTrue(RegexUtils.isLatitude(lat3));
@@ -110,11 +112,13 @@ class RegexUtilsTest {
         String str = "12324532a";
         String str2 = "1232453";
         String str3 = "1232453.11";
+        assertFalse(RegexUtils.isNumeric(""));
         assertFalse(RegexUtils.isNumeric(str));
         assertTrue(RegexUtils.isNumeric(str2));
         assertFalse(RegexUtils.isNumeric(str3));
         assertTrue(RegexUtils.isNotNumeric(str));
     }
+
     String[] testValidPhoneNumbers = {
             "18648293237",
             "18978050839",
@@ -217,6 +221,7 @@ class RegexUtilsTest {
             "14738548550",
             "18270590366"
     };
+
     // 测试验证手机号码
     @Test
     void testPhone() {
@@ -225,12 +230,12 @@ class RegexUtilsTest {
         assertTrue(RegexUtils.isNotPhone(phoneStr + "a"));
         // 输出测试数据
         for (String phoneNumber : testValidPhoneNumbers) {
-            assertTrue(RegexUtils.isPhone(phoneNumber) , phoneNumber);
+            assertTrue(RegexUtils.isPhone(phoneNumber), phoneNumber);
         }
     }
 
     @Test
-    void testPhoneNumber2(){
+    void testPhoneNumber2() {
         List<String> phoneNumbers = Arrays.asList(
                 "18584296492",
                 "18411016599",
@@ -334,7 +339,7 @@ class RegexUtilsTest {
                 "17895797218"
         );
         for (String phoneNumber : phoneNumbers) {
-            assertTrue(RegexUtils.isPhone(phoneNumber) , phoneNumber);
+            assertTrue(RegexUtils.isPhone(phoneNumber), phoneNumber);
         }
     }
 
@@ -360,6 +365,7 @@ class RegexUtilsTest {
     @Test
     void testVerifyFullChinese() {
         String string1 = "的撒开发和";
+        assertFalse(RegexUtils.isFullChinese(""));
         assertFalse(RegexUtils.isFullChinese(string1 + "213"));
         assertTrue(RegexUtils.isFullChinese(string1));
         assertTrue(RegexUtils.isNotFullChinese(string1 + "213"));
@@ -379,6 +385,7 @@ class RegexUtilsTest {
     void testLower() {
         String string1 = "4fceb2d22F";
         assertTrue(RegexUtils.isNotLowerCaseAndNumber(string1));
+        assertFalse(RegexUtils.isLowerCaseAndNumber(""));
         assertFalse(RegexUtils.isLowerCaseAndNumber(string1));
         String string2 = "980bb8126e4046e3";
         assertTrue(RegexUtils.isLowerCaseAndNumber(string2));
@@ -388,6 +395,7 @@ class RegexUtilsTest {
     @Test
     void testUpper() {
         String string1 = "4fceb2d22F";
+        assertFalse(RegexUtils.isUpperCaseAndNumber(""));
         assertFalse(RegexUtils.isUpperCaseAndNumber(string1));
         assertTrue(RegexUtils.isNotUpperCaseAndNumber(string1));
         String string2 = "F80C5366D9";
@@ -416,6 +424,7 @@ class RegexUtilsTest {
         assertTrue(RegexUtils.isHexadecimal(str1.replace(" ", "")));
         String str2 = "7e 00 4a 20 22 08 05 00 75 84 mm";
         assertFalse(RegexUtils.isHexadecimal(str2.replace(" ", "")));
+        assertFalse(RegexUtils.isHexadecimal(""));
         assertTrue(RegexUtils.isNotHexadecimal(str2.replace(" ", "")));
     }
 
@@ -425,6 +434,7 @@ class RegexUtilsTest {
         String domain2 = "dev.hnlot.com.cn";
         String domain3 = "223.5.5.5";
         String domain4 = "2235fdg";
+        assertFalse(RegexUtils.isDomain(""));
         assertTrue(RegexUtils.isDomain(domain1));
         assertTrue(RegexUtils.isDomain(domain2));
         assertTrue(RegexUtils.isDomain(domain3));
@@ -517,5 +527,32 @@ class RegexUtilsTest {
     void testValidBase64() {
         assertTrue(RegexUtils.isBase64("SGVsbG8gV29ybGQh")); // "Hello World!" 的 Base64 编码
         assertTrue(RegexUtils.isBase64("data:text/plain;base64,SGVsbG8gV29ybGQh"));//带头的
+    }
+
+    @Test
+    void testIsOtherChars() {
+        // 测试用例 1：普通字符串，不含任何控制字符
+        assertTrue(!RegexUtils.isOtherChars("Hello World!"), "Test Case 1 Failed");
+
+        // 测试用例 2：包含换行符
+        assertTrue(RegexUtils.isOtherChars("Hello\nWorld!"), "Test Case 2 Failed");
+
+        // 测试用例 3：包含回车符
+        assertTrue(RegexUtils.isOtherChars("Hello\rWorld!"), "Test Case 3 Failed");
+
+        // 测试用例 4：包含制表符
+        assertTrue(RegexUtils.isOtherChars("Hello\tWorld!"), "Test Case 4 Failed");
+
+        // 测试用例 5：包含多个控制字符
+//        assertTrue(RegexUtils.isOtherChars("Hello\\x00World!"), "Test Case 5 Failed");
+
+        // 测试用例 6：包含多个换行符
+        assertTrue(RegexUtils.isOtherChars("Hello\nWorld\n!"), "Test Case 6 Failed");
+
+        // 测试用例 7：空字符串
+        assertTrue(!RegexUtils.isOtherChars(""), "Test Case 7 Failed");
+
+        // 测试用例 8：仅包含空格
+        assertTrue(!RegexUtils.isOtherChars("     "), "Test Case 8 Failed");
     }
 }

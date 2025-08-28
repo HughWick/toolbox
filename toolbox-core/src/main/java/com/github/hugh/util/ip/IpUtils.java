@@ -1,5 +1,6 @@
 package com.github.hugh.util.ip;
 
+import com.github.hugh.constant.StrPool;
 import com.github.hugh.util.regex.RegexUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -316,6 +317,10 @@ public class IpUtils {
         }
     }
 
+    public static List<String> parseIpMaskRange(String ip, String mask) {
+        return parseIpMaskRange(ip, mask, 1000);
+    }
+
     /**
      * 根据IP和位数（掩码）返回该IP网段的所有IP
      * <p>格式：parseIpMaskRange("192.192.192.1.", "23")</p>
@@ -325,22 +330,77 @@ public class IpUtils {
      * @return List IP网段的所有IP
      * @since 1.7.2
      */
-    public static List<String> parseIpMaskRange(String ip, String mask) {
+    public static List<String> parseIpMaskRange(String ip, String mask, int limit) {
         List<String> list = new ArrayList<>();
         if ("32".equals(mask)) {
             list.add(ip);
         } else {
             String startIp = getBeginIpStr(ip, mask);
             String endIp = calcEndIp(ip, mask);
-            if (!"31".equals(mask)) {
-                String subStart = startIp.split(REGEX_IP)[0] + "." + startIp.split(REGEX_IP)[1] + "." + startIp.split(REGEX_IP)[2] + ".";
-                String subEnd = endIp.split(REGEX_IP)[0] + "." + endIp.split(REGEX_IP)[1] + "." + endIp.split(REGEX_IP)[2] + ".";
+            // 如果 mask 是31，直接返回网络地址和广播地址
+            if ("31".equals(mask)) {
+                String subStart = startIp.split(REGEX_IP)[0] + StrPool.POINT + startIp.split(REGEX_IP)[1] + StrPool.POINT + startIp.split(REGEX_IP)[2] + StrPool.POINT;
+                String subEnd = endIp.split(REGEX_IP)[0] + StrPool.POINT + endIp.split(REGEX_IP)[1] + StrPool.POINT + endIp.split(REGEX_IP)[2] + StrPool.POINT;
                 startIp = subStart + (Integer.parseInt(startIp.split(REGEX_IP)[3]) + 1);
                 endIp = subEnd + (Integer.parseInt(endIp.split(REGEX_IP)[3]) - 1);
+                list.add(startIp);
+                list.add(endIp);
+            } else {
+                // 优化 parseIpRange，避免一次性加载所有的 IP 地址
+                list = parseIpRangeWithLimit(startIp, endIp, limit);
             }
-            list = parseIpRange(startIp, endIp);
         }
         return list;
+    }
+
+    /**
+     * 根据起始 IP 和结束 IP 生成 IP 地址范围，最多返回 `limit` 个 IP 地址。
+     *
+     * @param startIp 起始 IP 地址，格式为 "xxx.xxx.xxx.xxx"
+     * @param endIp   结束 IP 地址，格式为 "xxx.xxx.xxx.xxx"
+     * @param limit   最大返回 IP 地址数量
+     * @return 包含指定范围内 IP 地址的列表，最多返回 `limit` 个地址
+     */
+    public static List<String> parseIpRangeWithLimit(String startIp, String endIp, int limit) {
+        List<String> ipList = new ArrayList<>();
+        // 将 IP 地址转为长整型进行比较与计算
+        long start = ipToLong(startIp);
+        long end = ipToLong(endIp);
+        // 遍历从起始 IP 到结束 IP 的范围，并限制返回的 IP 数量
+        for (long ip = start; ip <= end && ipList.size() < limit; ip++) {
+            ipList.add(longToIp(ip));  // 将长整型 IP 转换回字符串格式并添加到列表中
+        }
+        return ipList;
+    }
+
+    /**
+     * 将 IP 地址（字符串形式）转换为长整型数字。
+     *
+     * @param ip IP 地址，格式为 "xxx.xxx.xxx.xxx"
+     * @return 转换后的长整型数字表示形式
+     */
+    public static long ipToLong(String ip) {
+        String[] ipParts = ip.split("\\.");  // 使用点号分割 IP 地址
+        long result = 0;
+        // 将 IP 地址的每个部分转换为数字并移位到正确的位置
+        for (int i = 0; i < ipParts.length; i++) {
+            result |= (Long.parseLong(ipParts[i]) << (8 * (3 - i)));  // 每个部分左移相应的位数
+        }
+        return result;
+    }
+
+    /**
+     * 将长整型数字表示的 IP 地址转换为标准的字符串形式。
+     *
+     * @param longIp 长整型数字形式的 IP 地址
+     * @return 转换后的 IP 地址字符串，格式为 "xxx.xxx.xxx.xxx"
+     */
+    public static String longToIp(long longIp) {
+        // 通过移位操作将长整型数字转换为 IP 地址的每个部分
+        return ((longIp >> 24) & 0xFF) + StrPool.POINT +  // 取高位部分
+                ((longIp >> 16) & 0xFF) + StrPool.POINT +  // 取次高位部分
+                ((longIp >> 8) & 0xFF) + StrPool.POINT +   // 取次低位部分
+                (longIp & 0xFF);  // 取低位部分
     }
 
     /**

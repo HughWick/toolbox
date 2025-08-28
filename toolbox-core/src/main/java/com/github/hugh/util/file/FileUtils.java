@@ -3,17 +3,15 @@ package com.github.hugh.util.file;
 import com.github.hugh.constant.StrPool;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.DoubleMathUtils;
-import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.StringUtils;
 import com.github.hugh.util.io.StreamUtils;
+import com.github.hugh.util.net.UrlUtils;
 import com.github.hugh.util.regex.RegexUtils;
 import com.google.common.io.Files;
 import lombok.Cleanup;
 
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.text.DecimalFormat;
@@ -42,40 +40,6 @@ public class FileUtils {
             return;
         }
         file.mkdirs();
-    }
-
-    /**
-     * 根据url链接判断对应图片是否存在
-     *
-     * @param url 网址链接
-     * @return boolean {@code true}存在返回
-     */
-    public static boolean urlFileExist(String url) {
-        if (EmptyUtils.isEmpty(url)) {
-            return false;
-        }
-        try {
-            URL u = new URL(url);
-            URLConnection uc = u.openConnection();
-            InputStream in = uc.getInputStream();
-            if (url.equalsIgnoreCase(uc.getURL().toString())) {
-                in.close();
-            }
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    /**
-     * URL 文件不存在
-     *
-     * @param url 网址链接
-     * @return boolean {@code true} 文件不存在返回
-     * @since 1.4.15
-     */
-    public static boolean urlNotFileExist(String url) {
-        return !urlFileExist(url);
     }
 
     /**
@@ -162,42 +126,6 @@ public class FileUtils {
     }
 
     /**
-     * 通过url访问图片信息后、存储到本地
-     * <p>V1.5.1 后多线程使用{@link FileUtils#downloadByNio(String, String)}</p>
-     *
-     * @param fileUrl  网络资源地址
-     * @param savePath 保存路径
-     * @return boolean 成功返回true
-     */
-    @Deprecated
-    public static boolean downloadByStream(String fileUrl, String savePath) {
-        try {
-            URL url = new URL(fileUrl);
-            /* 将网络资源地址传给,即赋值给url */
-            /* 此为联系获得网络资源的固定格式用法，以便后面的in变量获得url截取网络资源的输入流 */
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            var dataInputStream = new DataInputStream(httpURLConnection.getInputStream());
-            /* 此处也可用BufferedInputStream与BufferedOutputStream  需要保存的路径*/
-            var dataOutputStream = new DataOutputStream(new FileOutputStream(savePath));
-            try (dataInputStream; dataOutputStream) {
-                /* 将参数savePath，即将截取的图片的存储在本地地址赋值给out输出流所指定的地址 */
-                byte[] buffer = new byte[4096];
-                int count;
-                /* 将输入流以字节的形式读取并写入buffer中 */
-                while ((count = dataInputStream.read(buffer)) > 0) {
-                    dataOutputStream.write(buffer, 0, count);
-                }
-                /* 关闭输入输出流以及网络资源的固定格式 */
-                httpURLConnection.disconnect();
-                return true;/* 网络资源截取并存储本地成功返回true */
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
      * 网络TRL中下载图片
      * <p>采用nio从URL流数据创建字节通道。然后使用文件输出流将其写入文件。</p>
      * <p>使用了{@link Cleanup}进行通道与流的关闭。</p>
@@ -208,7 +136,7 @@ public class FileUtils {
      * @since 1.5.1
      */
     public static boolean downloadByNio(String uri, String path) throws IOException {
-        if (urlNotFileExist(uri)) {
+        if (UrlUtils.resourceNotExists(uri)) {
             return false;
         }
         try (InputStream inputStream = new URL(uri).openStream();

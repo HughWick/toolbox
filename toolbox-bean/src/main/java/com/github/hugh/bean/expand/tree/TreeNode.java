@@ -1,7 +1,7 @@
 package com.github.hugh.bean.expand.tree;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -14,14 +14,17 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-public class TreeNode {
+@EqualsAndHashCode(callSuper = true)
+public class TreeNode extends BaseTreeNode<TreeNode> {
 
-    private String id;//节点位移标识
+    private String customLabel;// 自定义标签（element、）
+    private String customValue;// 自定义的值
 
-    private String parentId;//父节点id
-
-    private String value;//节点属性，按需求可定义多个属性
-
-    private List<TreeNode> children;//该节点的子节点对象
+    public TreeNode(String id, String parentId, String value, List<TreeNode> children) {
+        super(); // 调用父类的无参构造器
+        this.setId(id);
+        this.setParentId(parentId);
+        this.setValue(value);
+        this.setChildren(children);
+    }
 }

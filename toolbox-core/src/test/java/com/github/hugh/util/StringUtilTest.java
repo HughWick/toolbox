@@ -1,11 +1,11 @@
 package com.github.hugh.util;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.RoundingMode;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 字符串工具测试
@@ -15,11 +15,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class StringUtilTest {
 
+    private String path_str_1;
+
+    @BeforeEach
+    public void setUp() {
+        path_str_1 = "C:\\Users\\Lenovo\\Desktop\\0e9f4beeb6a5423585c6eabda21a63ee.jpg";
+    }
     // 测试字符串长度
     @Test
     void testVarCharSize() {
         String value = "startDate";
         assertEquals(9, StringUtils.varcharSize(value));
+        assertEquals(0, StringUtils.varcharSize(null));
+        assertFalse(StringUtils.isContainChinese("English"));
+        assertEquals(4, StringUtils.varcharSize("中文"));
+        assertEquals(7, StringUtils.varcharSize("abc中文"));
     }
 
     @Test
@@ -46,6 +56,7 @@ class StringUtilTest {
         String str1 = "getCamelCaseString";
         String camel = StringUtils.camelToUnderline(str1);
         assertEquals("get_camel_case_string", camel);
+        assertNull( StringUtils.camelToUnderline(null));
         assertEquals("get_camel_case_string".toUpperCase(), StringUtils.camelToUnderlineUppercase(str1));
         assertEquals(str1, StringUtils.getCamelCase(camel, false));
     }
@@ -54,6 +65,7 @@ class StringUtilTest {
     @Test
     void testReplaceAnyBlank() {
         assertEquals("entityiserror!", StringUtils.replaceAnyBlank(" entity is error !"));
+        assertEquals(" ", StringUtils.replaceAnyBlank(" "));
         assertEquals("_e_n_t_i_t_y__i_s__e_r_r_o_r__!_", StringUtils.replaceAnyBlank("entity is error !", "_"));
     }
 
@@ -61,11 +73,13 @@ class StringUtilTest {
     @Test
     void testChinese() {
         var str = "[a, b, [c]]]";
+//        assertEquals("", StringUtils.trim(str, ""));
         assertEquals("[a, b, [c]]", StringUtils.trim(str, "]"));
         assertEquals("a, b, [c]]]", StringUtils.trim(str, "["));
 //        System.out.println("==2=>>>" + StringUtils.trim(str, "]"));
 //        System.out.println("==2=>>>" + StringUtils.trim(str, "["));
         assertTrue(StringUtils.isContainChinese("；"));
+        assertFalse(StringUtils.isContainChinese(null));
         assertTrue(StringUtils.isContainChinese("中文"));
         assertFalse(StringUtils.isNotContainChinese("中文2"));
         assertFalse(StringUtils.isNotContainChinese("中文"));
@@ -81,19 +95,98 @@ class StringUtilTest {
         assertEquals(path1, StringUtils.after(string, "/", 4));
         assertEquals(path2, StringUtils.after(string2, "/", 4));
         String fileName = "0e9f4beeb6a5423585c6eabda21a63ee.jpg";
-        String filePath = "C:\\Users\\Lenovo\\Desktop\\" + fileName;
-        assertEquals(fileName, StringUtils.after(filePath, "\\"));
+//        String filePath = "C:\\Users\\Lenovo\\Desktop\\" + fileName;
+//        assertEquals(fileName, StringUtils.after(filePath, "\\"));
         String path3 = "http://192.168.1.89/capture/DaHua/capture/SZC3JW439D00083/2024/8/15/42e36a636264411982f470de6001ac09.jpg";
         String after3 = StringUtils.after(path3, "/", 4);
-        assertEquals("/DaHua/capture/SZC3JW439D00083/2024/8/15/42e36a636264411982f470de6001ac09.jpg" , after3);
+        assertEquals("/DaHua/capture/SZC3JW439D00083/2024/8/15/42e36a636264411982f470de6001ac09.jpg", after3);
+    }
+
+    @Test
+    void after_WithValidInput_ReturnsExpectedSubstring() {
+        String result = StringUtils.after(path_str_1, "\\");
+        assertEquals("0e9f4beeb6a5423585c6eabda21a63ee.jpg", result);
+    }
+
+    @Test
+    void after_WithNullValue_ReturnsNull() {
+        String result = StringUtils.after(null, "\\");
+        assertNull(result);
+    }
+
+    @Test
+    void after_WithEmptyValue_ReturnsEmptyString() {
+        String result = StringUtils.after("", "\\");
+        assertEquals("", result);
+    }
+
+    @Test
+    void after_WithCharacterNotPresent_ReturnsOriginalString() {
+        String result = StringUtils.after(path_str_1, "/");
+        assertEquals(path_str_1, result);
+    }
+
+    @Test
+    void after_WithCharacterAtEnd_ReturnsEmptyString() {
+        String result = StringUtils.after(path_str_1 + "\\", "\\");
+        assertEquals("", result);
+    }
+
+    @Test
+    void after_WithMultipleOccurrences_ReturnsLastSubstring() {
+        String result = StringUtils.after("abc\\def\\ghi", "\\");
+        assertEquals("ghi", result);
+    }
+    @Test
+    void before_NullValue_ReturnsNull() {
+        String result = StringUtils.before(null, "/");
+        assertEquals(null, result);
+    }
+
+    @Test
+    void before_EmptyValue_ReturnsEmptyString() {
+        String result = StringUtils.before("", "/");
+        assertEquals("", result);
+    }
+
+    @Test
+    void before_ValueContainsCha_ReturnsSubstring() {
+        String result = StringUtils.before("https://github.com/HughWick/toolbox", "/");
+        assertEquals("https://github.com/HughWick", result);
+        String sqlUrl = "jdbc:mysql://192.168.10.244:4139/cmmop";
+        assertEquals("jdbc:mysql://192.168.10.244:4139", StringUtils.before(sqlUrl, "/"));
+    }
+
+    @Test
+    void before_ValueDoesNotContainCha_ReturnsValue() {
+        String result = StringUtils.before("https://github.com/HughWick", "-");
+        assertEquals("https://github.com/HughWick", result);
+    }
+
+    @Test
+    void before_ValueOnlyContainsCha_ReturnsEmptyString() {
+        String result = StringUtils.before("///", "/",1);
+        assertEquals("", result);
+    }
+
+    @Test
+    void before_ValueStartsWithCha_ReturnsEmptyString() {
+        String result = StringUtils.before("/github.com/HughWick", "/",2);
+        assertEquals("", result);
+    }
+
+    @Test
+    void before_ValueEndsWithCha_ReturnsSubstring() {
+        String result = StringUtils.before("https://github.com/HughWick/", "/");
+        assertEquals("https://github.com/HughWick", result);
     }
 
     @Test
     void testBefore() {
         String path1 = "C:\\Users\\Lenovo\\Desktop";
-//        String path2 = "/capture/4M061F3PAA33D78/2020/10/27/e242edb022494a12a778c4cddecf2a48.jpg";
+        String path2 = "/capture/4M061F3PAA33D78/2020/10/27/e242edb022494a12a778c4cddecf2a48.jpg";
         String fileName = path1 + "\\0e9f4beeb6a5423585c6eabda21a63ee.jpg";
-//        String string2 = "https://www.hnlot.com.cn/DaHua" + path2;
+        String string2 = "https://www.hnlot.com.cn/DaHua" + path2;
         assertEquals(path1, StringUtils.before(fileName, "\\"));
         String str1 = "abc.sql";
         assertEquals("abc", StringUtils.before(str1, "."));
@@ -118,6 +211,7 @@ class StringUtilTest {
         assertEquals("1,2,3", StringUtils.trimLastPlace(stringBuilder));
         String str = "a|b|c|";
         assertEquals("a|b|c", StringUtils.trimLastPlace(str));
+        assertEquals( "", StringUtils.trimLastPlace(""));
         StringBuilder stringBuilder1 = null;
         assertThrowsExactly(NullPointerException.class, () -> {
             StringUtils.trimLastPlace(stringBuilder1);
@@ -130,6 +224,56 @@ class StringUtilTest {
         String str2 = "Ass>";
         assertTrue(StringUtils.startWithIgnoreCase(str, "<"));
         assertFalse(StringUtils.startWith(str2, "a", false));
+    }
+
+    @Test
+    public void startWith_BothNull_IgnoreEqualsTrue_ReturnsFalse() {
+        assertFalse(StringUtils.startWith(null, null, false, true));
+    }
+
+    @Test
+    public void startWith_BothNull_IgnoreEqualsFalse_ReturnsTrue() {
+        assertTrue(StringUtils.startWith(null, null, false, false));
+    }
+
+    @Test
+    public void startWith_StrNullPrefixNotNull_ReturnsFalse() {
+        assertFalse(StringUtils.startWith(null, "prefix", false, false));
+    }
+
+    @Test
+    public void startWith_StrNotNullPrefixNull_ReturnsFalse() {
+        assertFalse(StringUtils.startWith("string", null, false, false));
+    }
+
+    @Test
+    public void startWith_StrStartsWithPrefix_IgnoreCaseFalse_ReturnsTrue() {
+        assertTrue(StringUtils.startWith("string", "str", false, false));
+    }
+
+    @Test
+    public void startWith_StrStartsWithPrefix_IgnoreCaseTrue_ReturnsTrue() {
+        assertTrue(StringUtils.startWith("String", "str", true, false));
+    }
+
+    @Test
+    public void startWith_StrDoesNotStartWithPrefix_ReturnsFalse() {
+        assertFalse(StringUtils.startWith("string", "pre", false, false));
+    }
+
+    @Test
+    public void startWith_StrEqualsPrefix_IgnoreEqualsTrue_ReturnsFalse() {
+        assertFalse(StringUtils.startWith("string", "string", false, true));
+    }
+
+    @Test
+    public void startWith_StrEqualsPrefix_IgnoreEqualsFalse_ReturnsTrue() {
+        assertTrue(StringUtils.startWith("string", "string", false, false));
+    }
+
+    @Test
+    public void startWith_StrStartsWithPrefix_IgnoreEqualsTrue_ReturnsTrue() {
+        assertTrue(StringUtils.startWith("string", "str", false, true));
     }
 
     // 测试保留小数点后指定位数

@@ -751,4 +751,25 @@ public class BaseConvertUtils {
         }
         return stringBuilder.toString();
     }
+
+    /**
+     * 将一个short类型的值转换为4位的十六进制字符串。
+     * <p>
+     * 例如:
+     * <ul>
+     * <li>输入: (short) 255  (0x00FF) {@code ->} 返回: "00ff"</li>
+     * <li>输入: (short) -1   (0xFFFF) {@code ->} 返回: "ffff"</li>
+     * <li>输入: (short) 114  (0x0072) {@code ->} 返回: "0072"</li>
+     * </ul>
+     * <p>
+     * 该方法主要用于将如命令字（CMD）或校验和（CHECK）等2字节（short）的数据，
+     * 格式化为固定长度的十六进制字符串，便于协议报文的打印和分析。
+     *
+     * @param shar 需要转换的short类型值
+     * @return 格式化后的4位十六进制字符串
+     * @since 3.0.9
+     */
+    public static String shortToHex(short shar) {
+        return String.format("%04x", shar);
+    }
 }

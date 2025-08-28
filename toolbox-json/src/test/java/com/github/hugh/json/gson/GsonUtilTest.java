@@ -1,15 +1,17 @@
 package com.github.hugh.json.gson;
 
+import com.github.hugh.components.watermark.WatermarkLine;
+import com.github.hugh.json.exception.ToolboxJsonException;
 import com.github.hugh.json.model.Command;
 import com.github.hugh.json.model.ResponseData;
 import com.github.hugh.json.model.Student;
+import com.github.hugh.json.model.UsersJsonBo;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * gson 工具类测试
@@ -33,9 +35,9 @@ class GsonUtilTest {
         String strJson1 = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"birthday\":null,\"create\":\"" + create + "\"}";
         Student student1 = GsonUtils.fromJson(strJson1, Student.class);
         assertEquals(student1.toString(), student1.toString());
-        String jsonStr2 = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"create\":\"2021-06-30 11:45:13\",\"system\":0}";
+        String jsonStr2 = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"balance\":0.0,\"create\":\"2021-06-30 11:45:13\",\"system\":0}";
         assertEquals(jsonStr2, GsonUtils.toJson(student1));
-        String jsonStr3 = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"create\":" + create + ",\"system\":0}";
+        String jsonStr3 = "{\"id\":1,\"age\":2,\"name\":\"张三\",\"amount\":10.14,\"balance\":0.0,\"create\":1625024713000,\"system\":0}";
         assertEquals(jsonStr3, GsonUtils.toJsonTimestamp(student1));
         // 假设 `in` 是一个 JSON 解析器或输入流，可以模拟输入字符串
         String input = "SomeRandomText";
@@ -141,9 +143,17 @@ class GsonUtilTest {
         assertEquals(0, commands3.size());
     }
 
+    // 测试断包json数据
+    @Test
+    void testDecidedlyJson() {
+        String str1 = "{\"command\":\"303\",\"deviceId\":\"device_01\",\"requestId\":\"f0d04d5b-0a9a-4436-99a2-d540cd5c52cf\",\"timestamp\":1748936316924,\"payload\":{}},\"versionCode\":\"1\"";
+        List<Object> objectList = GsonUtils.parseMultipleJson(str1);
+        assertEquals(1, objectList.size());
+    }
+
     // 同字符串多个json解析
     @Test
-    void test02() {
+    void testMultipleJson() {
         // 第一种有一个完整的json，但是后面的第二个不完整
         String str1 = "{\"action\":\"heartbeat\",\"count\":\"0\",\"00030009\":\"D01020240605114\",\"00050001\":\"31\"}";
         String str2 = "{\"action\":\"time\",\"00010001\":\"12.26\",\"00010007\":\"0.00\",\"00010008\":\"0.00\",\"00020001\":\"22.0\",\"00020002\":\"36.0\",\"00020003\":\"0\",\"00020004\":\"0\",\"00020009\":\"C_0019\",\"0002000a\":\"1\",\"00030003\":\"(未知)\",\"00030004\":\"湖南省/邵阳市/大祥区/城北路街道\",\"00050001\":\"31\",\"00050006\":\"FDD LTE\",\"00060001\":\"$GNGGA,010910.00,2714.58249,N,11127.59198,E,1,23,0.62,226.5,M,,M,,*59\\r\\n\\r\\nOK\\r\\";
@@ -161,7 +171,7 @@ class GsonUtilTest {
     }
 
     @Test
-    void test04() {
+    void testNotJson() {
         String str1 = "{\"action\":\"heartbeat\",\"count\":\"0\",\"00030009\":\"D01020240605114\",\"00050001\":\"31\"}{\"action\":\"time\",\"00010001\":\"12.27\",\"00010007\":\"0.00\",\"00010008\":\"0.00\",\"00020001\":\"23.0\",\"00020002\":\"30.0\",\"00020003\":\"0\",\"00020004\":\"0\",\"00020009\":\"C_0019\",\"0002000a\":\"1\",\"00030003\":\"(未知)\",\"00030004\":\"湖南省/邵阳市/大祥区/城北路街道\",\"00050001\":\"31\",\"00050006\":\"FDD LTE\",\"00060001\":\"$GNGGA,020952.00,2714.58325,N,11127.58547,E,1,22,0.65,229.2,M,,M,,*5E\\r\\n\\r\\nOK\\r\\n\",\"00060002\":\"$GNRMC,020951.00,A,2714.58329,N,11127.58545,E,0.254,,311024,,,A,V*15\\r\\n\\r\\nOK\\r\\n\",\"00070007\":\"192.168.75.100\",\"00070009\":\"00\",\"0007000a\":\"00\",\"0007000c\":\"0\",\"0007000d\":[0,0,0,0],\"0007000e\":[0,0,0,0,0,0,0,0,0],\"0007000f\":\"\",\"00070010\":\"0\",\"01000003\":\"NULL\",\"02000003\":\"NULL\",\"03010001\":\"230.52\",\"03010002\":\"0.21\",\"03010003\":\"25.65\",\"03010006\":\"3.55\",\"06000001\":\"1\",\"06000002\":\"12.24\",\"06000003\":\"0.259\",\"06010001\":\"1\",\"06010002\":\"12.25\",\"06010003\":\"0.000\",\"06020001\":\"1\",\"06020002\":\"12.28\",\"06020003\":\"0.000\",\"06030001\":\"1\",\"06030002\":\"12.27\",\"06030003\":\"0.000\",\"07000001\":\"1\",\"07000002\":\"230.52\",\"07010001\":\"1\",\"07010002\":\"230.52\",\"07020001\":\"1\",\"07020002\":\"230.52\",\"07030001\":\"1\",\"07030002\":\"230.52\",\"07040001\":\"1\",\"07040002\":\"230.52\",\"07050001\":\"1\",\"07050002\":\"0.00\",\"07060001\":\"1\",\"07060002\":\"0.00\",\"07070001\":\"1\",\"07070002\":\"0.00\",\"07080001\":\"1\",\"07080002\":\"0.00\",\"01000003\":\"NULL\",\"02000003\":\"NULL\",\"00030009\":\"D01020240605114\"}";
         assertTrue(GsonUtils.isNotJsonValid(str1));
     }
@@ -261,6 +271,7 @@ class GsonUtilTest {
     void testIsJsonArray_throwsJsonParseException_invalidSyntax_missingQuote() {
         assertFalse(GsonUtils.isJsonArray("[\"value]"));
     }
+
     @Test
     void isJsonArray_invalidJsonArray() {
         assertFalse(GsonUtils.isJsonArray(""));
@@ -283,5 +294,46 @@ class GsonUtilTest {
     @Test
     void isJsonArray_nullString() {
         assertFalse(GsonUtils.isJsonArray(null));
+    }
+
+
+    @Test
+    void testList() {
+        String str1 = "{\"code\":\"0000\",\"data\":[{\"template\":1,\"createBy\":\"系统\",\"parentTypeId\":9,\"level\":2,\"children\":[],\"typeName\":\"抓拍单元\",\"id\":45,\"type\":0,\"createDate\":1683567605000}],\"message\":\"操作成功\"}";
+        String strArr1 = "[{\"template\":1,\"createBy\":\"系统\",\"parentTypeId\":9,\"level\":2,\"children\":[],\"typeName\":\"抓拍单元\",\"id\":45,\"type\":0,\"createDate\":1683567605000}]";
+        List<Object> objects = GsonUtils.toArrayList(strArr1);
+        System.out.println(objects.size());
+        List<Object> objects1 = GsonUtils.toArrayList(objects.toString());
+    }
+
+    @Test
+    void testUrl() {
+        // 测试URL
+        String head = "https://minio.dev.hnlot.com.cn/svmp-dev/";
+        String url = head + "trip/Trip/20250507/DC2E97CCD813@1746608504.json";
+//        System.out.println(GsonUtils.toJson(url));
+//        C200TripVo c200TripVo = GsonUtils.fromJson(url, C200TripVo.class);
+//        System.out.println(GsonUtils.toJson(c200TripVo));
+        String url2 = "https://jsonplaceholder.typicode.com/users/1";
+        UsersJsonBo usersJsonBo = GsonUtils.fromJson(url2, UsersJsonBo.class);
+        assertEquals("Leanne Graham", usersJsonBo.getName());
+
+        final ToolboxJsonException toolboxHttpException = assertThrowsExactly(ToolboxJsonException.class, () -> {
+            String url3 = "https://www.400unkown.cn";
+            GsonUtils.fromJson(url3, UsersJsonBo.class);
+        });
+        assertTrue(toolboxHttpException.getMessage().contains("java.net.UnknownHostException: www.400unkown.cn"));
+    }
+
+
+    @Test
+    void testToList() {
+        String str1 = "[{\"overallText\":\"工程记录\"} ,{\"key\":\"天气\", \"value\":\"阴 高温 38℃\" , \"highlightValue\":\"true\"}]";
+        String str2 = "[{ \"overallText\": \"工程记录\"} ,{\"key\":\"天气\", \"value\":\"阴 高温 38℃\" , \"highlightValue\":\"true\"}]";
+        List<WatermarkLine> arrayList = GsonUtils.toArrayList(str1, WatermarkLine.class);
+//        System.out.println(arrayList.size());
+        List<WatermarkLine> arrayList2 = GsonUtils.toArrayList(str2, WatermarkLine.class);
+//        System.out.println(arrayList2.size());
+        assertEquals("工程记录", arrayList2.get(0).getOverallText());
     }
 }

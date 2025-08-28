@@ -35,6 +35,10 @@ class IdCardTest {
         // 15位身份证转18位身份证
         assertEquals("430***********6214", IdCardUtils.encrypt(idcard18));
         assertEquals("430104********6214", IdCardUtils.encrypt(idcard18, 6, 4));
+        ToolboxException exception1 =  assertThrows(ToolboxException.class, () -> IdCardUtils.encrypt("430104********6214", -1, 4));
+        assertEquals("number before error", exception1.getMessage());
+        ToolboxException exception2 =  assertThrows(ToolboxException.class, () -> IdCardUtils.encrypt("430104********6214", 4, -1));
+        assertEquals("number rear error", exception2.getMessage());
         ToolboxException exception = assertThrows(ToolboxException.class, () -> IdCardUtils.encrypt("idcard18", 7, 1));
         assertEquals("id card number length error", exception.getMessage());
     }
@@ -45,5 +49,8 @@ class IdCardTest {
         String idCard2 = "43042619991230952X";//
         assertTrue(IdCardUtils.isIdCard(idCard1));
         assertTrue(IdCardUtils.isNotIdCard(idCard2));
+        String str1 = "360602198701280527";
+        System.out.println("===>>"+str1.length());
+        assertTrue(IdCardUtils.isIdCard("360602197701280527"));
     }
 }

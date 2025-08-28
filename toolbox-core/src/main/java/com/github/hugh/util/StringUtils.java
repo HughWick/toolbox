@@ -111,14 +111,34 @@ public class StringUtils {
      * @return String 获取指定最后一个字符之前所有字符串
      */
     public static String before(String value, String cha) {
+        return before(value, cha, -1);  // 默认调用取最后一个字符前的方法
+    }
+
+    /**
+     * 从给定字符串中查找并返回指定字符前的子字符串
+     * 主要用于字符串分割，根据指定的字符和位置提取所需部分
+     *
+     * @param value 原始字符串
+     * @param cha   需要查找的字符
+     * @param index 指定从前往后还是从后往前查找的索引，-1表示从后往前查找
+     * @return 查找指定字符前的子字符串如果未找到该字符，返回原始字符串；如果找到的字符在字符串起始位置，返回空字符串
+     * @since 2.8.2
+     */
+    public static String before(String value, String cha, int index) {
         if (EmptyUtils.isEmpty(value)) {
             return value;
         }
-        if (value.contains(cha)) {
-            int lastIndexOf = value.lastIndexOf(cha);
-            return value.substring(0, lastIndexOf);
+        // 默认是取最后一个字符的位置，index为-1表示取最后一个
+        int pos = (index <= 0) ? value.lastIndexOf(cha) : value.indexOf(cha);
+        // 如果未找到指定字符，则直接返回原始字符串
+        if (pos == -1) {
+            return value;
         }
-        return value;
+        // 处理边界条件，避免 StringIndexOutOfBoundsException
+        if (pos == 0) {
+            return "";
+        }
+        return value.substring(0, pos);
     }
 
     /**
@@ -145,6 +165,47 @@ public class StringUtils {
     }
 
     /**
+     * 将字符串按照指定的字符与次数进行切割
+     * <ul>
+     * <li>注：返回结果中首字符为指定切割的字符</li>
+     * <li>例：源字符串 http://www.baidu.com/capture/DaHua/capture/6G0BEB9GA12F70A/2021/1/17/9946090cb09b4986af8615174e862b9e.jpg</li>
+     * <li>获取"/"出现的第4次后的所有字符，结果为：/DaHua/capture/6G0BEB9GA12F70A/2021/1/17/9946090cb09b4986af8615174e862b9e.jpg</li>
+     * </ul>
+     *
+     * @param string 源字符串
+     * @param chr    匹配的字符
+     * @param index  次数
+     * @return String 字符串
+     * @since 1.5.6
+     */
+    public static String after(String string, String chr, int index) {
+        int index1 = indexOf(string, chr, index);
+        return string.substring(index1);
+    }
+
+    /**
+     * 根据字符串中指定字符的次数获取对应所在的下标
+     *
+     * @param string 源字符串
+     * @param chr    匹配的字符
+     * @param index  次数
+     * @return int 位置下标
+     * @since 1.5.6
+     */
+    public static int indexOf(String string, String chr, int index) {
+        Pattern pattern = Pattern.compile(chr);
+        Matcher findMatcher = pattern.matcher(string);
+        var number = 0;
+        while (findMatcher.find()) {
+            number++;
+            if (number == index) {//当指定出现次数满足时停止
+                break;
+            }
+        }
+        return findMatcher.start();
+    }
+
+    /**
      * 计算字符串中的对应varchar的长度
      * <ul>
      * <li>由于旧的Mysql数据库一个中文算2个字节、本方法将字符串中的中文按2个长度进行合计</li>
@@ -155,14 +216,18 @@ public class StringUtils {
      * @since 1.1.3
      */
     public static int varcharSize(String value) {
+        if (value == null || value.isEmpty()) {
+            return 0;
+        }
         var length = 0;
         var chinese = "[\u0391-\uFFE5]";
-        for (var i = 0; i < value.length(); i++) {  /* 获取字段值的长度，如果含中文字符，则每个中文字符长度为2，否则为1 */
-            var temp = value.substring(i, i + 1);  /* 获取一个字符 */
-            if (temp.matches(chinese)) {     /* 判断是否为中文字符 */
-                length += 2;  /* 中文字符长度为2 */
+        char[] charArray = value.toCharArray(); // 将 String 转换为 char 数组，避免重复创建 String 对象
+        for (char c : charArray) { // 遍历 char 数组，效率更高
+            String temp = String.valueOf(c); // 将 char 转换为 String 用于 matches 方法
+            if (temp.matches(chinese)) {
+                length += 2;
             } else {
-                length += 1;  /* 其他字符长度为1 */
+                length += 1;
             }
         }
         return length;
@@ -178,14 +243,12 @@ public class StringUtils {
      * @since 1.3.1
      */
     public static String leftPadding(final String original, final int targetLength, final char unit) {
-        //1. fast-return
         final int originalLength = original.length();
         if (originalLength >= targetLength) {
             return original;
         }
-        //2. 复制需要补充的长度 减掉 源数据的长度 加上 源字符串
-        return (String.valueOf(unit).repeat(targetLength - originalLength)) +
-                original;
+        //复制需要补充的长度 减掉 源数据的长度 加上 源字符串
+        return (String.valueOf(unit).repeat(targetLength - originalLength)) + original;
     }
 
     /**
@@ -349,47 +412,6 @@ public class StringUtils {
     }
 
     /**
-     * 将字符串按照指定的字符与次数进行切割
-     * <ul>
-     * <li>注：返回结果中首字符为指定切割的字符</li>
-     * <li>例：源字符串 http://www.baidu.com/capture/DaHua/capture/6G0BEB9GA12F70A/2021/1/17/9946090cb09b4986af8615174e862b9e.jpg</li>
-     * <li>获取"/"出现的第4次后的所有字符，结果为：/DaHua/capture/6G0BEB9GA12F70A/2021/1/17/9946090cb09b4986af8615174e862b9e.jpg</li>
-     * </ul>
-     *
-     * @param string 源字符串
-     * @param chr    匹配的字符
-     * @param index  次数
-     * @return String 字符串
-     * @since 1.5.6
-     */
-    public static String after(String string, String chr, int index) {
-        int index1 = indexOf(string, chr, index);
-        return string.substring(index1);
-    }
-
-    /**
-     * 根据字符串中指定字符的次数获取对应所在的下标
-     *
-     * @param string 源字符串
-     * @param chr    匹配的字符
-     * @param index  次数
-     * @return int 位置下标
-     * @since 1.5.6
-     */
-    public static int indexOf(String string, String chr, int index) {
-        Pattern pattern = Pattern.compile(chr);
-        Matcher findMatcher = pattern.matcher(string);
-        var number = 0;
-        while (findMatcher.find()) {
-            number++;
-            if (number == index) {//当指定出现次数满足时停止
-                break;
-            }
-        }
-        return findMatcher.start();
-    }
-
-    /**
      * 是否以指定字符串开头，忽略大小写
      *
      * @param str    被监测字符串
@@ -457,7 +479,6 @@ public class StringUtils {
      * @param str2       要比较的字符串2
      * @param ignoreCase 是否忽略大小写
      * @return 如果两个字符串相同，或者都是{@code null}，则返回{@code true}
-     * @since 3.2.0
      */
     public static boolean equals(CharSequence str1, CharSequence str2, boolean ignoreCase) {
         if (null == str1) {

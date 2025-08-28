@@ -35,7 +35,12 @@ public @interface Order {
      * @return String
      */
     String message() default "排序类型不支持";
-
+    /**
+     * 失败消息
+     *
+     * @return String
+     */
+    String value() default "";
     /**
      * 接收字段
      *

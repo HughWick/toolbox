@@ -40,13 +40,14 @@ public class UrlUtils {
         if (EmptyUtils.isEmpty(data)) {
             return url;
         }
+        StringBuilder stringBuilder = new StringBuilder(url);
         String last = url.substring(url.length() - 1);
         if (!"?".equals(last)) {// 当最后一个字符不为"?"时进行拼接
-            url += "?";
+            stringBuilder.append("?");
         }
         String params = jsonParse(data);
-        url += params;
-        return url;
+        stringBuilder.append(params);
+        return stringBuilder.toString();
     }
 
     /**
@@ -136,30 +137,6 @@ public class UrlUtils {
         }
         return paramMap;
     }
-
-//    /**
-//     * 解析 URL 参数字符串为 Map 的方法
-//     *
-//     * @param urlParams 包含 URL 参数的字符串
-//     * @return 解析后的参数 Map
-//     * @since 2.7.4
-//     */
-//    public static Map<String, String> parseUrl(String urlParams) {
-//        // 如果 URL 参数字符串为空，则返回一个空的 Map
-//        if (EmptyUtils.isEmpty(urlParams)) {
-//            return new HashMap<>();
-//        }
-//        Map<String, String> paramMap = new HashMap<>();
-//        String[] params = urlParams.split("&");
-//        for (String param : params) {
-//            String[] keyValue = param.split("=");
-//            // 对键和值进行解码，并放入 Map 中
-//            String key = URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8);
-//            String value = URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8);
-//            paramMap.put(key, value);
-//        }
-//        return paramMap;
-//    }
 
     /**
      * 将 URL 参数字符串解析为 Jsons 对象

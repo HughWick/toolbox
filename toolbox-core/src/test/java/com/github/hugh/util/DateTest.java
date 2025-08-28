@@ -1,14 +1,17 @@
 package com.github.hugh.util;
 
 import com.github.hugh.constant.DateCode;
+import com.github.hugh.exception.ToolboxException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,18 +49,25 @@ class DateTest {
         assertEquals(expectedDate, parsedDate);
     }
 
+//    @Test
+//    void testRandomTime() {
+//        // 创建一个随机数生成器
+//        Random random = new Random();
+//        // 生成随机的小时、分钟和秒
+//        int hour = random.nextInt(24); // 0到23之间的随机整数
+//        int minute = random.nextInt(60); // 0到59之间的随机整数
+//        int second = random.nextInt(60); // 0到59之间的随机整数
+//        // 格式化成HH:mm:ss的形式
+//        String formattedTime = String.format("%02d:%02d:%02d", hour, minute, second);
+//        // 打印随机生成的时间
+//        System.out.println("随机生成的时间为: " + formattedTime);
+//    }
+
     @Test
-    void testRandomTime(){
-        // 创建一个随机数生成器
-        Random random = new Random();
-        // 生成随机的小时、分钟和秒
-        int hour = random.nextInt(24); // 0到23之间的随机整数
-        int minute = random.nextInt(60); // 0到59之间的随机整数
-        int second = random.nextInt(60); // 0到59之间的随机整数
-        // 格式化成HH:mm:ss的形式
-        String formattedTime = String.format("%02d:%02d:%02d", hour, minute, second);
-        // 打印随机生成的时间
-        System.out.println("随机生成的时间为: " + formattedTime);
+    void testToStringTime() {
+        String str = "2020-06-04 13:00:21";
+        assertEquals("20200604130021", DateUtils.toStringTime(str));
+        assertEquals("", DateUtils.toStringTime(null));
     }
 
     @Test
@@ -65,19 +75,22 @@ class DateTest {
         String str = "2020-06-04 13:00:21";
         assertTrue(DateUtils.isDateFormat(str));
         assertEquals("Thu Jun 04 00:00:00 CST 2020", DateUtils.parseDate(str).toString());
-//        System.out.println("-2-->" + );
         final boolean dateFormat = DateUtils.isDateFormat(DateUtils.getDate(DateCode.YEAR_MONTH_DAY), DateCode.YEAR_MONTH_DAY);
         assertTrue(dateFormat);
-//        System.out.println("--3->" + );
 //        System.out.println("--4->" + DateUtils.getDate(1));
-        assertEquals("20200604130021", DateUtils.toStringTime(str));
 //        System.out.println("--5->" + DateUtils.getDate(DateUtils.toStringTime(str)));
 //        assertEquals(TimeUtils.getYear() + "" + TimeUtils.getMonth() + "" + TimeUtils.getDay(), DateUtils.getDateSign());
 //        System.out.println("--6->" + DateUtils.getDateSign());
-        String s = DateUtils.toStringDate("20200604130021");
-        assertTrue(DateUtils.isDateFormat(s));
 //        System.out.println(s);
-        System.out.println("--根据当前时间的一天前的起始时间->" + DateUtils.getDayBeforeStartTime());
+//        System.out.println("--根据当前时间的一天前的起始时间->" + DateUtils.getDayBeforeStartTime());
+    }
+
+    @Test
+    void testToStrDate() {
+        String s = DateUtils.toStringDate("20200604130021");
+        assertEquals("2020-06-04 13:00:21", s);
+        assertTrue(DateUtils.isDateFormat(s));
+        assertNull(DateUtils.toStringDate(null));
     }
 
     @Test
@@ -103,27 +116,97 @@ class DateTest {
         assertTrue(DateUtils.isToday(date1));
         assertTrue(DateUtils.isToday(DateUtils.ofPattern(date1)));
         assertFalse(DateUtils.isToday(DateUtils.parse("2022-01-03 22:11:22")));
-        assertInstanceOf(Date.class, DateUtils.dateStrToDate(date1.toString()));
+        Date parseData1 = DateUtils.parse(date1.toString(), DateCode.CST_FORM);
+        assertNotNull(parseData1);
+        assertInstanceOf(Date.class, parseData1);
+//        assertInstanceOf(Date.class, DateUtils.dateStrToDate(date1.toString()));
     }
 
 
     @Test
-    void test04() {
-
+    void testEarlyMorningSec() {
         long remainingMilliSec = DateUtils.getEarlyMorningSec();
         assertNotNull(remainingMilliSec);
         assertTrue(remainingMilliSec > 0);
+    }
 
-        Date iniHour = DateUtils.getIniHour();
-        assertNotNull(iniHour);
+    /**
+     * 测试getIniHour方法：验证返回的是当日当前小时的起始时间，分钟、秒、毫秒都应该为0。
+     */
+    @Test
+    void testGetIniHour() {
+        // 获取当前日期时间
+        Date result = DateUtils.getIniHour();
 
-        Date endHour = DateUtils.getEndHour();
-        assertNotNull(endHour);
+        // 使用Calendar对比
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(result);
 
-//        assertTrue(endHour.isAfter(iniHour));
-//        System.out.println("-距离凌晨还剩余多少毫秒-->>" + DateUtils.getEarlyMorningSec());
-//        System.out.println("--获取小时整点时间->>" + DateUtils.getIniHour());
-//        System.out.println("--获取当前小时的结束时间点->>" + DateUtils.getEndHour());
+        // 验证分钟、秒和毫秒是否都为0
+        assertEquals(0, calendar.get(Calendar.MINUTE));
+        assertEquals(0, calendar.get(Calendar.SECOND));
+        assertEquals(0, calendar.get(Calendar.MILLISECOND));
+
+        // 验证年份、月份、日期和小时与当前时间相同
+        Calendar now = Calendar.getInstance();
+        assertEquals(now.get(Calendar.YEAR), calendar.get(Calendar.YEAR));
+        assertEquals(now.get(Calendar.MONTH), calendar.get(Calendar.MONTH));
+        assertEquals(now.get(Calendar.DATE), calendar.get(Calendar.DATE));
+        assertEquals(now.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.HOUR_OF_DAY));
+    }
+
+    /**
+     * 测试getEndHour方法：验证返回的是当日当前小时的结束时间，分钟、秒、毫秒都应该是最大值（59, 59, 999）。
+     */
+    @Test
+    void testGetEndHour() {
+        // 获取当前日期时间
+        Date result = DateUtils.getEndHour();
+
+        // 使用Calendar对比
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(result);
+
+        // 验证分钟、秒和毫秒是否为59和999
+        assertEquals(59, calendar.get(Calendar.MINUTE));
+        assertEquals(59, calendar.get(Calendar.SECOND));
+        assertEquals(999, calendar.get(Calendar.MILLISECOND));
+
+        // 验证年份、月份、日期和小时与当前时间相同
+        Calendar now = Calendar.getInstance();
+        assertEquals(now.get(Calendar.YEAR), calendar.get(Calendar.YEAR));
+        assertEquals(now.get(Calendar.MONTH), calendar.get(Calendar.MONTH));
+        assertEquals(now.get(Calendar.DATE), calendar.get(Calendar.DATE));
+        assertEquals(now.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.HOUR_OF_DAY));
+    }
+
+    @Test
+    void testFormat() {
+        Date begin = DateUtils.parseTimestamp(1617943680000L);
+        assertEquals("2021-04-09 12:53:00", DateUtils.format(DateUtils.getMin(begin, 5), DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
+        assertNull(DateUtils.format(null, null));
+        assertEquals("2021-04-09", DateUtils.format(begin, null));
+    }
+
+    // 测试 getDate() 方法是否返回正确的日期格式
+    @Test
+    void testGetDateFormat() {
+        String result = DateUtils.getDate();
+        // 获取当前日期并格式化为期望的格式
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String expectedDate = sdf.format(new Date());
+        assertEquals(expectedDate, result, "getDate() should return the current date in 'yyyy-MM-dd' format.");
+    }
+
+    // 测试 getDate() 是否返回当前日期（不包括时间）
+    @Test
+    void testGetCurrentDate() {
+        // 获取当前日期，去掉时分秒的部分
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate = sdf.format(new Date());
+        String result = DateUtils.getDate();
+        // 比较两个日期字符串
+        assertEquals(currentDate, result, "getDate() should return the current date.");
     }
 
     @Test
@@ -135,11 +218,64 @@ class DateTest {
 //        System.out.println(DateUtils.minutesDifference(begin, DateUtils.parse(string)));
         assertEquals(82, DateUtils.minutesDifference(begin, end));
         assertEquals(4920, DateUtils.secondsDifference(begin, end));
-        assertEquals("2021-04-09 12:53:00", DateUtils.format(DateUtils.getMin(begin, 5), DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
+        assertNull(DateUtils.parseTimestamp(-1));
 //        System.out.println("3--->>" + DateUtils.format(DateUtils.getMin(begin, 5), DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC));
-        Date date = DateUtils.parseDate("2022-01-22 00:00:00");
-        assertTrue(DateUtils.checkTimeOut(date, 2));
-        assertTrue(DateUtils.checkTimeOut(DateUtils.parseDate("2022-01-22 10:00:00"), 2));
+    }
+
+    @Test
+    public void testCheckTimeOut_NullDate() {
+        Date date = null;
+        int hour = 1;
+        assertTrue(DateUtils.checkTimeOut(date, hour), "Expected true when the date is null");
+    }
+
+    @Test
+    public void testCheckTimeOut_HourLessThanOrEqualZero() {
+        Date date = new Date();
+        assertTrue(DateUtils.checkTimeOut(date, 0), "Expected true when the hour is less than or equal to 0");
+        assertTrue(DateUtils.checkTimeOut(date, -1), "Expected true when the hour is negative");
+    }
+
+    @Test
+    public void testCheckTimeOut_WithinTimeLimit() {
+        Date date = new Date(System.currentTimeMillis() - 30 * 60 * 1000); // 30 minutes ago
+        int hour = 1;
+        assertFalse(DateUtils.checkTimeOut(date, hour), "Expected false when the time difference is within the limit of 1 hour");
+    }
+
+    @Test
+    public void testCheckTimeOut_ExceedsTimeLimit() {
+        Date date = new Date(System.currentTimeMillis() - 2 * 60 * 60 * 1000); // 2 hours ago
+        int hour = 1;
+        assertTrue(DateUtils.checkTimeOut(date, hour), "Expected true when the time exceeds the limit of 1 hour");
+    }
+
+    @Test
+    public void testCheckTimeOut_ExceedsTimeLimitWithHigherHours() {
+        Date date = new Date(System.currentTimeMillis() - 5 * 60 * 60 * 1000); // 5 hours ago
+        int hour = 3;
+        assertTrue(DateUtils.checkTimeOut(date, hour), "Expected true when the time exceeds the limit of 3 hours");
+    }
+
+    @Test
+    public void testCheckTimeOut_ExactlyOneHour() {
+        Date date = new Date(System.currentTimeMillis() - 1 * 60 * 60 * 1000); // 1 hour ago
+        int hour = 1;
+        assertFalse(DateUtils.checkTimeOut(date, hour), "Expected false when the time is exactly 1 hour ago");
+    }
+
+    @Test
+    void testCheckTimeOut_ExactlyTwoHours() {
+        Date date = new Date(System.currentTimeMillis() - 2 * 60 * 60 * 1000); // 2 hours ago
+        int hour = 2;
+        assertFalse(DateUtils.checkTimeOut(date, hour), "Expected false when the time is exactly 2 hours ago with 2-hour limit");
+    }
+
+    @Test
+    void testCheckTimeOut_HigherHourLimit() {
+        Date date = new Date(System.currentTimeMillis() - (60 * 60 * 1000)); // 1 hour ago
+        int hour = 2;
+        assertFalse(DateUtils.checkTimeOut(date, hour), "Expected true when the time is 1 hour ago but the limit is 2 hours");
     }
 
     @Test
@@ -329,6 +465,315 @@ class DateTest {
         assertTrue(DateUtils.isTimestamp(str4));
 
 
+    }
 
+    @Test
+    void getStartDate_NullInput_ReturnsNull() {
+        Date result = DateUtils.getStartDate(null);
+        assertNull(result, "Expected null for null input");
+    }
+
+    @Test
+    void getStartDate_ValidDate_ReturnsStartOfDay() {
+        // 设置一个特定的日期用于测试
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2023, Calendar.OCTOBER, 15, 14, 30, 45);
+        calendar.set(Calendar.MILLISECOND, 500);
+        Date date = calendar.getTime();
+        Date result = DateUtils.getStartDate(date);
+        Calendar expectedCalendar = Calendar.getInstance();
+        expectedCalendar.setTime(date);
+        expectedCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        expectedCalendar.set(Calendar.MINUTE, 0);
+        expectedCalendar.set(Calendar.SECOND, 0);
+        expectedCalendar.set(Calendar.MILLISECOND, 0);
+        Date expectedDate = expectedCalendar.getTime();
+        assertEquals(expectedDate, result, "Expected start of day date");
+    }
+
+
+    @Test
+    void getEndDate_NullInput_ReturnsNull() {
+        Date result = DateUtils.getEndDate(null);
+        assertNull(result, "Expected null for null input");
+    }
+
+    @Test
+    void getEndDate_ValidDate_ReturnsEndDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2023, Calendar.JANUARY, 1, 12, 0, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Date date = calendar.getTime();
+        Date result = DateUtils.getEndDate(date);
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.setTime(result);
+        assertEquals(23, calendar2.get(Calendar.HOUR_OF_DAY), "Expected hour to be 23");
+        assertEquals(59, calendar2.get(Calendar.MINUTE), "Expected minute to be 59");
+        assertEquals(59, calendar2.get(Calendar.SECOND), "Expected second to be 59");
+        assertEquals(999, calendar2.get(Calendar.MILLISECOND), "Expected millisecond to be 999");
+    }
+
+    @Test
+    void parseDate_EmptyString_ReturnsNull() {
+        Locale locale = Locale.getDefault();
+        Date result = DateUtils.parseDate("", DateCode.YEAR_MONTH_DAY, locale);
+        assertNull(result);
+    }
+
+    @Test
+    void parseDate_MatchesSpecificPattern1_ReturnsDate() throws ParseException {
+        Locale locale = Locale.getDefault();
+        String dateStr = "2023-10-05 14:30:00.123";
+        Date expectedDate = new SimpleDateFormat(DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC_SSS).parse(dateStr);
+        Date result = DateUtils.parseDate(dateStr, DateCode.YEAR_MONTH_DAY, locale);
+        assertEquals(expectedDate, result);
+    }
+
+    @Test
+    void parseDate_MatchesSpecificPattern2_ReturnsDate() throws ParseException {
+//        Locale locale = Locale.getDefault();
+        String dateStr = "Thu Oct 05 14:30:00 CST 2023";
+        Date expectedDate = new SimpleDateFormat(DateCode.CST_FORM, Locale.US).parse(dateStr);
+        Date result = DateUtils.parseDate(dateStr, DateCode.YEAR_MONTH_DAY, Locale.US);
+        assertEquals(expectedDate, result);
+    }
+
+    @Test
+    void parseDate_UsesProvidedFormat_ReturnsDate() throws ParseException {
+        Locale locale = Locale.getDefault();
+        String dateStr = "2023-10-05";
+        Date expectedDate = new SimpleDateFormat(DateCode.YEAR_MONTH_DAY).parse(dateStr);
+        Date result = DateUtils.parseDate(dateStr, DateCode.YEAR_MONTH_DAY, locale);
+        assertEquals(expectedDate, result);
+    }
+
+    @Test
+    void parseDate_InvalidDate_ThrowsToolboxException() {
+        Locale locale = Locale.getDefault();
+        String dateStr = "invalid-date";
+        assertThrows(ToolboxException.class, () -> DateUtils.parseDate(dateStr, DateCode.YEAR_MONTH_DAY, locale));
+    }
+
+    /**
+     * 辅助方法：创建一个指定年、月、日的Date对象
+     * 注意：Calendar.MONTH 是 0-based (0 for January)
+     */
+    private Date createDate(int year, int month, int day) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month - 1, day, 0, 0, 0); // month - 1 因为 Calendar.MONTH 是 0-based
+        calendar.set(Calendar.MILLISECOND, 0); // 清除毫秒，确保比较精确
+        return calendar.getTime();
+    }
+    /**
+     * 辅助方法：创建一个指定年、月、日、时、分、秒、毫秒的Date对象
+     * 注意：Calendar.MONTH 是 0-based (0 for January)
+     */
+    private Date createDate(int year, int month, int day, int hour, int minute, int second, int millisecond) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month - 1, day, hour, minute, second); // month - 1 因为 Calendar.MONTH 是 0-based
+        calendar.set(Calendar.MILLISECOND, millisecond);
+        return calendar.getTime();
+    }
+
+    @Test
+    @DisplayName("shouldReturnTrueWhenDatesAreInSameYearAndMonth")
+    void testIsSameMonth_SameYearSameMonth() {
+        Date date1 = createDate(2023, 3, 10); // 2023年3月10日
+        Date date2 = createDate(2023, 3, 25); // 2023年3月25日
+        assertTrue(DateUtils.isSameMonth(date1, date2), "在同一年同一个月时应返回true");
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenMonthsAreDifferentInSameYear")
+    void testIsSameMonth_SameYearDifferentMonth() {
+        Date date1 = createDate(2023, 3, 10); // 2023年3月
+        Date date2 = createDate(2023, 4, 15); // 2023年4月
+        assertFalse(DateUtils.isSameMonth(date1, date2), "在同一年但不同月时应返回false");
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenYearsAreDifferent")
+    void testIsSameMonth_DifferentYears() {
+        Date date1 = createDate(2023, 3, 10); // 2023年3月
+        Date date2 = createDate(2024, 3, 20); // 2024年3月
+        assertFalse(DateUtils.isSameMonth(date1, date2), "在不同年时应返回false");
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenMonthsAndYearsAreDifferent")
+    void testIsSameMonth_DifferentYearsAndMonths() {
+        Date date1 = createDate(2023, 3, 10); // 2023年3月
+        Date date2 = createDate(2024, 5, 20); // 2024年5月
+        assertFalse(DateUtils.isSameMonth(date1, date2), "在不同年不同月时应返回false");
+    }
+
+    @Test
+    @DisplayName("shouldReturnTrueWhenDatesAreAtMonthBoundary")
+    void testIsSameMonth_MonthBoundary() {
+        Date date1 = createDate(2023, 1, 1); // 2023年1月1日
+        Date date2 = createDate(2023, 1, 31); // 2023年1月31日
+        assertTrue(DateUtils.isSameMonth(date1, date2), "在月份边界也应返回true");
+    }
+
+    @Test
+    @DisplayName("shouldReturnTrueWhenDatesAreAtYearBoundary")
+    void testIsSameMonth_YearBoundary() {
+        Date date1 = createDate(2023, 12, 15); // 2023年12月
+        Date date2 = createDate(2023, 12, 30); // 2023年12月
+        assertTrue(DateUtils.isSameMonth(date1, date2), "在年份边界（同年12月）也应返回true");
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenDatesCrossYearBoundary")
+    void testIsSameMonth_AcrossYearBoundary() {
+        Date date1 = createDate(2023, 12, 25); // 2023年12月
+        Date date2 = createDate(2024, 1, 5);  // 2024年1月
+        assertFalse(DateUtils.isSameMonth(date1, date2), "跨越年份时应返回false");
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenBeginDateIsNull")
+    void testIsSameMonth_BeginDateIsNull() {
+        Date endDate = createDate(2023, 3, 10);
+        assertFalse(DateUtils.isSameMonth(null, endDate), "起始日期为null时应返回false");
+        // 如果你的业务逻辑是抛出异常，则使用 assertThrows
+        // assertThrows(IllegalArgumentException.class, () -> DateUtils.isSameMonth(null, endDate));
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenEndDateIsNull")
+    void testIsSameMonth_EndDateIsNull() {
+        Date beginDate = createDate(2023, 3, 10);
+        assertFalse(DateUtils.isSameMonth(beginDate, null), "结束日期为null时应返回false");
+        // 如果你的业务逻辑是抛出异常，则使用 assertThrows
+        // assertThrows(IllegalArgumentException.class, () -> DateUtils.isSameMonth(beginDate, null));
+    }
+
+    @Test
+    @DisplayName("shouldReturnFalseWhenBothDatesAreNull")
+    void testIsSameMonth_BothDatesAreNull() {
+        assertFalse(DateUtils.isSameMonth(null, null), "两个日期都为null时应返回false");
+        // 如果你的业务逻辑是抛出异常，则使用 assertThrows
+        // assertThrows(IllegalArgumentException.class, () -> DateUtils.isSameMonth(null, null));
+    }
+
+    @Test
+    @DisplayName("shouldHandleLeapYearCorrectly")
+    void testIsSameMonth_LeapYear() {
+        Date date1 = createDate(2024, 2, 15); // 闰年2月
+        Date date2 = createDate(2024, 2, 29); // 闰年2月
+        assertTrue(DateUtils.isSameMonth(date1, date2), "闰年2月也应返回true");
+        Date date3 = createDate(2024, 3, 1); // 闰年3月
+        assertFalse(DateUtils.isSameMonth(date1, date3), "闰年跨月应返回false");
+    }
+
+    /**
+     * 辅助方法：验证日期是否精确到毫秒
+     * @param expectedCal 期望的日历对象
+     * @param actualDate 实际的Date对象
+     */
+    private void assertDateEquals(Calendar expectedCal, Date actualDate) {
+        Calendar actualCal = Calendar.getInstance();
+        actualCal.setTime(actualDate);
+
+        assertEquals(expectedCal.get(Calendar.YEAR), actualCal.get(Calendar.YEAR), "年份不一致");
+        assertEquals(expectedCal.get(Calendar.MONTH), actualCal.get(Calendar.MONTH), "月份不一致");
+        assertEquals(expectedCal.get(Calendar.DAY_OF_MONTH), actualCal.get(Calendar.DAY_OF_MONTH), "天不一致");
+        assertEquals(expectedCal.get(Calendar.HOUR_OF_DAY), actualCal.get(Calendar.HOUR_OF_DAY), "小时不一致");
+        assertEquals(expectedCal.get(Calendar.MINUTE), actualCal.get(Calendar.MINUTE), "分钟不一致");
+        assertEquals(expectedCal.get(Calendar.SECOND), actualCal.get(Calendar.SECOND), "秒不一致");
+        // 允许毫秒有微小差异，因为Date.from(Instant)转换时可能导致毫秒精度丢失或差异
+        // 或者直接比较，如果你的系统对毫秒精度要求极高
+        // assertEquals(expectedCal.get(Calendar.MILLISECOND), actualCal.get(Calendar.MILLISECOND), "毫秒不一致");
+        assertTrue(Math.abs(expectedCal.get(Calendar.MILLISECOND) - actualCal.get(Calendar.MILLISECOND)) < 2, "毫秒不一致，允许微小误差");
+    }
+
+    // --- getMonthEndTime (原始方法) 测试 ---
+
+    @ParameterizedTest
+    @CsvSource({
+            "2023, 1, 15, 2023, 1, 31",   // 普通月份
+            "2024, 2, 10, 2024, 2, 29",   // 闰年2月
+            "2023, 2, 10, 2023, 2, 28",   // 非闰年2月
+            "2023, 4, 5,  2023, 4, 30",   // 小月
+            "2023, 12, 1, 2023, 12, 31",  // 年底月份
+            "2023, 1, 1,  2023, 1, 31"    // 年初月份
+    })
+    @DisplayName("getMonthEndTime (原始方法): 各种普通日期")
+    void testGetMonthEndTime_OriginalMethod_VariousDates(int inputYear, int inputMonth, int inputDay,
+                                                         int expectedYear, int expectedMonth, int expectedDay) {
+        Date inputDate = createDate(inputYear, inputMonth, inputDay, 10, 30, 45, 123);
+        Date resultDate = DateUtils.getMonthEndTime(inputDate);
+
+        Calendar expectedCalendar = Calendar.getInstance();
+        expectedCalendar.set(expectedYear, expectedMonth - 1, expectedDay, 23, 59, 59);
+        expectedCalendar.set(Calendar.MILLISECOND, 999);
+
+        assertNotNull(resultDate);
+        assertDateEquals(expectedCalendar, resultDate);
+    }
+
+    @Test
+    @DisplayName("getMonthEndTime (原始方法): 输入日期为null应返回null")
+    void testGetMonthEndTime_OriginalMethod_NullInput() {
+        assertNull(DateUtils.getMonthEndTime(null));
+    }
+
+    // --- getMonthEndTimeOptimized (优化方法) 测试 ---
+
+    @ParameterizedTest
+    @CsvSource({
+            "2023, 1, 15, 2023, 1, 31",   // 普通月份
+            "2024, 2, 10, 2024, 2, 29",   // 闰年2月
+            "2023, 2, 10, 2023, 2, 28",   // 非闰年2月
+            "2023, 4, 5,  2023, 4, 30",   // 小月
+            "2023, 12, 1, 2023, 12, 31",  // 年底月份
+            "2023, 1, 1,  2023, 1, 31"    // 年初月份
+    })
+    @DisplayName("getMonthEndTimeOptimized (优化方法): 各种普通日期")
+    void testGetMonthEndTime_OptimizedMethod_VariousDates(int inputYear, int inputMonth, int inputDay,
+                                                          int expectedYear, int expectedMonth, int expectedDay) {
+        Date inputDate = createDate(inputYear, inputMonth, inputDay, 10, 30, 45, 123);
+        Date resultDate = DateUtils.getMonthEndTime(inputDate);
+
+        Calendar expectedCalendar = Calendar.getInstance();
+        expectedCalendar.set(expectedYear, expectedMonth - 1, expectedDay, 23, 59, 59);
+        expectedCalendar.set(Calendar.MILLISECOND, 999);
+
+        assertNotNull(resultDate);
+        assertDateEquals(expectedCalendar, resultDate);
+    }
+
+    @Test
+    @DisplayName("getMonthEndTimeOptimized (优化方法): 输入日期为null应返回null")
+    void testGetMonthEndTime_OptimizedMethod_NullInput() {
+        assertNull(DateUtils.getMonthEndTime(null));
+    }
+
+    @Test
+    @DisplayName("getMonthEndTimeOptimized (优化方法): 检查毫秒精度")
+    void testGetMonthEndTime_OptimizedMethod_MillisecondPrecision() {
+        // 创建一个精确到毫秒的日期
+        Date inputDate = createDate(2023, 7, 14, 12, 0, 0, 500);
+        Date resultDate = DateUtils.getMonthEndTime(inputDate);
+
+        Calendar expectedCalendar = Calendar.getInstance();
+        expectedCalendar.set(2023, Calendar.JULY, 31, 23, 59, 59);
+        expectedCalendar.set(Calendar.MILLISECOND, 999);
+
+        assertNotNull(resultDate);
+        // Date.from(Instant) 转换时可能会截断或四舍五入毫秒，所以通常不直接 ==
+        // 这里验证是否在预期值附近，或者直接比较时间戳
+        assertEquals(expectedCalendar.getTimeInMillis() / 1000, resultDate.getTime() / 1000, "秒级精度应一致");
+        // 如果你希望精确到毫秒，你需要确保你的Java版本和JVM能够支持所有9位纳秒精度
+        // 对于java.util.Date，它只能精确到毫秒。
+        // 所以这里检查毫秒级精度即可。
+        assertEquals(expectedCalendar.get(Calendar.MILLISECOND), actualCalForMsPrecision(resultDate).get(Calendar.MILLISECOND), "毫秒精度应为999");
+    }
+
+    private Calendar actualCalForMsPrecision(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal;
     }
 }

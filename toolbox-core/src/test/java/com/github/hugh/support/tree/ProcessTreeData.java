@@ -1,12 +1,12 @@
 package com.github.hugh.support.tree;
 
 import com.github.hugh.bean.dto.EntityCompareResult;
+import com.github.hugh.bean.dto.RegionDto;
 import com.github.hugh.bean.expand.tree.TreeNode;
 import com.github.hugh.bean.expand.tree.TreeNodeExpand;
+import com.github.hugh.pojo.TreeNodeObject;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 处理属性结构数据测试
@@ -138,13 +138,13 @@ public class ProcessTreeData {
     }
 
     // 处理树形结构数据
-    public static void process(List<TreeNodeObject> objects, List<TreeNode> rootList, List<TreeNode> childList) {
+    public static void processRegionDto(List<RegionDto> objects, List<TreeNode> rootList, List<TreeNode> childList) {
         Map<String, Object> nodeMap = new HashMap<>();
         Map<String, Object> nodeMap2 = new HashMap<>();
         Map<String, Object> nodeMap3 = new HashMap<>();
         Map<String, Object> nodeMap4 = new HashMap<>();
         // 将每一级都只放一条数据，并用上下级code码区分
-        for (TreeNodeObject treeNode : objects) {
+        for (RegionDto treeNode : objects) {
             // 存在省份
             if (nodeMap.containsKey(treeNode.getProvinceCode())) {// 省份
                 if (nodeMap2.containsKey(treeNode.getCityCode())) { // 城 判断城市key是否存在
@@ -199,4 +199,87 @@ public class ProcessTreeData {
     }
 
 
+    /**
+     * 优化的方法，用于将地域信息列表转换为树形结构的节点列表（省 -> 市 -> 区 -> 街道）。
+     * 该方法遍历地域信息，为每个省份创建一个根节点，并为每个省份下的城市、区域和街道创建子节点。
+     * 使用一个 Map 来跟踪已创建的节点，避免重复添加。
+     *
+     * @param objects   包含地域信息的 RegionDto 对象列表。每个对象应包含省份、城市、区域和街道的代码及名称。
+     * @param rootList  用于存储生成的根节点（省份）的列表。
+     * @param childList 用于存储生成的子节点（城市、区域和街道）的列表。
+     */
+    public static void processCustomOptimizedFour(List<RegionDto> objects, List<TreeNode> rootList, List<TreeNode> childList) {
+        // 用于存储已创建的 TreeNode 对象，Key 为节点的唯一标识（Code）
+        Map<String, TreeNode> existingNodes = new HashMap<>();
+        for (RegionDto region : objects) {
+            // 处理省份
+            String provinceCode = region.getProvinceCode();
+            // 如果该省份节点尚未创建
+            if (!existingNodes.containsKey(provinceCode)) {
+                TreeNode provinceNode = createProvinceNode(region);
+                rootList.add(provinceNode);
+                existingNodes.put(provinceCode, provinceNode);
+            }
+            // 处理城市
+            String cityCode = region.getCityCode();
+            // 如果该城市节点尚未创建
+            if (!existingNodes.containsKey(cityCode)) {
+                TreeNode cityNode = createCityNode(region);
+                cityNode.setParentId(provinceCode);
+                childList.add(cityNode);
+                existingNodes.put(cityCode, cityNode);
+            }
+
+            // 处理区域
+            String areaCode = region.getAreaCode();
+            // 如果该区域节点尚未创建
+            if (!existingNodes.containsKey(areaCode)) {
+                TreeNode areaNode = createAreaNode(region);
+                areaNode.setParentId(cityCode);
+                childList.add(areaNode);
+                existingNodes.put(areaCode, areaNode);
+            }
+            // 处理街道
+            String streetCodeEx = region.getStreetCodeEx();
+            // 如果街道代码不为空且该街道节点尚未创建
+            if (streetCodeEx != null && !streetCodeEx.isEmpty() && !existingNodes.containsKey(streetCodeEx)) {
+                TreeNode streetNode = createStreetNode(region);
+                streetNode.setParentId(areaCode);
+                childList.add(streetNode);
+                existingNodes.put(streetCodeEx, streetNode);
+            }
+        }
+    }
+
+    private static TreeNode createProvinceNode(RegionDto region) {
+        TreeNode node = new TreeNode();
+        node.setId(region.getProvinceCode());
+        node.setCustomLabel(region.getProvinceName());
+        node.setCustomValue(region.getProvinceCode());
+        return node;
+    }
+
+    private static TreeNode createCityNode(RegionDto region) {
+        TreeNode node = new TreeNode();
+        node.setId(region.getCityCode());
+        node.setCustomLabel(region.getCityName());
+        node.setCustomValue(region.getCityCode());
+        return node;
+    }
+
+    private static TreeNode createAreaNode(RegionDto region) {
+        TreeNode node = new TreeNode();
+        node.setId(region.getAreaCode());
+        node.setCustomLabel(region.getAreaName());
+        node.setCustomValue(region.getAreaCode());
+        return node;
+    }
+
+    private static TreeNode createStreetNode(RegionDto region) {
+        TreeNode node = new TreeNode();
+        node.setId(region.getStreetCodeEx());
+        node.setCustomLabel(region.getStreetName());
+        node.setCustomValue(region.getStreetCodeEx());
+        return node;
+    }
 }

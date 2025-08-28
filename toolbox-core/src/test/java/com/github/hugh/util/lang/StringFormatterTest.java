@@ -30,4 +30,68 @@ class StringFormatterTest {
         final String format4 = StringFormatter.format(string3, "展位");
         assertEquals("字符串其他：{}，数组：展位", format4);
     }
+    @Test
+    void formatWith_EmptyPlaceHolder_ReturnsOriginalString() {
+        String strPattern = "this is {} for {}";
+        String placeHolder = "";
+        String result = StringFormatter.formatWith(strPattern, placeHolder, "a", "b");
+        assertEquals(strPattern, result);
+    }
+
+    @Test
+    void formatWith_EmptyPattern_ReturnsEmptyString() {
+        String strPattern = "";
+        String placeHolder = "{}";
+        String result = StringFormatter.formatWith(strPattern, placeHolder, "a", "b");
+        assertEquals("", result);
+    }
+
+    @Test
+    void formatWith_EmptyArgs_ReturnsOriginalString() {
+        String strPattern = "this is {} for {}";
+        String placeHolder = "{}";
+        String result = StringFormatter.formatWith(strPattern, placeHolder);
+        assertEquals(strPattern, result);
+    }
+
+    @Test
+    void formatWith_NormalReplacement_ReplacesPlaceholders() {
+        String strPattern = "this is {} for {}";
+        String placeHolder = "{}";
+        String result = StringFormatter.formatWith(strPattern, placeHolder, "a", "b");
+        assertEquals("this is a for b", result);
+    }
+
+    @Test
+    void formatWith_EscapedPlaceHolder_DoesNotReplace() {
+        String strPattern = "this is \\{} for {}";
+        String placeHolder = "{}";
+        String result = StringFormatter.formatWith(strPattern, placeHolder, "a", "b");
+        assertEquals("this is {} for a", result);
+    }
+
+    @Test
+    void formatWith_DoubleEscapedPlaceHolder_Replaces() {
+        String strPattern = "this is \\\\{} for {}";
+        String placeHolder = "{}";
+        String result = StringFormatter.formatWith(strPattern, placeHolder, "a", "b");
+        assertEquals("this is \\a for b", result);
+    }
+
+    @Test
+    void formatWith_FewerArgs_LeavesPlaceholders() {
+        String strPattern = "this is {} for {}";
+        String placeHolder = "{}";
+        String result = StringFormatter.formatWith(strPattern, placeHolder, "a");
+        assertEquals("this is a for {}", result);
+    }
+
+    @Test
+    void formatWith_MoreArgs_IgnoresExtraArgs() {
+        String strPattern = "this is {} for {}";
+        String placeHolder = "{}";
+        String result = StringFormatter.formatWith(strPattern, placeHolder, "a", "b", "c");
+        assertEquals("this is a for b", result);
+    }
+
 }

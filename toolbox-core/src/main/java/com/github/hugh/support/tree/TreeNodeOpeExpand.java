@@ -39,6 +39,11 @@ public class TreeNodeOpeExpand<T> implements TreeNodeOpe<TreeNodeExpand<T>, Elem
      */
     private boolean sortEnable = true;
 
+    @Override
+    public void setMappingType(int mappingType) {
+
+    }
+
     /**
      * 设置是否设置父节点的 ID。
      *

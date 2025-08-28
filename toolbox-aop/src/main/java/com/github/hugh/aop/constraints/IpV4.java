@@ -29,14 +29,12 @@ public @interface IpV4 {
      * @return String
      */
     String message() default "IP格式错误"; //这边可以标注默认的验证失败消息
-
     /**
-     * 值
+     * 失败消息
      *
      * @return String
      */
     String value() default "";
-
     /**
      * 是否允许为空
      * <p>默认不允许，也就是false时，不管value是空字符串或者null都进行Ip规则校验</p>

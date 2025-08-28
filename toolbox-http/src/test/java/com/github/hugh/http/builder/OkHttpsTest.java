@@ -1,7 +1,6 @@
 package com.github.hugh.http.builder;
 
 import com.alibaba.fastjson.JSON;
-import com.github.hugh.http.OkHttpUpdateFileTest;
 import com.github.hugh.http.constant.MediaTypes;
 import com.github.hugh.http.constant.OkHttpCode;
 import com.github.hugh.http.exception.ToolboxHttpException;
@@ -137,21 +136,53 @@ class OkHttpsTest {
     @Test
     void testCookie() throws Exception {
         String url = "http://httpbin.org/cookies/set?username=admin&password=123456";
-        final String responseData = new OkHttps().setUrl(url)
+        OkHttpsResponse okHttpsResponse = new OkHttps().setUrl(url)
                 .sendCookie()
-                .doGet()
-                .getMessage();
+                .doGet();
         URI uri = URI.create(url);
         List<Cookie> cookies = OkHttpCode.COOKIE_STORE.get(uri.getHost());
         assertEquals("[username=admin; path=/, password=123456; path=/]", cookies.toString());
-//        String url2 = "http://httpbin.org/cookies/set?username=user_k2&password=si45";
-//        OkHttps.url(url2)
-//                .isSendCookie(true)
-//                .doPostForm()
-//                .getMessage();
-//        URI uri2 = URI.create(url2);
-//        List<Cookie> cookies2 = OkHttpCode.COOKIE_STORE.get(uri2.getHost());
-//        assertEquals("", cookies2.toString());
+    }
+
+    @Test
+    void testNoCookieSet() throws Exception {
+        String url = "http://httpbin.org/cookies/set?username=admin";
+        OkHttpsResponse okHttpsResponse = new OkHttps().setUrl(url)
+                .doGet();
+        URI uri = URI.create(url);
+        List<Cookie> cookies = OkHttpCode.COOKIE_STORE.get(uri.getHost());
+        // Check that no cookies were set
+        assertNull(cookies);
+    }
+
+    @Test
+    void testMultipleCookiesSet() throws Exception {
+        String url = "http://httpbin.org/cookies/set?username=admin&password=123456&role=admin";
+        OkHttpsResponse okHttpsResponse = new OkHttps().setUrl(url)
+                .sendCookie()
+                .doGet();
+        URI uri = URI.create(url);
+        List<Cookie> cookies = OkHttpCode.COOKIE_STORE.get(uri.getHost());
+        assertEquals("[username=admin; path=/, password=123456; path=/, role=admin; path=/]", cookies.toString());
+    }
+    @Test
+    void testCookieConflict() throws Exception {
+        String url1 = "http://httpbin.org/cookies/set?username=admin";
+        String url2 = "http://httpbin.org/cookies/set?username=user";
+
+        // First request
+        OkHttpsResponse okHttpsResponse1 = new OkHttps().setUrl(url1)
+                .sendCookie()
+                .doGet();
+
+        // Second request with a different cookie value for the same cookie name
+        OkHttpsResponse okHttpsResponse2 = new OkHttps().setUrl(url2)
+                .sendCookie()
+                .doGet();
+
+        URI uri = URI.create(url1);
+        List<Cookie> cookies = OkHttpCode.COOKIE_STORE.get(uri.getHost());
+        assertEquals("[username=user; path=/]", cookies.toString()); // The second cookie should override the first one
     }
 
     // 测试上传单张图片
@@ -250,7 +281,7 @@ class OkHttpsTest {
     }
 
     private static String getPath(String fileName) {
-        return OkHttpUpdateFileTest.class.getResource(fileName).getPath();
+        return OkHttpsTest.class.getResource(fileName).getPath();
     }
 
     @Test
@@ -412,19 +443,29 @@ class OkHttpsTest {
     @Test
     void testSetParam() throws IOException {
         String url1 = https_reqres_url + "/api/users";
+        Map<String, String> header = new HashMap<>();
+        header.put("x-api-key", "reqres-free-v1");
         OkHttpsResponse okHttpsResponse = OkHttps.url(url1)
+                .setHeader(header)
                 .setParam("page", 1).doGet();
         Jsons jsons = okHttpsResponse.toJsons();
-//        System.out.println(jsons);
+        System.out.println(jsons);
         assertEquals(1, jsons.getInt("page"));
 
+    }
+
+    @Test
+    void testReqresSetParam() throws IOException {
         String login_url = https_reqres_url + "/api/login";
         OkHttpsResponse okHttpsResponse2 = OkHttps
                 .url(login_url)
                 .setParam("email", "eve.holt@reqres.in")
                 .setParam("password", "cityslicka")
                 .doPostJson();
-        assertNotNull(okHttpsResponse2.toJsons().getString("token"));
+//        System.out.println(okHttpsResponse2.toJsons());
+        assertTrue(okHttpsResponse2.toJsons().isEquals("error","Missing API key."));
+//        assertNotNull(okHttpsResponse2.toJsons().getString("token"));
+
     }
 
     // 公共的404
@@ -508,5 +549,16 @@ class OkHttpsTest {
         String url2 = "https://minio.hnlot.com.cn/host-os/traffic/host_traffic-1.4.1_240805_RELEASE.bin2";
         OkHttpsResponse okHttpsResponse = OkHttps.url(url2).doGet();
         assertTrue(okHttpsResponse.getMessage().contains("<Code>NoSuchKey</Code>"));
+    }
+
+    @Test
+    void testAMap() throws IOException {
+        Map<String, Object> map = new HashMap<>();
+        map.put("appkey", "a9d3b14e97534966ace0e4883131859a");
+        map.put("locations", "112.850501,28.304445|112.850503,28.304445");
+        map.put("coordsys", "gps");
+        String url1 = "https://gateway.hnlot.com.cn/map/amap/convert";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url1).setBody(map).doGet();
+        assertTrue(okHttpsResponse.is200());
     }
 }

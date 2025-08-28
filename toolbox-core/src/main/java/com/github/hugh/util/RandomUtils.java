@@ -128,10 +128,10 @@ public class RandomUtils {
      * @return 随机字符串
      */
     public static String randomString(String baseString, int length) {
-        final StringBuilder stringBuilder = new StringBuilder();
         if (length < 1) {
             length = 1;
         }
+        final StringBuilder stringBuilder = new StringBuilder();
         int baseLength = baseString.length();
         for (int i = 0; i < length; i++) {
             int number = getRandom().nextInt(baseLength);

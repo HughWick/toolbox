@@ -29,7 +29,12 @@ public @interface StringLength {
      * @return String
      */
     String message() default "字符串长度错误";
-
+    /**
+     * 失败消息
+     *
+     * @return String
+     */
+    String value() default "";
     /**
      * 最小长度
      *

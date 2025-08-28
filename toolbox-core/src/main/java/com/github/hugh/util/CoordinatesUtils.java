@@ -8,6 +8,7 @@ import com.github.hugh.constant.DateCode;
 import com.github.hugh.constant.StrPool;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.regex.RegexUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
@@ -19,6 +20,7 @@ import java.text.DecimalFormat;
  * @author hugh
  * @since 1.6.3
  */
+@Slf4j
 public class CoordinatesUtils {
 
     /**
@@ -162,6 +164,11 @@ public class CoordinatesUtils {
         }
         GgaDTO ggaDTO = new GgaDTO();
         String[] arr = gga.split(StrPool.COMMA); // 用,分割
+        // 如果分割后的数组长度不够，给出适当的提示或处理
+        if (arr.length < 15) {
+            log.error("Invalid GGA string，data：{}", gga);
+            throw new ToolboxException("Invalid GGA string, insufficient data.");
+        }
         ggaDTO.setName(arr[0]);
         ggaDTO.setDate(arr[1]);
         ggaDTO.setLatitude(arr[2]);
@@ -298,5 +305,63 @@ public class CoordinatesUtils {
         double result = 2 * earthRadius * Math.asin(Math.sqrt(sa2 * sa2 + Math.cos(lat1) * Math.cos(lat2) * sb2 * sb2));
         DecimalFormat decimalFormat = new DecimalFormat("#.00");
         return Double.parseDouble(decimalFormat.format(result));
+    }
+
+    /**
+     * 将度分秒 (DMS) 格式的经纬度字符串转换为十进制度 (Decimal Degrees - DD)。
+     * 示例输入: "36°17'51\"N", "102°53'42\"E"
+     * 请注意：这个方法只处理数值和方向，不处理复杂的输入格式校验。
+     *
+     * @param dmsCoord 度分秒格式的坐标字符串，例如 "36°17'51\"N"
+     * @return 转换后的十进制度
+     * @since 3.0.5
+     */
+    public static double dmsToGps(String dmsCoord) {
+        // 移除度、分、秒符号，将它们替换为空格以方便后续分割。
+        // StrPool.SPACE 应该代表 " "，StrPool.EMPTY 应该代表 ""。
+        String cleaned = dmsCoord.replace("°", StrPool.SPACE)
+                .replace("'", StrPool.SPACE)
+                .replace("\"", StrPool.EMPTY);
+        // 提取方向 (N, S, E, W)
+        char direction = Character.toUpperCase(cleaned.charAt(cleaned.length() - 1));
+        if (direction != 'N' && direction != 'S' && direction != 'E' && direction != 'W') {
+            throw new IllegalArgumentException("Invalid direction in DMS format: " + dmsCoord + ". Expected N, S, E, or W.");
+        }
+        // 移除方向，留下纯数字部分
+        double decimalDegrees = getDecimalDegrees(dmsCoord, cleaned);
+        // 根据方向调整符号
+        if (direction == 'S' || direction == 'W') {
+            decimalDegrees = -decimalDegrees;
+        }
+        return decimalDegrees;
+    }
+
+    /**
+     * 辅助方法：从清理后的 DMS 字符串中提取数字部分并计算十进制度。
+     * 这个方法假设清理后的字符串格式为 "度 分 秒 方向"（例如 "36 17 51N" 经过清理后只剩数字和方向，方向会在传入前被截取）。
+     * 它将数字部分按空格分割为度、分、秒，并进行转换计算。
+     *
+     * @param dmsCoord 原始 DMS 格式的坐标字符串，用于在错误信息中提供上下文。
+     * @param cleaned  已经移除了度、分、秒符号的字符串，例如 "36 17 51N"。
+     * @return 计算出的十进制度数值（未考虑方向符号）。
+     * @since 3.0.5
+     */
+    private static double getDecimalDegrees(String dmsCoord, String cleaned) {
+        String numericParts = cleaned.substring(0, cleaned.length() - 1).trim();
+        // 分割字符串获取度、分、秒
+        // 使用一个或多个空格作为分隔符
+        String[] parts = numericParts.split("\\s+");
+        if (parts.length != 3) {
+            throw new IllegalArgumentException("Invalid DMS format: " + dmsCoord + ". Expected Degrees Minutes Seconds.");
+        }
+        double degrees, minutes, seconds;
+        try {
+            degrees = Double.parseDouble(parts[0]);
+            minutes = Double.parseDouble(parts[1]);
+            seconds = Double.parseDouble(parts[2]);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid number format in DMS string: " + dmsCoord, e);
+        }
+        return degrees + (minutes / 60.0) + (seconds / 3600.0);
     }
 }

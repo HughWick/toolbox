@@ -156,15 +156,18 @@ public class CaffeineCache {
      * 创建本地缓存、自定义设置超时时间单位
      * <p>在最后一次写入缓存后开始计时，在指定的时间后过期</p>
      *
-     * @param expireAfterWrite 设置缓存n秒后没有创建/覆盖时会被回收
-     * @param timeUnit         时间单位 {@link TimeUnit}
-     * @param cacheLoader      build方法中可以指定CacheLoader，在缓存不存在时通过CacheLoader的实现自动加载缓存
-     * @param <K>              key
-     * @param <V>              value
+     * @param duration    设置缓存n秒后没有创建/覆盖时会被回收
+     * @param timeUnit    时间单位 {@link TimeUnit}
+     * @param cacheLoader build方法中可以指定CacheLoader，在缓存不存在时通过CacheLoader的实现自动加载缓存
+     * @param <K>         key
+     * @param <V>         value
      * @return Cache
      * @since 2.1.5
      */
-    public static <K, V> LoadingCache<K, V> createExpireAfterWrite(int expireAfterWrite, TimeUnit timeUnit, CacheLoader<K, V> cacheLoader) {
-        return Caffeine.newBuilder().expireAfterWrite(expireAfterWrite, timeUnit).build(cacheLoader);
+    public static <K, V> LoadingCache<K, V> createExpireAfterWrite(int duration, TimeUnit timeUnit, CacheLoader<K, V> cacheLoader) {
+        if (duration < 0) {
+            throw new IllegalArgumentException("Duration cannot be negative: " + duration + " " + timeUnit);
+        }
+        return Caffeine.newBuilder().expireAfterWrite(duration, timeUnit).build(cacheLoader);
     }
 }

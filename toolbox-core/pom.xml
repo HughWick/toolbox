@@ -6,9 +6,9 @@
     <parent>
         <groupId>com.github.hughwick</groupId>
         <artifactId>toolbox-parent</artifactId>
-        <version>2.7.24</version>
+       <version>2.8.15</version>
     </parent>
-
+    <name>Toolbox Core</name>
     <artifactId>toolbox-core</artifactId>
     <packaging>jar</packaging>
     <description>toolbox 公共工具类核心包</description>
@@ -42,7 +42,6 @@
             <groupId>org.lionsoul</groupId>
             <artifactId>ip2region</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/eu.bitwalker/UserAgentUtils -->
         <dependency>
             <groupId>eu.bitwalker</groupId>
             <artifactId>UserAgentUtils</artifactId>
@@ -51,16 +50,15 @@
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.google.code.gson</groupId>-->
-<!--            <artifactId>gson</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>com.lingmoyun</groupId>
             <artifactId>minilzo-java</artifactId>
             <version>0.0.2</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
         </dependency>
     </dependencies>
 </project>

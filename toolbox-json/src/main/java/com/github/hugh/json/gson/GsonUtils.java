@@ -9,18 +9,17 @@ import com.github.hugh.json.gson.adapter.MapTypeAdapter;
 import com.github.hugh.util.DateUtils;
 import com.github.hugh.util.EmptyUtils;
 import com.github.hugh.util.MapUtils;
+import com.github.hugh.util.net.UrlUtils;
 import com.github.hugh.util.regex.RegexUtils;
 import com.google.common.base.Suppliers;
 import com.google.gson.*;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
+import org.json.JSONObject;
+import org.json.XML;
 
-import java.io.StringReader;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.*;
@@ -495,7 +494,7 @@ public class GsonUtils {
             gsonBuilder.registerTypeAdapter(Date.class, new CustomDateTypeAdapter());
             return fromJson(gsonBuilder, json, classOfT);
         } catch (JsonParseException jsonParseException) {
-            log.error("JSON解析实体失败，内容：{}", json);
+//            log.error("JSON解析实体失败，内容：{}", json);
             throw jsonParseException;
         }
     }
@@ -616,7 +615,7 @@ public class GsonUtils {
         } else if (RegexUtils.isNumeric(string)) {
             date = DateUtils.parseTimestamp(Long.parseLong(string));
         } else {
-            date = DateUtils.dateStrToDate(string);
+            date = DateUtils.parse(string, DateCode.CST_FORM);
         }
         return date == null ? null : DateUtils.format(date, pattern);
     }
@@ -631,14 +630,22 @@ public class GsonUtils {
      * @param <T>         出参类型
      * @return T
      */
-    private static <E, T> T fromJson(GsonBuilder gsonBuilder, E json, Class<T> classOfT) {
+    private static <E, T> T fromJson(GsonBuilder gsonBuilder, E object, Class<T> classOfT) {
         Gson gson = gsonBuilder.create();
-        if (json instanceof JsonElement) {
-            return gson.fromJson((JsonElement) json, classOfT);
-        } else if (json instanceof String) {
-            return gson.fromJson((String) json, classOfT);
+        if (object instanceof JsonElement) {
+            return gson.fromJson((JsonElement) object, classOfT);
+        } else if (object instanceof String) {
+            String strObject = (String) object;
+            if (RegexUtils.isDomain(strObject)) {
+                try {
+                    strObject = UrlUtils.readContent(strObject);
+                } catch (IOException ioException) {
+                    throw new ToolboxJsonException(ioException);
+                }
+            }
+            return gson.fromJson(strObject, classOfT);
         }
-        String jsonStr = toJson(json);
+        String jsonStr = toJson(object);
         return gson.fromJson(jsonStr, classOfT);
     }
 
@@ -874,55 +881,38 @@ public class GsonUtils {
      * @since 2.7.16
      */
     public static <T> T xmlToObject(String xml, Class<T> clazz, String rootKey) {
-        Jsons jsons = xmlToJson(xml);
+        JSONObject jsonObject = XML.toJSONObject(xml);
         // 如果根元素为空，则直接将 XML 转换为目标 Java 对象
         if (EmptyUtils.isEmpty(rootKey)) {
-            return jsons.formJson(clazz);
+            return JSON.parseObject(jsonObject.toString(), clazz);
         } else {
             // 如果指定了根元素，获取该根元素的内容并转换为目标 Java 对象
-            Jsons aThis = jsons.getThis(rootKey);
-            return aThis.formJson(clazz);
+            JSONObject jsonObject1 = jsonObject.getJSONObject(rootKey);
+            return JSON.parseObject(jsonObject1.toString(), clazz);
         }
     }
 
-    /**
-     * XML字符串转JSON对象
-     *
-     * @param xml xml字符串
-     * @return Jsons
-     * @since 2.7.16
-     */
-    public static Jsons xmlToJson(String xml) {
-        Map<String, Object> map = new HashMap<>();
-        SAXReader reader = new SAXReader();
-        Document document;
-        try {
-            document = reader.read(new StringReader(xml));
-        } catch (DocumentException documentException) {
-            throw new ToolboxJsonException(documentException);
-        }
-        Element root = document.getRootElement();
-        map.put(root.getName(), elementToMap(root));
-        return Jsons.on(map);
-    }
-
-    /**
-     * Element对象转map对象
-     *
-     * @param element Element对象
-     * @return map
-     * @since 2.7.16
-     */
-    public static Map<String, Object> elementToMap(Element element) {
-        Map<String, Object> map = new HashMap<>();
-        for (Object child : element.elements()) {
-            Element element1 = (Element) child;
-            if (element1.elements().isEmpty()) {
-                map.put(element1.getName(), element1.getText());
-            } else {
-                map.put(element1.getName(), elementToMap(element1));
-            }
-        }
-        return map;
-    }
+//    /**
+//     * 将 XML 文件转换为 Jsons 对象。
+//     * 此方法会自动处理文件的读取和关闭，并能正确处理 UTF-8 BOM。
+//     *
+//     * @param file 待解析的 XML 文件对象
+//     * @return 转换后的 Jsons 对象
+//     * @since 3.0.5
+//     */
+//    public static Jsons xmlToJson(File file) {
+//        return xmlToJson(FileUtils.readContent(file));
+//    }
+//
+//    /**
+//     * XML字符串转JSON对象
+//     *
+//     * @param xml xml字符串
+//     * @return Jsons
+//     * @since 2.7.16
+//     */
+//    public static Jsons xmlToJson(String xml) {
+//        JSONObject jsonObject = XML.toJSONObject(xml);
+//        return Jsons.on(jsonObject.toString());
+//    }
 }

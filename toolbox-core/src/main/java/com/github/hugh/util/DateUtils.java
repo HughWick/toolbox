@@ -1,12 +1,12 @@
 package com.github.hugh.util;
 
+import com.github.hugh.components.datetime.TimeCalc;
 import com.github.hugh.constant.DateCode;
 import com.github.hugh.exception.ToolboxException;
-import com.github.hugh.components.datetime.TimeCalc;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
+import java.time.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,6 +40,7 @@ public class DateUtils extends DateCode {
      * @param date 日期对象
      * @return String  格式为：yyyy-MM-dd
      */
+    @Deprecated
     public static String format(Date date) {
         return format(date, YEAR_MONTH_DAY);
     }
@@ -126,7 +127,7 @@ public class DateUtils extends DateCode {
      */
     public static String toStringDate(String strDate) {
         if (strDate == null) {
-            return "";
+            return null;
         }
         String reg = "(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})(\\d{2})";
         return strDate.replaceAll(reg, "$1-$2-$3 $4:$5:$6");
@@ -179,13 +180,7 @@ public class DateUtils extends DateCode {
      * @return 转换后的Date对象
      */
     public static Date parseDate(String dateStr, String format) {
-        Locale locale;
-        if (CST_FORM.equals(format)) {
-            locale = Locale.US;
-        } else {
-            locale = Locale.getDefault(Locale.Category.FORMAT);
-        }
-        return parseDate(dateStr, format, locale);
+        return parseDate(dateStr, format, Locale.getDefault(Locale.Category.FORMAT));
     }
 
     /**
@@ -199,12 +194,14 @@ public class DateUtils extends DateCode {
      */
     public static Date parseDate(String dateStr, String format, Locale locale) {
         // 判断待转换的日期字符串是否为空
-        if (EmptyUtils.isEmpty(dateStr)) {
+        if (dateStr == null || dateStr.trim().isEmpty()) {
             return null;
         }
         SimpleDateFormat simpleDateFormat;
         if (dateStr.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}")) {
             simpleDateFormat = new SimpleDateFormat(DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC_SSS);
+        } else if (dateStr.matches("\\D{3}\\s\\D{3}\\s\\d{2}\\s\\d{2}:\\d{2}:\\d{2}\\s\\D{3}\\s\\d{4}")) {
+            simpleDateFormat = new SimpleDateFormat(DateCode.CST_FORM, Locale.US);
         } else {
             simpleDateFormat = new SimpleDateFormat(format, locale);
         }
@@ -411,19 +408,17 @@ public class DateUtils extends DateCode {
      * @return boolean @{code true} 同一月
      */
     public static boolean isSameMonth(Date beginDate, Date endDate) {
-        try {
-            Calendar cal1 = Calendar.getInstance();
-            cal1.setTime(beginDate);
-            int month1 = cal1.get(Calendar.MONTH) + 1;
-            Calendar cal2 = Calendar.getInstance();
-            cal2.setTime(endDate);
-            int month2 = cal2.get(Calendar.MONTH) + 1;
-            boolean isSameYear = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
-            return isSameYear && month1 == month2;
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (beginDate == null || endDate == null) {
+            return false;
         }
-        return false;
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(beginDate);
+        int month1 = cal1.get(Calendar.MONTH) + 1;
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(endDate);
+        int month2 = cal2.get(Calendar.MONTH) + 1;
+        boolean isSameYear = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
+        return isSameYear && month1 == month2;
     }
 
     /**
@@ -862,14 +857,24 @@ public class DateUtils extends DateCode {
         if (date == null) {
             return null;
         }
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        int month = getMonth(date);
-        calendar.set(Calendar.MONTH, month - 1);
-        // 获取最后一天
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-        set(calendar, 23, 59, 59, 999);
-        return calendar.getTime();
+        // 1. 将 java.util.Date 转换为 LocalDate (只保留日期部分)
+        // 推荐指定时区，否则会使用系统默认时区，可能导致跨时区问题
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        // 2. 获取该月最后一天的日期
+        LocalDate endOfMonth = localDate.withDayOfMonth(localDate.lengthOfMonth());
+        // 3. 构建该天的结束时间 (23:59:59.999999999)
+        // LocalTime.MAX 表示 23:59:59.999999999
+        LocalDateTime endOfMonthDateTime = endOfMonth.atTime(LocalTime.MAX);
+        // 4. 将 LocalDateTime 转换回 java.util.Date
+        return Date.from(endOfMonthDateTime.atZone(ZoneId.systemDefault()).toInstant());
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(date);
+//        int month = getMonth(date);
+//        calendar.set(Calendar.MONTH, month - 1);
+//        // 获取最后一天
+//        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+//        set(calendar, 23, 59, 59, 999);
+//        return calendar.getTime();
     }
 
     /**
@@ -1172,22 +1177,6 @@ public class DateUtils extends DateCode {
         }
         // 当前时间 距离当天晚上23:59:59 秒数 也就是今天还剩多少秒
         return 24 * 60 * 60 - overTime;
-    }
-
-    /**
-     * 日期对象的字符串 转 日期对象
-     *
-     * @param dataStr 日期对象字符串 @{code Fri Oct 09 00:00:00 CST 2020}
-     * @return Date
-     * @since 1.2.8
-     */
-    public static Date dateStrToDate(String dataStr) {
-        try {
-            return new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US).parse(dataStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     /**

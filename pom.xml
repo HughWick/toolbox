@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.hughwick</groupId>
     <artifactId>toolbox-parent</artifactId>
-    <version>2.7.24</version>
+    <version>2.8.15</version>
     <packaging>pom</packaging>
-
+    <name>Toolbox parent</name>
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
@@ -35,14 +35,13 @@
         <!--========================== All Plugins START =====================-->
         <plugin.compiler.version>3.8.1</plugin.compiler.version>
         <plugin.sonar.version>3.1.1</plugin.sonar.version>
-        <!--        <plugin.surefire.version>2.22.2</plugin.surefire.version>-->
         <plugin.surefire.version>3.5.2</plugin.surefire.version>
         <plugin.jacoco.version>0.8.12</plugin.jacoco.version>
         <plugin.surefire.skip-it>false</plugin.surefire.skip-it>
         <plugin.surefire.ignore-failure>false</plugin.surefire.ignore-failure>
         <plugin.maven-source-plugin.version>2.2.1</plugin.maven-source-plugin.version>
         <plugin.maven-javadoc-plugin.version>3.3.1</plugin.maven-javadoc-plugin.version>
-        <plugin.maven-gpg-plugin.version>1.6</plugin.maven-gpg-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--============================== other ==============================-->
         <lombok.version>1.18.24</lombok.version>
         <spring.version>5.3.23</spring.version>
@@ -51,7 +50,8 @@
         <!--   gson再往上的版本测试用例会出现问题     -->
         <google-gson.version>2.10.1</google-gson.version>
         <fastjson.version>1.2.83</fastjson.version>
-        <!--        <fastjson.version>2.0.53</fastjson.version>-->
+        <org-json.version>20250517</org-json.version>
+        <!--        <fastjson.version>2.0.54</fastjson.version>-->
         <okhttp.version>4.9.3</okhttp.version>
         <servlet-api.version>4.0.1</servlet-api.version>
         <google-guava.version>33.1.0-jre</google-guava.version>
@@ -59,15 +59,17 @@
         <slf4j-simple.version>2.0.16</slf4j-simple.version>
         <ip2region.version>2.7.0</ip2region.version>
         <UserAgentUtils.version>1.21</UserAgentUtils.version>
-        <mybatis-plus.version>3.5.2</mybatis-plus.version>
-        <mongodb.version>2.6.13</mongodb.version>
+        <mybatis-plus.version>3.5.8</mybatis-plus.version>
+        <!--    与spring 2.7.X对其    -->
+        <spring-data-mongodb.version>3.4.18</spring-data-mongodb.version>
+        <mongodb-driver-sync.version>4.6.1</mongodb-driver-sync.version>
         <redis.version>3.7.1</redis.version>
         <caffeine.version>3.1.8</caffeine.version>
         <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
         <pdfbox.version>2.0.29</pdfbox.version>
-        <knife4j.version>3.0.3</knife4j.version>
+        <swagger-annotations.version>1.6.16</swagger-annotations.version>
         <bcprov-jdk18on.version>1.78.1</bcprov-jdk18on.version>
-        <dom4j.version>2.1.4</dom4j.version>
+        <thumbnailator.version>0.4.20</thumbnailator.version>
         <!--    test powermock 版本号与mockito版本号对等  -->
         <powermock.version>2.0.2</powermock.version>
         <mockito.version>2.23.4</mockito.version>
@@ -154,10 +156,23 @@
                 <artifactId>gson</artifactId>
                 <version>${google-gson.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2 -->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.json/json -->
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>${org-json.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
@@ -198,15 +213,10 @@
                 <artifactId>slf4j-simple</artifactId>
                 <version>${slf4j-simple.version}</version>
             </dependency>
-            <!-- mybatis plus-->
+            <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus -->
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter-test</artifactId>
+                <artifactId>mybatis-plus</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
@@ -237,21 +247,28 @@
                 <artifactId>pdfbox</artifactId>
                 <version>${pdfbox.version}</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-spring-boot-starter -->
+            <!-- https://mvnrepository.com/artifact/io.swagger/swagger-annotations -->
             <dependency>
-                <groupId>com.github.xiaoymin</groupId>
-                <artifactId>knife4j-spring-boot-starter</artifactId>
-                <version>${knife4j.version}</version>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger-annotations.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-data-mongodb</artifactId>
-                <version>${mongodb.version}</version>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-mongodb</artifactId>
+                <version>${spring-data-mongodb.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync -->
             <dependency>
-                <groupId>org.dom4j</groupId>
-                <artifactId>dom4j</artifactId>
-                <version>${dom4j.version}</version>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongodb-driver-sync</artifactId>
+                <version>${mongodb-driver-sync.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/net.coobird/thumbnailator -->
+            <dependency>
+                <groupId>net.coobird</groupId>
+                <artifactId>thumbnailator</artifactId>
+                <version>${thumbnailator.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -396,28 +413,26 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${plugin.maven-gpg-plugin.version}</version>
+                        <version>${maven-gpg-plugin.version}</version>
                         <executions>
                             <execution>
+                                <id>sign-artifacts</id>
                                 <phase>verify</phase>
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
                 </plugins>
             </build>
             <distributionManagement>
-                <!--      旧平台       -->
-                <!--                <snapshotRepository>-->
-                <!--                    <id>Hugh</id>-->
-                <!--                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>-->
-                <!--                </snapshotRepository>-->
-                <!--                <repository>-->
-                <!--                    <id>Hugh</id>-->
-                <!--                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
-                <!--                </repository>-->
                 <!--      新中央平台      -->
                 <snapshotRepository>
                     <id>central</id>

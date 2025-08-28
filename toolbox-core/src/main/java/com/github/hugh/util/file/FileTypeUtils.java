@@ -73,8 +73,11 @@ public class FileTypeUtils {
                 return null;
             }
             FileTypeEnum[] fileTypes = FileTypeEnum.values();
+            String majorBrandHex = fileHead.substring(16, 24);
             for (FileTypeEnum type : fileTypes) {
-                if (fileHead.startsWith(type.getValue())) {
+                if (majorBrandHex.equalsIgnoreCase(type.getValue())) {
+                    return type.name().toLowerCase();
+                } else if (fileHead.startsWith(type.getValue())) {
                     return type.name().toLowerCase();
                 }
             }
@@ -95,9 +98,9 @@ public class FileTypeUtils {
      * @return String 文件头十六进制
      */
     private static String getFileHead(InputStream inputStream) {
-        byte[] bytes = new byte[28];
+        byte[] bytes = new byte[24];
         try {
-            inputStream.read(bytes, 0, 28);
+            inputStream.read(bytes, 0, 24);
         } catch (IOException ioException) {
             throw new ToolboxException(ioException);
         }

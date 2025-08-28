@@ -1,6 +1,7 @@
 package com.github.hugh.components;
 
 import com.github.hugh.bean.dto.Ip2regionDTO;
+import com.github.hugh.constant.StrPool;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.ip.Ip2regionUtils;
 
@@ -69,23 +70,30 @@ public class IpResolver {
         this.spare = spare;
         return this;
     }
+
     /**
      * 根据 IP 地址和数据源获取完整的地理位置信息。
+     * <p>
+     * 此方法首先调用 parse() 方法解析 IP 地址，然后根据解析结果构造完整的地理位置字符串。
+     * 如果解析失败，将抛出 ToolboxException 异常。如果解析结果中的省份和城市为默认空字符串，
+     * 则返回 null；否则，根据解析结果返回完整的地理位置信息。
+     * </p>
      *
-     * @return IP 地址对应的完整地理位置信息，如果解析失败返回 null
+     * @return IP 地址对应的完整地理位置信息，如果解析失败或地理位置信息不完整则返回 null
      */
     public String getComplete() {
         Ip2regionDTO parse = parse();
         if (parse == null) {
             throw new ToolboxException("解析失败，IP：" + this.ip);
         }
+        // 如果省份和城市均为默认空字符串，返回 null
         if (DEFAULT_NULL_STR.equals(parse.getProvince())) {
             if (DEFAULT_NULL_STR.equals(parse.getCity())) {
                 return null;
             }
             return parse.getCity();
         }
-        String spareStr = this.spare == null ? "" : this.spare;
+        String spareStr = this.spare == null ? StrPool.EMPTY : this.spare;
         return parse.getProvince() + spareStr + parse.getCity();
     }
 
@@ -95,7 +103,7 @@ public class IpResolver {
      * @return IP 地址对应的城市信息，如果解析失败返回 null
      * @since 2.7.5
      */
-    public String getSimple() {
+    public String getCity() {
         Ip2regionDTO parse = parse();
         if (parse == null) {
             throw new ToolboxException("解析失败，IP：" + ip);

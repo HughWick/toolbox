@@ -1,10 +1,8 @@
 package com.github.hugh.bean.expand.tree;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 /**
  * element ui 属性空间对应的属性实体类
@@ -14,12 +12,9 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-public class ElementTreeExpand<T> {
+@EqualsAndHashCode(callSuper = true)
+public class ElementTreeExpand<T> extends BaseTreeNode<ElementTreeExpand<T>> {
 
-    private String id;//节点位移标识
-    private String parentId;//父节点id
     private String label;//节点属性，按需求可定义多个属性
-    private List<ElementTreeExpand<T>> children;//该节点的子节点对象
-    private T expand;//
+    private T expand;// 拓展对象
 }

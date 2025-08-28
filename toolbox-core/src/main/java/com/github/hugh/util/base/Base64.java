@@ -92,6 +92,9 @@ public class Base64 {
      * @since 2.6.1
      */
     public static byte[] decodeToByte(String text) {
+        if (text == null) {
+            return null;
+        }
         return decode(text.getBytes());
     }
 }

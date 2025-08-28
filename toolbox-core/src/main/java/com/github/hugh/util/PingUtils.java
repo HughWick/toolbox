@@ -48,19 +48,26 @@ public class PingUtils {
      *
      * @param ipAddress IP
      * @param pingCount ping次数
-     * @param timeOut   超时时间毫秒
+     * @param timeout   超时时间毫秒
      * @return int  ping成功的次数
      * @since 2.1.6
      */
-    public static int getConnectedCount(String ipAddress, int pingCount, int timeOut) throws IOException {
+    public static int getConnectedCount(String ipAddress, int pingCount, int timeout) throws IOException {
+        if (timeout <= 0) {
+            // 如果超时时间无效，则直接返回错误，避免卡死
+            throw new IllegalArgumentException("Timeout must be a positive value.");
+        }
+        if (pingCount <= 0) {
+            pingCount = 4; // 默认使用4次 ping（可以根据实际情况修改）
+        }
         Runtime runtime = Runtime.getRuntime();
-        String pingCommand = appendCmd(ipAddress, pingCount, timeOut);
+        String pingCommand = appendCmd(ipAddress, pingCount, timeout);
         Process process = runtime.exec(pingCommand);
         if (process == null) {
             return -1;
         }
-        InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream());
-        try (BufferedReader in = new BufferedReader(inputStreamReader)) {
+        try (InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream());
+             BufferedReader in = new BufferedReader(inputStreamReader)) {
             // 逐行检查输出,计算类似出现=23ms TTL=62字样的次数
             int connectedCount = 0;
             String line;

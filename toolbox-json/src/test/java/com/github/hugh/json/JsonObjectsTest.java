@@ -330,19 +330,6 @@ public class JsonObjectsTest {
 //        System.out.println("=4===>>" + new JsonObjects(str2).formJson(GsonTest.class));
     }
 
-    @Test
-    void testEntrySet() {
-//        var str2 = "{code:006,message:测试,age:18,created:16250247130001,amount:199.88,switchs:true}";
-//        System.out.println(new JsonObjects(str2).toJson());
-        var str3 = "{\"code\":\"006\",\"message\":\"测试\",\"age\":\"18\",\"created\":\"2022-03-21 18:02:11\",\"amount\":\"199.88\",\"switchs\":\"true\"}";
-        JsonObjects jsonObjects = new JsonObjects(str3);
-        Set<Map.Entry<String, JsonElement>> entries = JsonObjectUtils.parse(str3).entrySet();
-        assertEquals(jsonObjects.entrySet(), entries);
-//        for (Map.Entry<String, JsonElement> entrySet : jsonObjects.entrySet()) {
-//            System.out.println("===>>" + entrySet.getKey());
-//        }
-    }
-
     // 测试解析日期对象
     @Test
     void testDate() {

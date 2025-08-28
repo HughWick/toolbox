@@ -6,9 +6,9 @@
     <parent>
         <groupId>com.github.hughwick</groupId>
         <artifactId>toolbox-parent</artifactId>
-        <version>2.7.24</version>
+       <version>2.8.15</version>
     </parent>
-
+    <name>Toolbox AOP</name>
     <artifactId>toolbox-aop</artifactId>
     <packaging>jar</packaging>
     <description>toolbox-aop工具包</description>
