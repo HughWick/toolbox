@@ -41,7 +41,7 @@
         <plugin.surefire.ignore-failure>false</plugin.surefire.ignore-failure>
         <plugin.maven-source-plugin.version>2.2.1</plugin.maven-source-plugin.version>
         <plugin.maven-javadoc-plugin.version>3.3.1</plugin.maven-javadoc-plugin.version>
-        <plugin.maven-gpg-plugin.version>1.6</plugin.maven-gpg-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--============================== other ==============================-->
         <lombok.version>1.18.24</lombok.version>
         <spring.version>5.3.23</spring.version>
@@ -413,21 +413,21 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${plugin.maven-gpg-plugin.version}</version>
+                        <version>${maven-gpg-plugin.version}</version>
                         <executions>
                             <execution>
                                 <phase>verify</phase>
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
+                                <configuration>  <!-- 这是最关键的部分 -->
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
                             </execution>
                         </executions>
-                        <configuration>  <!-- 这是最关键的部分 -->
-                            <gpgArguments>
-                                <arg>--pinentry-mode</arg>
-                                <arg>loopback</arg>
-                            </gpgArguments>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>
