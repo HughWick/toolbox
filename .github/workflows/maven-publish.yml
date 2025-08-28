@@ -1,8 +1,11 @@
 name: Publish package to Maven Central Repository
 on:
-  push:
-    branches:
-      - 2.8.X
+  workflow_dispatch:
+
+#on:
+#  push:
+#    branches:
+#      - 2.8.X
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -17,10 +20,10 @@ jobs:
           server-username: MAVEN_CENTRAL_USERNAME
           server-password: MAVEN_CENTRAL_TOKEN
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Publish to Apache Maven Central
-        run: mvn --batch-mode deploy -P release -DskipTests -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }}
+        run: mvn --batch-mode deploy -P release -DskipTests
         env:
           MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
