@@ -13,7 +13,7 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
-          server-id: ossrh # 这个 ID 需要和你的 settings.xml 或者 pom.xml 中配置的 server ID 一致
+          server-id: central # 这个 ID 需要和你的 settings.xml 或者 pom.xml 中配置的 server ID 一致
           server-username: MAVEN_CENTRAL_USERNAME
           server-password: MAVEN_CENTRAL_TOKEN
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
