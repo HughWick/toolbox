@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - 2.8.X
 #on:
 #  push:
 #    branches:
