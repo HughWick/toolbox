@@ -1,7 +1,7 @@
 package com.github.hugh.components.watermark;
 
 import net.coobird.thumbnailator.Thumbnails;
-import net.coobird.thumbnailator.geometry.Positions;
+import net.coobird.thumbnailator.geometry.Position;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -232,13 +232,8 @@ public class ImageWaterMark {
         int finalWatermarkWidth = (int) (complexWatermarkImage.getWidth() * scaleRatio);
         int finalWatermarkHeight = (int) (complexWatermarkImage.getHeight() * scaleRatio);
         BufferedImage resizedWatermark = resizeWatermark(complexWatermarkImage, finalWatermarkWidth, finalWatermarkHeight);
-        // 10. 将生成并缩放后的水印应用到目标图片并保存
-        applyAndSaveWatermark(
-                targetImage,
-                resizedWatermark,
-                complexWatermarkBuilder.getOpacity(),
-                complexWatermarkBuilder.getOutPath()
-        );
+        // 10. 【修改】将水印应用到目标图片，并传入整个 builder 对象以获取位置和边距信息
+        applyAndSaveWatermark(targetImage, resizedWatermark, complexWatermarkBuilder);
     }
 
     /**
@@ -498,22 +493,28 @@ public class ImageWaterMark {
 
     /**
      * 将生成的水印图像应用到目标图片上并保存到指定路径。
-     * 【修改】此方法现在固定将水印放置在左下角。
      *
      * @param targetImg      目标图片。
      * @param watermarkImage 要应用的水印图像。
-     * @param opacity        水印的透明度。
-     * @param outPath        输出图片的文件路径。
+     * @param builder        传入完整的建造者对象以获取所有定位信息。
      * @throws IOException 如果在保存图片时发生I/O错误。
      */
     private static void applyAndSaveWatermark(BufferedImage targetImg, BufferedImage watermarkImage,
-                                              float opacity, String outPath) throws IOException {
+                                              ComplexWatermarkBuilder builder) throws IOException {
+        // 创建我们自定义的 MarginPosition 对象
+        Position finalPosition = new MarginPosition(
+                builder.getPosition(),
+                builder.getMarginTop(),
+                builder.getMarginBottom(),
+                builder.getMarginLeft(),
+                builder.getMarginRight()
+        );
         Thumbnails.of(targetImg)
                 .size(targetImg.getWidth(), targetImg.getHeight())
-                // 固定位置为左下角
-                .watermark(Positions.BOTTOM_LEFT, watermarkImage, opacity)
+                // 使用我们最终计算出的 Position 对象
+                .watermark(finalPosition, watermarkImage, builder.getOpacity())
                 .outputQuality(1.0)
-                .toFile(new File(outPath));
+                .toFile(new File(builder.getOutPath()));
     }
 }
 

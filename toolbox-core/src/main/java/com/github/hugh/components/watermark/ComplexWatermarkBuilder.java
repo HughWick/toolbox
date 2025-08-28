@@ -65,6 +65,41 @@ public class ComplexWatermarkBuilder {
      * 显示在水印内容区域底部的公司信息字符串。如果为空或null，则不显示。
      */
     private String companyInfo;
+    /**
+     * 水印与目标图片上边缘的距离（单位：像素）。
+     * <p>
+     * 该值用于在基础定位（如 {@code Positions.TOP_LEFT}）计算出的坐标基础上，
+     * 进一步向下偏移水印，从而在水印和图片顶部之间创建出指定的垂直间距。
+     * 默认为 0，表示不设置上边距。
+     */
+    private int marginTop = 0;
+
+    /**
+     * 水印与目标图片下边缘的距离（单位：像素）。
+     * <p>
+     * 该值用于在基础定位（如 {@code Positions.BOTTOM_LEFT}）计算出的坐标基础上，
+     * 进一步向上偏移水印，从而在水印和图片底部之间创建出指定的垂直间距。
+     * 默认为 0，表示不设置下边距。
+     */
+    private int marginBottom = 0;
+
+    /**
+     * 水印与目标图片左边缘的距离（单位：像素）。
+     * <p>
+     * 该值用于在基础定位（如 {@code Positions.TOP_LEFT}）计算出的坐标基础上，
+     * 进一步向右偏移水印，从而在水印和图片左侧之间创建出指定的水平间距。
+     * 默认为 0，表示不设置左边距。
+     */
+    private int marginLeft = 0;
+
+    /**
+     * 水印与目标图片右边缘的距离（单位：像素）。
+     * <p>
+     * 该值用于在基础定位（如 {@code Positions.TOP_RIGHT}）计算出的坐标基础上，
+     * 进一步向左偏移水印，从而在水印和图片右侧之间创建出指定的水平间距。
+     * 默认为 0，表示不设置右边距。
+     */
+    private int marginRight = 0;
 
     /**
      * 无参构造函数。
