@@ -16,13 +16,17 @@ jobs:
           distribution: 'temurin'
           server-id: central
           # Nexus用户名环境变量
-          server-username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          server-username: MAVEN_USERNAME
           # Nexus密码环境变量
-          server-password: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+          server-password: MAVEN_CENTRAL_TOKEN
           # gpg私钥
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           # gpg短密码环境变量
-          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          gpg-passphrase: GPG_PASSPHRASE
 
       - name: Publish to Apache Maven Central
         run: mvn clean --batch-mode deploy -P release -Dmaven.test.skip=true
+        env:
+          MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
