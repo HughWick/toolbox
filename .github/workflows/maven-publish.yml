@@ -22,7 +22,3 @@ jobs:
 
       - name: Publish to Apache Maven Central
         run: mvn clean --batch-mode deploy -P release -Dmaven.test.skip=true
-        env:
-#          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-#          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSWORD }}
