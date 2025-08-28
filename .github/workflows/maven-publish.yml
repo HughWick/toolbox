@@ -14,10 +14,14 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
-          server-id: central # 这个 ID 需要和你的 settings.xml 或者 pom.xml 中配置的 server ID 一致
+          server-id: central
+          # Nexus用户名环境变量
           server-username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          # Nexus密码环境变量
           server-password: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+          # gpg私钥
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          # gpg短密码环境变量
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Publish to Apache Maven Central
