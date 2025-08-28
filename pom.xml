@@ -416,11 +416,12 @@
                         <version>${maven-gpg-plugin.version}</version>
                         <executions>
                             <execution>
+                                <id>sign-artifacts</id>
                                 <phase>verify</phase>
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
-                                <configuration>  <!-- 这是最关键的部分 -->
+                                <configuration>
                                     <gpgArguments>
                                         <arg>--pinentry-mode</arg>
                                         <arg>loopback</arg>
