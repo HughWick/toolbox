@@ -757,9 +757,9 @@ public class BaseConvertUtils {
      * <p>
      * 例如:
      * <ul>
-     * <li>输入: (short) 255  (0x00FF) -&gt 返回: "00ff"</li>
-     * <li>输入: (short) -1   (0xFFFF) -&gt 返回: "ffff"</li>
-     * <li>输入: (short) 114  (0x0072) -&gt 返回: "0072"</li>
+     * <li>输入: (short) 255  (0x00FF) {@code ->} 返回: "00ff"</li>
+     * <li>输入: (short) -1   (0xFFFF) {@code ->} 返回: "ffff"</li>
+     * <li>输入: (short) 114  (0x0072) {@code ->} 返回: "0072"</li>
      * </ul>
      * <p>
      * 该方法主要用于将如命令字（CMD）或校验和（CHECK）等2字节（short）的数据，
