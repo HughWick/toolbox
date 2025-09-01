@@ -4,12 +4,14 @@ import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.io.StreamUtils;
 import com.github.hugh.util.system.OsUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 
@@ -24,6 +26,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class FileUtilsTest {
 
     private static final String TEMP_PATH = "D:\\\\java测试目录";
+    /**
+     * JUnit 5 会为每个测试方法注入一个临时的、干净的目录路径。
+     * 这使得文件操作测试变得非常方便和安全。
+     */
+    @TempDir
+    Path tempDir;
 
     @Test
     void testCreateDir() {
@@ -32,6 +40,19 @@ class FileUtilsTest {
         FileUtils.deleteDir(TEMP_PATH);
         assertFalse(new File(TEMP_PATH).exists());
     }
+
+    @Test
+    void testCreateDir_WhenDirectoryAlreadyExists() {
+        // 准备：创建一个已经存在的目录
+        File existingDir = tempDir.resolve("existingDir").toFile();
+        assertTrue(existingDir.mkdir(), "测试准备失败：无法创建初始目录");
+        // 执行
+        FileUtils.createDir(existingDir.getAbsolutePath());
+        // 验证：目录应该依然存在
+        assertTrue(existingDir.exists(), "已存在的目录在调用后应继续存在");
+        assertTrue(existingDir.isDirectory(), "路径应保持为目录类型");
+    }
+
 
     // 删除文件与删除空目录
     @Test
@@ -221,6 +242,7 @@ class FileUtilsTest {
         String base64WithoutHeader = "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/yQALCAABAAEBAREA/8wABgAQEAX/2gAIAQEAAD8A0sUpQKBSqVf/2Q==";
 
         String mimeTypeJpeg = FileUtils.getMimeType(base64WithHeaderJpeg);
+        assertNull(FileUtils.getExtensionFromMimeType(""));
         String fileTypeJpeg = FileUtils.getExtensionFromMimeType(mimeTypeJpeg);
         assertEquals("image/jpeg", mimeTypeJpeg); // 输出：image/jpeg
         assertEquals("jpg", fileTypeJpeg); // 输出：jpg

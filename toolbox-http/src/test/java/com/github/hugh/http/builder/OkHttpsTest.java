@@ -1,6 +1,7 @@
 package com.github.hugh.http.builder;
 
 import com.alibaba.fastjson.JSON;
+import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.http.constant.MediaTypes;
 import com.github.hugh.http.constant.OkHttpCode;
 import com.github.hugh.http.exception.ToolboxHttpException;
@@ -270,6 +271,11 @@ class OkHttpsTest {
         fileFrom2.setKey("file");
         fileFrom2.setName("20200718234953_grmzy.jpeg");
         fileFrom2.setFileArray(FileUtils.toByteArray(file));
+        File file2 = null;
+        ToolboxException toolboxException = assertThrowsExactly(ToolboxException.class, () -> {
+            assertNull(FileUtils.toByteArray(file2));
+        });
+        assertEquals("file is null !" , toolboxException.getMessage());
         fileFrom2.setFileMediaType(MediaTypes.IMAGE_JPEG);
         final var okHttpsResponse = new OkHttps().setUrl(http_bin_post_url).setFileFrom(fileFrom2)
                 .uploadFile();
