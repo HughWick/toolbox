@@ -67,7 +67,7 @@
         <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
         <swagger-core-jakarta.version>2.2.34</swagger-core-jakarta.version>
         <pdfbox.version>2.0.29</pdfbox.version>
-        <!--        <knife4j.version>3.0.3</knife4j.version>-->
+        <metadata-extractor.version>2.19.0</metadata-extractor.version>
         <bcprov-jdk18on.version>1.78.1</bcprov-jdk18on.version>
         <mongodb-driver-sync.version>5.0.1</mongodb-driver-sync.version>
         <!--    test powermock 版本号与mockito版本号对等  -->
@@ -249,12 +249,6 @@
                 <artifactId>pdfbox</artifactId>
                 <version>${pdfbox.version}</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-spring -->
-            <!--            <dependency>-->
-            <!--                <groupId>com.github.xiaoymin</groupId>-->
-            <!--                <artifactId>knife4j-spring</artifactId>-->
-            <!--                <version>${knife4j.version}</version>-->
-            <!--            </dependency>-->
             <dependency>
                 <groupId>org.springframework.data</groupId>
                 <artifactId>spring-data-mongodb</artifactId>
@@ -271,6 +265,12 @@
                 <groupId>net.coobird</groupId>
                 <artifactId>thumbnailator</artifactId>
                 <version>${thumbnailator.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor -->
+            <dependency>
+                <groupId>com.drewnoakes</groupId>
+                <artifactId>metadata-extractor</artifactId>
+                <version>${metadata-extractor.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
