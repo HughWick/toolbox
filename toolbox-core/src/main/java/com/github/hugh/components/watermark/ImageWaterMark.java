@@ -1,5 +1,6 @@
 package com.github.hugh.components.watermark;
 
+import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Position;
 
@@ -25,6 +26,7 @@ import java.util.List;
  * @author hugh
  * @since 3.0.8
  */
+@Slf4j
 public class ImageWaterMark {
 
     // --- 常量定义 ---
@@ -149,8 +151,11 @@ public class ImageWaterMark {
      * @throws IOException 如果指定的图片文件不存在、无法访问、或者文件内容不是有效的图片格式，则抛出此异常。
      */
     public static BufferedImage loadImage(String imagePath) throws IOException {
-        // 将路径字符串转换为 File 对象，并调用loadImage(File file)重载方法。
-        return loadImage(new File(imagePath));
+        File imageFile = new File(imagePath);
+        // 先用 ImageIO 加载原始的、可能方向错误的图像
+        BufferedImage originalImage = ImageIO.read(imageFile);
+        // 然后调用我们的新方法进行校正
+        return ImageOrientationCorrector.correct(originalImage, imageFile);
     }
 
     /**
@@ -162,8 +167,10 @@ public class ImageWaterMark {
      * @throws IOException 如果文件不存在、无法读取、或者文件内容不是有效的图片格式，则抛出此异常。
      */
     public static BufferedImage loadImage(File imageFile) throws IOException {
-        // 使用 Java 标准库的 ImageIO.read 方法直接从文件加载图片。
-        return ImageIO.read(imageFile);
+        // 先加载
+        BufferedImage originalImage = ImageIO.read(imageFile);
+        // 再校正
+        return ImageOrientationCorrector.correct(originalImage, imageFile);
     }
 
     /**
@@ -175,8 +182,13 @@ public class ImageWaterMark {
      * @throws IOException 如果读取流时发生I/O错误，或者流中的数据不是有效的图片格式，则抛出此异常。
      */
     public static BufferedImage loadImage(InputStream inputStream) throws IOException {
-        // 使用 Java 标准库的 ImageIO.read 方法直接从输入流加载图片。
-        return ImageIO.read(inputStream);
+        byte[] imageBytes = inputStream.readAllBytes();
+        // 从字节数组创建第一个流，用于 ImageIO 加载
+        InputStream isForImageIO = new java.io.ByteArrayInputStream(imageBytes);
+        BufferedImage originalImage = ImageIO.read(isForImageIO);
+        // 从字节数组创建第二个流，用于 EXIF 读取
+        InputStream isForExif = new java.io.ByteArrayInputStream(imageBytes);
+        return ImageOrientationCorrector.correct(originalImage, isForExif);
     }
 
     /**

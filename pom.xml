@@ -67,6 +67,7 @@
         <caffeine.version>3.1.8</caffeine.version>
         <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
         <pdfbox.version>2.0.29</pdfbox.version>
+        <metadata-extractor.version>2.19.0</metadata-extractor.version>
         <swagger-annotations.version>1.6.16</swagger-annotations.version>
         <bcprov-jdk18on.version>1.78.1</bcprov-jdk18on.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
@@ -269,6 +270,12 @@
                 <groupId>net.coobird</groupId>
                 <artifactId>thumbnailator</artifactId>
                 <version>${thumbnailator.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor -->
+            <dependency>
+                <groupId>com.drewnoakes</groupId>
+                <artifactId>metadata-extractor</artifactId>
+                <version>${metadata-extractor.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

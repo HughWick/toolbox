@@ -15,7 +15,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageWaterMarkTest {
+class ImageWaterMarkTest {
     private List<WatermarkLine> standardWatermarkContent;
 
     // 使用 @TempDir，JUnit5 会自动管理临时目录的创建和销毁
@@ -228,6 +228,63 @@ public class ImageWaterMarkTest {
         System.out.println("带自定义边距复杂水印图片已生成 (InputStream加载): " + outputPath.toAbsolutePath());
     }
 
+    @Test
+    @DisplayName("测试方向图片 4032_3024.jpg 的水印生成")
+    void testOrientationImage4032x3024() throws IOException {
+        // 1. 定义输入图片路径
+        String inputImagePath = "/file/watermark/direction/4032_3024.jpg";
+        // 2. 定义输出路径
+        Path outputPath = tempDir.resolve("output_orientation_corrected_4032_3024.jpg");
+        // 3. 构建水印任务
+        ComplexWatermarkBuilder builder = new ComplexWatermarkBuilder()
+                .setTargetImage(getPath(inputImagePath))
+                .setWatermarkContent(standardWatermarkContent)
+                .setOutPath(outputPath.toString())
+                .setCompanyInfo("测试方向校正公司");
+        // 4. 执行生成和断言
+        generateWatermarkAndAssert(builder, outputPath);
+
+        // 5. 打印成功信息
+        System.out.println("方向图片 4032_3024.jpg 水印已生成: " + outputPath.toAbsolutePath());
+    }
+
+    @Test
+    @DisplayName("测试反向图片 reverse_960_1280.jpg 的水印生成")
+    void testOrientationImageReverse960x1280() throws IOException {
+        // 1. 定义输入图片路径
+        String inputImagePath = "/file/watermark/direction/reverse_960_1280.jpg";
+        // 2. 定义输出路径
+        Path outputPath = tempDir.resolve("output_orientation_corrected_reverse_960_1280.jpg");
+        // 3. 构建水印任务
+        ComplexWatermarkBuilder builder = new ComplexWatermarkBuilder()
+                .setTargetImage(getPath(inputImagePath))
+                .setWatermarkContent(standardWatermarkContent)
+                .setOutPath(outputPath.toString())
+                .setCompanyInfo("测试方向校正公司");
+        // 4. 执行生成和断言
+        generateWatermarkAndAssert(builder, outputPath);
+        // 5. 打印成功信息
+        System.out.println("反向图片 reverse_960_1280.jpg 水印已生成: " + outputPath.toAbsolutePath());
+    }
+
+    @Test
+    @DisplayName("测试横向图片 horizontal_1280_960.jpg 的水印生成")
+    void testOrientationImageHorizontal1280x960() throws IOException {
+        // 1. 定义输入图片路径
+        String inputImagePath = "/file/watermark/direction/horizontal_1280_960.jpg";
+        // 2. 定义输出路径
+        Path outputPath = tempDir.resolve("output_orientation_corrected_horizontal_1280_960.jpg");
+        // 3. 构建水印任务
+        ComplexWatermarkBuilder builder = new ComplexWatermarkBuilder()
+                .setTargetImage(getPath(inputImagePath))
+                .setWatermarkContent(standardWatermarkContent)
+                .setOutPath(outputPath.toString())
+                .setCompanyInfo("测试方向校正公司");
+        // 4. 执行生成和断言
+        generateWatermarkAndAssert(builder, outputPath);
+        // 5. 打印成功信息
+        System.out.println("横向图片 horizontal_1280_960.jpg 水印已生成: " + outputPath.toAbsolutePath());
+    }
     /**
      * 辅助方法，用于执行水印生成并进行通用断言
      */
