@@ -41,20 +41,11 @@ public class JsonsTest {
         map2.put("age", 1);
         map2.put("name", "dc");
         map.put("woman", map2);
-//        System.out.println("--1-map>>" + map.toString());
         Jsons jsonObjects = new Jsons(map);
         assertEquals(GsonUtils.toJson(map), jsonObjects.toJson());
-//        System.out.println(jsonObjects);
-//        Assertions.assertO(new Jsons() , jsonObjects);
-//        Map<String, String> reconstructedUtilMap = Arrays.stream(str2.split(","))
-//                .map(s -> s.split("="))
-//                .collect(Collectors.toMap(s -> s[0], s -> s[1]));
-        //        String str2 = "{birthday=1666145184398, testList=1,2,3, woman={name=dc, age=1}, name=账上的, create=2022-01-10 22:33:10, sex_in=a,b,d}";
-//        Jsons jsonObjects2 = new Jsons(str2);
-//        Gson gson = new Gson();
-//        Map<String, Object> map3 = new HashMap<>();
-//        map3 = gson.fromJson(str, map.getClass());
-//        System.out.println("==2==>>" + JSON.parseObject(str2, HashMap.class).toString());
+        String string2 = "{\"activeTime\":null,\"cardEndTime\":\"2026-09-30\",\"cardFeeTime\":\"2024-10-01\",\"cardStatus\":8,\"iccid\":\"898604E4192370913180\",\"imsi\":null,\"leftPeriod\":13,\"minPeriod\":24,\"msisdn\":\"1441442413180\",\"note\":\"THXX-HTDJ-20240415001\",\"packageCanUsage\":30.00,\"packageHasUsage\":0,\"packageId\":7,\"packageName\":\"移动30M/月\",\"periodEndTime\":\"2025-09-30\",\"periodStartTime\":\"2025-09-01\",\"renewPrice\":0.3500,\"sendCardTime\":\"2024-04-07\"}";
+        Jsons jsons2 = new Jsons(string2);
+        System.out.println(jsons2);
     }
 
     @Test
@@ -220,7 +211,8 @@ public class JsonsTest {
                 "  }\n" +
                 "  ]\n" +
                 "}\n";
-        Jsons on = Jsons.on(str2);
+        Jsons jsons2 = Jsons.on(str2);
+        assertEquals(10, jsons2.getJsonArray("stepList").size());
     }
 
     @Test
