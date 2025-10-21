@@ -41,6 +41,14 @@ public interface TreeNodeOpe<T, E> {
     void setSortEnable(boolean sortEnable);
 
     /**
+     * 设置是否包含空子节点
+     *
+     * @param includeEmptyChildren true表示包含空子节点，false表示不包含空子节点
+     * @since 3.0.11
+     */
+    void setIncludeEmptyChildren(boolean includeEmptyChildren);
+
+    /**
      * 处理树节点操作，并返回排序结果列表
      *
      * @return 排序后的树节点列表

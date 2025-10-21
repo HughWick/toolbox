@@ -4,13 +4,8 @@ import com.github.hugh.bean.expand.tree.ElementTree;
 import com.github.hugh.bean.expand.tree.TreeNode;
 import com.github.hugh.util.ListUtils;
 
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -38,48 +33,35 @@ public class TreeNodeOpes implements TreeNodeOpe<TreeNode, ElementTree> {
      * 表示是否设置了父级ID的标志。
      */
     private boolean isSetParentId = false;
+    /**
+     * 表示是否包含空子节点的标志。
+     */
+    private boolean includeEmptyChildren = true;
 
     @Override
     public void setMappingType(int mappingType) {
 
     }
 
-    /**
-     * 设置是否设置父节点的 ID。
-     *
-     * @param setParentId 如果为 true，则在转换过程中设置 elementTree 的 parentId 属性；如果为 false，则不设置 parentId 属性。
-     */
     @Override
     public void setParentId(boolean setParentId) {
         this.isSetParentId = setParentId;
     }
 
-    /**
-     * 设置排序顺序是否升序。
-     *
-     * @param ascending 如果为 true，则按升序排序；如果为 false，则按降序排序。
-     */
     @Override
     public void setAscending(boolean ascending) {
         this.ascending = ascending;
     }
 
-    /**
-     * 设置是否启用排序功能。
-     *
-     * @param sortEnable true表示启用排序，false表示禁用排序
-     * @since 2.6.7
-     */
     @Override
     public void setSortEnable(boolean sortEnable) {
         this.sortEnable = sortEnable;
     }
 
-    /**
-     * 根据节点的ID属性进行排序的比较器。
-     * 通过调用 TreeNodeExpand 对象的 getId 方法来获取 ID 属性。
-     */
-//    private final Comparator<TreeNode> comparingById = Comparator.comparing(TreeNode::getId);
+    @Override
+    public void setIncludeEmptyChildren(boolean includeEmptyChildren) {
+        this.includeEmptyChildren = includeEmptyChildren;
+    }
 
     /**
      * 创建 TreeNodeOpe 实例，并传入根节点列表和子节点列表。
@@ -109,39 +91,10 @@ public class TreeNodeOpes implements TreeNodeOpe<TreeNode, ElementTree> {
      */
     @Override
     public List<TreeNode> process() {
-        /**
-         * 使用固定数量的线程池创建 ExecutorService 实例。
-         * 线程池的大小由可用处理器数量决定。
-         * ExecutorService 用于管理和调度线程池中的任务执行。
-         */
-        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        //创建一个map用于保存已经处理过的childNodesList中的TreeObject的id（去重）
-        Map<String, String> childNodesHashMap = new ConcurrentHashMap<>(childNodesList.size());
-        rootNodesList.forEach(rootNode -> {
-            // 提交任务给线程池
-            executorService.submit(() -> {
-                // 循环根节点列表，将子节点列表封装到对应的根节点TreeObject对象中
-//                assignChildNodes(childNodesList, rootNode, childNodesHashMap);
-                TreeNodeUtils.assignChildNodes(childNodesList, rootNode, childNodesHashMap, sortEnable, ascending);
-            });
-        });
-        // 关闭线程池
-        executorService.shutdown();
-        try {
-            if (!executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS)) {
-                executorService.shutdownNow();
-            }
-        } catch (InterruptedException ex) {
-            executorService.shutdownNow();
-            Thread.currentThread().interrupt();
-        }
-        if (sortEnable) {
-            return rootNodesList.stream()
-                    .sorted(ascending ? Comparator.comparing(TreeNode::getId) : Comparator.comparing(TreeNode::getId).reversed())
-                    .collect(Collectors.toList());
-        } else {
-            return rootNodesList;
-        }
+        List<TreeNode> allNodes = new ArrayList<>(rootNodesList.size() + childNodesList.size());
+        allNodes.addAll(rootNodesList);
+        allNodes.addAll(childNodesList);
+        return TreeNodeUtils.buildTree(rootNodesList, allNodes, sortEnable, ascending, includeEmptyChildren);
     }
 
     /**
