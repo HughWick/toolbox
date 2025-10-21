@@ -1,11 +1,13 @@
 package com.github.hugh.support.tree;
 
 import com.github.hugh.bean.dto.RegionDto;
+import com.github.hugh.bean.expand.tree.BaseTreeNode;
 import com.github.hugh.bean.expand.tree.TreeNode;
 import com.github.hugh.constant.StrPool;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -24,66 +26,91 @@ public class TreeNodeUtils {
     }
 
     /**
-     * 递归分配子节点并设置排序（可选）。该方法将遍历所有子节点，并将符合条件的子节点分配给当前节点。
-     * 如果设置了排序标志，子节点将按照指定的顺序（升序或降序）进行排序。
+     * 构建树形结构。
      *
-     * @param childNodesList    子节点列表，包含所有节点数据
-     * @param node              当前节点，该节点将被赋予对应的子节点
-     * @param childNodesHashMap 存储节点ID和父节点ID的映射，用于去重和节点关联
-     * @param sortEnable        是否启用排序，true表示启用，false表示不排序
-     * @param ascending         排序顺序，true表示升序，false表示降序
+     * @param rootNodes            根节点列表
+     * @param allNodes             所有节点列表（包括根节点和子节点）
+     * @param sortEnable           是否对子节点进行排序
+     * @param ascending            排序方向（true: 升序, false: 降序）
+     * @param includeEmptyChildren 如果节点没有子级，是否包含一个空的 children 数组 (true: 包含空数组, false: children属性为null)
+     * @return 构建并（可选）排序后的根节点列表
+     * @since 3.0.11
      */
-    public static void assignChildNodes(List<TreeNode> childNodesList, TreeNode node, Map<String, String> childNodesHashMap, boolean sortEnable, boolean ascending) {
-        List<TreeNode> childList = new ArrayList<>();
-        // 如果启用了排序
-        if (sortEnable) {
-            // 使用Stream流进行过滤和排序，筛选出当前节点的子节点，并根据升序或降序排序
-            childNodesList.stream()
-                    .filter(childNode -> isChildNode(node, childNode)) // 判断是否为当前节点的子节点
-                    .sorted(ascending ? Comparator.comparing(TreeNode::getId) : Comparator.comparing(TreeNode::getId).reversed()) // 根据id进行升序或降序排序
-                    .forEach(childNode -> loop(childNodesList, childNode, childNodesHashMap, childList, sortEnable, ascending)); // 对符合条件的子节点进行递归处理
-        } else { // 如果没有启用排序
-            // 直接过滤出当前节点的子节点，不进行排序
-            childNodesList.stream()
-                    .filter(childNode -> isChildNode(node, childNode)) // 判断是否为当前节点的子节点
-                    .forEach(childNode -> loop(childNodesList, childNode, childNodesHashMap, childList, sortEnable, ascending)); // 对符合条件的子节点进行递归处理
+    public static List<TreeNode> buildTree(List<TreeNode> rootNodes, List<TreeNode> allNodes, boolean sortEnable, boolean ascending, boolean includeEmptyChildren) {
+        if (allNodes == null || allNodes.isEmpty()) {
+            return rootNodes;
         }
-        // 将处理过的子节点列表设置到当前节点
-        node.setChildren(childList);
+        // 预处理：将所有子节点按 parentId 分组
+        Map<String, List<TreeNode>> childrenMap = allNodes.stream()
+                .filter(node -> node.getParentId() != null)
+                .collect(Collectors.groupingBy(TreeNode::getParentId));
+        Set<String> visitedNodeIds = Collections.synchronizedSet(new HashSet<>());
+        // 3【新增】根据排序配置，预先创建 Comparator
+        final Comparator<TreeNode> nodeComparator;
+        if (sortEnable) {
+            // 创建一个临时的、非 final 的比较器
+            Comparator<TreeNode> tempComparator = Comparator.comparing(TreeNode::getId);
+            // 如果是降序，就反转这个临时比较器
+            if (!ascending) {
+                tempComparator = tempComparator.reversed();
+            }
+            // 最后，将结果只赋值一次给 final 变量
+            nodeComparator = tempComparator;
+        } else {
+            nodeComparator = null; // 不排序
+        }
+        rootNodes.forEach(rootNode ->
+                assignChildrenRecursive(rootNode, childrenMap, visitedNodeIds, nodeComparator, includeEmptyChildren)
+        );
+        if (sortEnable) {
+            return rootNodes.stream().sorted(nodeComparator).toList();
+        }
+        return rootNodes;
     }
 
     /**
-     * 判断一个节点是否为当前节点的子节点。
-     * <p>
-     * 该方法通过比较当前节点的 ID 和子节点的父节点 ID 来判断子节点是否属于当前节点。
-     * 如果当前节点的 ID 等于子节点的父节点 ID，则返回 true，表示该子节点是当前节点的子节点；
-     * 否则返回 false。
+     * 一个通用的、递归分配子节点的静态辅助方法。
      *
-     * @param currentNode 当前节点，作为父节点进行判断。
-     * @param childNode   子节点，用于判断是否是当前节点的子节点。
-     * @return 如果 childNode 是 currentNode 的子节点，返回 true；否则返回 false。
+     * @param parentNode           当前父节点
+     * @param childrenMap          按 parentId 分组的所有节点的映射
+     * @param visitedNodeIds       用于防止循环引用的已访问ID集合
+     * @param comparator           用于子节点排序的比较器。如果为 null，则不排序。
+     * @param includeEmptyChildren 是否为叶子节点设置空的 children 列表
+     * @param <N>                  节点的类型，必须是 BaseTreeNode 的子类
+     * @since 3.0.11
      */
-    private static boolean isChildNode(TreeNode currentNode, TreeNode childNode) {
-        return currentNode.getId().equals(childNode.getParentId());
-    }
-
-    /**
-     * 递归处理每个子节点并将其添加到子节点列表中。该方法确保不会重复处理节点，并且将每个节点的子节点递归地赋予当前节点。
-     *
-     * @param childNodesList    所有节点的列表，用于获取每个节点的子节点。
-     * @param childNode         当前正在处理的子节点。该节点将被递归赋予子节点。
-     * @param childNodesHashMap 用于存储节点 ID 和父节点 ID 的映射，避免重复处理。
-     * @param childList         当前根节点的子节点列表，处理完的子节点将被添加到该列表中。
-     * @param sortEnable        是否启用排序，true 表示启用，false 表示不排序。
-     * @param ascending         排序顺序，true 表示升序，false 表示降序。当启用排序时，决定子节点的排序顺序。
-     */
-    private static void loop(List<TreeNode> childNodesList, TreeNode childNode, Map<String, String> childNodesHashMap, List<TreeNode> childList, boolean sortEnable, boolean ascending) {
-        if (childNodesHashMap.containsKey(childNode.getId())) { // 排除重复的
+    public static <N extends BaseTreeNode<N>> void assignChildrenRecursive(N parentNode, Map<String, List<N>> childrenMap, Set<String> visitedNodeIds, Comparator<N> comparator,
+                                                                           boolean includeEmptyChildren) {
+        // 防止循环引用
+        if (!visitedNodeIds.add(parentNode.getId())) {
             return;
         }
-        childNodesHashMap.put(childNode.getId(), childNode.getParentId()); // 添加处理子节点信息
-        assignChildNodes(childNodesList, childNode, childNodesHashMap, sortEnable, ascending); // 递归设置该子节点的子节点列表
-        childList.add(childNode); // 添加该子节点到对应的根节点列表
+        // 获取潜在的子节点列表
+        List<N> potentialChildren = childrenMap.get(parentNode.getId());
+        List<N> actualChildren = new ArrayList<>();
+        if (potentialChildren != null && !potentialChildren.isEmpty()) {
+            // 3过滤掉已访问的节点并去重
+            actualChildren = potentialChildren.stream()
+                    .filter(child -> !visitedNodeIds.contains(child.getId()))
+                    .collect(Collectors.collectingAndThen(
+                            Collectors.toMap(BaseTreeNode::getId, child -> child, (existing, replacement) -> existing),
+                            map -> new ArrayList<>(map.values())
+                    ));
+        }
+        // 在递归【之前】进行排序
+        if (comparator != null && !actualChildren.isEmpty()) {
+            actualChildren.sort(comparator);
+        }
+        // 根据配置设置 children 属性
+        if (includeEmptyChildren || !actualChildren.isEmpty()) {
+            parentNode.setChildren(actualChildren);
+        } else {
+            parentNode.setChildren(null);
+        }
+        // 对子节点进行递归
+        for (N child : actualChildren) {
+            assignChildrenRecursive(child, childrenMap, visitedNodeIds, comparator, includeEmptyChildren);
+        }
     }
 
     /**

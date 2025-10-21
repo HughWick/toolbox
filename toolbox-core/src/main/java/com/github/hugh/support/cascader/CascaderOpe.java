@@ -5,13 +5,8 @@ import com.github.hugh.bean.expand.tree.TreeNode;
 import com.github.hugh.support.tree.TreeNodeOpe;
 import com.github.hugh.support.tree.TreeNodeUtils;
 
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -40,7 +35,10 @@ public class CascaderOpe implements TreeNodeOpe<TreeNode, ElementCascader> {
      * 是否开启排序
      */
     private boolean sortEnable = true;
-
+    /**
+     * 表示是否包含空子节点的标志。
+     */
+    private boolean includeEmptyChildren = true;
     /**
      * 表示是否设置了父级ID的标志。
      */
@@ -81,7 +79,10 @@ public class CascaderOpe implements TreeNodeOpe<TreeNode, ElementCascader> {
     public void setSortEnable(boolean sortEnable) {
         this.sortEnable = sortEnable;
     }
-
+    @Override
+    public void setIncludeEmptyChildren(boolean includeEmptyChildren) {
+        this.includeEmptyChildren = includeEmptyChildren;
+    }
     /**
      * 创建 TreeNodeOpe 实例，并传入根节点列表和子节点列表。
      *
@@ -110,48 +111,10 @@ public class CascaderOpe implements TreeNodeOpe<TreeNode, ElementCascader> {
      */
     @Override
     public List<TreeNode> process() {
-        /**
-         * 使用固定数量的线程池创建 ExecutorService 实例。
-         * 线程池的大小由可用处理器数量决定。
-         * ExecutorService 用于管理和调度线程池中的任务执行。
-         */
-        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        //创建一个map用于保存已经处理过的childNodesList中的TreeObject的id（去重）
-        Map<String, String> childNodesHashMap = new ConcurrentHashMap<>(childNodesList.size());
-        rootNodesList.forEach(rootNode -> {
-            // 提交任务给线程池
-            executorService.submit(() -> {
-                // 循环根节点列表，将子节点列表封装到对应的根节点TreeObject对象中
-                try {
-                    TreeNodeUtils.assignChildNodes(childNodesList, rootNode, childNodesHashMap, sortEnable, ascending);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            });
-        });
-        // 关闭线程池
-        executorService.shutdown();
-        try {
-            if (!executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS)) {
-                executorService.shutdownNow();
-            }
-        } catch (InterruptedException interruptedException) {
-            executorService.shutdownNow();
-            Thread.currentThread().interrupt();
-        }
-        if (sortEnable) {
-            if (mappingType == CUSTOM_MAPPING) {
-                return rootNodesList.stream()
-                        .sorted(ascending ? Comparator.comparing(TreeNode::getCustomValue) : Comparator.comparing(TreeNode::getCustomValue).reversed())
-                        .collect(Collectors.toList());
-            } else {
-                return rootNodesList.stream()
-                        .sorted(ascending ? Comparator.comparing(TreeNode::getId) : Comparator.comparing(TreeNode::getId).reversed())
-                        .collect(Collectors.toList());
-            }
-        } else {
-            return rootNodesList;
-        }
+        List<TreeNode> allNodes = new ArrayList<>(rootNodesList.size() + childNodesList.size());
+        allNodes.addAll(rootNodesList);
+        allNodes.addAll(childNodesList);
+        return TreeNodeUtils.buildTree(rootNodesList, allNodes, sortEnable, ascending, includeEmptyChildren);
     }
 
     /**

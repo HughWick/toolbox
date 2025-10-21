@@ -51,11 +51,11 @@ class CascaderOpeTest {
     @BeforeAll
     static void setUp() {
         StopWatch stopWatch = new StopWatch("BeforeAll---处理文件");
-        stopWatch.start("读取文件耗时");
-        URL resource = CascaderOpeTest.class.getResource(TreeNodeOpeTest.DATA_FILE_PATH);
-        String path = resource.getPath();
-        fileData = FileUtils.readContent(path);
-        stopWatch.stop();
+//        stopWatch.start("读取文件耗时");
+//        URL resource = CascaderOpeTest.class.getResource(TreeNodeOpeTest.DATA_FILE_PATH);
+//        String path = resource.getPath();
+//        fileData = FileUtils.readContent(path);
+//        stopWatch.stop();
         stopWatch.start("解析字符串全国四级json字符串");
 //        treeNodeObjects = JSONArray.parseArray(fileData, TreeNodeObject.class);
         regionDtoList = JSONArray.parseArray(fileData, RegionDto.class);

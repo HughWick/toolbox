@@ -4,14 +4,7 @@ import com.github.hugh.bean.expand.tree.ElementTreeExpand;
 import com.github.hugh.bean.expand.tree.TreeNodeExpand;
 import com.github.hugh.util.ListUtils;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -38,6 +31,10 @@ public class TreeNodeOpeExpand<T> implements TreeNodeOpe<TreeNodeExpand<T>, Elem
      * 是否开启排序
      */
     private boolean sortEnable = true;
+    /**
+     * 表示是否包含空子节点的标志。
+     */
+    private boolean includeEmptyChildren = true;
 
     @Override
     public void setMappingType(int mappingType) {
@@ -54,28 +51,19 @@ public class TreeNodeOpeExpand<T> implements TreeNodeOpe<TreeNodeExpand<T>, Elem
         this.isSetParentId = setParentId;
     }
 
-    /**
-     * 设置排序顺序是否升序。
-     * <p>
-     * 默认为升序排序
-     * </p>
-     *
-     * @param ascending 如果为 true，则按升序排序；如果为 false，则按降序排序。
-     */
     @Override
     public void setAscending(boolean ascending) {
         this.ascending = ascending;
     }
 
-    /**
-     * 设置是否启用排序功能。
-     *
-     * @param sortEnable true表示启用排序，false表示禁用排序
-     * @since 2.6.7
-     */
     @Override
     public void setSortEnable(boolean sortEnable) {
         this.sortEnable = sortEnable;
+    }
+
+    @Override
+    public void setIncludeEmptyChildren(boolean includeEmptyChildren) {
+        this.includeEmptyChildren = includeEmptyChildren;
     }
 
     /**
@@ -112,38 +100,39 @@ public class TreeNodeOpeExpand<T> implements TreeNodeOpe<TreeNodeExpand<T>, Elem
      */
     @Override
     public List<TreeNodeExpand<T>> process() {
-        /**
-         * 使用固定数量的线程池创建 ExecutorService 实例。
-         * 线程池的大小由可用处理器数量决定。
-         * ExecutorService 用于管理和调度线程池中的任务执行。
-         */
-        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        //创建一个map用于保存已经处理过的childNodesList中的TreeObject的id（去重）
-        Map<String, String> childNodesHashMap = new ConcurrentHashMap<>(childNodesList.size());
-        rootNodesList.forEach(rootNode -> {
-            // 提交任务给线程池
-            executorService.submit(() -> {
-                // 循环根节点列表，将子节点列表封装到对应的根节点TreeObject对象中
-                assignChildNodes(childNodesList, rootNode, childNodesHashMap);
-            });
-        });
-        // 关闭线程池
-        executorService.shutdown();
-        try {
-            if (!executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS)) {
-                executorService.shutdownNow();
+        List<TreeNodeExpand<T>> allNodes = new ArrayList<>(rootNodesList.size() + childNodesList.size());
+        allNodes.addAll(rootNodesList);
+        allNodes.addAll(childNodesList);
+        if (allNodes.isEmpty()) {
+            return new ArrayList<>();
+        }
+        // 预处理：将所有子节点按 parentId 分组，极大提高查找效率
+        Map<String, List<TreeNodeExpand<T>>> childrenMap = new HashMap<>();
+        for (TreeNodeExpand<T> node : allNodes) {
+            if (node.getParentId() != null) {
+                // 如果 key 不存在，则创建一个新的列表；然后将当前节点添加到列表中
+                childrenMap.computeIfAbsent(node.getParentId(), k -> new ArrayList<>()).add(node);
             }
-        } catch (InterruptedException ex) {
-            executorService.shutdownNow();
-            Thread.currentThread().interrupt();
         }
+        // 创建一个线程安全的已访问节点集合，防止循环引用和重复处理
+        Set<String> visitedNodeIds = Collections.synchronizedSet(new HashSet<>());
+        //  根据是否排序，执行不同的逻辑
         if (sortEnable) {
-            return rootNodesList.stream()
-                    .sorted(ascending ? comparingById : comparingById.reversed())
-                    .collect(Collectors.toList());
-        } else {
-            return rootNodesList;
+            // 创建一个非空的比较器
+            final Comparator<TreeNodeExpand<T>> nodeComparator = ascending ? comparingById : comparingById.reversed();
+            // 使用这个非空的比较器进行递归
+            rootNodesList.forEach(rootNode ->
+                    TreeNodeUtils.assignChildrenRecursive(rootNode, childrenMap, visitedNodeIds, nodeComparator, includeEmptyChildren)
+            );
+            // 对根节点进行排序并返回
+            return rootNodesList.stream().sorted(nodeComparator).toList();
         }
+        // 如果不排序，直接进行递归（传入null比较器），然后返回结果
+        rootNodesList.forEach(rootNode ->
+                TreeNodeUtils.assignChildrenRecursive(rootNode, childrenMap, visitedNodeIds, null, includeEmptyChildren)
+        );
+        return rootNodesList;
+
     }
 
     /**
@@ -186,51 +175,4 @@ public class TreeNodeOpeExpand<T> implements TreeNodeOpe<TreeNodeExpand<T>, Elem
         }
         return elementTree;
     }
-
-
-    /**
-     * 将子节点分配给对应的父节点
-     *
-     * @param childNodesList    子节点列表
-     * @param treeNodeExpand    当前节点
-     * @param childNodesHashMap 存储已处理的子节点ID的HashMap
-     */
-    private void assignChildNodes(List<TreeNodeExpand<T>> childNodesList, TreeNodeExpand<T> treeNodeExpand, Map<String, String> childNodesHashMap) {
-        //创建一个list来保存每个根节点中对应的子节点
-        List<TreeNodeExpand<T>> childList = new ArrayList<>();
-        if (sortEnable) {
-            childNodesList.stream()
-                    .filter(childNode -> childNode.getParentId().equals(treeNodeExpand.getId()))//判断是否根节点的子节点
-                    .sorted(ascending ? comparingById : comparingById.reversed()) // 根据id进行升序或降序排序
-                    .forEach(childNode -> {
-                        loop(childNodesList, childNode, childNodesHashMap, childList);
-                    });
-        } else {
-            childNodesList.stream()
-                    .filter(childNode -> childNode.getParentId().equals(treeNodeExpand.getId()))//判断是否根节点的子节点
-                    .forEach(childNode -> {
-                        loop(childNodesList, childNode, childNodesHashMap, childList);
-                    });
-        }
-        treeNodeExpand.setChildren(childList);
-    }
-
-
-    /**
-     * 递归处理子节点，并将子节点添加到指定的列表中。
-     *
-     * @param childNodesList    子节点列表
-     * @param childNode         当前处理的子节点
-     * @param childNodesHashMap 子节点映射表
-     * @param childList         对应的根节点列表
-     */
-    private void loop(List<TreeNodeExpand<T>> childNodesList, TreeNodeExpand<T> childNode, Map<String, String> childNodesHashMap, List<TreeNodeExpand<T>> childList) {
-        if (childNodesHashMap.containsKey(childNode.getId())) { // 排除重复的
-            return;
-        }
-        childNodesHashMap.put(childNode.getId(), childNode.getParentId());//添加处理子节点信息
-        assignChildNodes(childNodesList, childNode, childNodesHashMap);//递归设置该子节点的子节点列表
-        childList.add(childNode);//添加该子节点到对应的根节点列表
-    }
-
 }
