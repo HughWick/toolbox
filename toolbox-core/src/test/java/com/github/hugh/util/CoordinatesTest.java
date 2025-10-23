@@ -199,15 +199,56 @@ class CoordinatesTest {
     void testConvertDMStoDD() {
         String latDMS1 = "36°17'41\"N";
         String lonDMS1 = "102°53'46\"E";
-        try {
-            double latDD = CoordinatesUtils.dmsToGps(latDMS1);
-            double lonDD = CoordinatesUtils.dmsToGps(lonDMS1);
-            assertEquals(36.29472222222222, latDD);
-            assertEquals(102.89611111111111, lonDD);
-            System.out.println("Latitude (DMS): " + latDMS1 + " -> Latitude (DD): " + latDD);
-            System.out.println("Longitude (DMS): " + lonDMS1 + " -> Longitude (DD): " + lonDD);
-        } catch (IllegalArgumentException e) {
-            System.err.println("Error: " + e.getMessage());
-        }
+        double latDD = CoordinatesUtils.dmsToGps(latDMS1);
+        double lonDD = CoordinatesUtils.dmsToGps(lonDMS1);
+        assertEquals(36.29472222222222, latDD);
+        assertEquals(102.89611111111111, lonDD);
+        System.out.println("Latitude (DMS): " + latDMS1 + " -> Latitude (DD): " + latDD);
+        System.out.println("Longitude (DMS): " + lonDMS1 + " -> Longitude (DD): " + lonDD);
+
+        String latDMS2 = "36°16'07\"N";
+        String lonDMS2 = "102°58'27\"E";
+        double latDD2 = CoordinatesUtils.dmsToGps(latDMS2);
+        double lonDD2 = CoordinatesUtils.dmsToGps(lonDMS2);
+        System.out.println("Latitude (DMS): " + latDMS2 + " -> Latitude (DD): " + latDD2);
+        System.out.println("Longitude (DMS): " + lonDMS2 + " -> Longitude (DD): " + lonDD2);
+
+        String latDMS3 = "36°17'54\"N";
+        String lonDMS3 = "102°53'40\"E";
+        double latDD3 = CoordinatesUtils.dmsToGps(latDMS3);
+        double lonDD3 = CoordinatesUtils.dmsToGps(lonDMS3);
+        System.out.println("Latitude (DMS): " + latDMS3 + " -> Latitude (DD): " + latDD3);
+        System.out.println("Longitude (DMS): " + lonDMS3 + " -> Longitude (DD): " + lonDD3);
+        GpsDTO gpsDTO3 = CoordinatesUtils.wgs84ToGcj02(lonDD3, latDD3);
+        System.out.println("==2==3====33===》" + gpsDTO3);
+//        36°16'12"N 102°58'31"E
+    }
+
+    @Test
+    void testConvertGcj02() {
+//        String latitude = "36.26940032665576";
+//        String longitude = "102.9742875400271";
+//        GpsDTO gpsDTO = CoordinatesUtils.wgs84ToGcj02(Double.parseDouble(longitude), Double.parseDouble(latitude));
+//        System.out.println("====》》" + gpsDTO);
+//        assertEquals(36.26913657337174, gpsDTO.getLatitude());
+//        assertEquals(102.97624573294738, gpsDTO.getLongitude());
+
+        String latitude2 = "36.29832922749307";
+        String longitude2 = "102.894430769317";
+        GpsDTO gpsDTO2 = CoordinatesUtils.wgs84ToGcj02(Double.parseDouble(longitude2), Double.parseDouble(latitude2));
+        System.out.println("===2222=》》"  + gpsDTO2.getLongitude() + "," + gpsDTO2.getLatitude());
+        assertEquals(36.29796384895343, gpsDTO2.getLatitude());
+        assertEquals(102.89619506968343, gpsDTO2.getLongitude());
+        String latitude3 = "36.2976031431241";
+        String longitude3 = "102.894105991026";
+        // gps（wgs84）转换为高德坐标系
+        GpsDTO gpsDTO3 = CoordinatesUtils.wgs84ToGcj02(Double.parseDouble(longitude3), Double.parseDouble(latitude3));
+        System.out.println("===333333333333333=》》" + gpsDTO3.getLongitude() + "," + gpsDTO3.getLatitude());
+        assertEquals(36.297237652268606, gpsDTO3.getLatitude());
+        assertEquals(102.89587015414914, gpsDTO3.getLongitude());
+        // 高德坐标系转换为 gps
+        GpsDTO restoredWgsCoordinate1 = CoordinatesUtils.gcj02ToWgs84(gpsDTO3.getLongitude(), gpsDTO3.getLatitude());
+        assertEquals(36.297603753563536, restoredWgsCoordinate1.getLatitude());
+        assertEquals(102.89410536151733, restoredWgsCoordinate1.getLongitude());
     }
 }
