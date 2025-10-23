@@ -26,12 +26,18 @@ public class CoordinatesUtils {
     /**
      * 圆周率
      */
-    private static final double pi = 3.14159265358979324;
+    private static final double PI = 3.1415926535897932384626433832795;
 
     /**
      * 计算后的Π
      */
-    private static final double CALC_PI = pi * 3000.0 / 180.0;
+    private static final double CALC_PI = PI * 3000.0 / 180.0;
+
+
+    // WGS-84 椭球模型参数
+    private static final double WGS84_SEMI_MAJOR_AXIS = 6378245; // 长半轴
+    private static final double WGS84_FLATTENING = 0.00669342162296594323D; // 扁率
+
 
     /**
      * 截取小数点后八位
@@ -363,5 +369,118 @@ public class CoordinatesUtils {
             throw new IllegalArgumentException("Invalid number format in DMS string: " + dmsCoord, e);
         }
         return degrees + (minutes / 60.0) + (seconds / 3600.0);
+    }
+
+    /**
+     * 将 WGS-84 坐标转换为 GCJ-02 (火星坐标系) 坐标。
+     * <p>
+     * 这是主要的入口方法。
+     *
+     * @param longitude WGS-84 经度
+     * @param latitude  WGS-84 纬度
+     * @return 转换后的 GCJ-02 坐标对象
+     * @since 3.0.12
+     */
+    public static GpsDTO wgs84ToGcj02(double longitude, double latitude) {
+        // 如果坐标在中国境外，则无需转换，直接返回原始坐标
+        if (outOfChina(longitude, latitude)) {
+            return new GpsDTO(latitude, longitude);
+        }
+        // 计算偏移量
+        GpsDTO offset = calculateOffset(longitude, latitude, true);
+        // 将偏移量应用到原始坐标上得到 GCJ-02 坐标
+        return new GpsDTO(latitude + offset.getLatitude(), longitude + offset.getLongitude());
+    }
+
+    /**
+     * 将 GCJ-02 (火星坐标系) 坐标转换为 WGS-84 坐标。
+     * <p>
+     * 采用近似法，对于大多数应用场景精度足够。
+     *
+     * @param longitude GCJ-02 经度
+     * @param latitude  GCJ-02 纬度
+     * @return 转换后的 WGS-84 坐标对象
+     * @since 3.0.12
+     */
+    public static GpsDTO gcj02ToWgs84(double longitude, double latitude) {
+        if (outOfChina(longitude, latitude)) {
+            return new GpsDTO(latitude, longitude);
+        }
+        GpsDTO offset = calculateOffset(longitude, latitude, false);
+        return new GpsDTO(latitude + offset.getLatitude(), longitude + offset.getLongitude());
+    }
+
+    /**
+     * 判断给定的经纬度是否在中国境外。
+     * GCJ-02 坐标系仅对中国大陆和港澳地区有效。
+     *
+     * @param lng 经度
+     * @param lat 纬度
+     * @return 如果在中国境外则返回 true，否则返回 false
+     * @since 3.0.12
+     */
+    public static boolean outOfChina(double lng, double lat) {
+        return (lng < 72.004 || lng > 137.8347) || (lat < 0.8293 || lat > 55.8271);
+    }
+
+    /**
+     * 计算 WGS-84 到 GCJ-02 的偏移量。
+     *
+     * @param lng    经度
+     * @param lat    纬度
+     * @param isPlus true 表示正向偏移 (WGS-84 -> GCJ-02)，false 表示反向偏移 (GCJ-02 -> WGS-84)
+     * @return 包含经纬度偏移量的坐标对象
+     * @since 3.0.12
+     */
+    private static GpsDTO calculateOffset(double lng, double lat, boolean isPlus) {
+        // 计算经纬度相对于中国基准点(105, 35)的差值
+        double dLng = transformLng(lng - 105.0, lat - 35.0);
+        double dLat = transformLat(lng - 105.0, lat - 35.0);
+        // 将纬度的弧度值作为后续计算的参数
+        double radLat = lat / 180.0 * PI;
+        double magic = Math.sin(radLat);
+        magic = 1 - WGS84_FLATTENING * magic * magic;
+        final double sqrtMagic = Math.sqrt(magic);
+        // 将计算出的米制偏移转换为经纬度偏移
+        dLng = (dLng * 180.0) / (WGS84_SEMI_MAJOR_AXIS / sqrtMagic * Math.cos(radLat) * PI);
+        dLat = (dLat * 180.0) / ((WGS84_SEMI_MAJOR_AXIS * (1 - WGS84_FLATTENING)) / (magic * sqrtMagic) * PI);
+        // 如果是反向转换，则将偏移量取反
+        if (!isPlus) {
+            dLng = -dLng;
+            dLat = -dLat;
+        }
+        return new GpsDTO(dLat, dLng);
+    }
+
+    /**
+     * 计算经度偏移量。这是一个经验公式。
+     *
+     * @param lng 经度与基准经度之差
+     * @param lat 纬度与基准纬度之差
+     * @return 经度偏移量
+     * @since 3.0.12
+     */
+    private static double transformLng(double lng, double lat) {
+        double ret = 300.0 + lng + 2.0 * lat + 0.1 * lng * lng + 0.1 * lng * lat + 0.1 * Math.sqrt(Math.abs(lng));
+        ret += (20.0 * Math.sin(6.0 * lng * PI) + 20.0 * Math.sin(2.0 * lng * PI)) * 2.0 / 3.0;
+        ret += (20.0 * Math.sin(lng * PI) + 40.0 * Math.sin(lng / 3.0 * PI)) * 2.0 / 3.0;
+        ret += (150.0 * Math.sin(lng / 12.0 * PI) + 300.0 * Math.sin(lng / 30.0 * PI)) * 2.0 / 3.0;
+        return ret;
+    }
+
+    /**
+     * 计算纬度偏移量。这是一个经验公式。
+     *
+     * @param lng 经度与基准经度之差
+     * @param lat 纬度与基准纬度之差
+     * @return 纬度偏移量
+     * @since 3.0.12
+     */
+    private static double transformLat(double lng, double lat) {
+        double ret = -100.0 + 2.0 * lng + 3.0 * lat + 0.2 * lat * lat + 0.1 * lng * lat + 0.2 * Math.sqrt(Math.abs(lng));
+        ret += (20.0 * Math.sin(6.0 * lng * PI) + 20.0 * Math.sin(2.0 * lng * PI)) * 2.0 / 3.0;
+        ret += (20.0 * Math.sin(lat * PI) + 40.0 * Math.sin(lat / 3.0 * PI)) * 2.0 / 3.0;
+        ret += (160.0 * Math.sin(lat / 12.0 * PI) + 320 * Math.sin(lat * PI / 30.0)) * 2.0 / 3.0;
+        return ret;
     }
 }
