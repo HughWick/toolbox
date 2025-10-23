@@ -160,20 +160,6 @@ class XmlToJsonTest {
         assertEquals("HJ", placemark.get(0).getName());
     }
 
-
-    @Test
-    void testFileKml() {
-//        String image1 = "/kml/map_utf-8_Bom.kml";
-//        File fileDir1 = new File(getPath(image1));
-//        String string1 = FileUtils.readContent(fileDir1);
-//        Jsons jsons = GsonUtils.xmlToJson(new File(getPath(image1)));
-//        String kml2 = "/kml/map_utf-8.kml";
-//        String string2 = FileUtils.readContent(getPath(kml2));
-//        Jsons jsons2 = GsonUtils.xmlToJson(string2);
-//        assertEquals(jsons.toJson(), jsons2.toJson());
-    }
-
-
     public static String getPath(String fileName) {
         return XmlToJsonTest.class.getResource(fileName).getPath();
     }

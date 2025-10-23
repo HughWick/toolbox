@@ -928,28 +928,4 @@ public class GsonUtils {
             return JSON.parseObject(jsonObject1.toString(), clazz);
         }
     }
-
-//    /**
-//     * 将 XML 文件转换为 Jsons 对象。
-//     * 此方法会自动处理文件的读取和关闭，并能正确处理 UTF-8 BOM。
-//     *
-//     * @param file 待解析的 XML 文件对象
-//     * @return 转换后的 Jsons 对象
-//     * @since 3.0.5
-//     */
-//    public static Jsons xmlToJson(File file) {
-//        return xmlToJson(FileUtils.readContent(file));
-//    }
-//
-//    /**
-//     * XML字符串转JSON对象
-//     *
-//     * @param xml xml字符串
-//     * @return Jsons
-//     * @since 2.7.16
-//     */
-//    public static Jsons xmlToJson(String xml) {
-//        JSONObject jsonObject = XML.toJSONObject(xml);
-//        return Jsons.on(jsonObject.toString());
-//    }
 }
