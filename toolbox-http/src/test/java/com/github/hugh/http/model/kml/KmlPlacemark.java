@@ -1,4 +1,4 @@
-package com.github.hugh.json.model.kml;
+package com.github.hugh.http.model.kml;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

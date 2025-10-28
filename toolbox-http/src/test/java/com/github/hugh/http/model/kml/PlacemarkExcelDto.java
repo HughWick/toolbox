@@ -1,4 +1,4 @@
-package com.github.hugh.json.model.kml;
+package com.github.hugh.http.model.kml;
 
 import cn.idev.excel.annotation.ExcelProperty;
 import lombok.AllArgsConstructor;
@@ -26,4 +26,7 @@ public class PlacemarkExcelDto {
 
     @ExcelProperty("高德纬度")
     private Double amapLatitude;
+
+    @ExcelProperty("详细地址")
+    private String address;
 }

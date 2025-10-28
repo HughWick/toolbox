@@ -1,7 +1,8 @@
 package com.github.hugh.bean.expand.tree;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -17,7 +18,8 @@ import java.util.List;
  *            那么在使用时可以写成 {@code BaseTreeNode<TreeNode>}。
  * @since 2.8.7
  */
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class BaseTreeNode<T extends BaseTreeNode<T>> { // 使用泛型约束，确保子节点类型一致
     /**
