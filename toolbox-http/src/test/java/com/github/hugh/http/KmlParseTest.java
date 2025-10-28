@@ -1,31 +1,40 @@
-package com.github.hugh.json;
+package com.github.hugh.http;
 
 import cn.idev.excel.FastExcel;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.github.hugh.bean.dto.coordinates.GpsDTO;
-import com.github.hugh.json.model.kml.KmlPlacemark;
-import com.github.hugh.json.model.kml.KmlRoot;
-import com.github.hugh.json.model.kml.PlacemarkExcelDto;
+import com.github.hugh.http.builder.OkHttps;
+import com.github.hugh.http.model.kml.KmlPlacemark;
+import com.github.hugh.http.model.kml.KmlRoot;
+import com.github.hugh.http.model.kml.PlacemarkExcelDto;
+import com.github.hugh.json.gson.Jsons;
 import com.github.hugh.util.CoordinatesUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class KmlParseTest {
 
     @Test
-    void testFileKml() {
-        String image1 = "/kml/test_01.kml";
+    void testFileKml() throws IOException {
+//        String image1 = "/kml/test_01.kml";
+        String image1 = "/kml/pipeline_route.kml";
         File fileDir1 = new File(getPath(image1));
         List<KmlPlacemark> placemarkList = parse2(fileDir1);
         for (KmlPlacemark p : placemarkList) {
             System.out.println(p);
         }
         System.out.println("--- 步骤1：解析完成，共 " + placemarkList.size() + " 条数据 ---");
+        Map<String, Object> map = new HashMap<>();
+        map.put("appkey", "057346cd8aba20f2ec554fc69b08a92c");
+        map.put("type", "0");
+        map.put("version", "1.0");
         // 2. 转换 -> 将 XML 实体列表 转换为 Excel DTO 列表
         List<PlacemarkExcelDto> excelDtoList = placemarkList.stream()
                 .map(p -> {
@@ -33,7 +42,17 @@ public class KmlParseTest {
                     Double lon = (p.getPoint() != null) ? p.getPoint().getLongitude() : null;
                     Double lat = (p.getPoint() != null) ? p.getPoint().getLatitude() : null;
                     GpsDTO gpsDTO = CoordinatesUtils.wgs84ToGcj02(lon, lat);
-                    return new PlacemarkExcelDto(p.getName(), p.getDescription(), lon, lat, gpsDTO.getLongitude(), gpsDTO.getLatitude());
+                    Jsons jsons = null;
+                    try {
+                        map.put("longitude", lon);
+                        map.put("latitude", lat);
+                        jsons = OkHttps.url("https://gateway.hnlot.com.cn/map/amap/reverseAddress").setBody(map).doGet().toJsons();
+                        Jsons data = jsons.getThis("data");
+                        System.out.println("--详细地址-->"+data.getString("address"));
+                        return new PlacemarkExcelDto(p.getName(), p.getDescription(), lon, lat, gpsDTO.getLongitude(), gpsDTO.getLatitude(), data.getString("address"));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }).collect(Collectors.toList());
         System.out.println("--- 步骤2：转换完成，准备导出 ---");
         // 3. 导出 -> 将 Excel DTO 列表写入文件

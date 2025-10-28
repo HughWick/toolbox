@@ -38,34 +38,55 @@ public class TreeNodeUtils {
      */
     public static List<TreeNode> buildTree(List<TreeNode> rootNodes, List<TreeNode> allNodes, boolean sortEnable, boolean ascending, boolean includeEmptyChildren) {
         if (allNodes == null || allNodes.isEmpty()) {
-            return rootNodes;
+            return new ArrayList<>();
         }
-        // 预处理：将所有子节点按 parentId 分组
-        Map<String, List<TreeNode>> childrenMap = allNodes.stream()
+        // 步骤 1: 规范化所有节点，确保每个ID只对应一个唯一的TreeNode对象实例。
+        // 这是为了防止因传入数据中存在重复ID的不同对象而导致后续链接失败。
+        Map<String, TreeNode> canonicalNodesMap = new LinkedHashMap<>();
+        for (TreeNode node : allNodes) {
+            canonicalNodesMap.putIfAbsent(node.getId(), node);
+        }
+        List<TreeNode> canonicalAllNodes = new ArrayList<>(canonicalNodesMap.values());
+        // 步骤 2: 将所有规范化后的节点按 parentId 进行分组，以便快速查找每个节点的直接子节点。
+        Map<String, List<TreeNode>> childrenGroupMap = canonicalAllNodes.stream()
                 .filter(node -> node.getParentId() != null)
                 .collect(Collectors.groupingBy(TreeNode::getParentId));
-        Set<String> visitedNodeIds = Collections.synchronizedSet(new HashSet<>());
-        // 3【新增】根据排序配置，预先创建 Comparator
-        final Comparator<TreeNode> nodeComparator;
+        // 步骤 3: 如果启用了排序，则对 childrenGroupMap 中每个子节点列表进行一次性排序。
         if (sortEnable) {
-            // 创建一个临时的、非 final 的比较器
-            Comparator<TreeNode> tempComparator = Comparator.comparing(TreeNode::getId);
-            // 如果是降序，就反转这个临时比较器
-            if (!ascending) {
-                tempComparator = tempComparator.reversed();
+            final Comparator<TreeNode> nodeComparator = ascending
+                    ? Comparator.comparing(TreeNode::getId)
+                    : Comparator.comparing(TreeNode::getId).reversed();
+            childrenGroupMap.values().forEach(list -> list.sort(nodeComparator));
+        }
+        // 步骤 4: 遍历所有规范化节点，为其链接子节点，正式构建出完整的树结构。
+        for (TreeNode node : canonicalAllNodes) {
+            // 从已经分组并（可选）排序的Map中获取子节点列表
+            List<TreeNode> children = childrenGroupMap.get(node.getId());
+            if (children != null && !children.isEmpty()) {
+                node.setChildren(children);
+            } else if (includeEmptyChildren) {
+                node.setChildren(new ArrayList<>());
+            } else {
+                node.setChildren(null);
             }
-            // 最后，将结果只赋值一次给 final 变量
-            nodeComparator = tempComparator;
-        } else {
-            nodeComparator = null; // 不排序
         }
-        rootNodes.forEach(rootNode ->
-                assignChildrenRecursive(rootNode, childrenMap, visitedNodeIds, nodeComparator, includeEmptyChildren)
-        );
+        // 步骤 5: 从规范化Map中提取出最终的根节点列表。
+        // 这一步确保了返回的根节点对象，是已经被正确构建了完整子树的那个唯一实例。
+        List<TreeNode> finalRootNodes = new ArrayList<>();
+        for (TreeNode originalRoot : rootNodes) {
+            TreeNode canonicalRoot = canonicalNodesMap.get(originalRoot.getId());
+            if (canonicalRoot != null) {
+                finalRootNodes.add(canonicalRoot);
+            }
+        }
+        // 步骤 6: 如果启用了排序，对根节点本身也进行排序。
         if (sortEnable) {
-            return rootNodes.stream().sorted(nodeComparator).collect(Collectors.toList());
+            final Comparator<TreeNode> nodeComparator = ascending
+                    ? Comparator.comparing(TreeNode::getId)
+                    : Comparator.comparing(TreeNode::getId).reversed();
+            finalRootNodes.sort(nodeComparator);
         }
-        return rootNodes;
+        return finalRootNodes;
     }
 
     /**
@@ -74,42 +95,45 @@ public class TreeNodeUtils {
      * @param parentNode           当前父节点
      * @param childrenMap          按 parentId 分组的所有节点的映射
      * @param visitedNodeIds       用于防止循环引用的已访问ID集合
-     * @param comparator           用于子节点排序的比较器。如果为 null，则不排序。
      * @param includeEmptyChildren 是否为叶子节点设置空的 children 列表
      * @param <N>                  节点的类型，必须是 BaseTreeNode 的子类
      * @since 3.0.11
      */
-    public static <N extends BaseTreeNode<N>> void assignChildrenRecursive(N parentNode, Map<String, List<N>> childrenMap, Set<String> visitedNodeIds, Comparator<N> comparator,
+    public static <N extends BaseTreeNode<N>> void assignChildrenRecursive(N parentNode, Map<String, List<N>> childrenMap, Set<String> visitedNodeIds,
                                                                            boolean includeEmptyChildren) {
-        // 防止循环引用
-        if (!visitedNodeIds.add(parentNode.getId())) {
+        // 1. 检查当前父节点是否已经被处理过，防止因数据错误导致的无限循环
+        if (visitedNodeIds.contains(parentNode.getId())) {
             return;
         }
-        // 获取潜在的子节点列表
-        List<N> potentialChildren = childrenMap.get(parentNode.getId());
+        visitedNodeIds.add(parentNode.getId());
+        // 2. 获取该父节点对应的、已经预排序好的子节点列表
+        List<N> potentialChildren = childrenMap.getOrDefault(parentNode.getId(), Collections.emptyList());
+        if (potentialChildren.isEmpty()) {
+            if (includeEmptyChildren) {
+                parentNode.setChildren(new ArrayList<>());
+            } else {
+                parentNode.setChildren(null);
+            }
+            return;
+        }
+        // 3. 【核心修正】创建一个新的列表来存放有效的子节点
+        // 我们不应该从 potentialChildren 中移除元素，因为其他父节点可能也需要它
         List<N> actualChildren = new ArrayList<>();
-        if (potentialChildren != null && !potentialChildren.isEmpty()) {
-            // 3过滤掉已访问的节点并去重
-            actualChildren = potentialChildren.stream()
-                    .filter(child -> !visitedNodeIds.contains(child.getId()))
-                    .collect(Collectors.collectingAndThen(
-                            Collectors.toMap(BaseTreeNode::getId, child -> child, (existing, replacement) -> existing),
-                            map -> new ArrayList<>(map.values())
-                    ));
+        for (N child : potentialChildren) {
+            // 如果一个子节点已经被其他分支处理过（即已经有父节点了），我们就跳过它
+            if (!visitedNodeIds.contains(child.getId())) {
+                actualChildren.add(child);
+            }
         }
-        // 在递归【之前】进行排序
-        if (comparator != null && !actualChildren.isEmpty()) {
-            actualChildren.sort(comparator);
-        }
-        // 根据配置设置 children 属性
+        // 4. 设置子节点
         if (includeEmptyChildren || !actualChildren.isEmpty()) {
             parentNode.setChildren(actualChildren);
         } else {
             parentNode.setChildren(null);
         }
-        // 对子节点进行递归
+        // 5. 对刚刚找到的有效子节点进行递归
         for (N child : actualChildren) {
-            assignChildrenRecursive(child, childrenMap, visitedNodeIds, comparator, includeEmptyChildren);
+            assignChildrenRecursive(child, childrenMap, visitedNodeIds, includeEmptyChildren);
         }
     }
 

@@ -106,33 +106,32 @@ public class TreeNodeOpeExpand<T> implements TreeNodeOpe<TreeNodeExpand<T>, Elem
         if (allNodes.isEmpty()) {
             return new ArrayList<>();
         }
-        // 预处理：将所有子节点按 parentId 分组，极大提高查找效率
+        // 预处理：将所有子节点按 parentId 分组
         Map<String, List<TreeNodeExpand<T>>> childrenMap = new HashMap<>();
         for (TreeNodeExpand<T> node : allNodes) {
             if (node.getParentId() != null) {
-                // 如果 key 不存在，则创建一个新的列表；然后将当前节点添加到列表中
                 childrenMap.computeIfAbsent(node.getParentId(), k -> new ArrayList<>()).add(node);
             }
         }
-        // 创建一个线程安全的已访问节点集合，防止循环引用和重复处理
+        // 创建一个线程安全的已访问节点集合
         Set<String> visitedNodeIds = Collections.synchronizedSet(new HashSet<>());
-        //  根据是否排序，执行不同的逻辑
+        // 根据是否排序，执行不同的逻辑
         if (sortEnable) {
-            // 创建一个非空的比较器
             final Comparator<TreeNodeExpand<T>> nodeComparator = ascending ? comparingById : comparingById.reversed();
-            // 使用这个非空的比较器进行递归
+            // 【核心修改点】: 在这里，对 childrenMap 中所有的子列表进行一次性排序
+            childrenMap.values().forEach(list -> list.sort(nodeComparator));
+            // 使用一个不再需要 comparator 的简化版递归函数
             rootNodesList.forEach(rootNode ->
-                    TreeNodeUtils.assignChildrenRecursive(rootNode, childrenMap, visitedNodeIds, nodeComparator, includeEmptyChildren)
+                    TreeNodeUtils.assignChildrenRecursive(rootNode, childrenMap, visitedNodeIds, includeEmptyChildren)
             );
             // 对根节点进行排序并返回
             return rootNodesList.stream().sorted(nodeComparator).collect(Collectors.toList());
         }
-        // 如果不排序，直接进行递归（传入null比较器），然后返回结果
+        // 如果不排序，直接进行递归，然后返回结果
         rootNodesList.forEach(rootNode ->
-                TreeNodeUtils.assignChildrenRecursive(rootNode, childrenMap, visitedNodeIds, null, includeEmptyChildren)
+                TreeNodeUtils.assignChildrenRecursive(rootNode, childrenMap, visitedNodeIds, includeEmptyChildren)
         );
         return rootNodesList;
-
     }
 
     /**
