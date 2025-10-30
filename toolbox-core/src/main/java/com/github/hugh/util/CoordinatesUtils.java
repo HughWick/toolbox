@@ -49,8 +49,8 @@ public class CoordinatesUtils {
      * <p>火星坐标系 (GCJ-02) 与百度坐标系 (BD-09) 坐标的转换算法</p>
      * <p>注：只保留小数点后八位</p>
      *
-     * @param longitude 经度
-     * @param latitude  纬度
+     * @param longitude 经度 (-180 到 +180)
+     * @param latitude  纬度 (-90 到 +90)
      * @return {@link GpsDTO}
      * @since 2.3.12
      */
@@ -63,8 +63,8 @@ public class CoordinatesUtils {
      * <p>火星坐标系 (GCJ-02) 与百度坐标系 (BD-09) 坐标的转换算法</p>
      * <p>注：只保留小数点后八位</p>
      *
-     * @param longitude 经度
-     * @param latitude  纬度
+     * @param longitude 经度 (-180 到 +180)
+     * @param latitude  纬度 (-90 到 +90)
      * @return {@link GpsDTO}
      * @since 1.6.3
      */
@@ -82,8 +82,8 @@ public class CoordinatesUtils {
      * 百度转高德
      * <p>百度坐标(bd09ll) 转 火星坐标(gcj02ll)</p>
      *
-     * @param longitude 经度
-     * @param latitude  纬度
+     * @param longitude 经度 (-180 到 +180)
+     * @param latitude  纬度 (-90 到 +90)
      * @return GpsDTO
      * @since 2.3.12
      */
@@ -95,8 +95,8 @@ public class CoordinatesUtils {
      * 百度转高德
      * <p>百度坐标(bd09ll) 转 火星坐标(gcj02ll)</p>
      *
-     * @param longitude 经度
-     * @param latitude  纬度
+     * @param longitude 经度 (-180 到 +180)
+     * @param latitude  纬度 (-90 到 +90)
      * @return GpsDTO  {@link GpsDTO}
      * @since 1.6.4
      */
@@ -270,10 +270,10 @@ public class CoordinatesUtils {
     /**
      * 计算两点之间距离
      *
-     * @param long1 第一点的精度
-     * @param lat1  第一点的纬度
-     * @param long2 第二点的精度
-     * @param lat2  第二点的纬度
+     * @param long1 第一点的经度 (-180 到 +180)
+     * @param lat1  第一点的纬度 (-90 到 +90)
+     * @param long2 第二点的经度 (-180 到 +180)
+     * @param lat2  第二点的纬度 (-90 到 +90)
      * @return double 返回的距离，单位m
      * @since 2.4.8
      */
@@ -284,10 +284,10 @@ public class CoordinatesUtils {
     /**
      * 计算两点之间距离
      *
-     * @param long1 第一点的精度
-     * @param lat1  第一点的纬度
-     * @param long2 第二点的精度
-     * @param lat2  第二点的纬度
+     * @param long1 第一点的经度 (-180 到 +180)
+     * @param lat1  第一点的纬度 (-90 到 +90)
+     * @param long2 第二点的经度 (-180 到 +180)
+     * @param lat2  第二点的纬度 (-90 到 +90)
      * @return double 返回的距离，单位m
      * @since 2.4.8
      */
@@ -376,8 +376,8 @@ public class CoordinatesUtils {
      * <p>
      * 这是主要的入口方法。
      *
-     * @param longitude WGS-84 经度
-     * @param latitude  WGS-84 纬度
+     * @param longitude WGS-84 经度 (-180 到 +180)
+     * @param latitude  WGS-84 纬度 (-90 到 +90)
      * @return 转换后的 GCJ-02 坐标对象
      * @since 3.0.12
      */
@@ -397,8 +397,8 @@ public class CoordinatesUtils {
      * <p>
      * 采用近似法，对于大多数应用场景精度足够。
      *
-     * @param longitude GCJ-02 经度
-     * @param latitude  GCJ-02 纬度
+     * @param longitude GCJ-02 经度 (-180 到 +180)
+     * @param latitude  GCJ-02 纬度 (-90 到 +90)
      * @return 转换后的 WGS-84 坐标对象
      * @since 3.0.12
      */
@@ -426,8 +426,8 @@ public class CoordinatesUtils {
     /**
      * 计算 WGS-84 到 GCJ-02 的偏移量。
      *
-     * @param lng    经度
-     * @param lat    纬度
+     * @param lng    经度 (-180 到 +180)
+     * @param lat    纬度 (-90 到 +90)
      * @param isPlus true 表示正向偏移 (WGS-84 -> GCJ-02)，false 表示反向偏移 (GCJ-02 -> WGS-84)
      * @return 包含经纬度偏移量的坐标对象
      * @since 3.0.12
