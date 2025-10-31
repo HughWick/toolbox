@@ -22,6 +22,8 @@ import java.text.DecimalFormat;
  */
 @Slf4j
 public class CoordinatesUtils {
+    private CoordinatesUtils() {
+    }
 
     /**
      * 圆周率
