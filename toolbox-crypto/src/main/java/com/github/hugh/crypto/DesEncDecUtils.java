@@ -12,10 +12,11 @@ import java.security.spec.InvalidKeySpecException;
 
 /**
  * DES加密工具
- *
+ *  直接使用 {@link com.github.hugh.crypto.components.CryptoCore}
  * @author hugh
  * @since 2.0.1
  */
+@Deprecated
 public class DesEncDecUtils {
     private DesEncDecUtils() {
 
@@ -134,13 +135,13 @@ public class DesEncDecUtils {
     /**
      * 用指定的key对数据进行DES加密.
      *
-     * @param data 待加密的数据
-     * @param key  DES加密的key
-     * @return byte 返回DES加密后的数据
+     * @param plaintextBytes 待加密的原始字节数组
+     * @param keyBytes       密钥的字节数组
+     * @return byte 加密后的原始字节数组 (密文)
      * @since 2.3.9
      */
-    private static byte[] encrypt(byte[] data, byte[] key) throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
-        return operate(data, key, Cipher.ENCRYPT_MODE);
+    public static byte[] encrypt(byte[] plaintextBytes, byte[] keyBytes) throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
+        return operate(plaintextBytes, keyBytes, Cipher.ENCRYPT_MODE);
     }
 
     /**

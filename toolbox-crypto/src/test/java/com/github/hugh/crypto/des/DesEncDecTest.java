@@ -102,13 +102,13 @@ class DesEncDecTest {
     void testCheck() {
         String key = "yinmeng0000w";
 //        DesEncDecUtils Des = DesEncDecUtils.getInstance(key);
-        CryptoCore Des = CryptoCore.getDesInstance(key);
-        assertEquals("JDOq2XbTaBBv0cTG+csoDQ==", Des.encrypt("13825004872"));
+        CryptoCore cryptoCore = CryptoCore.getDesInstance(key);
+        assertEquals("JDOq2XbTaBBv0cTG+csoDQ==", cryptoCore.encrypt("13825004872"));
         String string1 = "md5pass";
-        String md5pass = Des.encrypt(string1);
+        String md5pass = cryptoCore.encrypt(string1);
         String result = "4LJigdM+uWM=";
         assertEquals(md5pass, result);
-        assertEquals(Des.decrypt(result), string1);
+        assertEquals(cryptoCore.decrypt(result), string1);
         assertTrue(DesEncDecUtils.check(key, string1, result));
 //        System.out.println(Des.decrypt(Des.encrypt("46010319821218091X")));
     }

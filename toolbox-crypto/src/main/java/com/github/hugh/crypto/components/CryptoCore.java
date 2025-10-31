@@ -202,6 +202,25 @@ public class CryptoCore {
     }
 
     /**
+     * 接收字节，返回 Base64 字符串
+     * 这个方法专门用于将二进制数据加密后，转换为便于传输的字符串格式。
+     *
+     * @param dataBytes 待加密的原始字节数组（例如 Protobuf 数据）。
+     * @return 加密后并经过 Base64 编码的字符串。
+     * @throws ToolboxException 如果加密过程中发生错误。
+     * @since 3.0.14
+     */
+    public String encryptToBase64(byte[] dataBytes) {
+        // 1. 调用核心的字节加密方法
+        byte[] encryptedBytes = encrypt(dataBytes);
+        // 2. 将加密后的二进制结果编码为 Base64 字符串
+        if (encryptedBytes == null) {
+            return null;
+        }
+        return Base64.getEncoder().encodeToString(encryptedBytes);
+    }
+
+    /**
      * 使用当前实例配置的 Cipher 对象进行解密。
      *
      * @param data 待解密的字节数组。
@@ -243,5 +262,56 @@ public class CryptoCore {
         byte[] dataBytes = Base64.getDecoder().decode(data);
         byte[] decrypt = decrypt(dataBytes); // 这里会调用 public byte[] decrypt(byte[] data) 方法
         return new String(decrypt, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Base64 字符串解密
+     * 这个方法封装了“Base64解码 -> 解密”的完整流程。
+     *
+     * @param encryptedBase64 经过 Base64 编码的密文字符串。
+     * @return 解密后的原始数据字节数组。
+     * @throws ToolboxException 如果解码或解密过程中发生错误。
+     * @since 3.0.14
+     */
+    public byte[] decryptFromBase64(String encryptedBase64) {
+        if (encryptedBase64 == null) {
+            return null;
+        }
+        try {
+            // 1. 先将 Base64 字符串解码回原始的加密后字节数组
+            byte[] encryptedData = Base64.getDecoder().decode(encryptedBase64);
+            // 2. 调用核心的字节解密方法
+            return this.decrypt(encryptedData);
+        } catch (IllegalArgumentException e) {
+            // 捕获 Base64 解码失败的异常
+            throw new ToolboxException("Base64 解码失败：输入的字符串不是有效的 Base64 格式。", e);
+        } catch (ToolboxException toolboxException) {
+            // 重新抛出 decrypt 方法可能抛出的异常
+            throw toolboxException;
+        }
+    }
+
+    /**
+     * 使用当前实例配置的 Cipher 对象解密一个字节数组，并返回 UTF-8 编码的字符串。
+     * <p>
+     * 该方法直接对输入的加密字节数组进行解密，然后将结果转换为字符串。
+     * </p>
+     *
+     * @param encryptedData 待解密的原始加密字节数组。如果为 null，则返回 null。
+     * @return 解密后的原始字符串（使用 UTF-8 编码），如果输入为 null 则返回 null。
+     * @throws ToolboxException 如果在解密过程中发生错误（例如，密钥不匹配、数据损坏或填充错误）。
+     * @since 3.0.14
+     */
+    public String decryptToString(byte[] encryptedData) {
+        if (encryptedData == null) {
+            return null;
+        }
+        // 1. 调用核心的字节解密方法，得到解密后的字节数组
+        byte[] decryptedBytes = decrypt(encryptedData);
+        // 2. 将解密后的字节数组按照 UTF-8 编码转换为字符串
+        if (decryptedBytes == null) {
+            return null;
+        }
+        return new String(decryptedBytes, StandardCharsets.UTF_8);
     }
 }

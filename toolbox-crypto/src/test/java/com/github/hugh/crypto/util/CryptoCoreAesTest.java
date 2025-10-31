@@ -6,10 +6,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("CryptoCore AES 功能测试") // JUnit 5 的 DisplayName，用于在测试报告中显示更友好的名称
-public class CryptoCoreAesTest {
+class CryptoCoreAesTest {
     // 定义不同长度的 AES 测试密钥字符串
     // 重要：请确保这些字符串的 UTF-8 字节长度符合 AES 要求 (16, 24, 32 字节)
     // 使用 ASCII 字符通常每个字符是 1 字节，所以简单地使用对应长度的 ASCII 字符串即可
@@ -119,5 +120,115 @@ public class CryptoCoreAesTest {
         //      CryptoCore.getAesInstance(INVALID_AES_KEY_STR);
         // });
         // assertTrue(exception.getCause() instanceof InvalidKeyException, "底层异常应是 InvalidKeyException");
+    }
+
+    @Test
+    @DisplayName("AES 128位密钥加密字节数组并返回Base64字符串")
+    void testAesEncryptBytesToBase64AndDecrypt() {
+        // --- 1. 获取 AES 128 位密钥的 CryptoCore 实例 ---
+        // (与上一个测试用例相同，假设 ORIGINAL_BYTES 已定义)
+        CryptoCore aesCore = CryptoCore.getAesInstance(AES_KEY_128BIT_STR);
+        System.out.println("\n--- 开始测试 encryptToBase64 ---");
+        System.out.println("原始数据字节长度: " + ORIGINAL_BYTES.length);
+        // --- 2. 调用新方法，加密字节数组并获取 Base64 字符串 ---
+        String encryptedBase64 = aesCore.encryptToBase64(ORIGINAL_BYTES);
+        // 断言：验证返回的 Base64 字符串
+        assertNotNull(encryptedBase64, "加密后的 Base64 字符串不应为 null");
+        assertFalse(encryptedBase64.isEmpty(), "加密后的 Base64 字符串不应为空");
+        System.out.println("加密后的 Base64 字符串: " + encryptedBase64);
+        // 我们可以通过尝试解码来简单验证它是一个有效的 Base64 字符串
+        assertDoesNotThrow(() -> {
+            Base64.getDecoder().decode(encryptedBase64);
+        }, "返回的字符串应为有效的 Base64 格式");
+        // --- 3. 模拟接收方：解码 Base64 并解密 ---
+        // 3a. 将 Base64 字符串解码回原始的加密后字节数组
+        byte[] encryptedDataFromBase64 = Base64.getDecoder().decode(encryptedBase64);
+        System.out.println("Base64 解码后的密文字节长度: " + encryptedDataFromBase64.length);
+        // 3b. 调用 decrypt 方法解密
+        byte[] decryptedData = aesCore.decrypt(encryptedDataFromBase64);
+        // 断言：验证解密后的数据
+        assertNotNull(decryptedData, "解密结果不应为 null");
+        assertTrue(decryptedData.length > 0, "解密结果字节数组长度应大于 0");
+        // --- 4. 最终验证：解密后的数据是否与原始数据完全一致 ---
+        String decryptedString = new String(decryptedData, StandardCharsets.UTF_8);
+        // 断言字符串内容一致
+        assertEquals(ORIGINAL_STRING, decryptedString, "解密后的字符串应与原始字符串一致");
+        // 【最重要】断言原始字节数组完全一致
+        assertArrayEquals(ORIGINAL_BYTES, decryptedData, "解密后的字节数组应与原始字节数组一致");
+        System.out.println("测试通过！encryptToBase64 方法工作正常，整个流程闭环验证成功。");
+    }
+
+    /**
+     * 测试使用 AES 128 位密钥加密字节数组到Base64，再从Base64解密的完整流程。
+     */
+    @Test
+    @DisplayName("AES 128位密钥 加密字节到Base64 -> 从Base64解密 完整闭环")
+    void testAesEncryptBytesToBase64AndDecryptFromBase64() {
+        // --- 1. 获取实例和原始数据 ---
+        CryptoCore aesCore = CryptoCore.getAesInstance(AES_KEY_128BIT_STR);
+        System.out.println("\n--- 开始测试 encryptToBase64 -> decryptFromBase64 完整流程 ---");
+        // --- 2. 调用加密方法，得到 Base64 字符串 ---
+        String encryptedBase64 = aesCore.encryptToBase64(ORIGINAL_BYTES);
+        System.out.println("加密后的 Base64 字符串: " + encryptedBase64);
+        assertNotNull(encryptedBase64, "加密后的 Base64 字符串不应为 null");
+        // --- 3. 【修改点】直接调用新的解密方法 ---
+        // 无需再手动进行 Base64 解码，代码变得更简洁！
+        byte[] decryptedData = aesCore.decryptFromBase64(encryptedBase64);
+        System.out.println("通过 decryptFromBase64 直接解密成功。");
+        // 断言：验证解密后的数据
+        assertNotNull(decryptedData, "解密结果不应为 null");
+        // --- 4. 最终验证：解密后的数据是否与原始数据完全一致 ---
+        String decryptedString = new String(decryptedData, StandardCharsets.UTF_8);
+        assertEquals(ORIGINAL_STRING, decryptedString, "解密后的字符串应与原始字符串一致");
+        assertArrayEquals(ORIGINAL_BYTES, decryptedData, "解密后的字节数组应与原始字节数组一致");
+        System.out.println("测试通过！encryptToBase64 和 decryptFromBase64 方法配对工作正常！");
+    }
+
+    /**
+     * 【新增】测试无效 Base64 输入的边界情况
+     */
+    @Test
+    @DisplayName("decryptFromBase64 应能处理无效的 Base64 输入")
+    void testDecryptFromInvalidBase64() {
+        CryptoCore aesCore = CryptoCore.getAesInstance(AES_KEY_128BIT_STR);
+        String invalidBase64String = "这是一个无效的Base64字符串!!!";
+        // 断言：当调用 decryptFromBase64 并传入无效字符串时，应该抛出我们定义的 ToolboxException
+        ToolboxException thrown = assertThrows(
+                ToolboxException.class,
+                () -> aesCore.decryptFromBase64(invalidBase64String),
+                "对于无效的 Base64 输入，应该抛出 ToolboxException"
+        );
+        // （可选）进一步断言异常消息中是否包含了我们期望的信息
+        assertTrue(thrown.getMessage().contains("Base64 解码失败"), "异常消息应指明是 Base64 解码问题");
+        System.out.println("\n测试通过！decryptFromBase64 对无效输入的处理符合预期。");
+    }
+
+    /**
+     * 【新增的测试用例】
+     * 测试使用 AES 128 位密钥，加密一个字符串得到密文字节数组，
+     * 然后使用 decryptToString(byte[]) 方法直接解密回原始字符串。
+     */
+    @Test
+    @DisplayName("AES 128位密钥 密文字节数组 -> 明文字符串 解密测试")
+    void testAesDecryptBytesToString() {
+        // --- 1. 获取实例和原始数据 ---
+        CryptoCore aesCore = CryptoCore.getAesInstance(AES_KEY_128BIT_STR);
+        String originalComplexString = "测试场景：密文 byte[] -> 明文 String";
+        byte[] originalBytes = originalComplexString.getBytes(StandardCharsets.UTF_8);
+        System.out.println("\n--- 开始测试 decryptToString(byte[]) ---");
+        System.out.println("原始字符串: " + originalComplexString);
+        // --- 2. 获取加密后的字节数组 (密文) ---
+        // 我们需要先得到一个加密后的 byte[] 作为新方法的输入
+        byte[] encryptedData = aesCore.encrypt(originalBytes);
+        assertNotNull(encryptedData, "加密后的字节数组不应为 null");
+        System.out.println("加密后的密文字节长度: " + encryptedData.length);
+        // --- 3. 【核心】调用我们新的解密方法 ---
+        // 输入是 byte[] (密文)，输出是 String (明文)
+        String decryptedString = aesCore.decryptToString(encryptedData);
+        assertNotNull(decryptedString, "解密后的字符串不应为 null");
+        System.out.println("调用 decryptToString(byte[]) 解密后的字符串: " + decryptedString);
+        // --- 4. 最终验证：解密后的字符串是否与原始字符串完全一致 ---
+        assertEquals(originalComplexString, decryptedString, "解密后的字符串应与原始字符串完全一致");
+        System.out.println("测试通过！decryptToString(byte[]) 方法工作正常！");
     }
 }
