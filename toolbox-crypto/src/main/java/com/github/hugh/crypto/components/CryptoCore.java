@@ -211,9 +211,9 @@ public class CryptoCore {
      * @since 3.0.14
      */
     public String encryptToBase64(byte[] dataBytes) {
-        // 1. 调用核心的字节加密方法
+        // 调用核心的字节加密方法
         byte[] encryptedBytes = encrypt(dataBytes);
-        // 2. 将加密后的二进制结果编码为 Base64 字符串
+        // 将加密后的二进制结果编码为 Base64 字符串
         if (encryptedBytes == null) {
             return null;
         }
@@ -266,7 +266,6 @@ public class CryptoCore {
 
     /**
      * Base64 字符串解密
-     * 这个方法封装了“Base64解码 -> 解密”的完整流程。
      *
      * @param encryptedBase64 经过 Base64 编码的密文字符串。
      * @return 解密后的原始数据字节数组。
@@ -278,9 +277,9 @@ public class CryptoCore {
             return null;
         }
         try {
-            // 1. 先将 Base64 字符串解码回原始的加密后字节数组
+            // 先将 Base64 字符串解码回原始的加密后字节数组
             byte[] encryptedData = Base64.getDecoder().decode(encryptedBase64);
-            // 2. 调用核心的字节解密方法
+            // 调用核心的字节解密方法
             return this.decrypt(encryptedData);
         } catch (IllegalArgumentException e) {
             // 捕获 Base64 解码失败的异常
@@ -306,9 +305,9 @@ public class CryptoCore {
         if (encryptedData == null) {
             return null;
         }
-        // 1. 调用核心的字节解密方法，得到解密后的字节数组
+        // 调用核心的字节解密方法，得到解密后的字节数组
         byte[] decryptedBytes = decrypt(encryptedData);
-        // 2. 将解密后的字节数组按照 UTF-8 编码转换为字符串
+        // 将解密后的字节数组按照 UTF-8 编码转换为字符串
         if (decryptedBytes == null) {
             return null;
         }
