@@ -49,22 +49,29 @@ public class CryptoCore {
 
     // 定义支持的算法常量
     public static final String ALGORITHM_DES = "DES";
-    public static final String ALGORITHM_AES = "AES";
-
+    public static final String ALGORITHM_AES = "AES";// 代表默认使用 "AES/ECB/PKCS5Padding"
+    public static final String ALGORITHM_AES_ECB_PKCS5PADDING = "AES/ECB/PKCS5Padding";
+    /**
+     * AES 算法，使用 ECB 模式，不进行填充。
+     * <b>注意：</b>使用此模式时，待加密的数据字节数组长度必须是 16 的整数倍。
+     */
+    public static final String ALGORITHM_AES_ECB_NO_PADDING = "AES/ECB/NoPadding";
     /**
      * 获取 CryptoCore 实例，支持 DES 和 AES 加密/解密。
      * <p>
-     * 该方法是工厂方法，每次调用都会返回一个新的 DesEncDecUtils 实例，
+     * 该方法是工厂方法，每次调用都会返回一个新的 CryptoCore 实例，
      * 该实例已使用指定的密钥和算法初始化好加密和解密所需的 Cipher 对象。
-     * 请注意：同一个 DesEncDecUtils 实例只能用于创建时指定的密钥和算法。
+     * 请注意：同一个 CryptoCore 实例只能用于创建时指定的密钥和算法。
      * </p>
      *
      * @param key       密钥字符串。
      *                  对于 DES，密钥通常是 8 字节。
-     *                  对于 AES，由 {@code key.getBytes()} 得到的字节数组长度需要符合 AES 密钥长度要求 (16, 24 或 32 字节，对应 128, 192, 256 位)。
+     *                  对于 AES，由 {@code key.getBytes()} 得到的字节数组长度需要符合 AES 密钥长度要求 (16, 24 或 32 字节)。
      *                  **注意：直接使用字符串的字节数组作为密钥可能不安全，且长度不匹配常用算法要求。生产环境应使用安全的密钥生成或派生方式。**
-     * @param algorithm 指定的加密算法，目前支持 "DES" 或 "AES" (不区分大小写)。
-     * @return 根据指定密钥和算法配置好的 DesEncDecUtils 实例。
+     * @param algorithm 指定的加密算法。
+     *                  - 支持简写： "DES", "AES" (默认使用 "AES/ECB/PKCS5Padding")。
+     *                  - 支持完整名称： "AES/ECB/PKCS5Padding", "AES/ECB/NoPadding"。
+     * @return 根据指定密钥和算法配置好的 CryptoCore 实例。
      * @throws ToolboxException         如果密钥无效、算法不支持、初始化失败等密码学相关异常。
      * @throws IllegalArgumentException 如果传入的密钥或算法参数无效。
      */
@@ -78,41 +85,42 @@ public class CryptoCore {
         CryptoCore instance = new CryptoCore();
         try {
             SecretKey secretKey;
-            String cipherAlgorithmName; // 用于 Cipher.getInstance() 的算法名称，可以包含模式和填充
+            String cipherAlgorithmName = algorithm; // 用于 Cipher.getInstance() 的完整算法名称
+            String baseAlgorithm; // 用于密钥生成的算法名称 (如 "AES", "DES")
             // 根据指定的算法进行密钥和 Cipher 的初始化
-            switch (algorithm.toUpperCase()) { // 转换为大写以支持不区分大小写输入
+            String upperCaseAlgorithm = algorithm.toUpperCase();
+            // 解析基础算法，用于密钥生成
+            if (upperCaseAlgorithm.startsWith(ALGORITHM_AES)) {
+                baseAlgorithm = ALGORITHM_AES;
+            } else if (upperCaseAlgorithm.startsWith(ALGORITHM_DES)) {
+                baseAlgorithm = ALGORITHM_DES;
+            } else {
+                throw new IllegalArgumentException("不支持的基础加密算法：" + algorithm);
+            }
+            // 处理算法简写，并确定最终用于 Cipher 的完整名称
+            switch (baseAlgorithm) {
                 case ALGORITHM_DES:
                     // DES 密钥需要通过 DESKeySpec 和 SecretKeyFactory 生成
-                    // 注意：原始代码没有指定模式和填充，这里沿用，但生产环境建议明确指定，如 "DES/ECB/PKCS5Padding"
-                    cipherAlgorithmName = ALGORITHM_DES; // 或者 "DES/ECB/PKCS5Padding" 等
+                    if (upperCaseAlgorithm.equals(ALGORITHM_DES)) {
+                        cipherAlgorithmName = "DES/ECB/PKCS5Padding";
+                    }
                     DESKeySpec dks = new DESKeySpec(key.getBytes());
                     SecretKeyFactory skf = SecretKeyFactory.getInstance(ALGORITHM_DES);
                     secretKey = skf.generateSecret(dks);
                     break;
                 case ALGORITHM_AES:
                     // AES 密钥直接通过密钥字节数组和算法名称创建 SecretKeySpec
-                    // WARNING: key.getBytes() 得到的字节数组长度不一定符合 AES 密钥长度 (16, 24, 32 字节)
-                    // 如果长度不正确，可能会抛出 InvalidKeyException 或导致加密解密失败
-                    // 生产环境应使用 KeyGenerator 生成安全密钥，或从密码派生符合长度的密钥
-                    cipherAlgorithmName = ALGORITHM_AES; // 或者 "AES/CBC/PKCS5Padding" 等
+                    if (upperCaseAlgorithm.equals(ALGORITHM_AES)) {
+                        // 为了向后兼容，如果只传入 "AES"，则默认使用 PKCS5Padding
+                        cipherAlgorithmName = ALGORITHM_AES_ECB_PKCS5PADDING;
+                    }
                     byte[] keyBytes = key.getBytes();
-                    secretKey = new SecretKeySpec(keyBytes, ALGORITHM_AES);
-                    // 可选：简单检查密钥长度是否符合常见的 AES 长度
-                    // int keyLength = keyBytes.length;
-                    // if (keyLength != 16 && keyLength != 24 && keyLength != 32) {
-                    //     System.err.println("警告：由字符串衍生的 AES 密钥长度为 " + keyLength + " 字节。常见的 AES 密钥长度为 16, 24 或 32 字节。这可能会导致问题或不安全。");
-                    //     // 如果严格要求密钥长度，可以在此处抛出异常：
-                    //     // throw new InvalidKeyException("AES 密钥长度无效：" + keyLength + " 字节。");
-                    // }
+                    secretKey = new SecretKeySpec(keyBytes, ALGORITHM_AES); // SecretKeySpec 需要基础算法 "AES"
                     break;
                 default:
-                    // 如果指定了不支持的算法，抛出异常
-                    throw new IllegalArgumentException("不支持的加密算法：" + algorithm + "。目前支持：" + ALGORITHM_DES + ", " + ALGORITHM_AES);
+                    // 这个分支实际上在上面的检查中已经处理了，但为了代码完整性保留
+                    throw new IllegalArgumentException("不支持的加密算法：" + algorithm);
             }
-            // 实例化和初始化加密和解密 Cipher
-            // 注意：生产环境强烈建议明确指定模式和填充 (例如 "AES/CBC/PKCS5Padding")
-            // 并为如 CBC 模式处理 IV (Initialization Vector)，这对安全性至关重要。
-            // 仅使用算法名称 "DES" 或 "AES" 依赖于 JVM 默认设置，可能不安全或不一致。
             instance.encryptCipher = Cipher.getInstance(cipherAlgorithmName);
             instance.decryptCipher = Cipher.getInstance(cipherAlgorithmName);
             instance.encryptCipher.init(Cipher.ENCRYPT_MODE, secretKey);
@@ -120,14 +128,13 @@ public class CryptoCore {
         } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException |
                  InvalidKeyException exception) {
             // 捕获密码学相关的异常，并包装成 ToolboxException 抛出
-            throw new ToolboxException("初始化加密/解密器失败，算法：" + algorithm + "，原因：" + exception.getMessage(), exception); // 传递原始异常
+            throw new ToolboxException("初始化加密/解密器失败，算法：" + algorithm + "，原因：" + exception.getMessage(), exception);
         }
-        // 返回配置好的实例
         return instance;
     }
 
     /**
-     * 获取一个配置了 **AES 算法** 和指定密钥的 CryptoCore 实例。
+     * 获取一个配置了 **AES 算法 (AES/ECB/PKCS5Padding)** 和指定密钥的 CryptoCore 实例。
      * <p>
      * 此方法是获取 AES 实例的便捷方法，内部调用 {@code getInstance(key, ALGORITHM_AES)}。
      * </p>
@@ -141,6 +148,22 @@ public class CryptoCore {
      */
     public static CryptoCore getAesInstance(String key) {
         return getInstance(key, ALGORITHM_AES);
+    }
+
+    /**
+     * 获取一个配置了 **AES 算法 (AES/ECB/NoPadding)** 和指定密钥的 CryptoCore 实例。
+     * <p>
+     * 使用此实例进行加密时，<b>待加密的数据长度必须是 16 字节的整数倍</b>，否则会抛出 {@code IllegalBlockSizeException}。
+     * </p>
+     *
+     * @param key 用于 AES 加密的密钥字符串。
+     *            请确保由 {@code key.getBytes()} 得到的字节数组长度符合 AES 密钥要求 (16, 24 或 32 字节)。
+     * @return 配置了 AES NoPadding 算法和指定密钥的 CryptoCore 实例。
+     * @throws IllegalArgumentException 如果密钥参数无效。
+     * @throws ToolboxException         如果 CryptoCore 实例初始化失败。
+     */
+    public static CryptoCore getAesNoPadding(String key) {
+        return getInstance(key, ALGORITHM_AES_ECB_NO_PADDING);
     }
 
 

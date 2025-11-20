@@ -1,6 +1,5 @@
-package com.github.hugh.crypto.util;
+package com.github.hugh.crypto.components;
 
-import com.github.hugh.crypto.components.CryptoCore;
 import com.github.hugh.exception.ToolboxException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +22,36 @@ class CryptoCoreAesTest {
     // 定义测试数据
     private static final String ORIGINAL_STRING = "Hello, World! This is a test string for AES encryption.";
     private static final byte[] ORIGINAL_BYTES = ORIGINAL_STRING.getBytes(StandardCharsets.UTF_8);
+    @DisplayName("Java 端加密参数 (用于在线工具验证)")
+    @Test
+    void testForOnlineToolVerification_AesEcbNoPadding() {
+        final String plaintext = "ThisIs32ByteTestMessageForECB!";
+        System.out.println("--- Java 端加密参数 (用于在线工具验证) ---");
+        System.out.println("加密模式 (Mode): ECB");
+        System.out.println("填充方式 (Padding): PKCS5Padding");
+        System.out.println("密钥 (Key - String): " + AES_KEY_128BIT_STR);
+        System.out.println("明文 (Plaintext - String): " + plaintext);
+        System.out.println("-------------------------------------------------");
+        // --- 2. 使用 Java 进行加密 ---
+        // 注意：这里需要调用我们新增的、能指定完整 transformation 的方法
+        CryptoCore aesEcbCrypto = CryptoCore.getAesInstance(AES_KEY_128BIT_STR);
+        // 加密并获取 Base64 编码的密文
+        System.out.println(">>> 准备加密的明文实际字节长度: " + plaintext.getBytes(StandardCharsets.UTF_8).length);
+        String ciphertextBase64 = aesEcbCrypto.encrypt(plaintext);
+        System.out.println("--- Java 端生成的密文 (复制到在线工具进行比对) ---");
+        System.out.println("Ciphertext (Base64): " + ciphertextBase64);
+        System.out.println("-------------------------------------------------");
+        // --- 3. (可选) 在 Java 端进行本地验证 ---
+        String decryptedText = aesEcbCrypto.decrypt(ciphertextBase64);
+        assertEquals(plaintext, decryptedText, "Java端本地解密失败！");
+        System.out.println("Java 端本地验证成功: 解密结果与原文一致。");
+        // --- 4. (可选) 预期的在线工具结果 (硬编码) ---
+        // 您可以先运行一次，得到 ciphertextBase64 的值，然后填入这里，
+        // 这样测试用例就可以自动化地检查结果是否稳定。
+        // 例如，对于上面的 key 和 plaintext，加密结果是固定的。
+        String expectedCiphertextBase64 = "LOvOLhxOYnRnHV+gwEZwKKrC0CZxsazgaEMPfL5L6gk=";
+        assertEquals(expectedCiphertextBase64, ciphertextBase64, "加密结果与预期的固定值不符！");
+    }
 
     @Test
     @DisplayName("AES 128位密钥加密解密字符串")
@@ -34,12 +63,10 @@ class CryptoCoreAesTest {
         assertNotNull(encryptedData, "加密结果不应为 null");
         assertTrue(encryptedData.length > 0, "加密结果字节数组长度应大于 0");
         // 注意：对于 AES，加密后的长度与模式和填充有关，通常会大于等于原始数据长度
-
         // 3. 解密字节数组
         byte[] decryptedData = aesCore.decrypt(encryptedData);
         assertNotNull(decryptedData, "解密结果不应为 null");
         assertTrue(decryptedData.length > 0, "解密结果字节数组长度应大于 0");
-
         // 4. 验证解密后的数据是否与原始数据一致
         String decryptedString = new String(decryptedData, StandardCharsets.UTF_8);
         assertEquals(ORIGINAL_STRING, decryptedString, "解密后的字符串应与原始字符串一致");
