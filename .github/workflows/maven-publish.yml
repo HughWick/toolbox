@@ -23,9 +23,18 @@ jobs:
           # gpg短密码环境变量
           gpg-passphrase: GPG_PASSPHRASE
 
-      - name: Publish to Apache Maven Central
-        run: mvn clean --batch-mode deploy -P release -Dmaven.test.skip=true
+      - name: Publish to Apache Maven Central with Retry
+        # 使用 retry action
+        uses: nick-invision/retry@v2
+        # 配置环境变量，这部分保持不变
         env:
-          MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        with:
+          # 配置重试次数，例如总共尝试3次（初次 + 2次重试）
+          max_attempts: 3
+          # 每次重试之间等待的秒数
+          retry_wait_seconds: 15
+          # 将您原来需要执行的命令放在这里
+          command: mvn clean --batch-mode deploy -P release -Dmaven.test.skip=true
