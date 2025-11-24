@@ -105,7 +105,7 @@ class HeatshrinkUtilTest {
     @DisplayName("测试边界情况：空数组和 Null")
     void testEdgeCases() {
         // 测试 Null
-        byte[] nullResult = HeatshrinkUtils.compress(null);
+        byte[] nullResult = HeatshrinkUtils.compress((byte[]) null);
         Assertions.assertEquals(0, nullResult.length);
         // 测试空数组
         byte[] emptyResult = HeatshrinkUtils.compress(new byte[0]);
@@ -113,6 +113,21 @@ class HeatshrinkUtilTest {
         // 测试解压空数据
         byte[] emptyDecompress = HeatshrinkUtils.decompress(new byte[0]);
         Assertions.assertEquals(0, emptyDecompress.length);
+        // 测试 compressString
+        Assertions.assertArrayEquals(new byte[0], HeatshrinkUtils.compress((byte[]) null));
+        Assertions.assertArrayEquals(new byte[0], HeatshrinkUtils.compress(""));
+
+        // 测试 decompressToString
+        Assertions.assertEquals("", HeatshrinkUtils.decompressToString(null)); // 注意：原代码decompress处理了null，这里要确保decompressToString也兼容
+        Assertions.assertEquals("", HeatshrinkUtils.decompressToString(new byte[0]));
+
+        // 测试 compressToEncodedString
+        Assertions.assertEquals("", HeatshrinkUtils.compressToEncodedString(null));
+        Assertions.assertEquals("", HeatshrinkUtils.compressToEncodedString(""));
+
+        // 测试 decompressFromEncodedString
+        Assertions.assertEquals("", HeatshrinkUtils.decompressFromEncodedString(null));
+        Assertions.assertEquals("", HeatshrinkUtils.decompressFromEncodedString(""));
     }
 
     @Test
@@ -124,10 +139,112 @@ class HeatshrinkUtilTest {
         /*
         // 假设 "Hello" 压缩后的字节
         byte[] mcuCompressedData = new byte[] { (byte)0xB3, (byte)0x48, ... };
-
         byte[] decompressed = HeatshrinkUtils.decompress(mcuCompressedData);
         System.out.println("从 MCU 还原的数据: " + new String(decompressed));
         */
         Assertions.assertTrue(true);
+    }
+
+    // ================================================================
+    // 测试场景 1: 字符串 -> 字节数组 -> 字符串 (Round Trip)
+    // ================================================================
+
+    @Test
+    @DisplayName("测试基础字符串压缩与还原")
+    void testStringRoundTrip() {
+        String originalText = "Hello Heatshrink! This is a test string.";
+
+        // 1. 压缩
+        byte[] compressedBytes = HeatshrinkUtils.compress(originalText);
+        Assertions.assertNotNull(compressedBytes);
+        Assertions.assertTrue(compressedBytes.length > 0);
+        System.out.println("场景1 - 原始长度: " + originalText.length());
+        System.out.println("场景1 - 压缩后字节数: " + compressedBytes.length);
+        // 2. 解压
+        String restoredText = HeatshrinkUtils.decompressToString(compressedBytes);
+        // 3. 验证
+        Assertions.assertEquals(originalText, restoredText, "解压后的字符串应与原文一致");
+    }
+
+    // ================================================================
+    // 测试场景 2: 字符串 -> Base64字符串 -> 字符串 (传输场景)
+    // ================================================================
+
+    @Test
+    @DisplayName("测试 Base64 编码的压缩字符串 (JSON传输场景)")
+    void testEncodedStringRoundTrip() {
+        // 模拟一个较长的 JSON 数据，重复内容多，压缩效果好
+        String jsonContent = "{\"device_id\":\"GD32F450\",\"status\":\"online\",\"config\":{\"wifi\":\"OFF\",\"ble\":\"ON\",\"wifi\":\"OFF\",\"ble\":\"ON\"}}";
+        // 1. 压缩并转 Base64
+        String base64Result = HeatshrinkUtils.compressToEncodedString(jsonContent);
+        Assertions.assertNotNull(base64Result);
+        // Base64 只包含可见字符，不应包含换行或非法字符
+        Assertions.assertTrue(base64Result.matches("^[a-zA-Z0-9+/=]+$"), "输出应为合法的 Base64 字符串");
+        System.out.println("场景2 - 原始字符串: " + jsonContent);
+        System.out.println("场景2 - Base64结果: " + base64Result);
+        // 2. 还原
+        String restoredJson = HeatshrinkUtils.decompressFromEncodedString(base64Result);
+        // 3. 验证
+        Assertions.assertEquals(jsonContent, restoredJson, "经过Base64编解码后内容应保持一致");
+    }
+
+    // ================================================================
+    // 测试场景 3: 中文与特殊字符 (UTF-8 兼容性)
+    // ================================================================
+
+    @Test
+    @DisplayName("测试中文、Emoji等特殊字符支持")
+    void testUnicodeSupport() {
+        String original = "你好，世界！Heatshrink 🚀 测试中...";
+        // 1. 压缩
+        byte[] compressed = HeatshrinkUtils.compress(original);
+        // 2. 解压
+        String restored = HeatshrinkUtils.decompressToString(compressed);
+        // 3. 验证
+        Assertions.assertEquals(original, restored, "中文和Emoji应能正确还原，不乱码");
+    }
+
+    // ================================================================
+    // 测试场景 4: 边界条件 (Null 和 空串)
+    // ================================================================
+
+
+    // ================================================================
+    // 测试场景 5: 异常处理 (非法 Base64)
+    // ================================================================
+
+    @Test
+    @DisplayName("测试非法 Base64 输入时的异常抛出")
+    void testInvalidBase64Input() {
+        String invalidBase64 = "这显然不是一个Base64字符串!!!";
+        // 期待抛出 IllegalStateException (根据你代码中的实现)
+        Exception exception = Assertions.assertThrows(IllegalStateException.class, () -> {
+            HeatshrinkUtils.decompressFromEncodedString(invalidBase64);
+        });
+        // 验证错误信息包含关键词
+        Assertions.assertTrue(exception.getMessage().contains("not a valid Base64"));
+    }
+
+    // ================================================================
+    // 测试场景 6: 压缩率验证 (确保真的压缩了)
+    // ================================================================
+
+    @Test
+    @DisplayName("验证长文本的压缩效果")
+    void testCompressionRatio() {
+        // 构造一个高度重复的长字符串
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 100; i++) {
+            sb.append("RepeatString_");
+        }
+        String longStr = sb.toString();
+        byte[] originalBytes = longStr.getBytes(StandardCharsets.UTF_8);
+        byte[] compressedBytes = HeatshrinkUtils.compress(longStr);
+        System.out.println("场景6 - 原始大小: " + originalBytes.length + " bytes");
+        System.out.println("场景6 - 压缩大小: " + compressedBytes.length + " bytes");
+        // 对于重复内容，Heatshrink 应该能显著减少体积
+        Assertions.assertTrue(compressedBytes.length < originalBytes.length, "压缩后的数据应当比原始数据小");
+        // 确保数据没坏
+        Assertions.assertEquals(longStr, HeatshrinkUtils.decompressToString(compressedBytes));
     }
 }
