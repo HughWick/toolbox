@@ -30,7 +30,7 @@ public class FontUtils {
     public static Font load(String fontPath, int fontSize, int fontStyle) {
         try (InputStream fontStream = FontUtils.class.getClassLoader().getResourceAsStream(fontPath)) {
             if (fontStream == null) {
-                log.error("警告: 未找到默认字体资源，请检查路径:{}。将使用备用字体。", fontPath);
+                log.warn(" 未找到默认字体资源，请检查路径:{}。将使用备用字体。", fontPath);
                 return new Font("SansSerif", fontStyle, fontSize); // 备用字体
             }
             // 创建字体并设置样式和大小
