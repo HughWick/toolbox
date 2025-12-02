@@ -6,6 +6,8 @@ import com.github.hugh.json.model.Command;
 import com.github.hugh.json.model.ResponseData;
 import com.github.hugh.json.model.Student;
 import com.github.hugh.json.model.UsersJsonBo;
+import com.github.hugh.json.model.c200.C200TripVo;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -306,18 +308,17 @@ class GsonUtilTest {
         List<Object> objects1 = GsonUtils.toArrayList(objects.toString());
     }
 
+    @DisplayName("测试 GsonUtils 从 URL 解析 JSON 及异常处理")
     @Test
     void testUrl() {
         // 测试URL
         String head = "https://minio.dev.hnlot.com.cn/svmp-dev/";
         String url = head + "trip/Trip/20250507/DC2E97CCD813@1746608504.json";
-//        System.out.println(GsonUtils.toJson(url));
-//        C200TripVo c200TripVo = GsonUtils.fromJson(url, C200TripVo.class);
-//        System.out.println(GsonUtils.toJson(c200TripVo));
+        C200TripVo c200TripVo = GsonUtils.fromJson(url, C200TripVo.class);
+        assertEquals("DC2E97CCD813", c200TripVo.getId());
         String url2 = "https://jsonplaceholder.typicode.com/users/1";
         UsersJsonBo usersJsonBo = GsonUtils.fromJson(url2, UsersJsonBo.class);
         assertEquals("Leanne Graham", usersJsonBo.getName());
-
         final ToolboxJsonException toolboxHttpException = assertThrowsExactly(ToolboxJsonException.class, () -> {
             String url3 = "https://www.400unkown.cn";
             GsonUtils.fromJson(url3, UsersJsonBo.class);
