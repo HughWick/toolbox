@@ -13,7 +13,7 @@ import java.util.Base64;
  * Heatshrink 是一种基于 LZSS 的数据压缩算法，特别适用于内存极小的嵌入式系统。
  * </p>
  *
- * <h3>注意事项：</h3>
+ * <p><b>注意事项：</b></p>
  * <p>
  * 此类的配置参数（{@link #WINDOW_BITS} 和 {@link #LOOKAHEAD_BITS}）必须与
  * 嵌入式 C 语言端（{@code heatshrink_config.h}）中的宏定义完全保持一致，
