@@ -16,6 +16,7 @@ import okhttp3.*;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -417,11 +418,14 @@ class OkHttpsTest {
 //        assertEquals(1, postman3.get(0).getInt("id"));
     }
 
+    @DisplayName("测试返回结果内容是json")
     @Test
-    void testHttps() throws IOException {
-//        String url = "https://factory.web.hnlot.com.cn/v2/host/queryList";
-//        final Jsons jsons = OkHttps.url(url).doGet().toJsons();
-//        System.out.println(OkHttps.url(url).doGet().getMessage());
+    void testResultJson() throws IOException {
+        String head = "https://minio.dev.hnlot.com.cn/svmp-dev/";
+        String url1 = head + "trip/Event/20250430/DC2E97CCD813@1746001629@LeaveSeat.json";
+        OkHttpsResponse okHttpsResponse = OkHttps.url(url1).doGet();
+        assertNotNull(okHttpsResponse.getMessage());
+        assertEquals(459, okHttpsResponse.getMessage().length());
     }
 
     @Test
