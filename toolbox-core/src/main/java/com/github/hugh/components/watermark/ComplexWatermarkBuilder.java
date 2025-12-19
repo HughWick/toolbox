@@ -102,6 +102,21 @@ public class ComplexWatermarkBuilder {
     private int marginRight = 0;
 
     /**
+     * 图片输出质量（压缩比）。
+     * <p>
+     * 用于控制输出图片时的压缩程度，取值范围为 {@code 0.0f} 到 {@code 1.0f}。
+     * <ul>
+     *     <li>{@code 1.0f}：最高质量，几乎无损，但会导致<b>文件体积显著增大</b>。</li>
+     *     <li>{@code 0.8f}：默认值，通常能在保持肉眼难以分辨的高画质同时，显著减小文件体积。</li>
+     *     <li>{@code 0.0f}：最低质量，文件体积最小，但画质会严重劣化。</li>
+     * </ul>
+     * <p>
+     * <b>注意：</b> 此参数主要对 {@code JPG/JPEG} 格式生效。对于 {@code PNG} 等无损压缩格式，
+     * 此设置通常会被忽略或对文件大小影响甚微。
+     */
+    private float outputQuality;
+
+    /**
      * 无参构造函数。
      * 允许外部通过 {@code new ComplexWatermarkBuilder()} 的方式创建实例，
      * 然后通过链式 {@code setXxx()} 方法设置各项参数。

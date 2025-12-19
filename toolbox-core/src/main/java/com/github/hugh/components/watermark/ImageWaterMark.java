@@ -521,11 +521,14 @@ public class ImageWaterMark {
                 builder.getMarginLeft(),
                 builder.getMarginRight()
         );
+        // 获取用户配置的压缩质量，如果没有配置则给默认值 0.8f
+        // 注意：Thumbnailator 的 quality 范围是 0.0f 到 1.0f
+        float quality = builder.getOutputQuality() > 0 ? builder.getOutputQuality() : 0.8f;
         Thumbnails.of(targetImg)
-                .size(targetImg.getWidth(), targetImg.getHeight())
+                .size(targetImg.getWidth(), targetImg.getHeight())// 保持原尺寸
                 // 使用我们最终计算出的 Position 对象
                 .watermark(finalPosition, watermarkImage, builder.getOpacity())
-                .outputQuality(1.0)
+                .outputQuality(quality)
                 .toFile(new File(builder.getOutPath()));
     }
 }
