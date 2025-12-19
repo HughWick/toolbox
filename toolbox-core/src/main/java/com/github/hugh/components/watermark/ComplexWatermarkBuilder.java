@@ -22,8 +22,8 @@ import java.util.List;
  *
  * @since 3.0.8
  */
-@Setter // 为所有字段自动生成公共的 setter 方法 (例如: setTargetImage(...))
-@Getter // 为所有字段自动生成公共的 getter 方法 (例如: getTargetImage())
+@Setter
+@Getter
 @Accessors(chain = true) // 配置 setter 方法返回当前对象（this），从而支持链式调用 (例如: .setTargetImage(...).setWatermarkContent(...))
 public class ComplexWatermarkBuilder {
 
@@ -114,7 +114,7 @@ public class ComplexWatermarkBuilder {
      * <b>注意：</b> 此参数主要对 {@code JPG/JPEG} 格式生效。对于 {@code PNG} 等无损压缩格式，
      * 此设置通常会被忽略或对文件大小影响甚微。
      */
-    private float outputQuality;
+    private float outputQuality = 0.8f;
 
     /**
      * 无参构造函数。
