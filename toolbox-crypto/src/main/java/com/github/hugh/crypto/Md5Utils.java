@@ -16,6 +16,8 @@ import java.security.NoSuchAlgorithmException;
  */
 public class Md5Utils {
 
+    private Md5Utils(){}
+
     /**
      * 获取字符串的 md5 值 小写
      *
@@ -24,6 +26,17 @@ public class Md5Utils {
      */
     public static String lowerCase(final String string) {
         return encrypt(string, true, EncryptCode.MD5);
+    }
+
+    /**
+     * 获取字节数组的 md5 值 小写
+     *
+     * @param bytes 字节数组
+     * @return String 加密后的小写字符串
+     * @since 3.0.18
+     */
+    public static String lowerCase(final byte[] bytes) {
+        return encrypt(bytes, true, EncryptCode.MD5);
     }
 
     /**
@@ -37,20 +50,32 @@ public class Md5Utils {
     }
 
     /**
-     * 获取字符串的 md5 值
-     *
-     * @param string      字符串
-     * @param lowerCase   大小写标识：{@code true}小写
-     * @param encryptType 加密类型
-     * @return String 加密后字符串
+     * 接收 String 的通用加密方法
+     * 原逻辑保留，将核心实现委托给 byte[] 版本
      */
     public static String encrypt(final String string, boolean lowerCase, String encryptType) {
         if (EmptyUtils.isEmpty(string)) {
             return string;
         }
+        // 使用默认编码获取字节，保持与原逻辑一致
+        return encrypt(string.getBytes(), lowerCase, encryptType);
+    }
+
+    /**
+     * 核心通用加密方法，接收 byte[]
+     *
+     * @param data        要加密的数据
+     * @param lowerCase   大小写标识：{@code true}小写
+     * @param encryptType 加密类型 (MD5, SHA-256, SHA-512 等)
+     * @return String 加密后字符串
+     */
+    public static String encrypt(final byte[] data, boolean lowerCase, String encryptType) {
+        if (data == null || data.length == 0) {
+            return null; // 或者返回 ""，根据你的业务需求定
+        }
         try {
             MessageDigest messageDigest = MessageDigest.getInstance(encryptType);
-            byte[] output = messageDigest.digest(string.getBytes());
+            byte[] output = messageDigest.digest(data);
             String result = BaseConvertUtils.hexBytesToString(output);
             if (lowerCase) {
                 return result.toLowerCase();
@@ -62,25 +87,11 @@ public class Md5Utils {
     }
 
     /**
-     * 对给定的字节数组进行MD5加密，并返回加密后的十六进制字符串表示。
-     *
-     * @param inputBytes 要加密的字节数组
-     * @return 加密后的十六进制字符串
-     * @since 2.7.10
+     * 现有的针对 byte[] 的 MD5 加密 (保留或标记过时)
+     * 建议：既然有了通用的 encrypt(byte[]...), 这个方法可以保留以兼容旧代码，
+     * 或者重构为调用 encrypt(inputBytes, true, EncryptCode.MD5)
      */
     public static String encryptBytes(byte[] inputBytes) {
-        try {
-            MessageDigest md5 = MessageDigest.getInstance(EncryptCode.MD5);
-            // 对字节数组进行MD5加密
-            byte[] hash = md5.digest(inputBytes);
-            // 将加密后的字节数组转换为字符串表示
-            StringBuilder stringBuilder = new StringBuilder();
-            for (byte b : hash) {
-                stringBuilder.append(String.format("%02x", b));
-            }
-            return stringBuilder.toString();
-        } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
-            throw new ToolboxException(noSuchAlgorithmException);
-        }
+        return lowerCase(inputBytes);
     }
 }

@@ -29,6 +29,17 @@ public class ShaUtils {
     }
 
     /**
+     * 传入字节数组，返回小写的SHA-256串
+     *
+     * @param bytes 内容
+     * @return String
+     * @since 3.0.18
+     */
+    public static String lowerCase256(final byte[] bytes) {
+        return Md5Utils.encrypt(bytes, true, EncryptCode.SHA_256);
+    }
+
+    /**
      * 传入文本内容，返回小写的SHA-512串
      *
      * @param text 内容
@@ -36,6 +47,17 @@ public class ShaUtils {
      */
     public static String lowerCase512(final String text) {
         return Md5Utils.encrypt(text, true, EncryptCode.SHA_512);
+    }
+
+    /**
+     * 传入字节数组，返回小写的SHA-512串
+     *
+     * @param bytes 内容
+     * @return String
+     * @since 3.0.18
+     */
+    public static String lowerCase512(final byte[] bytes) {
+        return Md5Utils.encrypt(bytes, true, EncryptCode.SHA_512);
     }
 
     /**
