@@ -1,14 +1,8 @@
 package com.github.hugh.cache.redis;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import com.github.hugh.cache.redis.base.BaseRedisTest;
 import org.junit.jupiter.api.Test;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-import redis.embedded.RedisServer;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,40 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * 针对 set/get 方法的深度测试，包含多库、字节数组、过期时间验证
  * </p>
  */
-class EasyRedisStringTest {
-
-    private static RedisServer redisServer;
-    private static JedisPool jedisPool;
-    private static EasyRedis easyRedis;
-
-    // =================== 环境初始化 (同之前) ===================
-
-    @BeforeAll
-    static void startRedis() throws IOException {
-        redisServer = new RedisServer(6379);
-        try {
-            redisServer.start();
-        } catch (Exception e) {
-            System.err.println("Redis启动警告: " + e.getMessage());
-        }
-        JedisPoolConfig config = new JedisPoolConfig();
-        config.setMaxTotal(20);
-        jedisPool = new JedisPool(config, "localhost", 6379);
-        easyRedis = new EasyRedis(jedisPool);
-    }
-
-    @AfterAll
-    static void stopRedis() throws IOException {
-        if (jedisPool != null) jedisPool.close();
-        if (redisServer != null) redisServer.stop();
-    }
-
-    @BeforeEach
-    void cleanDb() {
-        try (var jedis = jedisPool.getResource()) {
-            jedis.flushAll(); // 确保每个测试开始前 Redis 是空的
-        }
-    }
+class EasyRedisStringTest extends BaseRedisTest {
 
     /**
      * 测试基础 Set/Get 以及过期时间

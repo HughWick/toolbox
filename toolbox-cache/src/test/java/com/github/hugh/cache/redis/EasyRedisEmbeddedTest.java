@@ -1,55 +1,16 @@
 package com.github.hugh.cache.redis;
 
 import com.github.hugh.cache.model.Student;
+import com.github.hugh.cache.redis.base.BaseRedisTest;
 import com.github.hugh.json.gson.GsonUtils;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-import redis.embedded.RedisServer;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class EasyRedisEmbeddedTest {
-
-    private static RedisServer redisServer;
-    private static EasyRedis easyRedis;
-    private static JedisPool jedisPool;
-
-    @BeforeAll
-    static void setUp() throws IOException {
-        // 1. 启动内存 Redis (端口 6379)
-        redisServer = new RedisServer(6379);
-        try {
-            redisServer.start();
-        } catch (Exception e) {
-            System.err.println("Redis启动失败，可能是端口占用，请检查: " + e.getMessage());
-        }
-
-        // 2. 初始化 JedisPool
-        JedisPoolConfig config = new JedisPoolConfig();
-        config.setMaxTotal(10);
-        // 注意：Embedded Redis 默认无密码，这里IP设为localhost
-        jedisPool = new JedisPool(config, "localhost", 6379);
-
-        // 3. 初始化待测工具类
-        easyRedis = new EasyRedis(jedisPool);
-    }
-
-    @AfterAll
-    static void tearDown() throws IOException {
-        if (jedisPool != null) {
-            jedisPool.close();
-        }
-        if (redisServer != null) {
-            redisServer.stop();
-        }
-    }
+class EasyRedisEmbeddedTest extends BaseRedisTest {
 
     /**
      * 辅助方法：构造一个属性齐全的 Student 对象
