@@ -1,15 +1,9 @@
 package com.github.hugh.cache.redis;
 
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import com.github.hugh.cache.redis.base.BaseRedisTest;
 import org.junit.jupiter.api.Test;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-import redis.embedded.RedisServer;
 
-import java.io.IOException;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,42 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * 覆盖 getAllKeys (scan/keys) 和 exists 方法
  * </p>
  */
-class EasyRedisKeysTest {
-
-    private static RedisServer redisServer;
-    private static JedisPool jedisPool;
-    private static EasyRedis easyRedis;
-
-    // =================== 环境初始化 ===================
-
-    @BeforeAll
-    static void startRedis() throws IOException {
-        redisServer = new RedisServer(6379);
-        try {
-            redisServer.start();
-        } catch (Exception e) {
-            System.err.println("Redis启动警告: " + e.getMessage());
-        }
-        JedisPoolConfig config = new JedisPoolConfig();
-        config.setMaxTotal(20);
-        jedisPool = new JedisPool(config, "localhost", 6379);
-        easyRedis = new EasyRedis(jedisPool);
-    }
-
-    @AfterAll
-    static void stopRedis() throws IOException {
-        if (jedisPool != null) jedisPool.close();
-        if (redisServer != null) redisServer.stop();
-    }
-
-    @BeforeEach
-    void cleanDb() {
-        try (var jedis = jedisPool.getResource()) {
-            jedis.flushAll(); // 保证每个测试方法开始时环境是干净的
-        }
-    }
-
-    // =================== 改进后的测试用例 ===================
+class EasyRedisKeysTest extends BaseRedisTest {
 
     /**
      * 测试模糊查询所有 Keys
