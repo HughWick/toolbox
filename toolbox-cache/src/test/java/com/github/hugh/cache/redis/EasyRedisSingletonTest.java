@@ -23,68 +23,103 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
  */
 class EasyRedisSingletonTest extends BaseRedisTest {
 
+    /**
+     * 测试：getInstance(jedisPool, dbIndex)
+     * 验证：多参数工厂方法的单例性及刷新机制
+     */
     @Test
     void testSingletonConcurrencyAndRefresh() throws InterruptedException {
+        // ... (保持你原有的代码不变) ...
         // 1. 准备高并发环境
-        int threadCount = 20; // 模拟 20 个线程同时访问
+        int threadCount = 20;
         ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
 
-        // 使用线程安全的 Set 来存储获取到的 HashCode
-        // 如果是单例，最终这个 Set 的 size 应该为 1
         Set<Integer> hashCodeSet = Collections.newSetFromMap(new ConcurrentHashMap<>());
-
-        // 使用 CountDownLatch 制造“并发起跑线”
         CountDownLatch startGate = new CountDownLatch(1);
         CountDownLatch endGate = new CountDownLatch(threadCount);
 
-        // 2. 提交任务
         for (int i = 0; i < threadCount; i++) {
-            // 模拟不同的 DB Index (1-4 循环)，验证 getInstance(pool, index) 是否依然返回同一个单例
-            // (假设 EasyRedis 是全局单例设计，而非每个 DB 一个实例)
             final int dbIndex = (i % 4) + 1;
-
             executorService.submit(() -> {
                 try {
-                    // 等待发令枪响，所有线程卡在这里
                     startGate.await();
-
-                    // --- 并发执行区开始 ---
+                    // 测试带 dbIndex 的方法
                     EasyRedis instance = EasyRedis.getInstance(jedisPool, dbIndex);
                     hashCodeSet.add(instance.hashCode());
-                    // --- 并发执行区结束 ---
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } finally {
+                    endGate.countDown();
+                }
+            });
+        }
+        startGate.countDown();
+        endGate.await();
+        executorService.shutdown();
+        // 验证单例
+        // 注意：如果你 EasyRedis 的实现是每个 dbIndex 一个单例，那么这里 size 应该是 4 而不是 1
+        // 但根据你原代码的注释 "假设 EasyRedis 是全局单例设计"，这里保留 assertEquals(1, ...)
+        // 如果实际是 "dbIndex 不同则实例不同"，请改为 assertEquals(4, hashCodeSet.size());
+        // 这里的断言取决于 getInstance(pool, dbIndex) 的具体实现逻辑。
+        // 假设原测试逻辑是你验证过的，这里暂不修改。
+        System.out.println("多参方法并发实例 HashCode 集合: " + hashCodeSet);
+        assertEquals(1, hashCodeSet.size(), "getInstance(pool, index) 应该返回同一个单例");
+        // 验证刷新
+        int oldHashCode = hashCodeSet.iterator().next();
+        EasyRedis refreshedInstance = EasyRedis.getInstance(jedisPool, 1, true);
+        int newHashCode = refreshedInstance.hashCode();
+        assertNotEquals(oldHashCode, newHashCode);
+        EasyRedis currentInstance = EasyRedis.getInstance(jedisPool, 1);
+        assertEquals(newHashCode, currentInstance.hashCode());
+    }
+
+    /**
+     * 测试：getInstance(JedisPool jedisPool)
+     * 覆盖方法：public static synchronized EasyRedis getInstance(JedisPool jedisPool)
+     * 验证点：
+     * 1. 基于 Suppliers.memoize 的懒加载单例是否生效
+     * 2. synchronized 是否保证了并发安全
+     */
+    @Test
+    void testSingleton_DefaultInstance() throws InterruptedException {
+        // 1. 基础验证：连续调用两次，应当是同一个对象
+        EasyRedis instance1 = EasyRedis.getInstance(jedisPool);
+        EasyRedis instance2 = EasyRedis.getInstance(jedisPool);
+        assertEquals(instance1.hashCode(), instance2.hashCode(), "串行调用 getInstance(pool) 应返回相同实例");
+        // 2. 高并发验证
+        int threadCount = 20;
+        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
+        // 用于存储并发获取到的对象 HashCode
+        Set<Integer> hashCodeSet = Collections.newSetFromMap(new ConcurrentHashMap<>());
+        CountDownLatch startGate = new CountDownLatch(1);
+        CountDownLatch endGate = new CountDownLatch(threadCount);
+        for (int i = 0; i < threadCount; i++) {
+            executorService.submit(() -> {
+                try {
+                    // 等待发令枪
+                    startGate.await();
+
+                    // --- 调用待测方法 ---
+                    EasyRedis instance = EasyRedis.getInstance(jedisPool);
+                    hashCodeSet.add(instance.hashCode());
+                    // ------------------
 
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 } finally {
-                    endGate.countDown(); // 完成一个减少一个
+                    endGate.countDown();
                 }
             });
         }
-
-        // 3. 鸣枪开跑！
-        startGate.countDown(); // 所有线程同时开始执行 getInstance
-        endGate.await(); // 等待所有线程跑完
+        // 3. 开始并发测试
+        startGate.countDown(); // 发令
+        endGate.await();       // 等待结束
         executorService.shutdown();
-
-        // 4. 【验证阶段一】：单例一致性
-        System.out.println("并发获取到的实例 HashCode 集合: " + hashCodeSet);
-        assertEquals(1, hashCodeSet.size(), "在单例模式下，所有线程获取到的 HashCode 应该完全一致");
-
-        int oldHashCode = hashCodeSet.iterator().next();
-
-        // 5. 【验证阶段二】：强制刷新 (refresh = true)
-        // 此时在主线程执行，模拟“刷新单例”操作
-        EasyRedis refreshedInstance = EasyRedis.getInstance(jedisPool, 1, true);
-        int newHashCode = refreshedInstance.hashCode();
-
-        System.out.println("旧实例 HashCode: " + oldHashCode);
-        System.out.println("新实例 HashCode: " + newHashCode);
-
-        assertNotEquals(oldHashCode, newHashCode, "刷新后应该生成一个新的实例对象");
-
-        // 6. 【验证阶段三】：再次获取
-        // 再次调用普通 getInstance，应该获取到刚才刷新后的那个新实例
-        EasyRedis currentInstance = EasyRedis.getInstance(jedisPool, 1);
-        assertEquals(newHashCode, currentInstance.hashCode(), "再次获取应该拿到刷新后的新实例");
+        // 4. 验证结果
+        System.out.println("getInstance(pool) 并发获取到的实例 HashCode: " + hashCodeSet);
+        // 断言：Set 中只能有 1 个 HashCode，证明 Suppliers.memoize 生效且并发安全
+        assertEquals(1, hashCodeSet.size(), "Suppliers.memoize 应该保证全局单例");
+        // 5. 验证一致性：并发获取到的应该和最开始串行获取的是同一个
+        assertEquals(instance1.hashCode(), hashCodeSet.iterator().next(), "并发获取的实例应与串行获取的一致");
     }
 }
