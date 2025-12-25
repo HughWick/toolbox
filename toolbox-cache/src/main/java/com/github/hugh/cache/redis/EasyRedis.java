@@ -1,6 +1,8 @@
 package com.github.hugh.cache.redis;
 
 import com.github.hugh.exception.ToolboxException;
+import com.github.hugh.json.gson.GsonUtils;
+import com.github.hugh.util.EmptyUtils;
 import com.google.common.base.Suppliers;
 import redis.clients.jedis.BinaryJedis;
 import redis.clients.jedis.Jedis;
@@ -92,6 +94,20 @@ public class EasyRedis {
             easyRedisSupp = Suppliers.memoize(easyRedisSupplier::get);
         }
         return easyRedisSupp.get();
+    }
+
+    /**
+     * 向指定 DB 设置值（String），默认永不过期
+     *
+     * @param dbIndex 数据库索引
+     * @param key     键
+     * @param value   值
+     * @return String
+     * @since 3.0.18
+     */
+    public String set(int dbIndex, String key, String value) {
+        // 调用现有的 4 参数方法，传入 -1 代表永不过期
+        return set(dbIndex, key, value, -1);
     }
 
     /**
@@ -215,6 +231,37 @@ public class EasyRedis {
      */
     public String get(int dbIndex, String key) {
         return executeWithJedis(dbIndex, jedis -> jedis.get(key));
+    }
+
+    /**
+     * 获取数据并转换为指定类型的对象 (使用默认 dbIndex)
+     *
+     * @param key   键
+     * @param clazz 目标对象的 Class
+     * @param <T>   泛型类型
+     * @return 目标对象，如果 key 不存在或值为 null 则返回 null
+     * @since 3.0.18
+     */
+    public <T> T get(String key, Class<T> clazz) {
+        return get(dbIndex, key, clazz);
+    }
+
+    /**
+     * 获取不同 redis 库下数据并转换为指定类型的对象
+     *
+     * @param dbIndex db索引
+     * @param key     键
+     * @param clazz   目标对象的 Class
+     * @param <T>     泛型类型
+     * @return 目标对象，如果 key 不存在或值为 null 则返回 null
+     * @since 3.0.18
+     */
+    public <T> T get(int dbIndex, String key, Class<T> clazz) {
+        String json = get(dbIndex, key);
+        if (EmptyUtils.isEmpty(json)) {
+            return null;
+        }
+        return GsonUtils.fromJson(json, clazz);
     }
 
     /**
@@ -347,6 +394,19 @@ public class EasyRedis {
     }
 
     /**
+     * 设置指定库 Key 的过期时间
+     *
+     * @param dbIndex 数据库索引
+     * @param key     键
+     * @param seconds 过期时间(秒)
+     * @return Long 1:成功, 0:Key不存在
+     * @since 3.0.18
+     */
+    public Long expire(int dbIndex, String key, int seconds) {
+        return executeWithJedis(dbIndex, jedis -> jedis.expire(key, seconds));
+    }
+
+    /**
      * 设置过期时间
      *
      * @param dbIndex 库索引
@@ -383,6 +443,23 @@ public class EasyRedis {
      */
     public Long ttl(int dbIndex, String key) {
         return executeWithJedis(dbIndex, jedis -> jedis.ttl(key));
+    }
+
+    /**
+     * Redis Incr 命令将指定库下 key 中储存的数字值增一。
+     * <p>
+     * 如果 key 不存在，那么 key 的值会先被初始化为 0 ，然后再执行 INCR 操作。
+     * 如果值包含错误的类型，或字符串类型的值不能表示为数字，那么返回一个错误。
+     * 本操作的值限制在 64 位(bit)有符号数字表示之内。
+     * </p>
+     *
+     * @param dbIndex 数据库索引
+     * @param key     KEY
+     * @return Long 执行 INCR 命令之后 key 的值
+     * @since 3.0.18
+     */
+    public Long incr(int dbIndex, String key) {
+        return executeWithJedis(dbIndex, jedis -> jedis.incr(key));
     }
 
     /**
