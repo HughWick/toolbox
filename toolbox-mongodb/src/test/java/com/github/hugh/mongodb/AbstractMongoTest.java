@@ -21,8 +21,7 @@ public abstract class AbstractMongoTest {
     @BeforeAll
     static void startEmbeddedMongo() {
         // 1. 使用新的 API 启动 Mongo (会自动选择空闲端口)
-        running = Mongod.instance().start(Version.Main.PRODUCTION);
-
+        running = Mongod.instance().start(Version.Main.V7_0);
         // 2. 获取运行时的地址信息
         var serverAddress = running.current().getServerAddress();
         String ip = serverAddress.getHost();
