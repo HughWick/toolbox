@@ -26,13 +26,10 @@ public abstract class AbstractMongoTest {
         var serverAddress = running.current().getServerAddress();
         String ip = serverAddress.getHost();
         int port = serverAddress.getPort();
-
         // 3. 创建连接字符串
         String connectionString = String.format("mongodb://%s:%d/%s", ip, port, TEST_DB_NAME);
-
         // 4. 初始化 MongoTemplate
         mongoTemplate = new MongoTemplate(MongoClients.create(connectionString), TEST_DB_NAME);
-
         System.out.println("嵌入式 MongoDB (v4.x) 已启动: " + connectionString);
     }
 
