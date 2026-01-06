@@ -45,10 +45,14 @@ class CoordinatesTest {
     // 测试GGA
     @Test
     void testGga() {
-        String lons = "2832.9191";
-        String lats = "10922.5659";
-        assertEquals("109.37609833", CoordinatesUtils.formatDegreeMinutes(Double.parseDouble(lats)));
-        assertEquals("28.54865167", CoordinatesUtils.formatDegreeMinutes(lons));
+        String latitude = "2832.9191";
+        String longitude = "10922.5659";
+        assertEquals("109.37609833", CoordinatesUtils.formatDegreeMinutes(Double.parseDouble(longitude)));
+        assertEquals("28.54865167", CoordinatesUtils.formatDegreeMinutes(latitude));
+        String latitude2 = "2811.41481";
+        String longitude2 = "11313.20219";
+        assertEquals("28.19024683", CoordinatesUtils.formatDegreeMinutes(Double.parseDouble(latitude2)));
+        assertEquals("113.2200365", CoordinatesUtils.formatDegreeMinutes(longitude2));
         String str = "$GNGGA,063012.000,2832.9110,N,10922.5671,E,2,21,0.63,400.9,M,-27.1,M,,*5A";
         GgaDTO ggaDTO = CoordinatesUtils.parseGga(str);
         assertNotNull(ggaDTO);
@@ -236,7 +240,7 @@ class CoordinatesTest {
         String latitude2 = "36.29832922749307";
         String longitude2 = "102.894430769317";
         GpsDTO gpsDTO2 = CoordinatesUtils.wgs84ToGcj02(Double.parseDouble(longitude2), Double.parseDouble(latitude2));
-        System.out.println("===2222=》》"  + gpsDTO2.getLongitude() + "," + gpsDTO2.getLatitude());
+        System.out.println("===2222=》》" + gpsDTO2.getLongitude() + "," + gpsDTO2.getLatitude());
         assertEquals(36.29796384895343, gpsDTO2.getLatitude());
         assertEquals(102.89619506968343, gpsDTO2.getLongitude());
         String latitude3 = "36.2976031431241";

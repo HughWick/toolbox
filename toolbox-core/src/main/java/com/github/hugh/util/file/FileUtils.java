@@ -2,7 +2,6 @@ package com.github.hugh.util.file;
 
 import com.github.hugh.constant.StrPool;
 import com.github.hugh.exception.ToolboxException;
-import com.github.hugh.util.DoubleMathUtils;
 import com.github.hugh.util.StringUtils;
 import com.github.hugh.util.io.StreamUtils;
 import com.github.hugh.util.net.UrlUtils;
@@ -200,23 +199,25 @@ public class FileUtils {
      * @since 2.7.15
      */
     public static String formatFileSize(long fileSize, boolean includeUnit) {
-        String wrongSize = "0";
         if (fileSize <= 0) {
-            return wrongSize;
+            return "0" + (includeUnit ? " B" : "");
         }
-        int kb = 1024; // 定义 KB 的计算常量
-        int mb = kb * kb; // 定义 MB 的计算常量
-        int gb = mb * kb; // 定义 GB 的计算常量
-        if (fileSize < kb) {
-            DecimalFormat df = new DecimalFormat("#.00");
-            return df.format((double) fileSize) + (includeUnit ? "B" : StrPool.EMPTY);
-        } else if (fileSize < mb) {
-            return DoubleMathUtils.div(fileSize, kb, 2) + (includeUnit ? "KB" : StrPool.EMPTY);
-        } else if (fileSize < gb) {
-            return DoubleMathUtils.div(fileSize, mb, 2) + (includeUnit ? "MB" : StrPool.EMPTY);
-        } else {
-            return DoubleMathUtils.div(fileSize, gb, 2) + (includeUnit ? "GB" : StrPool.EMPTY);
+        // 定义单位
+        String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
+        // 计算单位级别 (0=B, 1=KB, 2=MB...)
+        int digitGroups = (int) (Math.log10(fileSize) / Math.log10(1024));
+        // 防止超出 TB 范围
+        if (digitGroups >= units.length) {
+            digitGroups = units.length - 1;
         }
+        // 如果单位是 B (digitGroups == 0)，直接打印整数，不需要 DecimalFormat
+        if (digitGroups == 0) {
+            return fileSize + (includeUnit ? StrPool.SPACE + units[0] : StrPool.EMPTY);
+        }
+        // 如果单位大于 B，计算数值
+        double value = fileSize / Math.pow(1024, digitGroups);
+        DecimalFormat df = new DecimalFormat("#.##");
+        return df.format(value) + (includeUnit ? StrPool.SPACE + units[digitGroups] : StrPool.EMPTY);
     }
 
     /**
