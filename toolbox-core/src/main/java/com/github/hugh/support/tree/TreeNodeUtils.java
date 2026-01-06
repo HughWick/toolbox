@@ -4,6 +4,7 @@ import com.github.hugh.bean.dto.RegionDto;
 import com.github.hugh.bean.expand.tree.BaseTreeNode;
 import com.github.hugh.bean.expand.tree.TreeNode;
 import com.github.hugh.constant.StrPool;
+import com.github.hugh.util.ListUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -37,7 +38,7 @@ public class TreeNodeUtils {
      * @since 3.0.11
      */
     public static List<TreeNode> buildTree(List<TreeNode> rootNodes, List<TreeNode> allNodes, boolean sortEnable, boolean ascending, boolean includeEmptyChildren) {
-        if (allNodes == null || allNodes.isEmpty()) {
+        if (ListUtils.isEmpty(allNodes)) {
             return new ArrayList<>();
         }
         // 规范化所有节点，确保每个ID只对应一个唯一的TreeNode对象实例。
@@ -62,7 +63,7 @@ public class TreeNodeUtils {
         for (TreeNode node : canonicalAllNodes) {
             // 从已经分组并（可选）排序的Map中获取子节点列表
             List<TreeNode> children = childrenGroupMap.get(node.getId());
-            if (children != null && !children.isEmpty()) {
+            if (ListUtils.isNotEmpty(children)) {
                 node.setChildren(children);
             } else if (includeEmptyChildren) {
                 node.setChildren(new ArrayList<>());
