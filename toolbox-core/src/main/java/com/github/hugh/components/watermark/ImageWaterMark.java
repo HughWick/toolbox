@@ -28,6 +28,7 @@ import java.util.List;
  */
 @Slf4j
 public class ImageWaterMark {
+    private ImageWaterMark(){}
 
     // --- 常量定义 ---
     // 标题蓝色背景颜色：RGB (0, 102, 204)，透明度 200 (out of 255)
@@ -200,7 +201,7 @@ public class ImageWaterMark {
      * @throws IOException 如果在处理图片或字体时发生I/O错误。
      */
     public static void addComplex(ComplexWatermarkBuilder complexWatermarkBuilder) throws IOException {
-        // 1. 获取必要的字体度量信息
+        // 获取必要的字体度量信息
         BufferedImage tempGfxImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2dTemp = tempGfxImage.createGraphics();
         g2dTemp.setFont(complexWatermarkBuilder.getTitleFont());
@@ -208,32 +209,32 @@ public class ImageWaterMark {
         g2dTemp.setFont(complexWatermarkBuilder.getContentFont());
         FontMetrics contentFm = g2dTemp.getFontMetrics();
         g2dTemp.dispose(); // 立即释放临时Graphics2D资源
-        // 2. 计算水印的原始布局尺寸
-        WatermarkLayout layout = calculateWatermarkLayout(
-                complexWatermarkBuilder.getWatermarkContent(),
+        // 计算水印的原始布局尺寸
+        WatermarkLayout layout = calculateWatermarkLayout(complexWatermarkBuilder.getWatermarkContent(),
                 complexWatermarkBuilder.getCompanyInfo(),
                 titleFm,
                 contentFm
         );
-        // 3. 创建原始水印图像并获取其Graphics2D对象
+        //  创建原始水印图像并获取其Graphics2D对象
         BufferedImage complexWatermarkImage = new BufferedImage(layout.watermarkWidth, layout.watermarkHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = complexWatermarkImage.createGraphics();
-        configureGraphics(g2d); // 配置绘图质量
+        // 配置绘图质量
+        configureGraphics(g2d);
         try {
-            // 4. 绘制水印背景和基本元素
+            // 绘制水印背景和基本元素
             drawWatermarkBackground(g2d, layout.watermarkWidth, layout.watermarkHeight, layout.titleBgHeight, layout.contentTotalHeight);
-            // 5. 绘制左上角小圆点
+            // 绘制左上角小圆点
             drawIcon(g2d, layout.titleBgHeight);
-            // 6. 绘制标题
+            // 绘制标题
             drawTitle(g2d, complexWatermarkBuilder.getTitleFont(), layout.titleWidth, layout.watermarkWidth, layout.titleBgHeight, layout.titleFontMetrics, complexWatermarkBuilder.getWatermarkContent().get(0).overallText);
-            // 7. 绘制内容行
+            // 绘制内容行
             drawContentLines(g2d, complexWatermarkBuilder.getWatermarkContent(), complexWatermarkBuilder.getContentFont(), layout.titleBgHeight, layout.maxKeyWidth, layout.contentFontMetrics);
-            // 8. 绘制公司信息行
+            // 绘制公司信息行
             drawCompanyInfo(g2d, complexWatermarkBuilder.getCompanyInfo(), complexWatermarkBuilder.getContentFont(), layout.titleBgHeight, layout.contentTextLineCount, layout.contentFontMetrics);
         } finally {
             g2d.dispose(); // 确保Graphics2D资源被释放
         }
-        // 9. 【新增】根据目标图片尺寸缩放水印
+        // 根据目标图片尺寸缩放水印
         BufferedImage targetImage = complexWatermarkBuilder.getTargetImage();
         int targetWatermarkWidth = targetImage.getWidth() / 4;
         int targetWatermarkHeight = targetImage.getHeight() / 4;
@@ -244,12 +245,12 @@ public class ImageWaterMark {
         int finalWatermarkWidth = (int) (complexWatermarkImage.getWidth() * scaleRatio);
         int finalWatermarkHeight = (int) (complexWatermarkImage.getHeight() * scaleRatio);
         BufferedImage resizedWatermark = resizeWatermark(complexWatermarkImage, finalWatermarkWidth, finalWatermarkHeight);
-        // 10. 【修改】将水印应用到目标图片，并传入整个 builder 对象以获取位置和边距信息
+        // 将水印应用到目标图片，并传入整个 builder 对象以获取位置和边距信息
         applyAndSaveWatermark(targetImage, resizedWatermark, complexWatermarkBuilder);
     }
 
     /**
-     * 【新增】缩放 BufferedImage 到指定尺寸。
+     * 缩放 BufferedImage 到指定尺寸。
      *
      * @param originalImage 原始图像
      * @param targetWidth   目标宽度
@@ -287,7 +288,6 @@ public class ImageWaterMark {
         // 初始化 WatermarkLayout 对象，并将 FontMetrics 传递给它，以便后续访问。
         WatermarkLayout layout = new WatermarkLayout(titleFm, contentFm);
         // 获取并计算标题文本的尺寸。
-        // 修正点：titleText 变量不需要作为 WatermarkLayout 的属性，直接从 watermarkContent 获取
         String titleTextContent = watermarkContent.get(0).overallText; // 获取标题文本。假设列表的第一个元素是标题。
         layout.titleWidth = titleFm.stringWidth(titleTextContent); // 计算标题文本的显示宽度。
         layout.titleHeight = titleFm.getHeight(); // 获取标题文本的实际高度。
@@ -522,8 +522,9 @@ public class ImageWaterMark {
                 builder.getMarginRight()
         );
         Thumbnails.of(targetImg)
-                .size(targetImg.getWidth(), targetImg.getHeight())// 保持原尺寸
-                // 使用我们最终计算出的 Position 对象
+                // 保持原尺寸
+                .size(targetImg.getWidth(), targetImg.getHeight())
+                // 最终计算出的 Position 对象
                 .watermark(finalPosition, watermarkImage, builder.getOpacity())
                 .outputQuality(builder.getOutputQuality())
                 .toFile(new File(builder.getOutPath()));
