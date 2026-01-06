@@ -3,6 +3,7 @@ package com.github.hugh.util.file;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.io.StreamUtils;
 import com.github.hugh.util.system.OsUtils;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -132,28 +133,76 @@ class FileUtilsTest {
     @Test
     void testFormatFileSize() {
         String ip2DbPath = FileUtilsTest.class.getResource("/ip2region/ip2region.xdb").getFile();
-//        String head = "C:\\Users\\Hugh\\Desktop\\";
-//        String path = head + "FIGqfQdakAQeRiG.jpg";
-//        File directory = new File(ip2DbPath);//设定为当前文件
-//        System.out.println("--B->>" + FileUtils.formatFileSize(new File(head + "updateFile.http").length()));
-//        String temp1 = "/file/img.gitconfig";
-//        final String path = FileTest.class.getResource("/").getPath();
-//        final File kbFile = new File(path + temp1);
-//        System.out.println("--->>"+kbFile.length());
-        //B
-        assertEquals("213.00B", FileUtils.formatFileSize(213));
-        assertEquals("10.55MB", FileUtils.formatFileSize(ip2DbPath));
-        assertEquals("1.26GB", FileUtils.formatFileSize(1354390941L));
-        assertEquals("981.58MB", FileUtils.formatFileSize(1029263971L));
-        assertEquals("410.04KB", FileUtils.formatFileSize(419880));
-        assertEquals("880.00B", FileUtils.formatFileSize(880));
-        // ==============================
-        assertEquals("213.00", FileUtils.formatFileSize(213, false));
-        assertEquals("10.55MB", FileUtils.formatFileSize(ip2DbPath));
-        assertEquals("1.26", FileUtils.formatFileSize(1354390941L, false));
-        assertEquals("981.58", FileUtils.formatFileSize(1029263971L, false));
-        assertEquals("410.04", FileUtils.formatFileSize(419880, false));
-        assertEquals("880.00", FileUtils.formatFileSize(880, false));
+        assertEquals("10.55 MB", FileUtils.formatFileSize(ip2DbPath));
+    }
+
+    @Test
+    @DisplayName("测试：字节(B)范围 - 无需小数")
+    void testBytes() {
+        // 0 字节
+        assertEquals("0 B", FileUtils.formatFileSize(0));
+        // 负数（通常处理为0或者0B，根据你的具体实现调整）
+        assertEquals("0 B", FileUtils.formatFileSize(-1));
+        // 普通字节
+        assertEquals("123 B", FileUtils.formatFileSize(123));
+        // 边界：1023 B (还是 B)
+        assertEquals("1023 B", FileUtils.formatFileSize(1023));
+    }
+
+    @Test
+    @DisplayName("测试：KB/MB 进位与整数显示 - 验证去除 .00")
+    void testIntegerFormatting() {
+        // 1024 B -> 1 KB (验证不是 1.00 KB)
+        assertEquals("1 KB", FileUtils.formatFileSize(1024));
+        // 1024 * 1024 -> 1 MB
+        assertEquals("1 MB", FileUtils.formatFileSize(1048576));
+        // 验证 includeUnit = false 时也不带单位且无 .00
+        assertEquals("1", FileUtils.formatFileSize(1024, false));
+    }
+
+    @Test
+    @DisplayName("测试：小数格式化 - 去除末尾0与四舍五入")
+    void testDecimalFormatting() {
+        // 1.5 KB = 1024 + 512 = 1536
+        // 验证：显示 1.5 KB 而不是 1.50 KB
+        assertEquals("1.5 KB", FileUtils.formatFileSize(1536));
+        // 1.25 KB = 1280
+        assertEquals("1.25 KB", FileUtils.formatFileSize(1280));
+        // 四舍五入测试：
+        // 1.256 KB (1286 bytes) -> 应该进位成 1.26 KB
+        // 1286 / 1024 = 1.2558...
+        assertEquals("1.26 KB", FileUtils.formatFileSize(1286));
+        // 舍去测试：
+        // 1.254 KB (1284 bytes) -> 应该变成 1.25 KB
+        // 1284 / 1024 = 1.2539...
+        assertEquals("1.25 KB", FileUtils.formatFileSize(1284));
+    }
+
+    @Test
+    @DisplayName("测试：大单位 (GB, TB, PB)")
+    void testLargeUnits() {
+        long oneGB = 1024L * 1024 * 1024;
+        long oneTB = oneGB * 1024;
+        // 1 GB
+        assertEquals("1 GB", FileUtils.formatFileSize(oneGB));
+        // 1.26 GB (你的截图样例 1354390941L)
+        // 1354390941 / 1024^3 ≈ 1.2613...
+        assertEquals("1.26 GB", FileUtils.formatFileSize(1354390941L));
+        // 10.5 TB (测试更大数值)
+        long tenPointFiveTB = (long) (oneTB * 10.5);
+        assertEquals("10.5 TB", FileUtils.formatFileSize(tenPointFiveTB));
+    }
+
+    @Test
+    @DisplayName("测试：includeUnit 开关")
+    void testIncludeUnit() {
+        long size = 1536; // 1.5 KB
+        // 带单位
+        assertEquals("1.5 KB", FileUtils.formatFileSize(size, true));
+        // 不带单位 (注意：根据国际标准，你的实现里不带单位时是否还有空格？通常是 "1.5")
+        assertEquals("1.5", FileUtils.formatFileSize(size, false));
+        // 测试 B 单位的开关
+        assertEquals("100", FileUtils.formatFileSize(100, false));
     }
 
     private static String getPath(String fileName) {
