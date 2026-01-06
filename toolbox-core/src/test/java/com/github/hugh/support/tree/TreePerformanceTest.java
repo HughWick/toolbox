@@ -31,7 +31,7 @@ class TreePerformanceTest {
     public static Map<String, List<TreeNode>> createLargeMockData(int totalNodes, int maxLevels, int maxChildrenPerNode) {
         List<TreeNode> rootList = new ArrayList<>();
         List<TreeNode> childList = new ArrayList<>();
-        // 【核心修改】: 使用一个外部的 Map 来追踪节点的层级，而不是修改 TreeNode 类
+        // 使用一个外部的 Map 来追踪节点的层级，而不是修改 TreeNode 类
         Map<TreeNode, Integer> nodeLevels = new HashMap<>();
         Queue<TreeNode> parentQueue = new LinkedList<>();
         Random random = new Random();
