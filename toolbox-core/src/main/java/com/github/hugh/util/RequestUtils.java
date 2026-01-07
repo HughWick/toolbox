@@ -18,7 +18,13 @@ import java.util.Map;
  * @since 1.2.8
  */
 public class RequestUtils {
+    private RequestUtils() {
+    }
 
+    /**
+     * 安卓
+     */
+    private static final String ANDROID = "android";
     /**
      * 浏览器用户代理常量
      */
@@ -37,8 +43,8 @@ public class RequestUtils {
         String userAgent = getUserAgent(request).toLowerCase();
         if (userAgent.contains("micromessenger")) { // 微信
             return "wx";
-        } else if (userAgent.contains("android")) { // 安卓
-            return "android";
+        } else if (userAgent.contains(ANDROID)) { // 安卓
+            return ANDROID;
         } else if (userAgent.contains("iphone") || userAgent.contains("ipad") || userAgent.contains("ipod")) { // 苹果
             return "ios";
         } else { // 电脑
@@ -63,7 +69,7 @@ public class RequestUtils {
      * @return boolean {@code true} 是
      */
     public static boolean isAndroid(HttpServletRequest request) {
-        return "android".equals(getSystemType(request));
+        return ANDROID.equals(getSystemType(request));
     }
 
     /**
