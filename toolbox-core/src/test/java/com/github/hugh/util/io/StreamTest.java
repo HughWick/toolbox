@@ -2,9 +2,9 @@ package com.github.hugh.util.io;
 
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.file.FileUtils;
-import com.github.hugh.util.system.OsUtils;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -27,19 +27,20 @@ class StreamTest {
     void testToFile() throws IOException {
         String image1 = "/file/image/69956256_p1.jpg";
         String path = StreamTest.class.getResource(image1).getPath();
-//        String path2 = StreamTest.class.getResource("/").getPath();
         InputStream inputStream = StreamUtils.getInputStream(path);
-        String outFilePath;
-        if (OsUtils.isWindows()) {
-            outFilePath = "D:\\";
-        } else {
-            outFilePath = "./";
-        }
-        outFilePath += "test.jpg";
+        //使用 Java 提供的临时目录，或者项目下的 target 目录
+        String tempDir = System.getProperty("java.io.tmpdir");
+        // 或者 String tempDir = "D:\\test_temp_folder\\";
+        // 确保临时目录存在，避免因为目录不存在报错
+        new File(tempDir).mkdirs();
+        String outFilePath = tempDir + File.separator + "test.jpg";
         StreamUtils.toFile(inputStream, outFilePath);
-        assertTrue(new File(outFilePath).exists());
+        File file = new File(outFilePath);
+        assertTrue(file.exists());
+        Assertions.assertEquals(190505, file.length());
+        // 此时删除 test.jpg，只会尝试清理 tempDir，而不会去清理 D 盘根目录
         FileUtils.delFile(outFilePath);
-        assertFalse(new File(outFilePath).exists());
+        assertFalse(file.exists());
     }
 
     //  测试文件转字节
