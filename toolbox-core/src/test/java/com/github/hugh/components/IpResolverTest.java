@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author AS
  * @date 2021/2/23 14:23
  */
-public class IpResolverTest {
+class IpResolverTest {
 
     /**
      * ip数据文件目录
@@ -78,7 +78,7 @@ public class IpResolverTest {
     }
 
     @Test
-    public void cityTest() {
+    void cityTest() {
         String ip1 = "192.168.1.191";
         final String str1 = IpResolver.on(ip1, easyRedisSupplier.get()).getCity();
         assertEquals("内网IP", str1);
