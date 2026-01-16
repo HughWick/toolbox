@@ -5,7 +5,9 @@ import com.github.hugh.components.IpResolver;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.io.StreamUtils;
 import com.google.common.base.Suppliers;
+import org.lionsoul.ip2region.xdb.LongByteArray;
 import org.lionsoul.ip2region.xdb.Searcher;
+import org.lionsoul.ip2region.xdb.Version;
 
 import java.util.function.Supplier;
 
@@ -64,14 +66,18 @@ public class Ip2regionUtils {
      */
     public static String getCityInfo(String ip, byte[] cBuff) {
         try {
-            // 1、从 dbPath 加载整个 xdb 到内存。
-            if (cBuff == null) {
-                cBuff = getData();
+            LongByteArray longByteArray;
+            try {
+                longByteArray = Searcher.loadContentFromInputStream(StreamUtils.getInputStream(XDB_PATH));
+            } catch (Exception e) {
+                throw new ToolboxException("failed to load content from " + XDB_PATH);
             }
-            // 2、使用上述的 cBuff 创建一个完全基于内存的查询对象。
-            Searcher searcher = Searcher.newWithBuffer(cBuff);
-            // 3、查询
-            return searcher.search(ip);
+            Searcher searcher = Searcher.newWithBuffer(Version.IPv4, longByteArray);
+            // 查询
+            String region = searcher.search(ip);
+            // 关闭 (内存模式下关闭开销很小，但为了规范还是关一下)
+            searcher.close();
+            return region;
         } catch (Exception exception) {
             throw new ToolboxException("failed to create content cached searcher:", exception);
         }

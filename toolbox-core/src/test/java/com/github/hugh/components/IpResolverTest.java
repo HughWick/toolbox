@@ -62,7 +62,7 @@ class IpResolverTest {
     }
 
     @Test
-    public void completeSpareTest() {
+    void completeSpareTest() {
 //        String ip1 = "192.168.1.191";
 //        final String str1 = IpResolver.on(ip1).getComplete();
 //        assertEquals("内网IP", str1);
