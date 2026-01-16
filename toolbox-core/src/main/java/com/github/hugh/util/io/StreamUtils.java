@@ -2,7 +2,6 @@ package com.github.hugh.util.io;
 
 import com.github.hugh.constant.CharsetCode;
 import com.github.hugh.exception.ToolboxException;
-import com.github.hugh.util.system.OsUtils;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -17,44 +16,64 @@ import java.nio.CharBuffer;
  * @since 1.3.5
  */
 public class StreamUtils {
+    private StreamUtils() {
+    }
+
     /**
      * 默认缓存大小 8192
      */
     public static final int DEFAULT_BUFFER_SIZE = 2 << 12;
 
     /**
-     * 获取文件对应输入流
-     * <ul>
-     * <li>本地环境下，xx.properties 最终是放在 Web 应用下的 /WEB-INF/classes 文件夹下，不能被 System 类加载器获取到，所以加载失败.</li>
-     * <li>所以windows环境下使用 getClass().getResouceAsStream(String) 去加载资源.</li>
-     * </ul>
+     * 获取文件输入流
+     * <p>加载顺序：
+     * 1. 尝试作为 URL 加载 (http://, file://)
+     * 2. 尝试作为物理文件路径加载 (绝对路径或相对路径)
+     * 3. 尝试作为 ClassPath 资源加载 (支持带/或不带/的路径)
+     * </p>
      *
-     * @param filePath 文件路径
+     * @param filePath 文件路径/URL/资源路径
      * @return InputStream 输入流
+     * @throws ToolboxException 如果找不到文件
      */
     public static InputStream getInputStream(final String filePath) {
-        InputStream inputStream;
+        if (filePath == null || filePath.trim().isEmpty()) {
+            throw new ToolboxException("File path cannot be empty");
+        }
+        // 尝试 URL (处理 file:/, http:/ 等协议)
         try {
-            inputStream = new URL(filePath).openStream();
-        } catch (MalformedURLException localMalformedURLException) {
-            try {
-                inputStream = new FileInputStream(filePath);
-            } catch (Exception localException2) {
-                ClassLoader localClassLoader = Thread.currentThread().getContextClassLoader();
-                if (localClassLoader == null) {
-                    localClassLoader = StreamUtils.class.getClassLoader();
-                }
-                if (OsUtils.isWindows()) {
-                    inputStream = localClassLoader.getClass().getResourceAsStream(filePath);
-                } else { // linux jar包情况下
-                    inputStream = localClassLoader.getResourceAsStream(filePath);
-                }
-                if (inputStream == null) {
-                    throw new ToolboxException("Could not find file: " + filePath);
-                }
+            return new URL(filePath).openStream();
+        } catch (MalformedURLException e) {
+            // 不是 URL，继续尝试
+        } catch (IOException e) {
+            throw new ToolboxException(e);
+        }
+        // 尝试物理文件系统 (处理绝对路径，如 D:/xxx 或 /opt/xxx)
+        try {
+            File file = new File(filePath);
+            if (file.exists() && file.isFile()) {
+                return new FileInputStream(file);
             }
-        } catch (IOException localIOException1) {
-            throw new ToolboxException(localIOException1);
+        } catch (IOException e) {
+            // ignore，继续尝试 ClassPath
+        }
+        // 尝试 ClassPath 资源加载
+        // ClassLoader.getResourceAsStream 规范：路径不能以 / 开头
+        String classpath = filePath;
+        if (classpath.startsWith("/")) {
+            classpath = classpath.substring(1);
+        }
+        ClassLoader contextLoader = Thread.currentThread().getContextClassLoader();
+        InputStream inputStream = null;
+        if (contextLoader != null) {
+            inputStream = contextLoader.getResourceAsStream(classpath);
+        }
+        if (inputStream == null) {
+            // 兜底：使用当前类的加载器
+            inputStream = StreamUtils.class.getClassLoader().getResourceAsStream(classpath);
+        }
+        if (inputStream == null) {
+            throw new ToolboxException("Could not find file: " + filePath);
         }
         return inputStream;
     }
