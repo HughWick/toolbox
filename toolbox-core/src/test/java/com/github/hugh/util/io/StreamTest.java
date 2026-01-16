@@ -287,4 +287,69 @@ class StreamTest {
         String nonExistentFile = "non_existent_file.txt";
         assertThrows(ToolboxException.class, () -> StreamUtils.getInputStream(nonExistentFile));
     }
+
+    /**
+     * 测试 1：覆盖参数校验分支
+     * 对应代码：if (filePath == null || filePath.trim().isEmpty())
+     */
+    @Test
+    void testGetInputStream_NullOrEmpty() {
+        assertThrows(ToolboxException.class, () -> StreamUtils.getInputStream(null));
+        assertThrows(ToolboxException.class, () -> StreamUtils.getInputStream(""));
+        assertThrows(ToolboxException.class, () -> StreamUtils.getInputStream("   "));
+    }
+
+    /**
+     * 测试 2：覆盖纯 ClassPath 加载（不带 / 开头）
+     * 对应代码：contextLoader.getResourceAsStream(classpath)
+     * 注意：这里直接传相对路径字符串，不要用 getPath() 转成绝对路径，否则会命中 File 分支
+     */
+    @Test
+    void testGetInputStream_FromClassPath_NoSlash() throws IOException {
+        // 假设 resources 下有 file/image/Teresa.png
+        String classpath = "file/image/Teresa.png";
+
+        InputStream inputStream = StreamUtils.getInputStream(classpath);
+        assertNotNull(inputStream, "Should find resource via ClassPath");
+        assertTrue(inputStream.available() > 0);
+        inputStream.close();
+    }
+
+    /**
+     * 测试 3：覆盖 ClassPath 加载（带 / 开头），验证去斜杠逻辑
+     * 对应代码：if (classpath.startsWith("/")) { ... }
+     */
+    @Test
+    void testGetInputStream_FromClassPath_WithSlash() throws IOException {
+        // 传入 / 开头的路径，强制触发 substring(1) 逻辑
+        String classpath = "/file/image/Teresa.png";
+
+        InputStream inputStream = StreamUtils.getInputStream(classpath);
+        assertNotNull(inputStream, "Should find resource via ClassPath (stripping slash)");
+        assertTrue(inputStream.available() > 0);
+        inputStream.close();
+    }
+
+    /**
+     * 测试 4：覆盖 ClassLoader 兜底逻辑 (模拟 ContextClassLoader 找不到的情况)
+     * 这是一个比较极端的边缘测试，通常上述两个测试已经能覆盖大部分行。
+     * 只有当 Thread.currentThread().getContextClassLoader() 找不到时，才会走 StreamUtils.class.getClassLoader()
+     */
+    @Test
+    void testGetInputStream_FallbackClassLoader() throws IOException {
+        // 保存当前的 ContextClassLoader
+        ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            // 故意置空 ContextClassLoader
+            Thread.currentThread().setContextClassLoader(null);
+
+            String classpath = "file/image/Teresa.png";
+            InputStream inputStream = StreamUtils.getInputStream(classpath);
+            assertNotNull(inputStream, "Should find resource via Fallback ClassLoader");
+            inputStream.close();
+        } finally {
+            // 恢复现场，避免影响其他测试
+            Thread.currentThread().setContextClassLoader(originalClassLoader);
+        }
+    }
 }
