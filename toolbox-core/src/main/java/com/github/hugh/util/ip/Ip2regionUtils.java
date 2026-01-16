@@ -9,6 +9,7 @@ import org.lionsoul.ip2region.xdb.LongByteArray;
 import org.lionsoul.ip2region.xdb.Searcher;
 import org.lionsoul.ip2region.xdb.Version;
 
+import java.io.InputStream;
 import java.util.function.Supplier;
 
 /**
@@ -65,10 +66,10 @@ public class Ip2regionUtils {
      * @return String 返回字符串格式：国家|大区|省份|城市|运营商
      */
     public static String getCityInfo(String ip, byte[] cBuff) {
-        try {
+        try (InputStream inputStream = StreamUtils.getInputStream(XDB_PATH)) {
             LongByteArray longByteArray;
             try {
-                longByteArray = Searcher.loadContentFromInputStream(StreamUtils.getInputStream(XDB_PATH));
+                longByteArray = Searcher.loadContentFromInputStream(inputStream);
             } catch (Exception e) {
                 throw new ToolboxException("failed to load content from " + XDB_PATH);
             }
