@@ -13,7 +13,6 @@ import com.github.hugh.util.ip.Ip2regionUtils;
 public class IpResolver {
 
     private String ip; // 要解析的 IP 地址
-    private byte[] ipData; // IP 数据源
     private String spare; // 分隔符
 
     private static final String DEFAULT_NULL_STR = "0";
@@ -29,17 +28,6 @@ public class IpResolver {
     }
 
     /**
-     * 构造函数，初始化要解析的 IP 地址和 IP 数据源。
-     *
-     * @param ip    要解析的 IP 地址
-     * @param bytes IP 数据源
-     */
-    public IpResolver(String ip, byte[] bytes) {
-        this.ip = ip;
-        this.ipData = bytes;
-    }
-
-    /**
      * 静态工厂方法，创建一个新的 IpResolver 对象并初始化要解析的 IP 地址。
      *
      * @param ip 要解析的 IP 地址
@@ -47,17 +35,6 @@ public class IpResolver {
      */
     public static IpResolver on(String ip) {
         return new IpResolver(ip);
-    }
-
-    /**
-     * 静态工厂方法，创建一个新的 IpResolver 对象并初始化要解析的 IP 地址和 IP 数据源。
-     *
-     * @param ip    要解析的 IP 地址
-     * @param bytes IP 数据源
-     * @return 初始化了要解析的 IP 地址和 IP 数据源的 IpResolver 对象
-     */
-    public static IpResolver on(String ip, byte[] bytes) {
-        return new IpResolver(ip, bytes);
     }
 
     /**
@@ -122,7 +99,7 @@ public class IpResolver {
      */
     public Ip2regionDTO parse() {
         // 调用 Ip2regionUtils 工具类的方法获取城市信息
-        String str = Ip2regionUtils.getCityInfo(this.ip, this.ipData);
+        String str = Ip2regionUtils.getCityInfo(this.ip);
         // 如果城市信息为空，解析失败，返回 null
         if (str == null) {
             return null;
