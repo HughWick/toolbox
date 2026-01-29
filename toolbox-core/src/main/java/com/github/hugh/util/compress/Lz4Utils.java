@@ -36,7 +36,7 @@ public class Lz4Utils {
 
     /**
      * 压缩数据 (Block 模式)
-     * 适用于服务端 -> 设备
+     * 适用于服务端 {@code ->} 设备
      */
     public static byte[] compress(byte[] src) {
         if (src == null || src.length == 0) {
