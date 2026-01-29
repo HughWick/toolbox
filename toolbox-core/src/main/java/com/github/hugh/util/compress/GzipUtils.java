@@ -1,4 +1,4 @@
-package com.github.hugh.util;
+package com.github.hugh.util.compress;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

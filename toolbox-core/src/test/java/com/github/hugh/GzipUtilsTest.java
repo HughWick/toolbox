@@ -1,6 +1,6 @@
 package com.github.hugh;
 
-import com.github.hugh.util.GzipUtils;
+import com.github.hugh.util.compress.GzipUtils;
 import com.github.hugh.util.base.BaseConvertUtils;
 import com.lingmoyun.minilzo.MiniLZO;
 import org.junit.jupiter.api.Assertions;
