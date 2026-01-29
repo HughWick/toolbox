@@ -1,20 +1,24 @@
 package com.github.hugh.crypto.util;
 
 /**
- * ISO 7064 Mod 37-2 校验算法工具类
+ * ISO 7064 Mod 37-2 校验算法工具类。
  * <p>
  * 该算法用于生成和校验混合字母与数字的字符串校验位。
- * <br>
- * 特点：
+ * </p>
+ * <h3>特点：</h3>
  * <ul>
  *     <li>字符集：0-9, A-Z (共36个字符)</li>
  *     <li>能够检测出所有的单字符错误和相邻字符交换错误</li>
- *     <li>计算时会自动忽略非字母数字字符（如 '-', ' '）</li>
+ *     <li>计算时会自动忽略非字母数字字符（如 {@code -}, {@code /} 等）</li>
  * </ul>
+ * <p>
  * 常见应用：ISBT 128 (医疗), 某些集装箱编号或自定义编码系统。
  * </p>
+ *
+ * @since 3.0.20
  */
 public class Iso7064Utils {
+
     private Iso7064Utils() {
         throw new IllegalStateException("Utility class");
     }
@@ -25,15 +29,18 @@ public class Iso7064Utils {
     private static final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     /**
-     * 计算 ISO 7064 Mod 37-2 校验位
+     * 计算 ISO 7064 Mod 37-2 校验位。
      *
-     * @param input 待计算的原始字符串 (可以包含分隔符，计算时会被忽略)
-     * @return 计算出的校验字符 ('0'-'9', 'A'-'Z')
+     * @param input 待计算的原始字符串 (可以包含分隔符，计算时会被自动忽略)
+     * @return 计算出的校验字符 (范围：{@code 0-9}, {@code A-Z})
+     * @throws IllegalArgumentException 当输入为空，或输入中不包含任何有效字母/数字字符时抛出
+     * @throws IllegalStateException    当算法计算结果为 36 (即 {@code *}) 时抛出，这在 Mod 37-2 标准中属于无效结果
      */
     public static char computeCheckDigit(String input) {
         if (input == null || input.trim().isEmpty()) {
             throw new IllegalArgumentException("Input cannot be empty");
         }
+        // ISO 7064 Pure System (纯系统) 初始值设为 37 (等同于0)
         int p = 37;
         String upperInput = input.toUpperCase();
         boolean hasValidChar = false;
@@ -65,14 +72,15 @@ public class Iso7064Utils {
     }
 
     /**
-     * 校验字符串是否符合 ISO 7064 Mod 37-2 标准
+     * 校验字符串是否符合 ISO 7064 Mod 37-2 标准。
      * <p>
-     * 该方法假设输入的<b>最后一个有效字母/数字</b>是校验位，前面的有效字符是数据。
-     * 例如："G8-S" -> 数据是 "G8"，校验位是 'S'
+     * 该方法假设输入的 <b>最后一个有效字母/数字</b> 是校验位，前面的有效字符是数据。
+     * <br>
+     * 例如：{@code "G8-S"} -&gt; 数据是 {@code "G8"}，校验位是 {@code 'S'}
      * </p>
      *
      * @param inputWithCheckDigit 包含校验位的完整字符串
-     * @return true 校验通过, false 校验失败或输入无效
+     * @return {@code true} 校验通过; {@code false} 校验失败或输入无效
      */
     public static boolean isValid(String inputWithCheckDigit) {
         if (inputWithCheckDigit == null || inputWithCheckDigit.length() < 2) {
