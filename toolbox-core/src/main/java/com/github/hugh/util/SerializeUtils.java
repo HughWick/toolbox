@@ -3,9 +3,9 @@ package com.github.hugh.util;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 
 /**
  * 序列化辅助类
@@ -38,6 +38,9 @@ public final class SerializeUtils {
         kryo.setReferences(true);//默认值就是 true，添加此行的目的是为了提醒维护者，不要改变这个配置
         // 不强制要求注册类（注册行为无法保证多个 JVM 内同一个类的注册编号相同；而且业务系统中大量的 Class 也难以一一注册）
         kryo.setRegistrationRequired(false);//默认值就是 false，添加此行的目的是为了提醒维护者，不要改变这个配置
+        // 设置实例化策略，支持无参构造函数的类序列化（很多第三方库的类没有无参构造）
+        ((Kryo.DefaultInstantiatorStrategy) kryo.getInstantiatorStrategy())
+                .setFallbackInstantiatorStrategy(new StdInstantiatorStrategy());
         return kryo;
     });
 
@@ -50,12 +53,16 @@ public final class SerializeUtils {
      * @since 1.2.0
      */
     public static <T> byte[] toBytes(T object) {
+        if (object == null) {
+            return null;
+        }
         Kryo kryo = kryoLocal.get();
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        Output output = new Output(byteArrayOutputStream);
-        kryo.writeClassAndObject(output, object);
-        output.close();
-        return byteArrayOutputStream.toByteArray();
+        // 初始 buffer 大小 4KB，最大不限制（-1）
+        // 直接使用 Output 内部的 byte 数组，避免创建 ByteArrayOutputStream
+        try (Output output = new Output(4096, -1)) {
+            kryo.writeClassAndObject(output, object);
+            return output.toBytes();
+        }
     }
 
     /**
@@ -66,10 +73,46 @@ public final class SerializeUtils {
      * @since 1.2.0
      */
     public static Object toObject(byte[] bytes) {
+        if (bytes == null || bytes.length == 0) {
+            return null;
+        }
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         Input input = new Input(byteArrayInputStream);
         input.close();
         Kryo kryo = kryoLocal.get();
         return kryo.readClassAndObject(input);
+    }
+
+    /**
+     * 反序列化 (指定 Class 类型)
+     * <p>
+     * 注意：由于序列化时使用的是 writeClassAndObject，这里即便传入 Class，
+     * Kryo 依然会读取流中的类头信息。此方法的 Class 参数主要用于类型校验和泛型转换。
+     *
+     * @param bytes 序列化后的字节数组
+     * @param clazz 目标类型的 Class 对象
+     * @param <T>   泛型
+     * @return 反序列化后的对象
+     * @since 3.0.21
+     */
+    public static <T> T toObject(byte[] bytes, Class<T> clazz) {
+        Object obj = toObject(bytes);
+        if (obj == null) {
+            return null;
+        }
+        if (clazz != null && !clazz.isInstance(obj)) {
+            throw new ClassCastException("反序列化对象类型不匹配。期望: " + clazz.getName() + ", 实际: " + obj.getClass().getName());
+        }
+        return clazz.cast(obj);
+    }
+
+    /**
+     * 防止 ThreadLocal 内存泄漏
+     * 建议在 web 容器的过滤器或拦截器的 finally 块中调用
+     *
+     * @since 3.0.21
+     */
+    public static void remove() {
+        kryoLocal.remove();
     }
 }
