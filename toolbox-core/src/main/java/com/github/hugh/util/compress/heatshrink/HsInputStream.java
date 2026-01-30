@@ -1,4 +1,4 @@
-package com.github.hugh.util.heatshrink;
+package com.github.hugh.util.compress.heatshrink;
 
 import java.io.EOFException;
 import java.io.FilterInputStream;

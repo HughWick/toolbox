@@ -1,5 +1,6 @@
 package com.github.hugh.util.heatshrink;
 
+import com.github.hugh.util.compress.heatshrink.HeatshrinkUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.github.hugh.util.heatshrink;
+package com.github.hugh.util.compress.heatshrink;
 
 /**
  * 内部辅助类：用于追踪输入数据的处理进度和状态。
