@@ -1,5 +1,6 @@
 package com.github.hugh.bean.expand.tree;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode
 public class BaseTreeNode<T extends BaseTreeNode<T>> { // 使用泛型约束，确保子节点类型一致
     /**
      * 节点的唯一标识符，用于在树形结构中唯一确定一个节点的位置。
