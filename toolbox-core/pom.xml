@@ -28,6 +28,12 @@
             <groupId>com.esotericsoftware</groupId>
             <artifactId>kryo</artifactId>
         </dependency>
+        <!-- Kryo 的 StdInstantiatorStrategy 依赖它 -->
+        <dependency>
+            <groupId>org.objenesis</groupId>
+            <artifactId>objenesis</artifactId>
+            <scope>compile</scope>
+        </dependency>
         <!-- 谷歌套件 https://mvnrepository.com/artifact/com.google.guava/guava -->
         <dependency>
             <groupId>com.google.guava</groupId>
