@@ -95,7 +95,7 @@ class Crc16Test {
         String wxOpenIdStr = "00f18fb4f65ab436";
         assertEquals(16, wxOpenIdStr.length());
         String str2 = "fbf5018fbf751845";
-        assertEquals(str2.length() , wxOpenIdStr.length());
+        assertEquals(str2.length(), wxOpenIdStr.length());
         String str3 = "8a566f5d68953414";
         final String generate = Crc16Utils.generate(14);
         assertTrue(RegexUtils.isUpperCaseAndNumber(generate));
@@ -131,7 +131,7 @@ class Crc16Test {
     }
 
     @Test
-    void test04(){
+    void test04() {
         String str = "8aTH0000202309190001";
         String str2 = "8a566f5d68953414";
         String verCode = Crc16Utils.getVerCode(str2, 2);

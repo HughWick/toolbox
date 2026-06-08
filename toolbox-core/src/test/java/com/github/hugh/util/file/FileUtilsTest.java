@@ -203,6 +203,8 @@ class FileUtilsTest {
         assertEquals("1.5", FileUtils.formatFileSize(size, false));
         // 测试 B 单位的开关
         assertEquals("100", FileUtils.formatFileSize(100, false));
+
+        assertEquals("2.04 MB", FileUtils.formatFileSize(2139095, true));
     }
 
     private static String getPath(String fileName) {
