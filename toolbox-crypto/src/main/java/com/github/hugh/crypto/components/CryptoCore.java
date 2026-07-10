@@ -100,15 +100,61 @@ public class CryptoCore {
     }
 
     /**
-     * 【核心工厂方法】带有 IV 支持的 getInstance，支持所有高级模式 (CBC/GCM)
+     * 获取 CryptoCore 实例（不带初始化向量 IV，通常用于 ECB 模式）。
+     * <p>
+     * 这是一个便捷方法，内部会调用 {@link #getInstance(byte[], byte[], String)} 并将 IV 置为 null。
+     * 适用于不需要 IV 的加密工作模式（例如 ECB 模式）。
      *
-     * @param key       密钥字符串 (建议长度匹配对应算法)
-     * @param iv        初始化向量，ECB模式传 null，CBC/GCM模式必须传非空数组
-     * @param algorithm 完整算法名称或简写
+     * @param keyBytes  密钥字节数组
+     * @param algorithm 加密算法名称或完整的算法转换名称（如 "AES", "DES", "SM4"）
+     * @return 初始化完成的 CryptoCore 实例
+     * @throws IllegalArgumentException 当密钥为空或算法为空时抛出
+     * @throws ToolboxException         当底层密码学组件初始化失败时抛出
+     */
+    public static CryptoCore getInstance(byte[] keyBytes, String algorithm) {
+        return getInstance(keyBytes, null, algorithm);
+    }
+
+    /**
+     * 获取 CryptoCore 实例（支持字符串密钥和字节数组 IV）。
+     * <p>
+     * 该方法适合密钥以纯文本字符串形式存在的场景。内部会自动将字符串密钥按照 <b>UTF-8</b> 编码
+     * 转换为字节数组，然后调用底层核心初始化方法。
+     *
+     * @param key       字符串形式的密钥（不能为 null 或空字符串）
+     * @param iv        初始化向量（IV）或 Nonce 字节数组，对于不需要 IV 的模式（如 ECB）可传 null
+     * @param algorithm 加密算法名称（如 "AES", "DES", "SM4" 或带有模式/填充的完整名称）
+     * @return 初始化完成的 CryptoCore 实例
+     * @throws IllegalArgumentException 当密钥/算法为空，或者特定模式缺少 IV 时抛出
+     * @throws ToolboxException         当底层密码学组件初始化失败时抛出
      */
     public static CryptoCore getInstance(String key, byte[] iv, String algorithm) {
         if (key == null || key.isEmpty()) {
             throw new IllegalArgumentException("密钥 (key) 不能为空。");
+        }
+        if (algorithm == null || algorithm.isEmpty()) {
+            throw new IllegalArgumentException("算法 (algorithm) 不能为空。");
+        }
+        return getInstance(key.getBytes(StandardCharsets.UTF_8), iv, algorithm);
+    }
+
+    /**
+     * 获取 CryptoCore 实例的核心方法（使用字节数组密钥和字节数组 IV）。
+     * <p>
+     * 该方法负责解析基础算法类型（AES/DES/SM4），补全默认的工作模式和填充方式（若未指定，默认
+     * 使用 ECB/PKCS5Padding），生成对应的加密密钥（SecretKey），并根据算法和工作模式（如 CBC、GCM）
+     * 自动装配所需的参数规格（AlgorithmParameterSpec）。最后，同时初始化好用于加密和解密的 Cipher 实例。
+     *
+     * @param keyBytes  密钥字节数组（不能为 null 或空）
+     * @param iv        初始化向量（IV）或 Nonce 字节数组，工作模式需要时必填，不需要时（如 ECB）可传 null
+     * @param algorithm 加密算法名称或完整的转换格式（例如 "AES"、"AES/CBC/PKCS5Padding"、"AES/GCM/NoPadding" 等）
+     * @return 初始化完成的 CryptoCore 实例，包含已配置好的加密和解密 Cipher
+     * @throws IllegalArgumentException 当密钥为空、算法为空、是不支持的基础算法，或者特定工作模式下未提供 IV 时抛出
+     * @throws ToolboxException         当底层 Java 加密架构（JCA）报出算法不存在、密钥规格错误、填充错误或参数无效等异常时抛出
+     */
+    public static CryptoCore getInstance(byte[] keyBytes, byte[] iv, String algorithm) {
+        if (keyBytes == null || keyBytes.length == 0) {
+            throw new IllegalArgumentException("密钥 (keyBytes) 不能为空。");
         }
         if (algorithm == null || algorithm.isEmpty()) {
             throw new IllegalArgumentException("算法 (algorithm) 不能为空。");
@@ -129,8 +175,6 @@ public class CryptoCore {
             } else {
                 throw new IllegalArgumentException("不支持的基础加密算法：" + algorithm);
             }
-            // 统一生成密钥字节 (推荐显式指定 UTF_8，避免系统默认编码差异)
-            byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
             // 根据算法生成 SecretKey 和 确定真实 cipherName
             switch (baseAlgorithm) {
                 case ALGORITHM_DES:
@@ -152,19 +196,9 @@ public class CryptoCore {
                     throw new IllegalArgumentException("未知异常分支");
             }
             // 初始化 Cipher
-            // 如果算法中带有 BouncyCastle 的提供者 (SM4 需要)，Cipher.getInstance 可以自动从 BC 中寻找
             instance.encryptCipher = Cipher.getInstance(cipherAlgorithmName);
             instance.decryptCipher = Cipher.getInstance(cipherAlgorithmName);
-            // 5. 根据模式解析并注入 IV 规格参数 (ParameterSpec)
-            AlgorithmParameterSpec paramSpec = null;
-            if (cipherAlgorithmName.contains("/CBC/")) {
-                if (iv == null) throw new IllegalArgumentException("CBC模式必须提供 IV 参数");
-                paramSpec = new IvParameterSpec(iv);
-            } else if (cipherAlgorithmName.contains("/GCM/")) {
-                if (iv == null) throw new IllegalArgumentException("GCM模式必须提供 IV(Nonce) 参数");
-                // GCM 需要 GCMParameterSpec，128 表示 Authentication Tag 的长度为 128 bit (16 byte)
-                paramSpec = new GCMParameterSpec(128, iv);
-            }
+            AlgorithmParameterSpec paramSpec = getAlgorithmParameterSpec(iv, cipherAlgorithmName);
             // 执行 Init (分带参数和不带参数)
             if (paramSpec != null) {
                 instance.encryptCipher.init(Cipher.ENCRYPT_MODE, secretKey, paramSpec);
@@ -181,63 +215,142 @@ public class CryptoCore {
     }
 
     /**
-     * 获取一个配置了 **AES 算法 (AES/ECB/PKCS5Padding)** 和指定密钥的 CryptoCore 实例。
+     * 根据算法转换名称和 IV 字节数组，解析并构建对应的算法参数规格对象（AlgorithmParameterSpec）。
      * <p>
-     * 此方法是获取 AES 实例的便捷方法，内部调用 {@code getInstance(key, ALGORITHM_AES)}。
+     * <b>解析规则：</b>
+     * <ul>
+     * <li>如果算法转换名称中包含 <b>"/CBC/"</b>，则校验并将其封装为 {@link IvParameterSpec}</li>
+     * <li>如果算法转换名称中包含 <b>"/GCM/"</b>，则校验并将其封装为 {@link GCMParameterSpec}，其中认证标签（Authentication Tag）长度固定为 128 位（16 字节）</li>
+     * <li>对于其他模式（如 ECB），由于不需要额外参数，直接返回 null</li>
+     * </ul>
+     *
+     * @param iv                  初始化向量（IV）或 Nonce 字节数组
+     * @param cipherAlgorithmName 完整的加密算法转换名称（例如 "AES/CBC/PKCS5Padding" 或 "AES/GCM/NoPadding"）
+     * @return 对应的 {@link AlgorithmParameterSpec} 实例；如果是不需要参数的模式则返回 null
+     * @throws IllegalArgumentException 当算法属于 CBC 或 GCM 模式，但未提供所需的 iv 参数时抛出
+     */
+    private static AlgorithmParameterSpec getAlgorithmParameterSpec(byte[] iv, String cipherAlgorithmName) {
+        AlgorithmParameterSpec paramSpec = null;
+        if (cipherAlgorithmName.contains("/CBC/")) {
+            if (iv == null) throw new IllegalArgumentException("CBC模式必须提供 IV 参数");
+            paramSpec = new IvParameterSpec(iv);
+        } else if (cipherAlgorithmName.contains("/GCM/")) {
+            if (iv == null) throw new IllegalArgumentException("GCM模式必须提供 IV(Nonce) 参数");
+            // GCM 需要 GCMParameterSpec，128 表示 Authentication Tag 的长度为 128 bit (16 byte)
+            paramSpec = new GCMParameterSpec(128, iv);
+        }
+        return paramSpec;
+    }
+
+    /**
+     * 获取配置了 <b>AES 算法 (AES/ECB/PKCS5Padding)</b> 的 CryptoCore 实例。
+     * <p>
+     * 此方法为获取 AES 实例的便捷入口，内部默认使用 ECB 模式和 PKCS5Padding 填充。
      * </p>
      *
      * @param key 用于 AES 加密的密钥字符串。
-     *            请确保由 {@code key.getBytes()} 得到的字节数组长度符合 AES 密钥要求 (16, 24 或 32 字节)。
-     *            **重要：直接使用字符串字节数组作为密钥不安全，生产环境应使用安全的密钥生成或派生方式。**
-     * @return 配置了 AES 算法和指定密钥的 CryptoCore 实例。
-     * @throws IllegalArgumentException 如果密钥参数无效。
-     * @throws ToolboxException         如果 CryptoCore 实例初始化失败 (如密钥无效、算法问题等)。
+     *            请确保由 {@code key.getBytes()} 得到的字节数组长度符合 AES 密钥要求（16、24 或 32 字节）。
+     *            <b>安全提示：</b>直接使用字符串的默认字节编码作为密钥存在风险，生产环境应使用安全的密钥生成或派生方式（KDF）。
+     * @return 配置完毕的 CryptoCore 实例
+     * @throws IllegalArgumentException 如果密钥参数无效
+     * @throws ToolboxException         如果实例初始化失败（如底层算法不支持）
      */
     public static CryptoCore getAesInstance(String key) {
         return getInstance(key, ALGORITHM_AES);
     }
 
     /**
-     * 获取一个配置了 **AES 算法 (AES/ECB/NoPadding)** 和指定密钥的 CryptoCore 实例。
+     * 获取配置了 <b>AES 算法 (AES/ECB/PKCS5Padding)</b> 的 CryptoCore 实例（原生二进制密钥）。
      * <p>
-     * 使用此实例进行加密时，<b>待加密的数据长度必须是 16 字节的整数倍</b>，否则会抛出 {@code IllegalBlockSizeException}。
+     * 此方法为 {@link #getAesInstance(String)} 的重载，直接传入字节数组可避免字符集编码带来的不确定性。
+     * </p>
+     *
+     * @param keyBytes 用于 AES 加密的原生字节数组密钥（要求 16、24 或 32 字节）。
+     * @return 配置完毕的 CryptoCore 实例
+     * @throws IllegalArgumentException 如果密钥参数无效
+     * @throws ToolboxException         如果实例初始化失败
+     * @since 3.0.23
+     */
+    public static CryptoCore getAesInstance(byte[] keyBytes) {
+        return getInstance(keyBytes, ALGORITHM_AES);
+    }
+
+    /**
+     * 获取配置了 <b>AES 算法 (AES/ECB/NoPadding)</b> 的 CryptoCore 实例。
+     * <p>
+     * <b>注意：</b>使用 NoPadding 模式时，待加密的数据长度<b>必须是 16 字节的整数倍</b>，否则底层会抛出 {@code IllegalBlockSizeException}。
      * </p>
      *
      * @param key 用于 AES 加密的密钥字符串。
-     *            请确保由 {@code key.getBytes()} 得到的字节数组长度符合 AES 密钥要求 (16, 24 或 32 字节)。
-     * @return 配置了 AES NoPadding 算法和指定密钥的 CryptoCore 实例。
-     * @throws IllegalArgumentException 如果密钥参数无效。
-     * @throws ToolboxException         如果 CryptoCore 实例初始化失败。
+     *            请确保由 {@code key.getBytes()} 得到的字节数组长度符合 AES 密钥要求（16、24 或 32 字节）。
+     * @return 配置完毕的 CryptoCore 实例
+     * @throws IllegalArgumentException 如果密钥参数无效
+     * @throws ToolboxException         如果实例初始化失败
      */
     public static CryptoCore getAesNoPadding(String key) {
         return getInstance(key, ALGORITHM_AES_ECB_NO_PADDING);
     }
 
+    /**
+     * 获取配置了 <b>AES 算法 (AES/ECB/NoPadding)</b> 的 CryptoCore 实例（原生二进制密钥）。
+     * <p>
+     * 此方法为 {@link #getAesNoPadding(String)} 的重载。使用 NoPadding 模式时，数据长度必须为 16 字节的整数倍。
+     * </p>
+     *
+     * @param keyBytes 用于 AES 加密的原生字节数组密钥（要求 16、24 或 32 字节）。
+     * @return 配置完毕的 CryptoCore 实例
+     * @throws IllegalArgumentException 如果密钥参数无效
+     * @throws ToolboxException         如果实例初始化失败
+     * @since 3.0.23
+     */
+    public static CryptoCore getAesNoPadding(byte[] keyBytes) {
+        return getInstance(keyBytes, ALGORITHM_AES_ECB_NO_PADDING);
+    }
 
     /**
-     * 获取一个配置了 **DES 算法** 和指定密钥的 CryptoCore 实例。
+     * 获取配置了 <b>DES 算法</b> 的 CryptoCore 实例。
      * <p>
-     * 此方法是获取 DES 实例的便捷方法，内部调用 {@code getInstance(key, ALGORITHM_DES)}。
+     * 此方法为获取 DES 实例的便捷入口，内部默认调用 {@code ALGORITHM_DES}。
      * </p>
      *
      * @param key 用于 DES 加密的密钥字符串。
-     *            通常需要是 8 字节（64位）。
-     *            **重要：直接使用字符串字节数组作为密钥不安全，生产环境应使用安全的密钥生成或派生方式。**
-     * @return 配置了 DES 算法和指定密钥的 CryptoCore 实例。
-     * @throws IllegalArgumentException 如果密钥参数无效。
-     * @throws ToolboxException         如果 CryptoCore 实例初始化失败 (如密钥无效、算法问题等)。
+     *            DES 密钥长度通常要求为 8 字节（64位）。
+     *            <b>安全提示：</b>直接使用字符串的默认字节编码作为密钥存在风险，建议使用安全的密钥派生方式。
+     * @return 配置完毕的 CryptoCore 实例
+     * @throws IllegalArgumentException 如果密钥参数无效
+     * @throws ToolboxException         如果实例初始化失败
      */
     public static CryptoCore getDesInstance(String key) {
         return getInstance(key, ALGORITHM_DES);
     }
 
     /**
-     * 获取 AES-CBC 模式的加密核心实例。
-     * 内部默认使用 PKCS5Padding 填充方式。
+     * 获取配置了 <b>DES 算法</b> 的 CryptoCore 实例（原生二进制密钥）。
+     * <p>
+     * 此方法为 {@link #getDesInstance(String)} 的重载，直接传入字节数组可避免字符集编码问题。
+     * </p>
      *
-     * @param key 密钥字符串
-     * @param iv  初始化向量 (Initialization Vector)
-     * @return CryptoCore 实例
+     * @param keyBytes 用于 DES 加密的原生字节数组密钥（通常为 8 字节）。
+     * @return 配置完毕的 CryptoCore 实例
+     * @throws IllegalArgumentException 如果密钥参数无效
+     * @throws ToolboxException         如果实例初始化失败
+     * @since 3.0.23
+     */
+    public static CryptoCore getDesInstance(byte[] keyBytes) {
+        return getInstance(keyBytes, ALGORITHM_DES);
+    }
+
+    /**
+     * 获取配置了 <b>AES 算法 (AES/CBC/PKCS5Padding)</b> 的 CryptoCore 实例。
+     * <p>
+     * CBC 模式需要配合初始化向量 (IV) 使用，能有效提高安全性。内部默认使用 PKCS5Padding 填充。
+     * </p>
+     *
+     * @param key 密钥字符串。底层转换为字节数组后要求为 16、24 或 32 字节。
+     * @param iv  初始化向量 (Initialization Vector)，通常要求与分组长度一致（AES 为 16 字节）。
+     * @return 配置完毕的 CryptoCore 实例
+     * @throws IllegalArgumentException 如果密钥或 IV 参数无效
+     * @throws ToolboxException         如果实例初始化失败
      * @since 3.0.22
      */
     public static CryptoCore getAesCbcInstance(String key, byte[] iv) {
@@ -245,12 +358,33 @@ public class CryptoCore {
     }
 
     /**
-     * 获取 AES-GCM 模式的加密核心实例。
-     * 内部默认使用 NoPadding 无填充方式，GCM 模式自带认证功能。
+     * 获取配置了 <b>AES 算法 (AES/CBC/PKCS5Padding)</b> 的 CryptoCore 实例（原生二进制密钥）。
+     * <p>
+     * 此方法为 {@link #getAesCbcInstance(String, byte[])} 的重载。
+     * </p>
      *
-     * @param key 密钥字符串
-     * @param iv  初始化向量 (Initialization Vector)，在 GCM 模式中通常也称为 Nonce
-     * @return CryptoCore 实例
+     * @param keyBytes 原生字节数组密钥（要求 16、24 或 32 字节）。
+     * @param iv       初始化向量 (Initialization Vector)。
+     * @return 配置完毕的 CryptoCore 实例
+     * @throws IllegalArgumentException 如果密钥或 IV 参数无效
+     * @throws ToolboxException         如果实例初始化失败
+     * @since 3.0.23
+     */
+    public static CryptoCore getAesCbcInstance(byte[] keyBytes, byte[] iv) {
+        return getInstance(keyBytes, iv, ALGORITHM_AES_CBC_PKCS5PADDING);
+    }
+
+    /**
+     * 获取配置了 <b>AES 算法 (AES/GCM/NoPadding)</b> 的 CryptoCore 实例。
+     * <p>
+     * GCM (Galois/Counter Mode) 是一种提供认证加密的模式。内部默认无填充 (NoPadding)。
+     * </p>
+     *
+     * @param key 密钥字符串。底层转换为字节数组后要求为 16、24 或 32 字节。
+     * @param iv  初始化向量 (Initialization Vector)，在 GCM 模式中通常称为 Nonce，建议长度为 12 字节 (96位)。
+     * @return 配置完毕的 CryptoCore 实例
+     * @throws IllegalArgumentException 如果密钥或 IV 参数无效
+     * @throws ToolboxException         如果实例初始化失败
      * @since 3.0.22
      */
     public static CryptoCore getAesGcmInstance(String key, byte[] iv) {
@@ -258,11 +392,32 @@ public class CryptoCore {
     }
 
     /**
-     * 获取国密 SM4 默认模式的加密核心实例。
-     * 默认使用 ECB 模式，该模式不需要初始化向量 (IV)。
+     * 获取配置了 <b>AES 算法 (AES/GCM/NoPadding)</b> 的 CryptoCore 实例（原生二进制密钥）。
+     * <p>
+     * 此方法为 {@link #getAesGcmInstance(String, byte[])} 的重载。
+     * </p>
      *
-     * @param key 密钥字符串
-     * @return CryptoCore 实例
+     * @param keyBytes 原生字节数组密钥（要求 16、24 或 32 字节）。
+     * @param iv       初始化向量 / Nonce。
+     * @return 配置完毕的 CryptoCore 实例
+     * @throws IllegalArgumentException 如果密钥或 IV 参数无效
+     * @throws ToolboxException         如果实例初始化失败
+     * @since 3.0.23
+     */
+    public static CryptoCore getAesGcmInstance(byte[] keyBytes, byte[] iv) {
+        return getInstance(keyBytes, iv, ALGORITHM_AES_GCM_NO_PADDING);
+    }
+
+    /**
+     * 获取配置了 <b>国密 SM4 算法 (默认 ECB 模式)</b> 的 CryptoCore 实例。
+     * <p>
+     * ECB 模式为基础加密模式，不需要初始化向量 (IV)。
+     * </p>
+     *
+     * @param key 密钥字符串。SM4 密钥长度固定要求为 16 字节（128位）。
+     * @return 配置完毕的 CryptoCore 实例
+     * @throws IllegalArgumentException 如果密钥参数无效
+     * @throws ToolboxException         如果实例初始化失败
      * @since 3.0.22
      */
     public static CryptoCore getSm4Instance(String key) {
@@ -270,16 +425,53 @@ public class CryptoCore {
     }
 
     /**
-     * 获取国密 SM4-CBC 模式的加密核心实例。
-     * 内部默认使用 PKCS5Padding 填充方式。
+     * 获取配置了 <b>国密 SM4 算法 (默认 ECB 模式)</b> 的 CryptoCore 实例（原生二进制密钥）。
+     * <p>
+     * 此方法为 {@link #getSm4Instance(String)} 的重载。
+     * </p>
      *
-     * @param key 密钥字符串
-     * @param iv  初始化向量 (Initialization Vector)
-     * @return CryptoCore 实例
+     * @param keyBytes 原生字节数组密钥（要求 16 字节）。
+     * @return 配置完毕的 CryptoCore 实例
+     * @throws IllegalArgumentException 如果密钥参数无效
+     * @throws ToolboxException         如果实例初始化失败
+     * @since 3.0.23
+     */
+    public static CryptoCore getSm4Instance(byte[] keyBytes) {
+        return getInstance(keyBytes, null, ALGORITHM_SM4);
+    }
+
+    /**
+     * 获取配置了 <b>国密 SM4 算法 (SM4/CBC/PKCS5Padding)</b> 的 CryptoCore 实例。
+     * <p>
+     * SM4 的 CBC 模式，需要配合初始化向量 (IV) 使用。内部默认使用 PKCS5Padding 填充方式。
+     * </p>
+     *
+     * @param key 密钥字符串。SM4 密钥长度固定要求为 16 字节。
+     * @param iv  初始化向量 (Initialization Vector)，固定要求为 16 字节。
+     * @return 配置完毕的 CryptoCore 实例
+     * @throws IllegalArgumentException 如果密钥或 IV 参数无效
+     * @throws ToolboxException         如果实例初始化失败
      * @since 3.0.22
      */
     public static CryptoCore getSm4CbcInstance(String key, byte[] iv) {
         return getInstance(key, iv, ALGORITHM_SM4_CBC_PKCS5PADDING);
+    }
+
+    /**
+     * 获取配置了 <b>国密 SM4 算法 (SM4/CBC/PKCS5Padding)</b> 的 CryptoCore 实例（原生二进制密钥）。
+     * <p>
+     * 此方法为 {@link #getSm4CbcInstance(String, byte[])} 的重载。
+     * </p>
+     *
+     * @param keyBytes 原生字节数组密钥（要求 16 字节）。
+     * @param iv       初始化向量 (Initialization Vector)。
+     * @return 配置完毕的 CryptoCore 实例
+     * @throws IllegalArgumentException 如果密钥或 IV 参数无效
+     * @throws ToolboxException         如果实例初始化失败
+     * @since 3.0.23
+     */
+    public static CryptoCore getSm4CbcInstance(byte[] keyBytes, byte[] iv) {
+        return getInstance(keyBytes, iv, ALGORITHM_SM4_CBC_PKCS5PADDING);
     }
 
     /**
