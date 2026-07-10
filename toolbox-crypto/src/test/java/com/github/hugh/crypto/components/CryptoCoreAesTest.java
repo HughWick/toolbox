@@ -18,10 +18,19 @@ class CryptoCoreAesTest {
     private static final String AES_KEY_256BIT_STR = "ThisIsA32ByteKeyForAES_256Bits_1"; // 32 bytes
 
     private static final String INVALID_AES_KEY_STR = "ShortKey"; // Invalid length, e.g., 8 bytes
+    // 如果您还没有定义这些常量，请在测试类中补充：
+//    private static final String AES_KEY_128BIT_STR = "1234567890123456"; // 16字节 AES 密钥
+    private static final String SM4_KEY_128BIT_STR = "6543210987654321"; // 16字节 SM4 密钥
+
+    // 16字节 IV (适用于 AES-CBC, SM4-CBC)
+    private static final byte[] IV_16_BYTES = "abcdefghijklmnop".getBytes(StandardCharsets.UTF_8);
+    // 12字节 IV (适用于 AES-GCM 推荐长度)
+    private static final byte[] IV_12_BYTES = "abcdefghijkl".getBytes(StandardCharsets.UTF_8);
 
     // 定义测试数据
     private static final String ORIGINAL_STRING = "Hello, World! This is a test string for AES encryption.";
     private static final byte[] ORIGINAL_BYTES = ORIGINAL_STRING.getBytes(StandardCharsets.UTF_8);
+
     @DisplayName("Java 端加密参数 (用于在线工具验证)")
     @Test
     void testForOnlineToolVerification_AesEcbNoPadding() {
@@ -257,5 +266,108 @@ class CryptoCoreAesTest {
         // --- 4. 最终验证：解密后的字符串是否与原始字符串完全一致 ---
         assertEquals(originalComplexString, decryptedString, "解密后的字符串应与原始字符串完全一致");
         System.out.println("测试通过！decryptToString(byte[]) 方法工作正常！");
+    }
+    @Test
+    @DisplayName("AES-CBC 128位密钥带IV 密文字节数组 -> 明文字符串 解密测试")
+    void testAesCbcDecryptBytesToString() {
+        // --- 1. 获取实例和原始数据 ---
+        CryptoCore aesCbcCore = CryptoCore.getAesCbcInstance(AES_KEY_128BIT_STR, IV_16_BYTES);
+        String originalComplexString = "测试场景：AES-CBC 密文 byte[] -> 明文 String（包含特殊字符！@#￥%）";
+        byte[] originalBytes = originalComplexString.getBytes(StandardCharsets.UTF_8);
+        System.out.println("\n--- 开始测试 AES-CBC decryptToString(byte[]) ---");
+        System.out.println("原始字符串: " + originalComplexString);
+
+        // --- 2. 获取加密后的字节数组 (密文) ---
+        byte[] encryptedData = aesCbcCore.encrypt(originalBytes);
+        assertNotNull(encryptedData, "加密后的字节数组不应为 null");
+        System.out.println("加密后的密文字节长度: " + encryptedData.length);
+
+        // --- 3. 【核心】调用解密方法 ---
+        String decryptedString = aesCbcCore.decryptToString(encryptedData);
+        assertNotNull(decryptedString, "解密后的字符串不应为 null");
+        System.out.println("解密后的字符串: " + decryptedString);
+
+        // --- 4. 最终验证 ---
+        assertEquals(originalComplexString, decryptedString, "解密后的字符串应与原始字符串完全一致");
+        System.out.println("测试通过！AES-CBC decryptToString(byte[]) 方法工作正常！");
+    }
+
+    @Test
+    @DisplayName("AES-GCM 128位密钥带12字节IV 密文字节数组 -> 明文字符串 解密测试")
+    void testAesGcmDecryptBytesToString() {
+        // --- 1. 获取实例和原始数据 ---
+        // GCM 模式推荐使用 12 字节的 IV (Nonce)
+        CryptoCore aesGcmCore = CryptoCore.getAesGcmInstance(AES_KEY_128BIT_STR, IV_12_BYTES);
+        String originalComplexString = "测试场景：AES-GCM AEAD模式 密文 byte[] -> 明文 String";
+        byte[] originalBytes = originalComplexString.getBytes(StandardCharsets.UTF_8);
+        System.out.println("\n--- 开始测试 AES-GCM decryptToString(byte[]) ---");
+        System.out.println("原始字符串: " + originalComplexString);
+
+        // --- 2. 获取加密后的字节数组 (密文) ---
+        // 注意：GCM模式加密后的密文长度会比明文多出 16字节（认证标签 Auth Tag）
+        byte[] encryptedData = aesGcmCore.encrypt(originalBytes);
+        assertNotNull(encryptedData, "加密后的字节数组不应为 null");
+        System.out.println("加密后的密文字节长度: " + encryptedData.length);
+
+        // --- 3. 【核心】调用解密方法 ---
+        String decryptedString = aesGcmCore.decryptToString(encryptedData);
+        assertNotNull(decryptedString, "解密后的字符串不应为 null");
+        System.out.println("解密后的字符串: " + decryptedString);
+
+        // --- 4. 最终验证 ---
+        assertEquals(originalComplexString, decryptedString, "解密后的字符串应与原始字符串完全一致");
+        System.out.println("测试通过！AES-GCM decryptToString(byte[]) 方法工作正常！");
+    }
+
+    @Test
+    @DisplayName("SM4-ECB (国密) 128位密钥 密文字节数组 -> 明文字符串 解密测试")
+    void testSm4EcbDecryptBytesToString() {
+        // --- 1. 获取实例和原始数据 ---
+        // SM4 使用 128 bit (16字节) 密钥
+        CryptoCore sm4Core = CryptoCore.getSm4Instance(SM4_KEY_128BIT_STR);
+        String originalComplexString = "测试场景：SM4-ECB 国密算法 密文 byte[] -> 明文 String";
+        byte[] originalBytes = originalComplexString.getBytes(StandardCharsets.UTF_8);
+        System.out.println("\n--- 开始测试 SM4-ECB decryptToString(byte[]) ---");
+        System.out.println("原始字符串: " + originalComplexString);
+
+        // --- 2. 获取加密后的字节数组 (密文) ---
+        byte[] encryptedData = sm4Core.encrypt(originalBytes);
+        assertNotNull(encryptedData, "加密后的字节数组不应为 null");
+        System.out.println("加密后的密文字节长度: " + encryptedData.length);
+
+        // --- 3. 【核心】调用解密方法 ---
+        String decryptedString = sm4Core.decryptToString(encryptedData);
+        assertNotNull(decryptedString, "解密后的字符串不应为 null");
+        System.out.println("解密后的字符串: " + decryptedString);
+
+        // --- 4. 最终验证 ---
+        assertEquals(originalComplexString, decryptedString, "解密后的字符串应与原始字符串完全一致");
+        System.out.println("测试通过！SM4-ECB decryptToString(byte[]) 方法工作正常！");
+    }
+
+    @Test
+    @DisplayName("SM4-CBC (国密) 128位密钥带IV 密文字节数组 -> 明文字符串 解密测试")
+    void testSm4CbcDecryptBytesToString() {
+        // --- 1. 获取实例和原始数据 ---
+        // SM4-CBC 需要 16 字节的 IV
+        CryptoCore sm4CbcCore = CryptoCore.getSm4CbcInstance(SM4_KEY_128BIT_STR, IV_16_BYTES);
+        String originalComplexString = "测试场景：SM4-CBC 增强安全国密 密文 byte[] -> 明文 String";
+        byte[] originalBytes = originalComplexString.getBytes(StandardCharsets.UTF_8);
+        System.out.println("\n--- 开始测试 SM4-CBC decryptToString(byte[]) ---");
+        System.out.println("原始字符串: " + originalComplexString);
+
+        // --- 2. 获取加密后的字节数组 (密文) ---
+        byte[] encryptedData = sm4CbcCore.encrypt(originalBytes);
+        assertNotNull(encryptedData, "加密后的字节数组不应为 null");
+        System.out.println("加密后的密文字节长度: " + encryptedData.length);
+
+        // --- 3. 【核心】调用解密方法 ---
+        String decryptedString = sm4CbcCore.decryptToString(encryptedData);
+        assertNotNull(decryptedString, "解密后的字符串不应为 null");
+        System.out.println("解密后的字符串: " + decryptedString);
+
+        // --- 4. 最终验证 ---
+        assertEquals(originalComplexString, decryptedString, "解密后的字符串应与原始字符串完全一致");
+        System.out.println("测试通过！SM4-CBC decryptToString(byte[]) 方法工作正常！");
     }
 }

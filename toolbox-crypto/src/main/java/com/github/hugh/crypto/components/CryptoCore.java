@@ -1,16 +1,22 @@
 package com.github.hugh.crypto.components;
 
 import com.github.hugh.exception.ToolboxException;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.Security;
+import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 
@@ -39,6 +45,14 @@ import java.util.Base64;
  */
 public class CryptoCore {
 
+    // === 静态代码块：注册国密/拓展算法提供者 ===
+    static {
+        // 注册 BouncyCastle 以支持 SM4 等国密算法
+        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
+    }
+
     // 私有构造方法，防止外部直接实例化
     private CryptoCore() {
     }
@@ -50,12 +64,18 @@ public class CryptoCore {
     // 定义支持的算法常量
     public static final String ALGORITHM_DES = "DES";
     public static final String ALGORITHM_AES = "AES";// 代表默认使用 "AES/ECB/PKCS5Padding"
+    public static final String ALGORITHM_SM4 = "SM4";
     public static final String ALGORITHM_AES_ECB_PKCS5PADDING = "AES/ECB/PKCS5Padding";
     /**
      * AES 算法，使用 ECB 模式，不进行填充。
-     * <b>注意：</b>使用此模式时，待加密的数据字节数组长度必须是 16 的整数倍。
+     * 注意：使用此模式时，待加密的数据字节数组长度必须是 16 的整数倍。
      */
     public static final String ALGORITHM_AES_ECB_NO_PADDING = "AES/ECB/NoPadding";
+    public static final String ALGORITHM_AES_CBC_PKCS5PADDING = "AES/CBC/PKCS5Padding";
+    public static final String ALGORITHM_AES_GCM_NO_PADDING = "AES/GCM/NoPadding";
+    public static final String ALGORITHM_SM4_ECB_PKCS5PADDING = "SM4/ECB/PKCS5Padding";
+    public static final String ALGORITHM_SM4_CBC_PKCS5PADDING = "SM4/CBC/PKCS5Padding";
+
     /**
      * 获取 CryptoCore 实例，支持 DES 和 AES 加密/解密。
      * <p>
@@ -76,6 +96,17 @@ public class CryptoCore {
      * @throws IllegalArgumentException 如果传入的密钥或算法参数无效。
      */
     public static CryptoCore getInstance(String key, String algorithm) {
+        return getInstance(key, null, algorithm);
+    }
+
+    /**
+     * 【核心工厂方法】带有 IV 支持的 getInstance，支持所有高级模式 (CBC/GCM)
+     *
+     * @param key       密钥字符串 (建议长度匹配对应算法)
+     * @param iv        初始化向量，ECB模式传 null，CBC/GCM模式必须传非空数组
+     * @param algorithm 完整算法名称或简写
+     */
+    public static CryptoCore getInstance(String key, byte[] iv, String algorithm) {
         if (key == null || key.isEmpty()) {
             throw new IllegalArgumentException("密钥 (key) 不能为空。");
         }
@@ -85,49 +116,65 @@ public class CryptoCore {
         CryptoCore instance = new CryptoCore();
         try {
             SecretKey secretKey;
-            String cipherAlgorithmName = algorithm; // 用于 Cipher.getInstance() 的完整算法名称
-            String baseAlgorithm; // 用于密钥生成的算法名称 (如 "AES", "DES")
-            // 根据指定的算法进行密钥和 Cipher 的初始化
+            String cipherAlgorithmName = algorithm;
+            String baseAlgorithm;
             String upperCaseAlgorithm = algorithm.toUpperCase();
-            // 解析基础算法，用于密钥生成
+            // 解析基础算法 (用于 SecretKeySpec)
             if (upperCaseAlgorithm.startsWith(ALGORITHM_AES)) {
                 baseAlgorithm = ALGORITHM_AES;
             } else if (upperCaseAlgorithm.startsWith(ALGORITHM_DES)) {
                 baseAlgorithm = ALGORITHM_DES;
+            } else if (upperCaseAlgorithm.startsWith(ALGORITHM_SM4)) {
+                baseAlgorithm = ALGORITHM_SM4;
             } else {
                 throw new IllegalArgumentException("不支持的基础加密算法：" + algorithm);
             }
-            // 处理算法简写，并确定最终用于 Cipher 的完整名称
+            // 统一生成密钥字节 (推荐显式指定 UTF_8，避免系统默认编码差异)
+            byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
+            // 根据算法生成 SecretKey 和 确定真实 cipherName
             switch (baseAlgorithm) {
                 case ALGORITHM_DES:
-                    // DES 密钥需要通过 DESKeySpec 和 SecretKeyFactory 生成
-                    if (upperCaseAlgorithm.equals(ALGORITHM_DES)) {
-                        cipherAlgorithmName = "DES/ECB/PKCS5Padding";
-                    }
-                    DESKeySpec dks = new DESKeySpec(key.getBytes());
+                    if (upperCaseAlgorithm.equals(ALGORITHM_DES)) cipherAlgorithmName = "DES/ECB/PKCS5Padding";
+                    DESKeySpec dks = new DESKeySpec(keyBytes);
                     SecretKeyFactory skf = SecretKeyFactory.getInstance(ALGORITHM_DES);
                     secretKey = skf.generateSecret(dks);
                     break;
                 case ALGORITHM_AES:
-                    // AES 密钥直接通过密钥字节数组和算法名称创建 SecretKeySpec
-                    if (upperCaseAlgorithm.equals(ALGORITHM_AES)) {
-                        // 为了向后兼容，如果只传入 "AES"，则默认使用 PKCS5Padding
-                        cipherAlgorithmName = ALGORITHM_AES_ECB_PKCS5PADDING;
-                    }
-                    byte[] keyBytes = key.getBytes();
-                    secretKey = new SecretKeySpec(keyBytes, ALGORITHM_AES); // SecretKeySpec 需要基础算法 "AES"
+                    if (upperCaseAlgorithm.equals(ALGORITHM_AES)) cipherAlgorithmName = ALGORITHM_AES_ECB_PKCS5PADDING;
+                    secretKey = new SecretKeySpec(keyBytes, ALGORITHM_AES);
+                    break;
+                case ALGORITHM_SM4:
+                    if (upperCaseAlgorithm.equals(ALGORITHM_SM4)) cipherAlgorithmName = ALGORITHM_SM4_ECB_PKCS5PADDING;
+                    // SM4 的密钥处理和 AES 一样，直接封装为 SecretKeySpec 即可 (需要 BouncyCastle)
+                    secretKey = new SecretKeySpec(keyBytes, ALGORITHM_SM4);
                     break;
                 default:
-                    // 这个分支实际上在上面的检查中已经处理了，但为了代码完整性保留
-                    throw new IllegalArgumentException("不支持的加密算法：" + algorithm);
+                    throw new IllegalArgumentException("未知异常分支");
             }
+            // 初始化 Cipher
+            // 如果算法中带有 BouncyCastle 的提供者 (SM4 需要)，Cipher.getInstance 可以自动从 BC 中寻找
             instance.encryptCipher = Cipher.getInstance(cipherAlgorithmName);
             instance.decryptCipher = Cipher.getInstance(cipherAlgorithmName);
-            instance.encryptCipher.init(Cipher.ENCRYPT_MODE, secretKey);
-            instance.decryptCipher.init(Cipher.DECRYPT_MODE, secretKey);
+            // 5. 根据模式解析并注入 IV 规格参数 (ParameterSpec)
+            AlgorithmParameterSpec paramSpec = null;
+            if (cipherAlgorithmName.contains("/CBC/")) {
+                if (iv == null) throw new IllegalArgumentException("CBC模式必须提供 IV 参数");
+                paramSpec = new IvParameterSpec(iv);
+            } else if (cipherAlgorithmName.contains("/GCM/")) {
+                if (iv == null) throw new IllegalArgumentException("GCM模式必须提供 IV(Nonce) 参数");
+                // GCM 需要 GCMParameterSpec，128 表示 Authentication Tag 的长度为 128 bit (16 byte)
+                paramSpec = new GCMParameterSpec(128, iv);
+            }
+            // 执行 Init (分带参数和不带参数)
+            if (paramSpec != null) {
+                instance.encryptCipher.init(Cipher.ENCRYPT_MODE, secretKey, paramSpec);
+                instance.decryptCipher.init(Cipher.DECRYPT_MODE, secretKey, paramSpec);
+            } else {
+                instance.encryptCipher.init(Cipher.ENCRYPT_MODE, secretKey);
+                instance.decryptCipher.init(Cipher.DECRYPT_MODE, secretKey);
+            }
         } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException |
-                 InvalidKeyException exception) {
-            // 捕获密码学相关的异常，并包装成 ToolboxException 抛出
+                 InvalidKeyException | InvalidAlgorithmParameterException exception) {
             throw new ToolboxException("初始化加密/解密器失败，算法：" + algorithm + "，原因：" + exception.getMessage(), exception);
         }
         return instance;
@@ -182,6 +229,57 @@ public class CryptoCore {
      */
     public static CryptoCore getDesInstance(String key) {
         return getInstance(key, ALGORITHM_DES);
+    }
+
+    /**
+     * 获取 AES-CBC 模式的加密核心实例。
+     * 内部默认使用 PKCS5Padding 填充方式。
+     *
+     * @param key 密钥字符串
+     * @param iv  初始化向量 (Initialization Vector)
+     * @return CryptoCore 实例
+     * @since 3.0.22
+     */
+    public static CryptoCore getAesCbcInstance(String key, byte[] iv) {
+        return getInstance(key, iv, ALGORITHM_AES_CBC_PKCS5PADDING);
+    }
+
+    /**
+     * 获取 AES-GCM 模式的加密核心实例。
+     * 内部默认使用 NoPadding 无填充方式，GCM 模式自带认证功能。
+     *
+     * @param key 密钥字符串
+     * @param iv  初始化向量 (Initialization Vector)，在 GCM 模式中通常也称为 Nonce
+     * @return CryptoCore 实例
+     * @since 3.0.22
+     */
+    public static CryptoCore getAesGcmInstance(String key, byte[] iv) {
+        return getInstance(key, iv, ALGORITHM_AES_GCM_NO_PADDING);
+    }
+
+    /**
+     * 获取国密 SM4 默认模式的加密核心实例。
+     * 默认使用 ECB 模式，该模式不需要初始化向量 (IV)。
+     *
+     * @param key 密钥字符串
+     * @return CryptoCore 实例
+     * @since 3.0.22
+     */
+    public static CryptoCore getSm4Instance(String key) {
+        return getInstance(key, null, ALGORITHM_SM4);
+    }
+
+    /**
+     * 获取国密 SM4-CBC 模式的加密核心实例。
+     * 内部默认使用 PKCS5Padding 填充方式。
+     *
+     * @param key 密钥字符串
+     * @param iv  初始化向量 (Initialization Vector)
+     * @return CryptoCore 实例
+     * @since 3.0.22
+     */
+    public static CryptoCore getSm4CbcInstance(String key, byte[] iv) {
+        return getInstance(key, iv, ALGORITHM_SM4_CBC_PKCS5PADDING);
     }
 
     /**
