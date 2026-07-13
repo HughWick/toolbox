@@ -21,9 +21,10 @@ import java.util.Base64;
  * 2.  **无需 Padding**: GCM 是流加密模式，不需要对明文进行填充。
  * 3.  **需要唯一的 IV**: 每次加密【绝不能】使用相同的密钥和 IV 组合，否则会严重破坏安全性。本类库在每次加密时都会生成一个安全的随机 IV。
  * </p>
- *
+ * 直接使用 {@link com.github.hugh.crypto.components.CryptoCore}
  * @since 3.0.15
  */
+@Deprecated
 public class AesGcmCipher {
 
     // --- 算法常量 ---
@@ -159,6 +160,7 @@ public class AesGcmCipher {
 
     /**
      * 解密并返回 UTF-8 编码的字符串。
+     *
      * @see #decryptToBytes(byte[], byte[])
      */
     public String decryptToString(byte[] ciphertext, byte[] iv) {
@@ -168,6 +170,7 @@ public class AesGcmCipher {
 
     /**
      * 解密并返回 UTF-8 编码的字符串。
+     *
      * @see #decryptToBytes(String, String)
      */
     public String decryptToString(String ciphertextBase64, String ivBase64) {
@@ -177,6 +180,7 @@ public class AesGcmCipher {
 
     /**
      * 解密并返回 UTF-8 编码的字符串。
+     *
      * @see #decryptToBytes(byte[])
      */
     public String decryptToString(byte[] combinedBytes) {
@@ -186,6 +190,7 @@ public class AesGcmCipher {
 
     /**
      * 解密并返回 UTF-8 编码的字符串。
+     *
      * @see #decryptToBytes(String)
      */
     public String decryptToString(String combinedBase64) {
@@ -195,6 +200,7 @@ public class AesGcmCipher {
 
     /**
      * 解密并返回 UTF-8 编码的字符串。
+     *
      * @see #decryptToBytes(GcmEncryptedPacket)
      */
     public String decryptToString(GcmEncryptedPacket packet) {
@@ -232,6 +238,7 @@ public class AesGcmCipher {
         public static GcmEncryptedPacket fromCombinedBase64(String combinedBase64) {
             return fromCombinedBytes(Base64.getDecoder().decode(combinedBase64));
         }
+
         public String getIvAsBase64() {
             return Base64.getEncoder().encodeToString(iv);
         }
@@ -239,12 +246,14 @@ public class AesGcmCipher {
         public String getCiphertextAsBase64() {
             return Base64.getEncoder().encodeToString(ciphertext);
         }
+
         public byte[] toCombinedBytes() {
             return ByteBuffer.allocate(iv.length + ciphertext.length)
                     .put(iv)
                     .put(ciphertext)
                     .array();
         }
+
         public String toCombinedBase64() {
             return Base64.getEncoder().encodeToString(toCombinedBytes());
         }
