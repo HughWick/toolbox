@@ -12,7 +12,6 @@
     <artifactId>toolbox-core</artifactId>
     <packaging>jar</packaging>
     <description>toolbox 公共工具类核心包</description>
-
     <dependencies>
         <dependency>
             <groupId>com.github.hughwick</groupId>

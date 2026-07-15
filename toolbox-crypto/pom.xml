@@ -12,6 +12,12 @@
     <artifactId>toolbox-crypto</artifactId>
     <packaging>jar</packaging>
     <description>toolbox-crypto 加密解密</description>
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>com.github.hughwick</groupId>
@@ -32,6 +38,12 @@
             <artifactId>minilzo-java</artifactId>
             <version>0.0.2</version>
             <scope>test</scope>
+        </dependency>
+        <!--  https://jitpack.io/#wosherco/jnanoid-enhanced      -->
+        <dependency>
+            <groupId>com.github.wosherco</groupId>
+            <artifactId>jnanoid-enhanced</artifactId>
+            <version>9819c115e7</version>
         </dependency>
     </dependencies>
 </project>
