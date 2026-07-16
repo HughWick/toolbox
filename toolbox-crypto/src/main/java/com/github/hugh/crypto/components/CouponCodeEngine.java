@@ -15,7 +15,7 @@ import java.util.HexFormat;
  * @since 3.0.24
  */
 public class CouponCodeEngine {
-
+    private CouponCodeEngine(){}
     /**
      * 排除易混淆字符的字母表（共 54 个字符）
      * 避免用户将 1 与 l/I 混淆，将 0 与 O/o 混淆。
