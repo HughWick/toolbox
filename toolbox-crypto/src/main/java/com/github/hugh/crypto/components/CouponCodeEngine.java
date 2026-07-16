@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HexFormat;
 
 /**
- * <h1>优惠券码生成与校验引擎</h1>
+ * 优惠券码生成与校验引擎
  * <p>本类采用 <b>"随机载荷 (NanoID) + CRC16 校验位"</b> 的设计方案。
  * 可以在不查询数据库的情况下，快速本地校验优惠券码的合法性（防伪、防盲猜）。</p>
  *
