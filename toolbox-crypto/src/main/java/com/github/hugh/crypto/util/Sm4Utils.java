@@ -21,8 +21,9 @@ import java.security.Security;
  *
  * @author hugh
  * @since 2.6.1
+ * 直接使用 {@link com.github.hugh.crypto.components.CryptoCore}
  */
-
+@Deprecated
 public class Sm4Utils {
 
     private Sm4Utils() {
