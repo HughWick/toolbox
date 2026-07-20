@@ -219,7 +219,7 @@ public class CryptoCore {
                     secretKey = new SecretKeySpec(keyBytes, ALGORITHM_SM4);
                     break;
                 default:
-                    throw new IllegalArgumentException("未知异常分支");
+                    throw new IllegalArgumentException("不支持的加密算法：" + algorithm);
             }
             // 初始化 Cipher
             // 如果算法中带有 BouncyCastle 的提供者 (SM4 需要)，Cipher.getInstance 可以自动从 BC 中寻找
