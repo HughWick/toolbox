@@ -61,10 +61,47 @@ public class CryptoCore {
     private Cipher encryptCipher;
     private Cipher decryptCipher;
 
-    // 定义支持的算法常量
+    /**
+     * DES（Data Encryption Standard）数据加密标准算法标识。
+     * <p>
+     * <b>默认变换模式：</b>若仅指定此算法标识，默认解析为 {@code "DES/ECB/PKCS5Padding"}。<br>
+     * <b>规格说明：</b>
+     * <ul>
+     *   <li>分组大小（Block Size）：64 位（8 字节）。</li>
+     *   <li>密钥长度：固定为 8 字节（64 位，其中包含 56 位有效密钥与 8 位奇偶校验位）。</li>
+     *   <li>填充方式：标准的 PKCS#5 填充（填充 1~8 字节）。</li>
+     * </ul>
+     * <b>注意：</b>DES 密钥强度较低，已被证明不够安全，除兼容老旧系统外不建议在新系统中使用。
+     */
     public static final String ALGORITHM_DES = "DES";
-    public static final String ALGORITHM_AES = "AES";// 代表默认使用 "AES/ECB/PKCS5Padding"
+
+    /**
+     * AES（Advanced Encryption Standard）高级加密标准算法标识。
+     * <p>
+     * <b>默认变换模式：</b>若仅指定此算法标识，默认解析为 {@code "AES/ECB/PKCS5Padding"}。<br>
+     * <b>规格说明：</b>
+     * <ul>
+     *   <li>分组大小（Block Size）：128 位（16 字节）。</li>
+     *   <li>密钥长度：支持 16、24 或 32 字节（对应 128、192 或 256 位）。</li>
+     *   <li>填充方式：Java 声明为 {@code PKCS5Padding}，但因 AES 块大小为 16 字节，底层实际执行的是 <b>PKCS7Padding</b>（填充 1~16 字节）。</li>
+     * </ul>
+     */
+    public static final String ALGORITHM_AES = "AES";
+
+    /**
+     * 国密 SM4 对称加密算法标识。
+     * <p>
+     * <b>默认变换模式：</b>若仅指定此算法标识，默认解析为 {@code "SM4/ECB/PKCS5Padding"}。<br>
+     * <b>规格说明：</b>
+     * <ul>
+     *   <li>分组大小（Block Size）：固定为 128 位（16 字节）。</li>
+     *   <li>密钥长度：固定为 16 字节（128 位）。</li>
+     *   <li>填充方式：声明为 {@code PKCS5Padding} 时，在 Bouncy Castle 等 Provider 中底层实际调用的同样是 <b>PKCS7Padding</b>（填充 1~16 字节）。</li>
+     *   <li>环境依赖：需要系统中注册了支持国密算法的 Security Provider（如 Bouncy Castle）。</li>
+     * </ul>
+     */
     public static final String ALGORITHM_SM4 = "SM4";
+
     /**
      * AES/ECB 模式 + PKCS5Padding 填充。
      * <p>
