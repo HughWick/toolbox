@@ -65,15 +65,48 @@ public class CryptoCore {
     public static final String ALGORITHM_DES = "DES";
     public static final String ALGORITHM_AES = "AES";// 代表默认使用 "AES/ECB/PKCS5Padding"
     public static final String ALGORITHM_SM4 = "SM4";
-    public static final String ALGORITHM_AES_ECB_PKCS5PADDING = "AES/ECB/PKCS5Padding";
     /**
-     * AES 算法，使用 ECB 模式，不进行填充。
-     * 注意：使用此模式时，待加密的数据字节数组长度必须是 16 的整数倍。
+     * AES/ECB 模式 + PKCS5Padding 填充。
+     * <p>
+     * <b>注意：</b>ECB 模式不具备隐蔽明文结构的能力，相同的明文块会生成相同的密文块，存在安全性风险，不建议在安全要求较高的场景中使用。
+     */
+    public static final String ALGORITHM_AES_ECB_PKCS5PADDING = "AES/ECB/PKCS5Padding";
+
+    /**
+     * AES/ECB 模式 + 无填充。
+     * <p>
+     * 要求待加密的明文数据长度必须是 AES 分组大小（16 字节 / 128 位）的整数倍，否则在加密时会抛出异常。
      */
     public static final String ALGORITHM_AES_ECB_NO_PADDING = "AES/ECB/NoPadding";
+
+    /**
+     * AES/CBC 模式 + PKCS5Padding 填充。
+     * <p>
+     * 采用密码块链接模式（CBC），加密时需要搭配随机生成的初始向量（IV），安全性高于 ECB 模式。
+     */
     public static final String ALGORITHM_AES_CBC_PKCS5PADDING = "AES/CBC/PKCS5Padding";
+
+    /**
+     * AES/GCM 模式 + 无填充。
+     * <p>
+     * 伽罗瓦/计数器模式（GCM），属于认证加密（AEAD）算法，同时提供机密性与数据完整性校验，是目前推荐使用的 AES 加密模式。
+     */
     public static final String ALGORITHM_AES_GCM_NO_PADDING = "AES/GCM/NoPadding";
+
+    /**
+     * 国密 SM4/ECB 模式 + PKCS5Padding 填充。
+     * <p>
+     * <b>说明：</b>SM4 的分组大小为 128 位（16 字节）。在 Java 密码扩展（如 Bouncy Castle）中，
+     * 声明为 {@code PKCS5Padding} 时，实际执行的是标准的 <b>PKCS7Padding</b> 机制（填充字节数为 1~16 字节）。
+     */
     public static final String ALGORITHM_SM4_ECB_PKCS5PADDING = "SM4/ECB/PKCS5Padding";
+
+    /**
+     * 国密 SM4/CBC 模式 + PKCS5Padding 填充。
+     * <p>
+     * <b>说明：</b>SM4 的分组大小为 128 位（16 字节）。在 Java 密码扩展（如 Bouncy Castle）中，
+     * 声明为 {@code PKCS5Padding} 时，实际执行的是标准的 <b>PKCS7Padding</b> 机制（填充字节数为 1~16 字节）。
+     */
     public static final String ALGORITHM_SM4_CBC_PKCS5PADDING = "SM4/CBC/PKCS5Padding";
 
     /**
