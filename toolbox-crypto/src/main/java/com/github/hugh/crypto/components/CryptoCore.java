@@ -263,7 +263,7 @@ public class CryptoCore {
                     secretKey = new SecretKeySpec(keyBytes, ALGORITHM_SM4);
                     break;
                 default:
-                    throw new IllegalArgumentException("未知异常分支");
+                    throw new IllegalArgumentException("不支持的加密算法：" + algorithm);
             }
             // 初始化 Cipher
             instance.encryptCipher = Cipher.getInstance(cipherAlgorithmName);
