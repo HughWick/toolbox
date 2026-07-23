@@ -132,7 +132,7 @@ public class NumberFormatUtils {
      * @return 转换后的 {@link BigDecimal} 对象。若输入为 {@code null}、{@code NaN} 或 {@code Infinity} 则返回 {@code null}
      * @since 3.0.25
      */
-    public static BigDecimal toBigDecimal(Number value) {
+    public static BigDecimal toBigDecimal(Object value) {
         if (value == null) return null;
         if (value instanceof Float) {
             float f = (Float) value;
@@ -146,6 +146,17 @@ public class NumberFormatUtils {
         }
         if (value instanceof BigDecimal) {
             return (BigDecimal) value;
+        }
+        if (value instanceof String) {
+            String str = ((String) value).trim();
+            if (str.isEmpty()) {
+                return null;
+            }
+            try {
+                return new BigDecimal(str);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("无法将字符串解析为有效数值: \"" + value + "\"", e);
+            }
         }
         return new BigDecimal(value.toString());
     }
@@ -212,6 +223,82 @@ public class NumberFormatUtils {
      * @since 3.0.25
      */
     public static String formatZeroAsInt(Number value) {
+        return formatZeroAsInt(value, 2, DEFAULT_ROUNDING);
+    }
+
+    /**
+     * 格式化字符串数值并去除末尾多余的零（指定最大小数位数和舍入模式）。
+     *
+     * @param value        需要格式化的字符串数值（如 "1.200"）
+     * @param maxScale     最多保留的小数位数
+     * @param roundingMode 舍入模式
+     * @return 格式化后的字符串
+     * @since 3.0.25
+     */
+    public static String formatTrimZeros(String value, int maxScale, RoundingMode roundingMode) {
+        BigDecimal bd = toBigDecimal(value);
+        // 直接复用底层的 Number 方法
+        return formatTrimZeros(bd, maxScale, roundingMode);
+    }
+
+    /**
+     * 格式化字符串数值并去除末尾多余的零（指定最大小数位数，使用默认舍入模式）。
+     *
+     * @param value    需要格式化的字符串数值
+     * @param maxScale 最多保留的小数位数
+     * @return 格式化后的字符串
+     * @since 3.0.25
+     */
+    public static String formatTrimZeros(String value, int maxScale) {
+        return formatTrimZeros(value, maxScale, DEFAULT_ROUNDING);
+    }
+
+    /**
+     * 格式化字符串数值并去除末尾多余的零（默认最多保留 2 位小数，使用默认舍入模式）。
+     *
+     * @param value 需要格式化的字符串数值
+     * @return 格式化后的字符串
+     * @since 3.0.25
+     */
+    public static String formatTrimZeros(String value) {
+        return formatTrimZeros(value, 2, DEFAULT_ROUNDING);
+    }
+
+    /**
+     * 格式化字符串数值，若数值等于 0 则直接展示为整数 "0"（指定小数位数和舍入模式）。
+     *
+     * @param value        需要格式化的字符串数值
+     * @param scale        保留的小数位数
+     * @param roundingMode 舍入模式
+     * @return 格式化后的字符串（例如："0.00" 会转换为 "0"）
+     * @since 3.0.25
+     */
+    public static String formatZeroAsInt(String value, int scale, RoundingMode roundingMode) {
+        BigDecimal bd = toBigDecimal(value);
+        // 直接复用底层的 Number 方法
+        return formatZeroAsInt(bd, scale, roundingMode);
+    }
+
+    /**
+     * 格式化字符串数值，若数值等于 0 则直接展示为整数 "0"（指定小数位数，使用默认舍入模式）。
+     *
+     * @param value 需要格式化的字符串数值
+     * @param scale 保留的小数位数
+     * @return 格式化后的字符串
+     * @since 3.0.25
+     */
+    public static String formatZeroAsInt(String value, int scale) {
+        return formatZeroAsInt(value, scale, DEFAULT_ROUNDING);
+    }
+
+    /**
+     * 格式化字符串数值，若数值等于 0 则直接展示为整数 "0"（默认保留 2 位小数，使用默认舍入模式）。
+     *
+     * @param value 需要格式化的字符串数值
+     * @return 格式化后的字符串
+     * @since 3.0.25
+     */
+    public static String formatZeroAsInt(String value) {
         return formatZeroAsInt(value, 2, DEFAULT_ROUNDING);
     }
 }

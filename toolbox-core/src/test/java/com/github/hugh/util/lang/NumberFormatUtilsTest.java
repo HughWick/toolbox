@@ -2,12 +2,14 @@ package com.github.hugh.util.lang;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * NumberFormatUtils 的单元测试类
@@ -206,5 +208,72 @@ class NumberFormatUtilsTest {
 
         // 5. 其他 Number 子类（如 AtomicInteger / AtomicLong）
         assertEquals(new BigDecimal("123"), NumberFormatUtils.toBigDecimal(new java.util.concurrent.atomic.AtomicInteger(123)));
+    }
+    @Test
+    @DisplayName("字符串重载方法能正确解析并去除末尾零")
+    void testStringOverload() {
+        assertEquals("1.2", NumberFormatUtils.formatTrimZeros("1.200"));
+        assertEquals("12", NumberFormatUtils.formatTrimZeros("12.00"));
+        assertEquals("0", NumberFormatUtils.formatTrimZeros("0.000"));
+        assertEquals("3.14", NumberFormatUtils.formatTrimZeros("  3.1400  ")); // 前后空格
+    }
+
+    @Test
+    @DisplayName("原 Number 方法不受影响，保持正常工作")
+    void testNumberOriginal() {
+        assertEquals("1.2", NumberFormatUtils.formatTrimZeros(1.200d));
+        assertEquals("12", NumberFormatUtils.formatTrimZeros(12));
+        assertEquals("100", NumberFormatUtils.formatTrimZeros(new BigDecimal("100.00")));
+    }
+
+    @Test
+    @DisplayName("字符串输入与保留位数及舍入模式")
+    void testStringWithScaleAndRounding() {
+        assertEquals("1.23", NumberFormatUtils.formatTrimZeros("1.2345", 2));
+        assertEquals("1.24", NumberFormatUtils.formatTrimZeros("1.2355", 2)); // HALF_UP
+        assertEquals("1.23", NumberFormatUtils.formatTrimZeros("1.2355", 2, RoundingMode.DOWN));
+    }
+
+    @Test
+    @DisplayName("科学计数法字符串支持")
+    void testScientificNotationString() {
+        assertEquals("1000", NumberFormatUtils.formatTrimZeros("1e3"));
+        assertEquals("0.0123", NumberFormatUtils.formatTrimZeros("1.23e-2", 4));
+    }
+    @Test
+    @DisplayName("Null 与空字符串返回 null")
+    void testNullAndEmptyInputs() {
+        assertNull(NumberFormatUtils.formatTrimZeros((String) null));
+        assertNull(NumberFormatUtils.formatTrimZeros(""));
+        assertNull(NumberFormatUtils.formatTrimZeros("   "));
+        assertNull(NumberFormatUtils.formatZeroAsInt((String) null));
+        assertNull(NumberFormatUtils.formatZeroAsInt(""));
+        assertNull(NumberFormatUtils.formatZeroAsInt("   "));
+    }
+
+    @Test
+    @DisplayName("非法字符串解析抛出 IllegalArgumentException")
+    void testInvalidStringThrowsException() {
+        assertThrows(IllegalArgumentException.class, () -> NumberFormatUtils.formatTrimZeros("abc"));
+        assertThrows(IllegalArgumentException.class, () -> NumberFormatUtils.formatTrimZeros("1.2.3"));
+        assertThrows(IllegalArgumentException.class, () -> NumberFormatUtils.formatZeroAsInt("12a"));
+    }
+    @ParameterizedTest
+    @CsvSource({
+            "'0', '0'",
+            "'0.00', '0'",
+            "'-0.00', '0'",
+            "'0.0000', '0'"
+    })
+    @DisplayName("字符串形式的零值均转换为整数 '0'")
+    void testZeroStringValues(String input, String expected) {
+        assertEquals(expected, NumberFormatUtils.formatZeroAsInt(input));
+    }
+
+    @Test
+    @DisplayName("非零字符串保持指定小数位数（不去除末尾零）")
+    void testNonZeroStringValues() {
+        assertEquals("1.20", NumberFormatUtils.formatZeroAsInt("1.2"));
+        assertEquals("1.23", NumberFormatUtils.formatZeroAsInt("1.234", 2));
     }
 }
