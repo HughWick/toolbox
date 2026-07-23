@@ -3,6 +3,9 @@ package com.github.hugh.util.lang;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -151,5 +154,57 @@ class NumberFormatUtilsTest {
         assertNull(NumberFormatUtils.formatZeroAsInt((Double) null));
         assertEquals("NaN", NumberFormatUtils.formatZeroAsInt(Double.NaN));
         assertEquals("Infinity", NumberFormatUtils.formatZeroAsInt(Double.POSITIVE_INFINITY));
+    }
+
+    @Test
+    @DisplayName("测试 BigDecimal 零值转为整数 0")
+    void testBigDecimalZeroValues() {
+        assertEquals("0", NumberFormatUtils.formatZeroAsInt(BigDecimal.ZERO));
+        assertEquals("0", NumberFormatUtils.formatZeroAsInt(new BigDecimal("0.00")));
+        assertEquals("0", NumberFormatUtils.formatZeroAsInt(new BigDecimal("-0.00")));
+
+        // 四舍五入后变成 0.00 的微小值，也应返回 "0"
+        assertEquals("0", NumberFormatUtils.formatZeroAsInt(new BigDecimal("0.001"), 2));
+    }
+
+    @Test
+    @DisplayName("测试 BigDecimal 非零值保留末尾 0")
+    void testBigDecimalNonZeroValues() {
+        // 1.2 格式化为 2 位保留应为 "1.20"
+        assertEquals("1.20", NumberFormatUtils.formatZeroAsInt(new BigDecimal("1.2")));
+
+        // 1.0 非零整数，格式化为 2 位应为 "1.00"
+        assertEquals("1.00", NumberFormatUtils.formatZeroAsInt(new BigDecimal("1.0")));
+
+        // 正常小数保留
+        assertEquals("12.34", NumberFormatUtils.formatZeroAsInt(new BigDecimal("12.34")));
+        assertEquals("1.01", NumberFormatUtils.formatZeroAsInt(new BigDecimal("1.005")));
+    }
+
+    @Test
+    @DisplayName("测试 BigDecimal null 值")
+    void testBigDecimalNullValue() {
+        assertNull(NumberFormatUtils.formatZeroAsInt((BigDecimal) null));
+    }
+    @Test
+    @DisplayName("测试其他 Number 类型（Integer、Long、Short、Byte、BigInteger 等）转换为 BigDecimal")
+    void testOtherNumberTypesToBigDecimal() {
+        // 1. Integer 类型
+        assertEquals(new BigDecimal("100"), NumberFormatUtils.toBigDecimal(100));
+        assertEquals(new BigDecimal("-50"), NumberFormatUtils.toBigDecimal(-50));
+
+        // 2. Long 类型
+        assertEquals(new BigDecimal("10000000000"), NumberFormatUtils.toBigDecimal(10000000000L));
+
+        // 3. Short 与 Byte 类型
+        assertEquals(new BigDecimal("10"), NumberFormatUtils.toBigDecimal((short) 10));
+        assertEquals(new BigDecimal("5"), NumberFormatUtils.toBigDecimal((byte) 5));
+
+        // 4. BigInteger 类型
+        BigInteger bigInt = new BigInteger("999999999999999999");
+        assertEquals(new BigDecimal("999999999999999999"), NumberFormatUtils.toBigDecimal(bigInt));
+
+        // 5. 其他 Number 子类（如 AtomicInteger / AtomicLong）
+        assertEquals(new BigDecimal("123"), NumberFormatUtils.toBigDecimal(new java.util.concurrent.atomic.AtomicInteger(123)));
     }
 }
