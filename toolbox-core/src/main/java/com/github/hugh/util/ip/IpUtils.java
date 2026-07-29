@@ -39,32 +39,60 @@ public class IpUtils {
      * @return String ip
      */
     public static String get(HttpServletRequest request) {
-        // X-Forwarded-For：Squid 服务代理
-        String ip = request.getHeader("x-forwarded-for");
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            // Proxy-Client-IP：apache 服务代理
-            ip = request.getHeader("Proxy-Client-IP");
+        if (request == null) {
+            return "unknown";
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            // WL-Proxy-Client-IP：weblogic 服务代理
-            ip = request.getHeader("WL-Proxy-Client-IP");
+        String ip = null;
+        // 优先尝试获取 CDN / WAF 的专属 Header，这些往往更准确且由云厂商提供，难以被客户端直接伪造
+        ip = request.getHeader("CF-Connecting-IP"); // Cloudflare
+        if (isValidIp(ip)) return ip;
+        ip = request.getHeader("True-Client-IP"); // Akamai / Cloudflare Enterprise 等
+        if (isValidIp(ip)) return ip;
+        // 尝试获取标准的 X-Forwarded-For
+        ip = request.getHeader("X-Forwarded-For");
+        if (isValidIp(ip)) {
+            // 修复漏洞：针对存在多级代理的情况，格式为 "IP1, IP2, IP3"
+            String[] ipArray = ip.split(",");
+            for (String currentIp : ipArray) {
+                currentIp = currentIp.trim();
+                // 遍历截取后的数组，找到第一个既不是空、也不是 unknown 的 IP
+                if (isValidIp(currentIp)) {
+                    return currentIp;
+                }
+            }
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            // HTTP_CLIENT_IP：有些代理服务器
-            ip = request.getHeader("HTTP_CLIENT_IP");
+        // 依次降级尝试其他常见的代理头
+        String[] otherHeaders = {
+                "X-Real-IP",            // Nginx 常用
+                "Proxy-Client-IP",      // Apache 常用
+                "WL-Proxy-Client-IP",   // WebLogic 常用
+                "HTTP_CLIENT_IP",       // 代理服务器
+                "HTTP_X_FORWARDED_FOR"  // 代理服务器
+        };
+        for (String header : otherHeaders) {
+            ip = request.getHeader(header);
+            if (isValidIp(ip)) {
+                return ip;
+            }
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            // X-Real-IP：nginx服务代理
-            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        // 最后兜底：取 TCP 直连 Socket IP
+        ip = request.getRemoteAddr();
+        // 兼容 IPv6 的本地回环地址
+        if ("0:0:0:0:0:0:0:1".equals(ip) || "::1".equals(ip)) {
+            ip = "127.0.0.1";
         }
-        // 有些网络通过多层代理，那么获取到的ip就会有多个，一般都是通过逗号（,）分割开来，并且第一个ip为客户端的真实IP
-        if (ip != null && ip.length() != 0) {
-            ip = ip.split(",")[0];
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getRemoteAddr();
-        }
-        return ip;
+        return ip != null ? ip : "unknown";
+    }
+
+    /**
+     * 辅助方法：校验 IP 是否有效
+     * 判断标准：不为空，长度大于 0，且不等于 "unknown" (忽略大小写)
+     *
+     * @param ip 待校验的 IP 字符串
+     * @return boolean
+     */
+    private static boolean isValidIp(String ip) {
+        return ip != null && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip.trim());
     }
 
     /**

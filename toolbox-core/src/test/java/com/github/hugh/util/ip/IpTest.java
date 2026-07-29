@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -94,23 +93,20 @@ class IpTest {
     @Mock
     private HttpServletRequest request;
 
-    @InjectMocks
-    private IpUtils ipUtils;
-
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void get_ValidXForwardedFor_ReturnsFirstIp() {
-        when(request.getHeader("x-forwarded-for")).thenReturn("192.168.1.110, 192.168.1.120");
+    void getValidXForwardedForReturnsFirstIp() {
+        when(request.getHeader("X-Forwarded-For")).thenReturn("192.168.1.110, 192.168.1.120");
         String ip = IpUtils.get(request);
         assertEquals("192.168.1.110", ip);
     }
 
     @Test
-    public void get_XForwardedForNull_ReturnsProxyClientIp() {
+    void getXForwardedForNullReturnsProxyClientIp() {
         when(request.getHeader("x-forwarded-for")).thenReturn(null);
         when(request.getHeader("Proxy-Client-IP")).thenReturn("192.168.1.120");
         String ip = IpUtils.get(request);
@@ -118,7 +114,7 @@ class IpTest {
     }
 
     @Test
-    public void get_AllHeadersUnknown_ReturnsRemoteAddr() {
+    void getAllHeadersUnknownReturnsRemoteAddr() {
         when(request.getHeader("x-forwarded-for")).thenReturn("unknown");
         when(request.getHeader("Proxy-Client-IP")).thenReturn("unknown");
         when(request.getHeader("WL-Proxy-Client-IP")).thenReturn("unknown");
