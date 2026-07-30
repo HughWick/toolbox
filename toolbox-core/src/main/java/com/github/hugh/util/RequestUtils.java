@@ -1,22 +1,15 @@
 package com.github.hugh.util;
 
-import com.github.hugh.constant.StrPool;
-import eu.bitwalker.useragentutils.Browser;
-import eu.bitwalker.useragentutils.OperatingSystem;
-import eu.bitwalker.useragentutils.UserAgent;
-import eu.bitwalker.useragentutils.Version;
 import jakarta.servlet.http.HttpServletRequest;
-
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 设备工具类
  *
  * @author hugh
  * @since 1.2.8
+ * {@link UserAgentUtils}
  */
+@Deprecated
 public class RequestUtils {
     private RequestUtils() {
     }
@@ -28,7 +21,7 @@ public class RequestUtils {
     /**
      * 浏览器用户代理常量
      */
-    private static final String USER_AGENT = "user-agent";
+//    private static final String USER_AGENT = "user-agent";
 
     /**
      * 根据{@link HttpServletRequest}获取请求头内的设备类型
@@ -40,7 +33,7 @@ public class RequestUtils {
      * @return String 设备类型
      */
     public static String getSystemType(HttpServletRequest request) {
-        String userAgent = getUserAgent(request).toLowerCase();
+        String userAgent = UserAgentUtils.getUserAgent(request).toLowerCase();
         if (userAgent.contains("micromessenger")) { // 微信
             return "wx";
         } else if (userAgent.contains(ANDROID)) { // 安卓
@@ -97,78 +90,78 @@ public class RequestUtils {
     public static boolean isPc(HttpServletRequest request) {
         return "pc".equals(getSystemType(request));
     }
-
-    /**
-     * 获取浏览器名称
-     *
-     * @param request 请求信息头
-     * @return String 浏览器名称+版本号
-     * @since 2.3.6
-     */
-    public static String getBrowserName(HttpServletRequest request) {
-        String userAgent = getUserAgent(request);
-        UserAgent ua = UserAgent.parseUserAgentString(userAgent);
-        Browser browser = ua.getBrowser();
-        return browser.getName() + StrPool.SLASH + browser.getVersion(userAgent);
-    }
-
-    /**
-     * 获取操作系统
-     *
-     * @param request 请求信息头
-     * @return String 操作系统名称
-     * @since 2.3.6
-     */
-    public static String getOsName(HttpServletRequest request) {
-        String userAgent = getUserAgent(request);
-        UserAgent ua = UserAgent.parseUserAgentString(userAgent);
-        OperatingSystem os = ua.getOperatingSystem();
-        return os.getName();
-    }
-
-    /**
-     * 获取浏览器的版本号
-     *
-     * @param request 请求信息头
-     * @return Version 版本号
-     * @since 2.4.9
-     */
-    public static Version getBrowserVersion(HttpServletRequest request) {
-        String userAgent = getUserAgent(request);
-        UserAgent ua = UserAgent.parseUserAgentString(userAgent);
-        Browser browser = ua.getBrowser();
-        return browser.getVersion(userAgent);
-    }
-
-    /**
-     * 获取用户浏览器信息与系统信息
-     *
-     * @param request 请求头
-     * @return String
-     * @since 2.4.9
-     */
-    public static String getUserAgent(HttpServletRequest request) {
-        if (request == null) {
-            return null;
-        }
-        return request.getHeader(USER_AGENT);
-    }
-
-    /**
-     * 获取请求头部信息
-     *
-     * @param request HTTPServletRequest 请求对象
-     * @return 包含所有 HTTP 请求头部信息的 Map 对象
-     * @since 2.5.5
-     */
-    public static Map<String, String> getHeaders(HttpServletRequest request) {
-        Map<String, String> map = new HashMap<>();
-        Enumeration<String> headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement();
-            String headerValue = request.getHeader(headerName);
-            map.put(headerName, headerValue);
-        }
-        return map;
-    }
+//
+//    /**
+//     * 获取浏览器名称
+//     *
+//     * @param request 请求信息头
+//     * @return String 浏览器名称+版本号
+//     * @since 2.3.6
+//     */
+//    public static String getBrowserName(HttpServletRequest request) {
+//        String userAgent = getUserAgent(request);
+//        UserAgent ua = UserAgent.parseUserAgentString(userAgent);
+//        Browser browser = ua.getBrowser();
+//        return browser.getName() + StrPool.SLASH + browser.getVersion(userAgent);
+//    }
+//
+//    /**
+//     * 获取操作系统
+//     *
+//     * @param request 请求信息头
+//     * @return String 操作系统名称
+//     * @since 2.3.6
+//     */
+//    public static String getOsName(HttpServletRequest request) {
+//        String userAgent = getUserAgent(request);
+//        UserAgent ua = UserAgent.parseUserAgentString(userAgent);
+//        OperatingSystem os = ua.getOperatingSystem();
+//        return os.getName();
+//    }
+//
+//    /**
+//     * 获取浏览器的版本号
+//     *
+//     * @param request 请求信息头
+//     * @return Version 版本号
+//     * @since 2.4.9
+//     */
+//    public static Version getBrowserVersion(HttpServletRequest request) {
+//        String userAgent = getUserAgent(request);
+//        UserAgent ua = UserAgent.parseUserAgentString(userAgent);
+//        Browser browser = ua.getBrowser();
+//        return browser.getVersion(userAgent);
+//    }
+//
+//    /**
+//     * 获取用户浏览器信息与系统信息
+//     *
+//     * @param request 请求头
+//     * @return String
+//     * @since 2.4.9
+//     */
+//    public static String getUserAgent(HttpServletRequest request) {
+//        if (request == null) {
+//            return null;
+//        }
+//        return request.getHeader(USER_AGENT);
+//    }
+//
+//    /**
+//     * 获取请求头部信息
+//     *
+//     * @param request HTTPServletRequest 请求对象
+//     * @return 包含所有 HTTP 请求头部信息的 Map 对象
+//     * @since 2.5.5
+//     */
+//    public static Map<String, String> getHeaders(HttpServletRequest request) {
+//        Map<String, String> map = new HashMap<>();
+//        Enumeration<String> headerNames = request.getHeaderNames();
+//        while (headerNames.hasMoreElements()) {
+//            String headerName = headerNames.nextElement();
+//            String headerValue = request.getHeader(headerName);
+//            map.put(headerName, headerValue);
+//        }
+//        return map;
+//    }
 }

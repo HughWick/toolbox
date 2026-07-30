@@ -48,8 +48,8 @@
             <artifactId>ip2region</artifactId>
         </dependency>
         <dependency>
-            <groupId>eu.bitwalker</groupId>
-            <artifactId>UserAgentUtils</artifactId>
+            <groupId>nl.basjes.parse.useragent</groupId>
+            <artifactId>yauaa</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
@@ -73,6 +73,13 @@
             <groupId>at.yawk.lz4</groupId>
             <artifactId>lz4-java</artifactId>
             <scope>compile</scope>
+        </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-to-slf4j -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-to-slf4j</artifactId>
+            <version>2.25.5</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
