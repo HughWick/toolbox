@@ -226,7 +226,7 @@ class UserAgentUtilsTest {
         request.addHeader("User-Agent", UA_WEIBO);
         assertTrue(UserAgentUtils.isMobile(request));
         assertTrue(UserAgentUtils.isWeibo(request));
-        assertEquals("Weibo", UserAgentUtils.getDomesticPlatform(request));
+        assertEquals("WeiBo", UserAgentUtils.getDomesticPlatform(request));
     }
 
     @Test
@@ -234,6 +234,6 @@ class UserAgentUtilsTest {
         request.addHeader("User-Agent", UA_DOU_YIN);
         assertTrue(UserAgentUtils.isMobile(request));
         assertTrue(UserAgentUtils.isDouYin(request));
-        assertEquals("Douyin", UserAgentUtils.getDomesticPlatform(request));
+        assertEquals("DouYin", UserAgentUtils.getDomesticPlatform(request));
     }
 }

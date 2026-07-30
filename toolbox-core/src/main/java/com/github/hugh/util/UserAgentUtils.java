@@ -296,8 +296,8 @@ public class UserAgentUtils {
         if (ua.contains(KEYWORD_WECHAT)) return "Wechat";
         if (ua.contains(KEYWORD_ALIPAY)) return "Alipay";
         if (ua.contains(KEYWORD_DING_TALK)) return "DingTalk";
-        if (ua.contains(KEYWORD_DOU_YIN)) return "Douyin";
-        if (ua.contains(KEYWORD_WEIBO)) return "Weibo";
+        if (ua.contains(KEYWORD_DOU_YIN)) return "DouYin";
+        if (ua.contains(KEYWORD_WEIBO)) return "WeiBo";
         if (ua.contains(KEYWORD_QQ)) return "QQ";
         return "Other";
     }
