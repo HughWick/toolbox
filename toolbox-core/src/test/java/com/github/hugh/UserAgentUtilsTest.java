@@ -34,6 +34,10 @@ class UserAgentUtilsTest {
 
     // 抖音客户端 UA 示例（内嵌 Aweme 标识）
     private static final String UA_DOU_YIN = "Mozilla/5.0 (Linux; Android 11; Pixel 5 Build/RD2A.210905.003; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/92.0.4515.131 Mobile Safari/537.36 aweme_17.9.0";
+    // 补充企业微信 User-Agent 示例（包含 wxwork 关键字）
+    private static final String UA_WXWORK_IOS = "Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.38(0x1800262c) NetType/WIFI Language/zh_CN wxwork/4.1.6 (MicroMessenger/6.2.0) MacWechat/store";
+    // 企业微信 Android 客户端 User-Agent 示例（包含 wxwork 关键字）
+    private static final String UA_WXWORK_ANDROID = "Mozilla/5.0 (Linux; Android 12; SM-G991B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.99 Mobile Safari/537.36 MicroMessenger/8.0.28 wxwork/4.0.18";
 
     @BeforeEach
     void setUp() {
@@ -235,5 +239,28 @@ class UserAgentUtilsTest {
         assertTrue(UserAgentUtils.isMobile(request));
         assertTrue(UserAgentUtils.isDouYin(request));
         assertEquals("DouYin", UserAgentUtils.getDomesticPlatform(request));
+    }
+
+    @Test
+    void testWxWorkApp() {
+        // 1. 正向测试：企业微信 iOS 端
+        request.addHeader("User-Agent", UA_WXWORK_IOS);
+        assertTrue(UserAgentUtils.isWxWork(request));
+        assertTrue(UserAgentUtils.isMobile(request));
+        // 企业微信 UA 中通常也包含 MicroMessenger，若 isWechat 也成立可一并断言
+        assertTrue(UserAgentUtils.isWechat(request));
+
+        // 2. 反向测试：普通微信不应该被判定为企业微信
+        request.removeHeader("User-Agent");
+        request.addHeader("User-Agent", UA_WECHAT_IOS);
+        assertFalse(UserAgentUtils.isWxWork(request));
+    }
+
+    @Test
+    void testWxWorkAndroid() {
+        // 3. 正向测试：企业微信 Android 端
+        request.addHeader("User-Agent", UA_WXWORK_ANDROID);
+        assertTrue(UserAgentUtils.isWxWork(request));
+        assertTrue(UserAgentUtils.isMobile(request));
     }
 }
