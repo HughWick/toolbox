@@ -18,8 +18,9 @@ public class UserAgentUtils {
 
     private UserAgentUtils() {
     }
-
     private static final String USER_AGENT = "User-Agent";
+    private static final String WINDOWS = "Windows";
+    private static final String WINDOWS_NT = "Windows NT";
     private static final String UNKNOWN = "Unknown";
     private static final String SLASH = "/"; // 如项目中有 StrPool.SLASH 可直接替换
     // --- 国内常见 APP 的 User-Agent 特征词 ---
@@ -96,8 +97,8 @@ public class UserAgentUtils {
             return UNKNOWN;
         }
         // 针对 Windows NT 进行人类友好化转换
-        if ("Windows NT".equalsIgnoreCase(osName)) {
-            return "Windows";
+        if (WINDOWS_NT.equalsIgnoreCase(osName)) {
+            return WINDOWS;
         }
         return osName;
     }
@@ -172,13 +173,21 @@ public class UserAgentUtils {
         if (isUnknown(osName)) {
             return UNKNOWN;
         }
-        // 针对 Yauaa 返回 "??" 或老旧 "Windows NT" 的友好转换
-        if ("Windows NT".equalsIgnoreCase(osName)) {
-            osName = "Windows";
-        }
-        // 如果 osVersion 为未知或者 "??"，只返回系统名称
-        if (isUnknown(osVersion) || "??".equals(osVersion)) {
+        // 兜底逻辑：缺少 Client Hints 时（初次请求或未带高熵 Header）
+        if ("??".equals(osVersion) || "Unknown".equalsIgnoreCase(osVersion)) {
+            String ua = request.getHeader(USER_AGENT);
+            if (ua != null && ua.contains("Windows NT 10.0")) {
+                // 无法准确区分 Win 10 还是 Win 11，返回稳妥的商业名称或降级表示
+                return "Windows 10/11";
+            }
+            if (WINDOWS_NT.equalsIgnoreCase(osName)) {
+                return WINDOWS;
+            }
             return osName;
+        }
+        // 成功通过 Client Hints 或传统规则识别出名称和版本
+        if (WINDOWS_NT.equalsIgnoreCase(osName)) {
+            osName = WINDOWS;
         }
         return osName + " " + osVersion;
     }

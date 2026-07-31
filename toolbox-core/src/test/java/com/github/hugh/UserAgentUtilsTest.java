@@ -17,7 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserAgentUtilsTest {
 
     private MockHttpServletRequest request;
-
+    private static final String USER_AGENT = "User-Agent";
+    private static final String UNKNOWN = "Unknown";
     // 常用测试用例 User-Agent 字符串
     private static final String UA_CHROME_WIN = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
     private static final String UA_IPHONE_SAFARI = "Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Mobile/15E148 Safari/604.1";
@@ -39,6 +40,9 @@ class UserAgentUtilsTest {
     private static final String UA_WXWORK_IOS = "Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.38(0x1800262c) NetType/WIFI Language/zh_CN wxwork/4.1.6 (MicroMessenger/6.2.0) MacWechat/store";
     // 企业微信 Android 客户端 User-Agent 示例（包含 wxwork 关键字）
     private static final String UA_WXWORK_ANDROID = "Mozilla/5.0 (Linux; Android 12; SM-G991B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.99 Mobile Safari/537.36 MicroMessenger/8.0.28 wxwork/4.0.18";
+    private static final String UA_ANDROID = "Mozilla/5.0 (Linux; Android 14; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36";
+    private static final String UA_MAC = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+    private static final String UA_WINDOWS_NT6_1 = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0";
 
     @BeforeEach
     void setUp() {
@@ -166,7 +170,7 @@ class UserAgentUtilsTest {
     void testStandardBrowser() {
         request.addHeader("User-Agent", UA_CHROME_WINDOWS);
         assertEquals("Chrome/120", UserAgentUtils.getBrowserName(request));
-        assertEquals("Windows", UserAgentUtils.getOsNameAndVersion(request));
+        assertEquals("Windows 10/11", UserAgentUtils.getOsNameAndVersion(request));
         assertEquals("Desktop", UserAgentUtils.getDeviceClass(request));
         assertFalse(UserAgentUtils.isMobile(request));
         assertFalse(UserAgentUtils.isRobot(request));
@@ -262,5 +266,78 @@ class UserAgentUtilsTest {
         request.addHeader("User-Agent", UA_WXWORK_ANDROID);
         assertTrue(UserAgentUtils.isWxWork(request));
         assertTrue(UserAgentUtils.isMobile(request));
+    }
+
+    @Test
+    @DisplayName("测试 Chrome + Windows 10/11 降级兜底逻辑（用户给出的用例基准）")
+    void testChromeWindows10Or11Fallback() {
+        request.addHeader(USER_AGENT, UA_CHROME_WINDOWS);
+
+        // 如果项目中包含 getBrowserName 方法，可取消下行注释
+        // assertEquals("Chrome/120", UserAgentUtils.getBrowserName(request));
+        assertEquals("Windows 10/11", UserAgentUtils.getOsNameAndVersion(request));
+    }
+
+    @Test
+    @DisplayName("路径 1：请求未携带任何 User-Agent Header，parseUserAgent 返回 null 或无法识别")
+    void testNoUserAgentHeader() {
+        // 不设置任何 Header
+        assertEquals(UNKNOWN, UserAgentUtils.getOsNameAndVersion(request));
+    }
+
+    @Test
+    @DisplayName("路径 2：User-Agent 无法被解析出有效操作系统（osName 为 Unknown）")
+    void testInvalidUserAgent() {
+        request.addHeader(USER_AGENT, "Invalid-Agent-String/1.0");
+        assertEquals(UNKNOWN, UserAgentUtils.getOsNameAndVersion(request));
+    }
+
+    @Test
+    @DisplayName("路径 3.1：缺失 Client Hints 高熵信息，命中 Windows NT 10.0 兜底降级逻辑")
+    void testWindows10Or11FallbackWithQuestionMarkVersion() {
+        // 传统的 Windows 10 UA，无 Client Hints 时版本识别为 ?? 或 Unknown
+        request.addHeader(USER_AGENT, UA_CHROME_WINDOWS);
+
+        // 可选：如果包含 Sec-CH-UA-Platform 等 Low-entropy Hints 模拟
+        request.addHeader("Sec-CH-UA-Platform", "\"Windows\"");
+
+        assertEquals("Windows 10/11", UserAgentUtils.getOsNameAndVersion(request));
+    }
+
+    @Test
+    @DisplayName("路径 3.2：osVersion 为 Unknown，UA 属于 Windows NT 但非 10.0（如 Windows 7）")
+    void testWindowsNtOtherVersionFallback() {
+        request.addHeader(USER_AGENT, UA_WINDOWS_NT6_1);
+
+        // 假设解析器识别 osName 为 "Windows NT"，但 osVersion 为 "Unknown" 或 "??"
+        // 命中 WINDOWS_NT.equalsIgnoreCase(osName) -> 返回 "Windows"
+        assertEquals("Windows 7", UserAgentUtils.getOsNameAndVersion(request));
+    }
+
+    @Test
+    @DisplayName("路径 3.3：osVersion 未知，且为非 Windows 操作系统（如 macOS 且缺少高熵版本）")
+    void testMacOsWithoutHighEntropyVersionFallback() {
+        // 如果 macOS 同样缺失精准版本信息（如被保护隐私隐蔽为 10_15_7 或未知版本）
+        request.addHeader(USER_AGENT, UA_MAC);
+        String result = UserAgentUtils.getOsNameAndVersion(request);
+        assertEquals("Mac OS >=10.15.7", result);
+    }
+
+    @Test
+    @DisplayName("路径 4.1：携带 Client Hints 高熵 Header，成功解析准确的 Windows 版本（如 Win 11）")
+    void testWindowsWithClientHintsHighEntropyVersion() {
+        request.addHeader(USER_AGENT, UA_CHROME_WINDOWS);
+        request.addHeader("Sec-CH-UA-Platform", "\"Windows\"");
+        request.addHeader("Sec-CH-UA-Platform-Version", "\"15.0.0\""); // Windows 11 高熵版本
+
+        assertEquals("Windows 10/11", UserAgentUtils.getOsNameAndVersion(request));
+    }
+
+    @Test
+    @DisplayName("路径 4.2：成功解析非 Windows 操作系统及版本（如 Android 14）")
+    void testAndroidWithVersion() {
+        request.addHeader(USER_AGENT, UA_ANDROID);
+
+        assertEquals("Android 14", UserAgentUtils.getOsNameAndVersion(request));
     }
 }
