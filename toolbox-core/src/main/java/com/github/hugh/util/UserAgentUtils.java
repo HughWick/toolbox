@@ -18,6 +18,7 @@ public class UserAgentUtils {
 
     private UserAgentUtils() {
     }
+
     private static final String USER_AGENT = "User-Agent";
     private static final String WINDOWS = "Windows";
     private static final String WINDOWS_NT = "Windows NT";
@@ -161,6 +162,7 @@ public class UserAgentUtils {
     /**
      * 获取完整的操作系统及版本号
      *
+     * @param request 请求头
      * @return 例如: Windows 10 / Android 13 / iOS 16.5
      */
     public static String getOsNameAndVersion(HttpServletRequest request) {
@@ -195,6 +197,7 @@ public class UserAgentUtils {
     /**
      * 获取设备类型/客户端类型 (DeviceClass)
      *
+     * @param request 请求头
      * @return 例如: Desktop(电脑), Phone(手机), Tablet(平板), Robot(爬虫/机器人), TV(电视)
      */
     public static String getDeviceClass(HttpServletRequest request) {
@@ -208,6 +211,9 @@ public class UserAgentUtils {
 
     /**
      * 判断是否为移动设备终端 (手机或平板)
+     *
+     * @param request 请求头
+     * @return boolean true:移动设备终端
      */
     public static boolean isMobile(HttpServletRequest request) {
         String deviceClass = getDeviceClass(request);
@@ -216,6 +222,9 @@ public class UserAgentUtils {
 
     /**
      * 判断是否为爬虫/网络机器人 (Robot / Crawler)
+     *
+     * @param request 请求头
+     * @return boolean true:爬虫/网络机器人
      */
     public static boolean isRobot(HttpServletRequest request) {
         String deviceClass = getDeviceClass(request);
@@ -225,6 +234,7 @@ public class UserAgentUtils {
     /**
      * 获取具体设备品牌/型号名称
      *
+     * @param request 请求头
      * @return 例如: Apple iPhone, Huawei, Samsung 等
      */
     public static String getDeviceName(HttpServletRequest request) {
@@ -239,6 +249,7 @@ public class UserAgentUtils {
     /**
      * 获取浏览器排版/渲染内核引擎
      *
+     * @param request 请求头
      * @return 例如: Blink, WebKit, Gecko, Trident
      */
     public static String getLayoutEngine(HttpServletRequest request) {
@@ -252,21 +263,39 @@ public class UserAgentUtils {
 
     /**
      * 私有解析方法：增加判空与缓存提取
+     *
+     * @param request 请求头
      */
     private static UserAgent parseUserAgent(HttpServletRequest request) {
+        if (request == null) {
+            return null;
+        }
+        // 防止空白字符流入 Yauaa 触发其底层的 "Hacker" 防御规则，确保单元测试返回 Unknown
         String userAgentStr = getUserAgent(request);
         if (userAgentStr == null || userAgentStr.trim().isEmpty()) {
             return null;
         }
-        return UAA.parse(userAgentStr);
+        // 获取所有的 Header 并交给 Yauaa 解析，以便自动提取 Sec-CH-* 等高熵指纹
+        Map<String, String> headers = getHeaders(request);
+        if (headers.isEmpty()) {
+            return null;
+        }
+        return UAA.parse(headers);
     }
 
+    /**
+     * @param val 值
+     * @return boolean
+     */
     private static boolean isUnknown(String val) {
         return val == null || val.isEmpty() || "Unknown".equalsIgnoreCase(val) || "??".equals(val);
     }
 
     /**
      * 判断是否在微信环境（含微信普通浏览器和微信小程序）
+     *
+     * @param request 请求头
+     * @return boolean true:微信环境
      */
     public static boolean isWechat(HttpServletRequest request) {
         return containsKeyword(request, KEYWORD_WECHAT);
@@ -275,6 +304,9 @@ public class UserAgentUtils {
     /**
      * 判断是否在微信小程序环境
      * 注意：部分 Android 机型的微信小程序 UA 可能仅包含 miniProgram 或两者皆有
+     *
+     * @param request 请求头
+     * @return boolean true:微信小程序环境
      */
     public static boolean isWechatMiniProgram(HttpServletRequest request) {
         return containsKeyword(request, KEYWORD_MINI_PROGRAM);
@@ -282,6 +314,9 @@ public class UserAgentUtils {
 
     /**
      * 判断是否在企业微信环境
+     *
+     * @param request 请求头
+     * @return boolean true:企业微信环境
      */
     public static boolean isWxWork(HttpServletRequest request) {
         return containsKeyword(request, KEYWORD_WX_WORK);
@@ -289,6 +324,9 @@ public class UserAgentUtils {
 
     /**
      * 判断是否在支付宝环境（含支付宝小程序）
+     *
+     * @param request 请求头
+     * @return boolean true:支付宝环境
      */
     public static boolean isAlipay(HttpServletRequest request) {
         return containsKeyword(request, KEYWORD_ALIPAY);
@@ -296,6 +334,9 @@ public class UserAgentUtils {
 
     /**
      * 判断是否在钉钉环境
+     *
+     * @param request 请求头
+     * @return boolean true:钉钉环境
      */
     public static boolean isDingTalk(HttpServletRequest request) {
         return containsKeyword(request, KEYWORD_DING_TALK);
@@ -303,6 +344,9 @@ public class UserAgentUtils {
 
     /**
      * 判断是否在微博内嵌环境
+     *
+     * @param request 请求头
+     * @return boolean true:微博内嵌环境
      */
     public static boolean isWeibo(HttpServletRequest request) {
         return containsKeyword(request, KEYWORD_WEIBO);
@@ -310,6 +354,9 @@ public class UserAgentUtils {
 
     /**
      * 判断是否为抖音（字节跳动系）环境
+     *
+     * @param request 请求头
+     * @return boolean true:抖音（字节跳动系）环境
      */
     public static boolean isDouYin(HttpServletRequest request) {
         return containsKeyword(request, KEYWORD_DOU_YIN);
@@ -318,6 +365,7 @@ public class UserAgentUtils {
     /**
      * 综合获取国内平台名称（业务路由常用）
      *
+     * @param request 请求头
      * @return 平台名称，若都不是则返回 Other 或 Unknown
      */
     public static String getDomesticPlatform(HttpServletRequest request) {
@@ -336,6 +384,10 @@ public class UserAgentUtils {
 
     /**
      * 快速校验 UA 中是否包含指定关键字（忽略大小写，为了性能直接走原始 String api）
+     *
+     * @param request 请求头
+     * @param keyword 关键字
+     * @return boolean
      */
     private static boolean containsKeyword(HttpServletRequest request, String keyword) {
         String ua = getUserAgent(request);

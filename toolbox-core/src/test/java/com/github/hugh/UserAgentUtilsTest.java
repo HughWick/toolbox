@@ -330,7 +330,7 @@ class UserAgentUtilsTest {
         request.addHeader("Sec-CH-UA-Platform", "\"Windows\"");
         request.addHeader("Sec-CH-UA-Platform-Version", "\"15.0.0\""); // Windows 11 高熵版本
 
-        assertEquals("Windows 10/11", UserAgentUtils.getOsNameAndVersion(request));
+        assertEquals("Windows 11", UserAgentUtils.getOsNameAndVersion(request));
     }
 
     @Test
