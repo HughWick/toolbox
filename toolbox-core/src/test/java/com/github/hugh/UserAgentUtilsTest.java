@@ -25,6 +25,7 @@ class UserAgentUtilsTest {
     private static final String UA_GOOGLE_BOT = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
     // 各种真实的 User-Agent 样本
     private static final String UA_CHROME_WINDOWS = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+//    private static final String UA_CHROME_WINDOWS = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36";
     private static final String UA_WECHAT_IOS = "Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.38(0x1800262c) NetType/WIFI Language/zh_CN";
     private static final String UA_WECHAT_MINI_PROGRAM = "Mozilla/5.0 (iPhone; CPU iPhone OS 15_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.38(0x1800262c) NetType/WIFI Language/zh_CN miniProgram";
     private static final String UA_ALIPAY_ANDROID = "Mozilla/5.0 (Linux; U; Android 13; zh-cn; KB2000 Build/TP1A) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/100.0.4896.58 Mobile Safari/537.36 AlipayDefined(nt:WIFI,ws:1080|2322) AlipayClient/10.3.96.8000 Language/zh-Hans";
@@ -92,7 +93,7 @@ class UserAgentUtilsTest {
             request.addHeader("User-Agent", UA_CHROME_WIN);
 
             assertEquals("Chrome/120", UserAgentUtils.getBrowserName(request));
-            assertEquals("Windows NT", UserAgentUtils.getOsName(request));
+            assertEquals("Windows", UserAgentUtils.getOsName(request));
             assertEquals("120", UserAgentUtils.getBrowserVersion(request));
             assertEquals("Desktop", UserAgentUtils.getDeviceClass(request));
             assertEquals("Blink", UserAgentUtils.getLayoutEngine(request));
@@ -163,10 +164,9 @@ class UserAgentUtilsTest {
 
     @Test
     void testStandardBrowser() {
-//        mockUserAgent(UA_CHROME_WINDOWS);
         request.addHeader("User-Agent", UA_CHROME_WINDOWS);
         assertEquals("Chrome/120", UserAgentUtils.getBrowserName(request));
-        assertEquals("Windows NT", UserAgentUtils.getOsNameAndVersion(request));
+        assertEquals("Windows", UserAgentUtils.getOsNameAndVersion(request));
         assertEquals("Desktop", UserAgentUtils.getDeviceClass(request));
         assertFalse(UserAgentUtils.isMobile(request));
         assertFalse(UserAgentUtils.isRobot(request));

@@ -11,11 +11,13 @@ import java.util.Map;
 
 /**
  * UserAgent 与 请求头解析工具类（基于 Yauaa 实现）
+ *
  * @since 3.0.26
  */
 public class UserAgentUtils {
 
-    private UserAgentUtils(){}
+    private UserAgentUtils() {
+    }
 
     private static final String USER_AGENT = "User-Agent";
     private static final String UNKNOWN = "Unknown";
@@ -61,13 +63,10 @@ public class UserAgentUtils {
         if (agent == null) {
             return UNKNOWN + SLASH + UNKNOWN;
         }
-
         String name = agent.getValue(UserAgent.AGENT_NAME);
         String version = agent.getValue(UserAgent.AGENT_VERSION);
-
         name = isUnknown(name) ? UNKNOWN : name;
         version = isUnknown(version) ? UNKNOWN : version;
-
         return name + SLASH + version;
     }
 
@@ -78,12 +77,29 @@ public class UserAgentUtils {
      * @return String 操作系统名称 (如: Windows, Android, iOS, macOS)
      */
     public static String getOsName(HttpServletRequest request) {
+        if (request == null) {
+            return UNKNOWN;
+        }
+        // 优先尝试读取 HTTP Client Hints (现代 Chrome 默认会自动发送 Sec-CH-UA-Platform: "Windows")
+        String platformHeader = request.getHeader("Sec-CH-UA-Platform");
+        if (platformHeader != null && !platformHeader.isBlank()) {
+            // 去除标头自带的双引号，如 "Windows" -> Windows
+            return platformHeader.replace("\"", "").trim();
+        }
+        // 兜底使用 UserAgent 解析
         UserAgent agent = parseUserAgent(request);
         if (agent == null) {
             return UNKNOWN;
         }
         String osName = agent.getValue(UserAgent.OPERATING_SYSTEM_NAME);
-        return isUnknown(osName) ? UNKNOWN : osName;
+        if (isUnknown(osName)) {
+            return UNKNOWN;
+        }
+        // 针对 Windows NT 进行人类友好化转换
+        if ("Windows NT".equalsIgnoreCase(osName)) {
+            return "Windows";
+        }
+        return osName;
     }
 
     /**
@@ -131,9 +147,7 @@ public class UserAgentUtils {
         if (headerNames == null) {
             return Collections.emptyMap();
         }
-
-        // 预设 16 初始容量，防 HashMap 扩容
-        Map<String, String> map = new HashMap<>(16);
+        Map<String, String> map = new HashMap<>();
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
             if (headerName != null) {
@@ -155,11 +169,18 @@ public class UserAgentUtils {
         }
         String osName = agent.getValue(UserAgent.OPERATING_SYSTEM_NAME);
         String osVersion = agent.getValue(UserAgent.OPERATING_SYSTEM_VERSION);
-
         if (isUnknown(osName)) {
             return UNKNOWN;
         }
-        return isUnknown(osVersion) ? osName : osName + " " + osVersion;
+        // 针对 Yauaa 返回 "??" 或老旧 "Windows NT" 的友好转换
+        if ("Windows NT".equalsIgnoreCase(osName)) {
+            osName = "Windows";
+        }
+        // 如果 osVersion 为未知或者 "??"，只返回系统名称
+        if (isUnknown(osVersion) || "??".equals(osVersion)) {
+            return osName;
+        }
+        return osName + " " + osVersion;
     }
 
     /**
@@ -234,6 +255,7 @@ public class UserAgentUtils {
     private static boolean isUnknown(String val) {
         return val == null || val.isEmpty() || "Unknown".equalsIgnoreCase(val) || "??".equals(val);
     }
+
     /**
      * 判断是否在微信环境（含微信普通浏览器和微信小程序）
      */
@@ -286,6 +308,7 @@ public class UserAgentUtils {
 
     /**
      * 综合获取国内平台名称（业务路由常用）
+     *
      * @return 平台名称，若都不是则返回 Other 或 Unknown
      */
     public static String getDomesticPlatform(HttpServletRequest request) {
