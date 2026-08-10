@@ -28,11 +28,15 @@ public class DateCode {
      */
     public static final String YEAR_MONTH_DAY_SIMPLE = "yyyyMMdd";
 
-
     /**
      * [年-月-日 时:分:秒]完整的日期格式
      */
     public static final String YEAR_MONTH_DAY_HOUR_MIN_SEC = "yyyy-MM-dd HH:mm:ss";
+
+    /**
+     * [年-月-日 时:分]的日期格式
+     */
+    public static final String YEAR_MONTH_DAY_HOUR_MIN = "yyyy-MM-dd HH:mm";
 
     /**
      * 完整的日期格式
