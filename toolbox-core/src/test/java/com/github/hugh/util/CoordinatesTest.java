@@ -255,4 +255,91 @@ class CoordinatesTest {
         assertEquals(36.297603753563536, restoredWgsCoordinate1.getLatitude());
         assertEquals(102.89410536151733, restoredWgsCoordinate1.getLongitude());
     }
+
+    // 允许的误差范围（约 1米左右的精度误差）
+    private static final double DELTA = 0.0003;
+
+    /**
+     * 测试 GCJ-02 (火星坐标) 转 WGS-84 (地球坐标)
+     * 包含 double 和 String 两种入参的测试
+     */
+    @Test
+    void testGcj02ToWgs84() {
+        // 假设天安门附近的 GCJ-02 坐标
+        double gcjLon = 116.403875;
+        double gcjLat = 39.915281;
+
+        // 预期的 WGS-84 坐标 (近似值，具体取决于 calculateOffset 的算法精度)
+        double expectedWgsLon = 116.397428;
+        double expectedWgsLat = 39.913876;
+
+        // 1. 测试 double 传参
+        GpsDTO wgs84Dto = CoordinatesUtils.gcj02ToWgs84(gcjLon, gcjLat);
+        assertNotNull(wgs84Dto);
+        assertEquals(expectedWgsLon, wgs84Dto.getLongitude(), DELTA, "Double参数: GCJ-02转WGS-84经度计算有误");
+        assertEquals(expectedWgsLat, wgs84Dto.getLatitude(), DELTA, "Double参数: GCJ-02转WGS-84纬度计算有误");
+
+        // 2. 测试 String 传参
+        GpsDTO wgs84StrDto = CoordinatesUtils.gcj02ToWgs84(String.valueOf(gcjLon), String.valueOf(gcjLat));
+        assertNotNull(wgs84StrDto);
+        assertEquals(expectedWgsLon, wgs84StrDto.getLongitude(), DELTA, "String参数: GCJ-02转WGS-84经度计算有误");
+        assertEquals(expectedWgsLat, wgs84StrDto.getLatitude(), DELTA, "String参数: GCJ-02转WGS-84纬度计算有误");
+    }
+
+    /**
+     * 测试 BD-09 (百度坐标) 直接转 WGS-84 (地球坐标)
+     */
+    @Test
+    void testBd09ToWgs84() {
+        // 假设天安门附近的 BD-09 坐标
+        double bdLon = 116.410369;
+        double bdLat = 39.921336;
+        // 预期的 WGS-84 坐标
+        double expectedWgsLon = 116.397755;
+        double expectedWgsLat = 39.913594;
+        //  测试 double 传参
+        GpsDTO wgs84Dto = CoordinatesUtils.bd09ToWgs84(bdLon, bdLat);
+        assertNotNull(wgs84Dto);
+        assertEquals(expectedWgsLon, wgs84Dto.getLongitude(), DELTA, "Double参数: BD-09转WGS-84经度计算有误");
+        assertEquals(expectedWgsLat, wgs84Dto.getLatitude(), DELTA, "Double参数: BD-09转WGS-84纬度计算有误");
+        //  测试 String 传参
+        GpsDTO wgs84StrDto = CoordinatesUtils.bd09ToWgs84(String.valueOf(bdLon), String.valueOf(bdLat));
+        assertNotNull(wgs84StrDto);
+        assertEquals(expectedWgsLon, wgs84StrDto.getLongitude(), DELTA, "String参数: BD-09转WGS-84经度计算有误");
+        assertEquals(expectedWgsLat, wgs84StrDto.getLatitude(), DELTA, "String参数: BD-09转WGS-84纬度计算有误");
+    }
+
+    /**
+     * 测试 BD-09 (百度坐标) 转 GCJ-02 (火星坐标)
+     */
+    @Test
+    void testBd09ToGcj02() {
+        double bdLon = 116.410369;
+        double bdLat = 39.921336;
+        // 预期的 GCJ-02 坐标
+        double expectedGcjLon = 116.403875;
+        double expectedGcjLat = 39.915281;
+        // 测试 String 传参
+        GpsDTO gcj02Dto = CoordinatesUtils.bd09ToGcj02(String.valueOf(bdLon), String.valueOf(bdLat));
+        assertNotNull(gcj02Dto);
+        assertEquals(expectedGcjLon, gcj02Dto.getLongitude(), DELTA, "BD-09转GCJ-02经度计算有误");
+        assertEquals(expectedGcjLat, gcj02Dto.getLatitude(), DELTA, "BD-09转GCJ-02纬度计算有误");
+    }
+
+    /**
+     * 测试 GCJ-02 (火星坐标) 转 BD-09 (百度坐标)
+     */
+    @Test
+    void testGcj02ToBd09() {
+        double gcjLon = 116.403875;
+        double gcjLat = 39.915281;
+        // 预期的 BD-09 坐标
+        double expectedBdLon = 116.410369;
+        double expectedBdLat = 39.921336;
+        // 测试 String 传参
+        GpsDTO bd09Dto = CoordinatesUtils.gcj02ToBd09(String.valueOf(gcjLon), String.valueOf(gcjLat));
+        assertNotNull(bd09Dto);
+        assertEquals(expectedBdLon, bd09Dto.getLongitude(), DELTA, "GCJ-02转BD-09经度计算有误");
+        assertEquals(expectedBdLat, bd09Dto.getLatitude(), DELTA, "GCJ-02转BD-09纬度计算有误");
+    }
 }

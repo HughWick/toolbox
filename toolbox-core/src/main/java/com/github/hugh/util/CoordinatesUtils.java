@@ -396,6 +396,19 @@ public class CoordinatesUtils {
 
     /**
      * 将 GCJ-02 (火星坐标系) 坐标转换为 WGS-84 坐标。
+     * 支持字符串输入
+     *
+     * @param longitude GCJ-02 经度 (-180 到 +180)
+     * @param latitude  GCJ-02 纬度 (-90 到 +90)
+     * @return 转换后的 WGS-84 坐标对象
+     * @since 3.0.12
+     */
+    public static GpsDTO gcj02ToWgs84(final String longitude, final String latitude) {
+        return gcj02ToWgs84(Double.parseDouble(longitude), Double.parseDouble(latitude));
+    }
+
+    /**
+     * 将 GCJ-02 (火星坐标系) 坐标转换为 WGS-84 坐标。
      * <p>
      * 采用近似法，对于大多数应用场景精度足够。
      *
@@ -484,5 +497,34 @@ public class CoordinatesUtils {
         ret += (20.0 * Math.sin(lat * PI) + 40.0 * Math.sin(lat / 3.0 * PI)) * 2.0 / 3.0;
         ret += (160.0 * Math.sin(lat / 12.0 * PI) + 320 * Math.sin(lat * PI / 30.0)) * 2.0 / 3.0;
         return ret;
+    }
+
+    /**
+     * 将 BD-09 (百度坐标系) 直接转换为 WGS-84 坐标。
+     * 支持字符串输入
+     *
+     * @param longitude BD-09 经度 (-180 到 +180)
+     * @param latitude  BD-09 纬度 (-90 到 +90)
+     * @return 转换后的 WGS-84 坐标对象
+     * @since 3.0.27
+     */
+    public static GpsDTO bd09ToWgs84(final String longitude, final String latitude) {
+        return bd09ToWgs84(Double.parseDouble(longitude), Double.parseDouble(latitude));
+    }
+
+    /**
+     * 将 BD-09 (百度坐标系) 直接转换为 WGS-84 坐标。
+     * <p>内部实现为：先将 BD-09 转为 GCJ-02，再将 GCJ-02 转为 WGS-84</p>
+     *
+     * @param longitude BD-09 经度 (-180 到 +180)
+     * @param latitude  BD-09 纬度 (-90 到 +90)
+     * @return 转换后的 WGS-84 坐标对象
+     * @since 3.0.27
+     */
+    public static GpsDTO bd09ToWgs84(final double longitude, final double latitude) {
+        // 先将百度坐标(BD-09)转换为火星坐标(GCJ-02)
+        GpsDTO gcj02 = bd09ToGcj02(longitude, latitude);
+        // 再将火星坐标(GCJ-02)转换为标准坐标(WGS-84)
+        return gcj02ToWgs84(gcj02.getLongitude(), gcj02.getLatitude());
     }
 }
