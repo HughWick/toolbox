@@ -55,8 +55,8 @@ public class IsoDateUtils {
      * @param str 待解析的时间字符串，例如 "2021-12-25T16:53+08:00"
      * @return 格式化后的字符串，例如 "2021-12-25 16:53:00"；若失败则原样返回
      */
-    public static String formatIsoString(String str) {
-        return formatIsoString(str, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC, null);
+    public static String format(String str) {
+        return format(str, DateCode.YEAR_MONTH_DAY_HOUR_MIN_SEC, null);
     }
 
     /**
@@ -66,8 +66,8 @@ public class IsoDateUtils {
      * @param targetPattern 目标输出格式，例如 "yyyy-MM-dd HH:mm"
      * @return 格式化后的字符串；若失败则原样返回
      */
-    public static String formatIsoPattern(String str, String targetPattern) {
-        return formatIsoString(str, targetPattern, null);
+    public static String format(String str, String targetPattern) {
+        return format(str, targetPattern, null);
     }
 
     /**
@@ -78,7 +78,7 @@ public class IsoDateUtils {
      * @param targetZone    目标时区，为 null 则不进行时区转换
      * @return 格式化后的字符串；若解析失败或输入为空，则直接返回原字符串
      */
-    public static String formatIsoString(String str, String targetPattern, ZoneId targetZone) {
+    public static String format(String str, String targetPattern, ZoneId targetZone) {
         // 校验：如果为空，直接原样返回（null 返回 null，"" 返回 ""）
         if (str == null || str.trim().isEmpty()) {
             return str;
@@ -99,11 +99,11 @@ public class IsoDateUtils {
             // 时区与类型转换
             LocalDateTime resultTime;
             if (parsed instanceof ZonedDateTime) {
-                ZonedDateTime zdt = (ZonedDateTime) parsed;
-                resultTime = (targetZone != null) ? zdt.withZoneSameInstant(targetZone).toLocalDateTime() : zdt.toLocalDateTime();
+                ZonedDateTime zonedDateTime = (ZonedDateTime) parsed;
+                resultTime = (targetZone != null) ? zonedDateTime.withZoneSameInstant(targetZone).toLocalDateTime() : zonedDateTime.toLocalDateTime();
             } else if (parsed instanceof OffsetDateTime) {
-                OffsetDateTime odt = (OffsetDateTime) parsed;
-                resultTime = (targetZone != null) ? odt.atZoneSameInstant(targetZone).toLocalDateTime() : odt.toLocalDateTime();
+                OffsetDateTime offsetDateTime = (OffsetDateTime) parsed;
+                resultTime = (targetZone != null) ? offsetDateTime.atZoneSameInstant(targetZone).toLocalDateTime() : offsetDateTime.toLocalDateTime();
             } else if (parsed instanceof LocalDateTime) {
                 resultTime = (LocalDateTime) parsed;
             } else {
