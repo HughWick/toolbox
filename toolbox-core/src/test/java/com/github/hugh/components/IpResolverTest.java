@@ -48,10 +48,13 @@ class IpResolverTest {
     void getCompleteTest() {
         String ip1 = "192.168.1.191";
         final Ip2regionDTO str1 = IpResolver.on(ip1).parse();
-        assertEquals("0", str1.getRegion());
+        assertEquals("内网IP", str1.getRegion());
         String ip2 = "175.8.167.6";
         final Ip2regionDTO str2 = IpResolver.on(ip2).parse();
         assertEquals("0", str2.getRegion());
+        Ip2regionDTO parse = IpResolver.on(ip2).useV4().parse();
+        assertEquals("CN", parse.getRegion());
+        assertEquals("长沙市", parse.getCity());
     }
 
     @Test
@@ -101,7 +104,7 @@ class IpResolverTest {
         final String str1 = IpResolver.on(ip1)
                 .useV4().setSpare("-")
                 .getComplete();
-        assertNull(str1);
+        assertEquals("内网IP",str1);
         String ip2 = "175.8.167.6";
         final String str2 = IpResolver.on(ip2).getComplete();
         assertEquals("湖南省长沙市", str2);

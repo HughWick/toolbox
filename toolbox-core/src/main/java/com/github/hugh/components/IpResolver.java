@@ -19,6 +19,7 @@ public class IpResolver {
     private static final String DEFAULT_SPARE_CHAR = "\\|";
     // V4 版本返回的保留/内网标识
     private static final String DEFAULT_RESERVED_STR = "Reserved";
+    private static final String INTERNAL_IP = "内网IP";
 
     /**
      * 构造函数，初始化要解析的 IP 地址。
@@ -53,6 +54,7 @@ public class IpResolver {
     /**
      * 开启 V4 解析模式
      * 业务端调用示例: IpResolver.on(ip).useV4().getComplete();
+     * @since 3.0.28
      */
     public IpResolver useV4() {
         this.useV4 = true;
@@ -61,6 +63,9 @@ public class IpResolver {
 
     /**
      * 判断解析出的节点是否为无效值 (兼容旧版的 0 和 新版的 Reserved)
+     *
+     * @param val 解析出的节点值
+     * @since 3.0.28
      */
     private boolean isInvalid(String val) {
         return val == null
@@ -88,6 +93,9 @@ public class IpResolver {
         String city = parse.getCity();
         boolean isProvInvalid = isInvalid(province);
         boolean isCityInvalid = isInvalid(city);
+        if (INTERNAL_IP.equals(parse.getCity())) {
+            return INTERNAL_IP;
+        }
         // 如果省份和城市均为无效值（例如内网IP），返回 null
         if (isProvInvalid && isCityInvalid) {
             return null;
@@ -128,13 +136,21 @@ public class IpResolver {
      * 如果解析失败返回 null
      */
     public Ip2regionDTO parse() {
+        Ip2regionDTO ip2regionDTO = new Ip2regionDTO();
+        // 【上层预判】如果是内网 IP，直接返回自定义的内网标识，不查询底层库
+        if (isInternalIp(this.ip)) {
+            ip2regionDTO.setProvince(INTERNAL_IP);
+            ip2regionDTO.setCity(INTERNAL_IP);
+            ip2regionDTO.setIsp(INTERNAL_IP);
+            ip2regionDTO.setRegion(INTERNAL_IP);
+            return ip2regionDTO;
+        }
         // 根据标识调用对应的底层工具类
         String str = this.useV4 ? Ip2regionUtils.getCityInfoV4(this.ip) : Ip2regionUtils.getCityInfo(this.ip);
         if (str == null) {
             return null;
         }
         String[] arr = str.split(DEFAULT_SPARE_CHAR);
-        Ip2regionDTO ip2regionDTO = new Ip2regionDTO();
         if (this.useV4) {
             // --- V4 新版格式解析映射 ---
             // 格式：中国|湖南省|张家界市|电信|CN
@@ -154,5 +170,26 @@ public class IpResolver {
             ip2regionDTO.setIsp(arr[4]);
         }
         return ip2regionDTO;
+    }
+
+    /**
+     * 判断是否为内网/局域网/回环 IP
+     *
+     * @param ip IP 地址
+     * @return true:是，false:否
+     * @since 3.0.28
+     */
+    private boolean isInternalIp(String ip) {
+        if (ip == null || ip.trim().isEmpty()) {
+            return false;
+        }
+        if ("127.0.0.1".equals(ip) || "localhost".equalsIgnoreCase(ip)) {
+            return true;
+        }
+        // 简单的正则匹配内网网段 (10.x.x.x, 172.16.x.x-172.31.x.x, 192.168.x.x)
+        // 追求极致性能的话，建议将 IP 转为 long 型进行位运算判断，这里用正则做个简单示例
+        return ip.startsWith("10.")
+                || ip.startsWith("192.168.")
+                || ip.matches("^172\\.(1[6-9]|2[0-9]|3[0-1])\\..*");
     }
 }
