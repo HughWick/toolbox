@@ -26,11 +26,12 @@ class Ip2RegeinTest {
     void tearDown() throws Exception {
         resetSearcherField();
     }
+
     @Test
     void parseStringTest() {
-//        String ip = "222.244.144.131";
-//        final String cityInfo = Ip2regionUtils.getCityInfo(ip);
-//        assertEquals("中国|0|湖南省|长沙市|电信", cityInfo);
+        String ip = "222.244.144.131";
+        final String cityInfo = Ip2regionUtils.getCityInfo(ip);
+        assertEquals("中国|0|湖南省|长沙市|电信", cityInfo);
         String ip2 = "223.153.137.189";
         final String cityInfo2 = Ip2regionUtils.getCityInfo(ip2);
         assertEquals("中国|0|湖南省|张家界市|电信", cityInfo2);
@@ -43,6 +44,33 @@ class Ip2RegeinTest {
         String ip5 = "79.124.58.250";
         final String cityInfo5 = Ip2regionUtils.getCityInfo(ip5);
         assertEquals("保加利亚|0|Sofia|0|0", cityInfo5);
+        // 实际地址：湖南省岳阳市
+        String ip6 = "39.144.192.141";
+        final String cityInfo6 = Ip2regionUtils.getCityInfo(ip6);
+        System.out.println(cityInfo6);
+        assertEquals("中国|0|0|0|移动", cityInfo6);
+    }
+
+    @Test
+    void parseV4StringTest() {
+        String ip = "222.244.144.131";
+        final String cityInfo = Ip2regionUtils.getCityInfoV4(ip);
+        assertEquals("中国|湖南省|长沙市|电信|CN", cityInfo);
+        String ip2 = "223.153.137.189";
+        final String cityInfo2 = Ip2regionUtils.getCityInfoV4(ip2);
+        assertEquals("中国|湖南省|张家界市|电信|CN", cityInfo2);
+        String ip3 = "175.8.167.6";
+        final String cityInfo3 = Ip2regionUtils.getCityInfoV4(ip3);
+        assertEquals("中国|湖南省|长沙市|电信|CN", cityInfo3);
+        String ip4 = "192.168.1.191";
+        final String cityInfo4 = Ip2regionUtils.getCityInfoV4(ip4);
+        assertEquals("Reserved|Reserved|Reserved|0|0", cityInfo4);
+        String ip5 = "79.124.58.250";
+        final String cityInfo5 = Ip2regionUtils.getCityInfoV4(ip5);
+        assertEquals("Bulgaria|Sofia-Capital|Sofia|0|BG", cityInfo5);
+        String ip6 = "39.144.192.141";
+        final String cityInfo6 = Ip2regionUtils.getCityInfoV4(ip6);
+        assertEquals("中国|0|0|移动|CN", cityInfo6);
     }
 
     @Test

@@ -28,66 +28,116 @@ public class Ip2regionUtils {
      * ip数据文件目录
      */
     private static final String XDB_PATH = "/ip2region/ip2region.xdb";
+    /**
+     * 新版(v4) ip数据文件目录
+     */
+    private static final String XDB_V4_PATH = "/ip2region/ip2region_v4.xdb";
+
 
     /**
-     * 全局复用的 Searcher 实例 (ip2region v2 的 Searcher 在内存模式下是线程安全的)
+     * 全局复用的 Searcher 实例
      */
     private static Searcher searcher;
+    private static Searcher searcherV4;
 
     /**
-     * 使用静态代码块或静态内部类实现一次性加载
-     * 这里为了防止启动时文件不存在导致整个应用崩溃，采用懒加载（第一次调用时初始化）
+     * 独立的锁对象，防止旧版和新版初始化时互相阻塞
+     */
+    private static final Object LOCK_OLD = new Object();
+    private static final Object LOCK_V4 = new Object();
+
+    /**
+     * 懒加载初始化 旧版 Searcher
      */
     private static void initSearcher() {
         if (searcher != null) {
             return;
         }
-        // 双重检查锁，防止并发初始化
-        synchronized (IpUtils.class) {
-            if (searcher != null) {
-                return;
-            }
-            long start = System.nanoTime();
-            try (InputStream inputStream = StreamUtils.getInputStream(XDB_PATH)) {
-                if (inputStream == null) {
-                    throw new ToolboxException("IP data file not found: " + XDB_PATH);
-                }
-                // 将整个 xdb 文件加载到内存 (cBuff)
-                var cBuff = Searcher.loadContentFromInputStream(inputStream);
-                // 使用内容 buffer 创建 Searcher
-                // 这里的 Version.IPv4 取决于你引入的 jar 包版本，确保参数匹配
-                searcher = Searcher.newWithBuffer(Version.IPv4, cBuff);
-                log.info("Ip2region loaded successfully, cost: {} ms", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start));
-            } catch (Exception e) {
-                log.error("Failed to load ip2region.xdb", e);
-                // 抛出异常，或者让 searcher 保持 null，在调用时处理
-                throw new ToolboxException("failed to create content cached searcher: " + e.getMessage());
+        synchronized (LOCK_OLD) {
+            if (searcher == null) {
+                searcher = buildSearcher(XDB_PATH);
             }
         }
     }
 
     /**
-     * 根据IP地址解析省市区信息
+     * 懒加载初始化 新版(v4) Searcher
+     */
+    private static void initSearcherV4() {
+        if (searcherV4 != null) {
+            return;
+        }
+        synchronized (LOCK_V4) {
+            if (searcherV4 == null) {
+                searcherV4 = buildSearcher(XDB_V4_PATH);
+            }
+        }
+    }
+
+    /**
+     * 提取出的公共 Searcher 构建逻辑
      *
-     * @param ip    IP地址
-     * @return String 返回字符串格式：国家|大区|省份|城市|运营商
+     * @param path xdb文件路径
+     * @return Searcher 实例
+     */
+    private static Searcher buildSearcher(String path) {
+        long start = System.nanoTime();
+        try (InputStream inputStream = StreamUtils.getInputStream(path)) {
+            if (inputStream == null) {
+                throw new ToolboxException("IP data file not found: " + path);
+            }
+            // 将整个 xdb 文件加载到内存 (cBuff)
+            var cBuff = Searcher.loadContentFromInputStream(inputStream);
+            // 创建 Searcher (保留你原有的 Version.IPv4 传参方式)
+            Searcher newSearcher = Searcher.newWithBuffer(Version.IPv4, cBuff);
+            log.debug("Ip2region [{}] loaded successfully, cost: {} ms",
+                    path, TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start));
+            return newSearcher;
+        } catch (Exception e) {
+            log.error("Failed to load ip2region file: {}", path, e);
+            throw new ToolboxException("failed to create content cached searcher for " + path + ": " + e.getMessage());
+        }
+    }
+
+    /**
+     * 【兼容旧版】根据IP地址解析省市区信息
+     *
+     * @param ip IP地址
+     * @return String 返回旧版字符串格式：国家|大区|省份|城市|运营商
      */
     public static String getCityInfo(String ip) {
-        //  基础校验
         if (ip == null || ip.trim().isEmpty()) {
-            return null; // 或者返回 "未知"
+            return null;
         }
-        // 懒加载初始化
         if (searcher == null) {
             initSearcher();
         }
         try {
-            // 执行查询 (纯内存操作，微秒级)
-            // Searcher 在完全加载到内存后是线程安全的，可以直接并发调用
             return searcher.search(ip);
         } catch (Exception e) {
-            log.warn("IP parse error for ip: {}, error: {}", ip, e.getMessage());
-            return null; // 或者返回 "未知"
+            log.warn("IP parse error for ip: {} using OLD xdb, error: {}", ip, e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * 根据IP地址解析省市区信息 (v4版本)
+     *
+     * @param ip IP地址
+     * @return String 返回 v4 版的字符串格式
+     */
+    public static String getCityInfoV4(String ip) {
+        if (ip == null || ip.trim().isEmpty()) {
+            return null;
+        }
+        if (searcherV4 == null) {
+            initSearcherV4();
+        }
+        try {
+            return searcherV4.search(ip);
+        } catch (Exception e) {
+            log.warn("IP parse error for ip: {} using V4 xdb, error: {}", ip, e.getMessage());
+            return null;
         }
     }
 
