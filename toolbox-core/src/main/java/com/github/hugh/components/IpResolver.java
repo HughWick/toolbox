@@ -187,7 +187,7 @@ public class IpResolver {
             return true;
         }
         // 简单的正则匹配内网网段 (10.x.x.x, 172.16.x.x-172.31.x.x, 192.168.x.x)
-        // 追求极致性能的话，建议将 IP 转为 long 型进行位运算判断，这里用正则做个简单示例
+        // 追求极致性能的话，建议将 IP 转为 long 型进行位运算判断
         return ip.startsWith("10.")
                 || ip.startsWith("192.168.")
                 || ip.matches("^172\\.(1[6-9]|2[0-9]|3[0-1])\\..*");

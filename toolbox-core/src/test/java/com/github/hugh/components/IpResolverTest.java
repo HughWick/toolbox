@@ -15,19 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 class IpResolverTest {
 
-    /**
-     * ip数据文件目录
-     */
-//    private static final String XDB_PATH = "/ip2region/ip2region.xdb";
-//
-//    private static final Supplier<byte[]> easyRedisSupplier = () -> {
-//        InputStream resourceAsStream = Ip2RegeinTest.class.getResourceAsStream(XDB_PATH);
-//        try {
-//            return StreamUtils.toByteArray(resourceAsStream);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    };
     @Test
     void completeTest() {
         String ip1 = "192.168.1.191";
@@ -36,9 +23,12 @@ class IpResolverTest {
         String ip2 = "175.8.167.6";
         final String str2 = IpResolver.on(ip2).getComplete();
         assertEquals("湖南省长沙市", str2);
-//        String ip3 = "154.18.161.64";
-//        final String str3 = IpResolver.on(ip3, easyRedisSupplier.get()).getComplete();
-//        assertNull(str3);
+        // 香港
+        String ip3 = "154.18.161.64";
+        final String str3 = IpResolver.on(ip3).getComplete();
+        assertNull(str3);
+        String complete = IpResolver.on(ip3).useV4().getComplete();
+        assertEquals("Singapore", complete);
 //        String ip4 = "";
 //        final String str4 = IpResolver.on("", easyRedisSupplier.get());
 //        assertEquals(ip4 , str4);
@@ -112,8 +102,9 @@ class IpResolverTest {
         String ip3 = "39.144.192.141";
         final String str3 = IpResolver.on(ip3).getComplete();
         assertNull(str3);
-//        String ip4 = "";
-//        final String str4 = IpResolver.on("", easyRedisSupplier.get());
-//        assertEquals(ip4 , str4);
+        // 实际地址：湖南省长沙市
+        String ip4 = "39.144.190.72";
+        final String str4 = IpResolver.on(ip4).getComplete();
+        assertNull(str4);
     }
 }
