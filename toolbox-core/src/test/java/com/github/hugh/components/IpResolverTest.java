@@ -1,11 +1,11 @@
 package com.github.hugh.components;
 
 import com.github.hugh.bean.dto.Ip2regionDTO;
+import com.github.hugh.exception.ToolboxException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * IP 解析测试工具
@@ -49,9 +49,9 @@ class IpResolverTest {
 
     @Test
     void completeSpareTest() {
-//        String ip1 = "192.168.1.191";
-//        final String str1 = IpResolver.on(ip1).getComplete();
-//        assertEquals("内网IP", str1);
+        String ip1 = "192.168.1.191";
+        final String str1 = IpResolver.on(ip1).getComplete();
+        assertEquals("内网IP", str1);
         String ip2 = "175.8.167.6";
         final String str2 = IpResolver.on(ip2).setSpare("-").getComplete();
         assertEquals("湖南省-长沙市", str2);
@@ -82,9 +82,10 @@ class IpResolverTest {
     @Test
     @DisplayName("Test case: parse() 方法返回 null，应抛出异常")
     void testGetComplete_ParseReturnsNull_ThrowsException() {
-//        IpResolver ipResolver = IpResolver.on("8.0.25.");
-//        ToolboxException exception = assertThrows(ToolboxException.class, ipResolver::getComplete);
-//        assertEquals("failed to create content cached searcher:", exception.getMessage());
+        IpResolver ipResolver = IpResolver.on("8.0.25.");
+//        String complete = ipResolver.getComplete();
+        ToolboxException exception = assertThrows(ToolboxException.class, ipResolver::getComplete);
+        assertEquals("解析失败，IP：8.0.25.", exception.getMessage());
 //        assertEquals("invalid ip address `8.0.25.`", exception.getCause().getMessage());
     }
 

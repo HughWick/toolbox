@@ -4,6 +4,7 @@ import com.github.hugh.bean.dto.Ip2regionDTO;
 import com.github.hugh.constant.StrPool;
 import com.github.hugh.exception.ToolboxException;
 import com.github.hugh.util.ip.Ip2regionUtils;
+import com.github.hugh.util.regex.RegexUtils;
 
 /**
  * 提供 IP 地址解析功能的工具类。
@@ -136,6 +137,9 @@ public class IpResolver {
      * 如果解析失败返回 null
      */
     public Ip2regionDTO parse() {
+        if (RegexUtils.isNotIp(this.ip)) {
+            return null;
+        }
         Ip2regionDTO ip2regionDTO = new Ip2regionDTO();
         // 【上层预判】如果是内网 IP，直接返回自定义的内网标识，不查询底层库
         if (isInternalIp(this.ip)) {
