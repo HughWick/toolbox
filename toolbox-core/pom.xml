@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.github.hughwick</groupId>
         <artifactId>toolbox-parent</artifactId>
-       <version>3.0.28</version>
+       <version>3.0.29</version>
     </parent>
     <name>Toolbox Core</name>
     <artifactId>toolbox-core</artifactId>
@@ -74,11 +74,9 @@
             <artifactId>lz4-java</artifactId>
             <scope>compile</scope>
         </dependency>
-        <!-- Source: https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-to-slf4j -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-to-slf4j</artifactId>
-            <version>2.25.5</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
