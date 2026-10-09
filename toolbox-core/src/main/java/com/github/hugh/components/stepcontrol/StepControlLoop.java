@@ -101,7 +101,9 @@ public class StepControlLoop {
         // 限制绝对输出值在执行器的物理极值 [OutputMin, OutputMax] 之间
         double nextOutput = this.currentOutput + delta;
         nextOutput = Math.max(config.getOutputMin(), Math.min(config.getOutputMax(), nextOutput));
-        // 6. 物理极限拦截（Saturated Output Skip）
+        // 6. 物理极限拦截（Saturated Output Skip）与真实生效增量计算
+        // 计算经物理上下限截断后，实际真实生效的步进量 actualDelta
+        double actualDelta = nextOutput - this.currentOutput;
         // 若当前执行器已达最大/最小极限且输出没有发生任何变化，无需向下游发送控制报文
         if (Double.compare(nextOutput, this.currentOutput) == 0) {
             return StepResult.skip(this.currentOutput, StepReason.OUTPUT_SATURATED);
@@ -109,7 +111,7 @@ public class StepControlLoop {
         // 7. 更新本地控制状态并返回动作指令
         this.currentOutput = nextOutput;
         this.lastAdjustTimestamp.set(nowMs);
-        return StepResult.execute(nextOutput, delta, StepReason.ADJUSTED_OK);
+        return StepResult.execute(nextOutput, actualDelta, StepReason.ADJUSTED_OK);
     }
 
     /**
