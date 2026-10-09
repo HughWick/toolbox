@@ -337,6 +337,15 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <!--禁用默认 deploy 插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.1.4</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
             <!-- central发布插件 将组件部署到OSSRH并将其发布到Central Repository   -->
             <!-- Source: https://mvnrepository.com/artifact/org.sonatype.central/central-publishing-maven-plugin -->
             <plugin>
@@ -346,6 +355,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publishingServerId>central</publishingServerId>
+                    <autoPublish>true</autoPublish>
                 </configuration>
             </plugin>
             <!--compiler plugin -->
