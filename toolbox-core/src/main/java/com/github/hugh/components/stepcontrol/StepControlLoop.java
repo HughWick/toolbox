@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *   <li><b>防抖节流（Cooldown）：</b>防止系统在大滞后或惯性响应期间高频重复动作。</li>
  *   <li><b>死区过滤（DeadBand）：</b>消除测量噪声引起的执行机构频繁微调震荡。</li>
  *   <li><b>步进速率限制（MaxStep）：</b>防止单次控制增量过大引发超调与系统冲击。</li>
- *   <li><b>输出抗饱和（Output Clamping & Anti-Windup）：</b>执行器上下限硬约束，饱和时静默拦截。</li>
+ *   <li><b>输出抗饱和（Output Clamping 与 Anti-Windup）：</b>执行器上下限硬约束，饱和时静默拦截。</li>
  * </ul>
  *
  * <b>典型适用场景：</b>

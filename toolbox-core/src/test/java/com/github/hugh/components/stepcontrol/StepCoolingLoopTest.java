@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class StepCoolingLoopTest {
 
     @Test
-    @DisplayName("核心验证: 机房夏季散热降温闭环控制验证 (正作用 DIRECT 模式)")
+    @DisplayName("核心验证: 机房夏季散热（空调/散热风机）降温闭环控制验证 (正作用 DIRECT 模式)")
     void testCoolingContinuousRegulation_DirectAction() {
         // =========================================================================
         // 1. 物理环境与受控对象模型构建 (机房制冷温控):
