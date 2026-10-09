@@ -346,18 +346,6 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
-            <!-- central发布插件 将组件部署到OSSRH并将其发布到Central Repository   -->
-            <!-- Source: https://mvnrepository.com/artifact/org.sonatype.central/central-publishing-maven-plugin -->
-            <plugin>
-                <groupId>org.sonatype.central</groupId>
-                <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>${central-publishing-maven-plugin.version}</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <publishingServerId>central</publishingServerId>
-                    <autoPublish>true</autoPublish>
-                </configuration>
-            </plugin>
             <!--compiler plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -473,6 +461,18 @@
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+                    <!-- central发布插件 将组件部署到OSSRH并将其发布到Central Repository   -->
+                    <!-- Source: https://mvnrepository.com/artifact/org.sonatype.central/central-publishing-maven-plugin -->
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central-publishing-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
