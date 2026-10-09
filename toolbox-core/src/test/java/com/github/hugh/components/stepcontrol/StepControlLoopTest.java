@@ -66,7 +66,6 @@ class StepControlLoopTest {
         // 误差 e = 28.0 - 24.0 = +4.0
         // 理论调节量 delta = 4.0 * 5.0 = 20.0 -> 超出最大限制 maxStep=15.0，应被截断
         StepResult result = acCoolingLoop.compute(28.0, now);
-
         assertTrue(result.isNeedAction(), "温度过高，必须加大制冷输出");
         assertEquals(15.0, result.getDelta(), 1e-4, "应触发 maxStep 限制，单次最多加大 15.0%");
         assertEquals(35.0, result.getNewOutput(), 1e-4, "初始 20% + 15% = 35%");
