@@ -22,7 +22,11 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           # gpg短密码环境变量
           gpg-passphrase: GPG_PASSPHRASE
-
+      - name: Import GPG Key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
       # 第一步：编译、打包所有子模块并完成 GPG 签名
       - name: Build and Sign Artifacts
         run: mvn clean install -P release -DskipTests --batch-mode -e
