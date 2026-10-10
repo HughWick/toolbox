@@ -410,13 +410,13 @@
                         <artifactId>central-publishing-maven-plugin</artifactId>
                         <version>${central-publishing-maven-plugin.version}</version>
                         <extensions>true</extensions>
-                        <inherited>false</inherited> <!-- 阻止子模块继承该插件 -->
                         <configuration>
                             <publishingServerId>central</publishingServerId>
                             <autoPublish>true</autoPublish>
+                            <waitUntil>published</waitUntil> <!-- 显式等待发布校验完成 -->
                         </configuration>
                     </plugin>
-                    <!-- 2. 禁用传统的 maven-deploy-plugin -->
+                    <!-- 禁用传统的 maven-deploy-plugin -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-deploy-plugin</artifactId>
