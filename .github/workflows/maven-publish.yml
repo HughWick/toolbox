@@ -23,8 +23,16 @@ jobs:
           # gpg短密码环境变量
           gpg-passphrase: GPG_PASSPHRASE
 
+      # 第一步：编译、打包所有子模块并完成 GPG 签名
+      - name: Build and Sign Artifacts
+        run: mvn clean install -P release -DskipTests --batch-mode -e
+        env:
+          MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      # 第二步：仅在根目录 (-N) 触发中央仓库发布上传
       - name: Publish to Apache Maven Central
-        run: mvn clean --batch-mode deploy -P release -DskipTests -e
+        run: mvn central-publishing:publish -P release --batch-mode -N -e
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
