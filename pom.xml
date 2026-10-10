@@ -413,8 +413,6 @@
                         <configuration>
                             <publishingServerId>central</publishingServerId>
                             <autoPublish>true</autoPublish>
-                            <!-- 确保配置正确，或者在不需要发布的模块中跳过 -->
-                            <skip>true</skip>
                         </configuration>
                     </plugin>
                     <!-- Source -->
