@@ -22,21 +22,9 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           # gpg短密码环境变量
           gpg-passphrase: GPG_PASSPHRASE
-      # 导入 GPG 私钥
-      - name: Import GPG Key
-        uses: crazy-max/ghaction-import-gpg@v6
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      # 编译、生成源码/文档并完成 GPG 本地签名与安装
-      - name: Build, Package and Sign
-        run: mvn clean install -P release -DskipTests --batch-mode -e
+      - name: Publish to Apache Maven Central
+        run: mvn clean --batch-mode deploy -P release -Dmaven.test.skip=true
         env:
+          MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-      # 使用 Sonatype 官方 Central Publishing Action 完成自动拉取与校验上传
-      - name: Publish to Maven Central
-        uses: sonatype/central-publishing-action@v1
-        with:
-          username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-          password: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
-          publishing_type: 'automatic'
