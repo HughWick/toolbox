@@ -8,12 +8,8 @@
     <version>3.0.29</version>
     <packaging>pom</packaging>
     <name>Toolbox parent</name>
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
-
+    <description>Toolbox 是一个高效、便捷的 Java 工具类库集合</description>
+    <url>https://github.com/hughwick/toolbox</url>
     <modules>
         <module>toolbox-all</module>
         <module>toolbox-aop</module>
@@ -42,7 +38,7 @@
         <plugin.maven-source-plugin.version>2.2.1</plugin.maven-source-plugin.version>
         <plugin.maven-javadoc-plugin.version>3.3.1</plugin.maven-javadoc-plugin.version>
         <central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
-        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <!--============================== other ==============================-->
         <lombok.version>1.18.24</lombok.version>
         <!--    与spring 对其    -->
@@ -334,26 +330,18 @@
                         </execution>
                     </executions>
                 </plugin>
-                <!-- 中央发布插件：全局开启，统一接管所有模块的 deploy 阶段 -->
-                <plugin>
-                    <groupId>org.sonatype.central</groupId>
-                    <artifactId>central-publishing-maven-plugin</artifactId>
-                    <version>${central-publishing-maven-plugin.version}</version>
-                    <extensions>true</extensions>
-                    <configuration>
-                        <publishingServerId>central</publishingServerId>
-                        <autoPublish>true</autoPublish>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
+            <!-- 中央发布插件：全局开启，统一接管所有模块的 deploy 阶段 -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.2.0</version>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>${central-publishing-maven-plugin.version}</version>
+                <extensions>true</extensions>
                 <configuration>
-                    <skip>true</skip>
+                    <publishingServerId>central</publishingServerId>
+                    <autoPublish>true</autoPublish>
                 </configuration>
             </plugin>
             <!-- compiler plugin -->
@@ -392,31 +380,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <!--============================== ADD For sonatype START ==============================-->
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo,manual</distribution>
-        </license>
-    </licenses>
-    <!-- SCM信息 -->
-    <scm>
-        <connection>scm:git:https://github.com/HughWick/toolbox.git</connection>
-        <developerConnection>scm:git:https://github.com/HughWick/toolbox.git</developerConnection>
-        <url>https://github.com/HughWick/toolbox</url>
-    </scm>
-    <!-- 开发者信息 -->
-    <developers>
-        <developer>
-            <name>Hugh Wick</name>
-            <email>dang_star@live.com</email>
-            <organization>personal</organization>
-            <url>https://github.com/HughWick</url>
-        </developer>
-    </developers>
-    <!--============================== ADD For sonatype END ==============================-->
 
     <profiles>
         <profile>
@@ -477,4 +440,29 @@
             </build>
         </profile>
     </profiles>
+
+    <!--============================== ADD For sonatype START ==============================-->
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo,manual</distribution>
+        </license>
+    </licenses>
+    <!-- SCM信息 -->
+    <scm>
+        <connection>scm:git:https://github.com/HughWick/toolbox.git</connection>
+        <developerConnection>scm:git:https://github.com/HughWick/toolbox.git</developerConnection>
+        <url>https://github.com/hughwick/toolbox</url>
+    </scm>
+    <!-- 开发者信息 -->
+    <developers>
+        <developer>
+            <name>Hugh Wick</name>
+            <email>dang_star@live.com</email>
+            <organization>personal</organization>
+        </developer>
+    </developers>
+    <!--============================== ADD For sonatype END ==============================-->
+
 </project>
