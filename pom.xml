@@ -337,6 +337,14 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.1.4</version>
+                <configuration>
+                    <skip>true</skip> <!-- 跳过默认的 deploy 动作，完全交给 central-publishing-maven-plugin 处理 -->
+                </configuration>
+            </plugin>
             <!--compiler plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -461,7 +469,6 @@
                                         <arg>--pinentry-mode</arg>
                                         <arg>loopback</arg>
                                     </gpgArguments>
-                                    <passphrase>${env.GPG_PASSPHRASE}</passphrase>
                                 </configuration>
                             </execution>
                         </executions>
