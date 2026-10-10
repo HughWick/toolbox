@@ -23,7 +23,7 @@ jobs:
           # gpg短密码环境变量
           gpg-passphrase: GPG_PASSPHRASE
       - name: Publish to Apache Maven Central
-        run: mvn clean deploy --batch-mode -P release -Dmaven.test.skip=true -DskipTests -e
+        run: mvn clean install deploy --batch-mode -P release -Dmaven.test.skip=true -DskipTests -e
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
