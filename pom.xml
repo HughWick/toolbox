@@ -414,6 +414,7 @@
                         <configuration>
                             <publishingServerId>central</publishingServerId>
                             <autoPublish>true</autoPublish>
+                            <skip>true</skip> <!-- 如果根模块不需要直接发布，可直接跳过 -->
                         </configuration>
                     </plugin>
                     <!-- Source -->
