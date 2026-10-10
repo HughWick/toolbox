@@ -32,7 +32,7 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       # 第二步：仅在根目录 (-N) 触发中央仓库发布上传
       - name: Publish to Apache Maven Central
-        run: mvn central-publishing:publish -P release --batch-mode -N -e
+        run: mvn central-publishing:publish -P release --batch-mode -N -X -e
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
