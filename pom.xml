@@ -337,14 +337,6 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.1.4</version>
-                <configuration>
-                    <skip>true</skip> <!-- 跳过默认的 deploy 动作，完全交给 central-publishing-maven-plugin 处理 -->
-                </configuration>
-            </plugin>
             <!--compiler plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -418,9 +410,19 @@
                         <artifactId>central-publishing-maven-plugin</artifactId>
                         <version>${central-publishing-maven-plugin.version}</version>
                         <extensions>true</extensions>
+                        <inherited>false</inherited> <!-- 阻止子模块继承该插件 -->
                         <configuration>
                             <publishingServerId>central</publishingServerId>
                             <autoPublish>true</autoPublish>
+                        </configuration>
+                    </plugin>
+                    <!-- 2. 禁用传统的 maven-deploy-plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>3.1.1</version>
+                        <configuration>
+                            <skip>true</skip>
                         </configuration>
                     </plugin>
                     <!-- Source -->
