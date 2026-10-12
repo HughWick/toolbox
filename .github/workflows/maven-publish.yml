@@ -23,7 +23,11 @@ jobs:
           # gpg短密码环境变量
           gpg-passphrase: GPG_PASSPHRASE
       - name: Publish to Apache Maven Central
-        run: mvn clean deploy --batch-mode -P release  -DdeployAtEnd=true -Dmaven.test.skip=true -DskipTests -e
+        # 1. 先执行 clean install，让所有模块及其 pom、源码、签名在本地干净生成并稳定就位
+        # 2. 紧接着在不 clean 的情况下执行 deploy 触发中央发布插件
+        run: |
+          mvn clean install --batch-mode -P release -Dmaven.test.skip=true -DskipTests -e
+          mvn deploy --batch-mode -P release -Dmaven.test.skip=true -DskipTests -e
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
