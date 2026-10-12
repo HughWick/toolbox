@@ -333,6 +333,16 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <!-- 中央发布插件：通过 <inherited>false</inherited> 确保仅在根目录执行一次，统一打包所有子模块 -->
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>${central-publishing-maven-plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                </configuration>
+            </plugin>
             <!-- compiler plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -375,16 +385,6 @@
             <id>release</id>
             <build>
                 <plugins>
-                    <!-- 中央发布插件：通过 <inherited>false</inherited> 确保仅在根目录执行一次，统一打包所有子模块 -->
-                    <plugin>
-                        <groupId>org.sonatype.central</groupId>
-                        <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>${central-publishing-maven-plugin.version}</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <publishingServerId>central</publishingServerId>
-                        </configuration>
-                    </plugin>
                     <!-- Source -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
