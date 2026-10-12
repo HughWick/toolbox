@@ -65,18 +65,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.5.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <classifier>original</classifier>
-                </configuration>
+                <version>3.2.0</version>
             </plugin>
             <!-- Shade 插件 -->
             <plugin>
