@@ -11,7 +11,6 @@
     <description>Toolbox 是一个高效、便捷的 Java 工具类库集合</description>
     <url>https://github.com/hughwick/toolbox</url>
     <modules>
-        <module>toolbox-all</module>
         <module>toolbox-core</module>
         <module>toolbox-aop</module>
         <module>toolbox-db</module>
@@ -21,6 +20,7 @@
         <module>toolbox-bean</module>
         <module>toolbox-http</module>
         <module>toolbox-mongodb</module>
+        <module>toolbox-all</module>
     </modules>
 
     <properties>
@@ -383,7 +383,6 @@
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>central</publishingServerId>
-<!--                            <autoPublish>true</autoPublish>-->
                         </configuration>
                     </plugin>
                     <!-- Source -->
