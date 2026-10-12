@@ -22,27 +22,8 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           # gpg短密码环境变量
           gpg-passphrase: GPG_PASSPHRASE
-      - name: Set up Maven 3.9.11
-        uses: s4u/setup-maven-action@v1.21.0
-        with:
-          maven-version: '3.9.11'
-      # 关键步骤：配置 GPG Agent 启用 loopback 模式，解决 "No pinentry" 报错
-      - name: Configure GPG Agent for Non-Interactive Mode
-        run: |
-          mkdir -p ~/.gnupg
-          chmod 700 ~/.gnupg
-          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
-          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
-          gpgconf --reload gpg-agent
-      - name: Publish to Maven Central
-        run: |
-          mvn clean deploy --batch-mode \
-            -P release \
-            -Dmaven.test.skip=true \
-            -DskipTests \
-            -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}" \
-            -Dgpg.arguments="--pinentry-mode=loopback" \
-            -e
+      - name: Publish to Apache Maven Central
+        run: mvn clean install deploy --batch-mode -P release -Dmaven.test.skip=true -DskipTests -e
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
