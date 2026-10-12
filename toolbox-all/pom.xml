@@ -59,4 +59,20 @@
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <!-- 禁用默认的 maven-jar-plugin，防止与大包冲突 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-jar</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- 之后可以在这里配置你的 assembly 或 shade 插件来生成全功能 jar -->
+        </plugins>
+    </build>
 </project>
