@@ -12,13 +12,13 @@
     <url>https://github.com/hughwick/toolbox</url>
     <modules>
         <module>toolbox-all</module>
+        <module>toolbox-core</module>
         <module>toolbox-aop</module>
         <module>toolbox-db</module>
-        <module>toolbox-core</module>
+        <module>toolbox-json</module>
         <module>toolbox-crypto</module>
         <module>toolbox-cache</module>
         <module>toolbox-bean</module>
-        <module>toolbox-json</module>
         <module>toolbox-http</module>
         <module>toolbox-mongodb</module>
     </modules>
