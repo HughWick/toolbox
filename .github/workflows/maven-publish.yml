@@ -25,8 +25,9 @@ jobs:
       - name: Publish to Apache Maven Central
         # 1. 先执行 clean install，让所有模块及其 pom、源码、签名在本地干净生成并稳定就位
         # 2. 紧接着在不 clean 的情况下执行 deploy 触发中央发布插件
-        run: |
-          mvn clean deploy --batch-mode -P release -Dmaven.test.skip=true -DskipTests -e
+#        run: |
+#          mvn clean deploy --batch-mode -P release -Dmaven.test.skip=true -DskipTests -e
+        run: mvn clean deploy -P release -DskipTests
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
