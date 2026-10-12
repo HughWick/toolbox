@@ -22,11 +22,12 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           # gpg短密码环境变量
           gpg-passphrase: GPG_PASSPHRASE
+      - name: Set up Maven 3.9.11
+        uses: s4u/setup-maven-action@v1.21.0
+        with:
+          maven-version: '3.9.11'
+        run: mvn -V
       - name: Publish to Apache Maven Central
-        # 1. 先执行 clean install，让所有模块及其 pom、源码、签名在本地干净生成并稳定就位
-        # 2. 紧接着在不 clean 的情况下执行 deploy 触发中央发布插件
-#        run: |
-#          mvn clean deploy --batch-mode -P release -Dmaven.test.skip=true -DskipTests -e
         run: mvn clean install deploy --batch-mode -P release -Dmaven.test.skip=true -DskipTests -e
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
