@@ -73,12 +73,11 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <!-- 关键：不直接替换原主构件，而是作为附加构件（附带 -all 或保持默认，由插件自动管理 pom 映射） -->
+                            <!-- 开启附加构件模式 -->
                             <shadedArtifactAttached>true</shadedArtifactAttached>
-                            <!-- 如果希望大包的名字叫 toolbox-all.jar，可以指定 classifier 为空或者自定义，
-                                 但通常 Maven Central 推荐大包使用类似 -all 的 classifier 或者是独立 artifact。
-                                 这里我们让其作为附加包输出，原有的普通 jar 保持不变，各自拥有合法的 pom。 -->
-                            <shadedClassifierName></shadedClassifierName> <!-- 或者设一个具体的名字，如 all -->
+                            <!-- 必须指定一个非空的 classifier，例如 all，这样会生成 toolbox-all-3.0.30-all.jar，
+                                 它会正确挂载在 toolbox-all 的 pom 之下，不会引起 Central Publishing 校验失败 -->
+                            <shadedClassifierName>all</shadedClassifierName>
                         </configuration>
                     </execution>
                 </executions>
