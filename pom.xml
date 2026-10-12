@@ -11,6 +11,7 @@
     <description>Toolbox 是一个高效、便捷的 Java 工具类库集合</description>
     <url>https://github.com/hughwick/toolbox</url>
     <modules>
+        <module>toolbox-all</module>
         <module>toolbox-core</module>
         <module>toolbox-aop</module>
         <module>toolbox-db</module>
@@ -20,7 +21,6 @@
         <module>toolbox-bean</module>
         <module>toolbox-http</module>
         <module>toolbox-mongodb</module>
-        <module>toolbox-all</module>
     </modules>
 
     <properties>
@@ -333,16 +333,6 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <!-- 中央发布插件：通过 <inherited>false</inherited> 确保仅在根目录执行一次，统一打包所有子模块 -->
-            <plugin>
-                <groupId>org.sonatype.central</groupId>
-                <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>${central-publishing-maven-plugin.version}</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <publishingServerId>central</publishingServerId>
-                </configuration>
-            </plugin>
             <!-- compiler plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -434,6 +424,18 @@
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+                    <!-- 中央发布插件：通过 <inherited>false</inherited> 确保仅在根目录执行一次，统一打包所有子模块 -->
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central-publishing-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <!-- 自动发布 -->
+                            <autoPublish>false</autoPublish>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

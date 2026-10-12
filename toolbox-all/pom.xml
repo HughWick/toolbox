@@ -61,11 +61,10 @@
     </dependencies>
     <build>
         <plugins>
-            <!-- Shade 插件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -73,11 +72,21 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <!-- 开启附加构件模式 -->
-                            <shadedArtifactAttached>true</shadedArtifactAttached>
-                            <!-- 必须指定一个非空的 classifier，例如 all，这样会生成 toolbox-all-3.0.30-all.jar，
-                                 它会正确挂载在 toolbox-all 的 pom 之下，不会引起 Central Publishing 校验失败 -->
-                            <shadedClassifierName>all</shadedClassifierName>
+                            <!-- 创建源码jar -->
+                            <createSourcesJar>true</createSourcesJar>
+                            <artifactSet>
+                                <includes>
+                                    <include>${project.groupId}:*:*</include>
+                                </includes>
+                            </artifactSet>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/maven/**</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>
