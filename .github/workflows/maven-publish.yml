@@ -35,16 +35,7 @@ jobs:
           echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
           gpgconf --reload gpg-agent
       - name: Publish to Apache Maven Central
-      # 执行发布命令，务必带上 -Dgpg 参数
-      - name: Publish to Maven Central
-        run: |
-          mvn clean deploy --batch-mode \
-            -P release \
-            -Dmaven.test.skip=true \
-            -DskipTests \
-            -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}" \
-            -Dgpg.arguments="--pinentry-mode=loopback" \
-            -e
+        run: mvn clean install deploy --batch-mode -P release -Dmaven.test.skip=true -DskipTests -e
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
