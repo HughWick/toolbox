@@ -72,6 +72,14 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                        <configuration>
+                            <!-- 关键：不直接替换原主构件，而是作为附加构件（附带 -all 或保持默认，由插件自动管理 pom 映射） -->
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <!-- 如果希望大包的名字叫 toolbox-all.jar，可以指定 classifier 为空或者自定义，
+                                 但通常 Maven Central 推荐大包使用类似 -all 的 classifier 或者是独立 artifact。
+                                 这里我们让其作为附加包输出，原有的普通 jar 保持不变，各自拥有合法的 pom。 -->
+                            <shadedClassifierName></shadedClassifierName> <!-- 或者设一个具体的名字，如 all -->
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
