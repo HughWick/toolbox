@@ -2,6 +2,7 @@ package com.github.hugh.components.stepcontrol.domain;
 
 import com.github.hugh.components.stepcontrol.enums.ActionDirection;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,10 +11,9 @@ import lombok.NoArgsConstructor;
  * <p>
  * 用于规范和约束控制回路（如PID、比例调节等）的核心控制参数，
  * 包含目标值设定、抗抖动死区、响应增益、输出限幅及频率保护机制。
- *
- * @author System
  */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class StepConfig {
@@ -79,4 +79,32 @@ public class StepConfig {
      * </ul>
      */
     private ActionDirection direction;
+
+    /**
+     * 极简工业工厂：只需指定目标值与方向，死区自动按目标的 2% 估算
+     */
+    public static StepConfig of(double targetSP, ActionDirection direction) {
+        double autoDeadBand = Math.max(1.0, Math.abs(targetSP) * 0.02);
+        return of(targetSP, autoDeadBand, direction);
+    }
+
+    /**
+     * 业务推荐工厂：指定 目标值 + 允许误差 + 控制方向
+     *
+     * @param targetSP  期望维持的目标物理量（如 435.0 lux, 26.0 ℃）
+     * @param deadBand  允许的误差死区（如 ±15.0 lux, ±0.5 ℃）
+     * @param direction REVERSE（反作用：越暗越加力/加热）或 DIRECT（正作用：越热越制冷）
+     */
+    public static StepConfig of(double targetSP, double deadBand, ActionDirection direction) {
+        return StepConfig.builder()
+                .setPoint(targetSP)
+                .deadBand(deadBand)
+                .direction(direction)
+                .outputMin(0.0)      // 默认输出下限 0%
+                .outputMax(100.0)    // 默认输出上限 100%
+                .maxStep(15.0)       // 默认单步安全上限 15%（防冲击）
+                .cooldownMs(1000L)   // 默认保护冷却 1 秒
+                // 注意：gain 保持为 null，底层会自动启动自适应学习与黄金阻尼！
+                .build();
+    }
 }
