@@ -70,7 +70,15 @@ public class StepConfig {
      * 保证现场设备有足够的机械物理响应时间，并防止高频下发指令堵塞总线（如 Modbus、PLC通信）。
      */
     private Long cooldownMs;
-
+    /**
+     * 冷启动预置工作点 / 默认初始输出 (Cold-Start Working Point / Bias)
+     * <p>
+     * 作用：当回路首次接管某台设备且外部无法提供执行机构当前真实开度时，算法从此预置工作点开始闭环寻优。
+     * 场景：
+     * 1. 默认置为 null：工具类将自动安全回退至 outputMin（从安全下限开始缓慢爬坡试探）。
+     * 2. 置为经验平衡点（如 50.0%）：适用于已知设备大致常态运行在半开状态的场景，大幅缩短达到设定值（SP）的爬坡时间。
+     */
+    private Double coldStartOutput;
     /**
      * 控制作用方向 (Action Direction)
      * <ul>
@@ -104,6 +112,8 @@ public class StepConfig {
                 .outputMax(100.0)    // 默认输出上限 100%
                 .maxStep(15.0)       // 默认单步安全上限 15%（防冲击）
                 .cooldownMs(1000L)   // 默认保护冷却 1 秒
+                // 默认采用安全下限 outputMin（从 0 开始爬坡最安全，避免一上来就超调炸机）
+                .coldStartOutput(0.0)
                 // 注意：gain 保持为 null，底层会自动启动自适应学习与黄金阻尼！
                 .build();
     }

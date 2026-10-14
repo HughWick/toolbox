@@ -114,6 +114,7 @@ class StepMqReceiverTest {
                 0.0,
                 100.0,
                 1000L,
+                0.0,
                 ActionDirection.REVERSE
         );
         DeviceStateRepository stateRepo = new DeviceStateRepository();

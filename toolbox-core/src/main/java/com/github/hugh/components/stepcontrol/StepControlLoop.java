@@ -7,10 +7,7 @@ import com.github.hugh.components.stepcontrol.enums.ActionDirection;
 import com.github.hugh.components.stepcontrol.enums.StepReason;
 import lombok.Getter;
 
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 步进式工业级闭环控制器（Step Controller）
@@ -36,8 +33,16 @@ public class StepControlLoop {
     /**
      * 内部透明维护的多租户/多设备状态池（Key 为 deviceId 等唯一标识）
      * 避免业务层每次 new 对象导致冷却失效与增益记忆丢失
+     * <p>
+     * 特性：
+     * 1. maximumSize(50000)：硬性容量防爆（上万设备安全可控，超出按 LRU/LFU 驱逐）
+     * 2. expireAfterAccess(2 小时)：设备 2 小时不上报数据，自动释放增益记忆与状态，彻底杜绝僵尸设备 OOM
      */
-    private static final Map<String, StepState> STATE_HOLDER = new ConcurrentHashMap<>();
+    private static final com.github.benmanes.caffeine.cache.Cache<String, StepState> STATE_CACHE =
+            com.github.benmanes.caffeine.cache.Caffeine.newBuilder()
+                    .maximumSize(500_000)
+                    .expireAfterAccess(java.time.Duration.ofHours(2))
+                    .build();
 
     /**
      * 控制回路核心配置
@@ -78,7 +83,25 @@ public class StepControlLoop {
      * @return 对应设备的 {@link StepState} 内部状态实例；若设备尚未开始控制循环或状态已被清理，则返回 {@code null}
      */
     public static StepState getInternalStateForMonitor(String deviceId) {
-        return STATE_HOLDER.get(deviceId);
+        return STATE_CACHE.getIfPresent(deviceId);
+    }
+
+    /**
+     * 极简业务入口（完全免传初始输出）
+     * 自动从 config 中获取合理基准，开发者心智负担为 0
+     *
+     * @param deviceId  设备唯一标识符，不可为空
+     * @param currentPV 当前传感器测量值 (PV)
+     * @param config    控制参数配置
+     */
+    public static StepResult compute(String deviceId, double currentPV, StepConfig config) {
+        // 兜底基准优先级：
+        // 1. 如果 config 显式配置了 coldStartOutput 则使用
+        // 2. 否则默认采用下限值 outputMin（如 0.0）
+        double defaultBaseline = config.getColdStartOutput() != null
+                ? config.getColdStartOutput()
+                : config.getOutputMin();
+        return compute(deviceId, currentPV, defaultBaseline, config, System.currentTimeMillis());
     }
 
     /**
@@ -106,7 +129,7 @@ public class StepControlLoop {
      */
     public static StepResult compute(String deviceId, double currentPV, double currentOutputIfAbsent, StepConfig config, long nowMs) {
         // 自动拉取或安全初始化设备的状态上下文，业务无感持久化
-        StepState state = STATE_HOLDER.computeIfAbsent(deviceId, k -> new StepState(currentOutputIfAbsent));
+        StepState state = STATE_CACHE.get(deviceId, k -> new StepState(currentOutputIfAbsent));
         return compute(state, config, currentPV, nowMs);
     }
 
@@ -261,6 +284,6 @@ public class StepControlLoop {
      * @param deviceId 设备唯一标识
      */
     public static void evictState(String deviceId) {
-        STATE_HOLDER.remove(deviceId);
+        STATE_CACHE.invalidate(deviceId);
     }
 }

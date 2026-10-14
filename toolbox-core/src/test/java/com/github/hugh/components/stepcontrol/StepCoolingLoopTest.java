@@ -49,6 +49,7 @@ class StepCoolingLoopTest {
                 0.0,                    // 最小输出 0% (关闭制冷)
                 100.0,                  // 最大输出 100% (全速制冷)
                 1000L,                  // 最小动作间隔 (1秒)
+                0.0,
                 ActionDirection.DIRECT  // 【正作用】：温度越高于SP，制冷输出越需要增大
         );
 
@@ -140,6 +141,7 @@ class StepCoolingLoopTest {
                 minAcSetTemp,
                 maxAcSetTemp,
                 1000L,
+                0.0,
                 ActionDirection.REVERSE
         );
         StepControlLoop loop = new StepControlLoop(config, initialAcSetTemp);
@@ -250,6 +252,7 @@ class StepCoolingLoopTest {
                 minAcSetTemp,
                 maxAcSetTemp,
                 1000L,
+                0.0,
                 ActionDirection.REVERSE // 反作用：太热降温(CV↓)，太冷升温(CV↑)
         );
         StepControlLoop loop = new StepControlLoop(config, initialAcSetTemp);

@@ -25,19 +25,19 @@ class StepControlLoopTest {
         // 场景 A: 恒照度联动 (反作用: 光越弱输出越大)
         // SP=450 lux, 死区=±20 lux, 增益=0.05, 最大步长=10%, 输出=0~100%, 冷却=2000ms
         lightingConfig = new StepConfig(
-                450.0, 20.0, 0.05, 10.0, 0.0, 100.0, 2000L, ActionDirection.REVERSE
+                450.0, 20.0, 0.05, 10.0, 0.0, 100.0, 2000L, 0.0,ActionDirection.REVERSE
         );
         lightingLoop = new StepControlLoop(lightingConfig, 50.0); // 初始亮度 50%
 
         // 场景 B: 空调制冷联动 (正作用: 温度越高输出越大)
         // SP=24.0 ℃, 死区=±0.5 ℃, 增益=5.0, 最大步长=15%, 输出=0~100%, 冷却=3000ms
         acCoolingConfig = new StepConfig(
-                24.0, 0.5, 5.0, 15.0, 0.0, 100.0, 3000L, ActionDirection.DIRECT
+                24.0, 0.5, 5.0, 15.0, 0.0, 100.0, 3000L, 0.0,ActionDirection.DIRECT
         );
         acCoolingLoop = new StepControlLoop(acCoolingConfig, 20.0); // 初始开度 20%
         // 场景 C: 单参快捷测试场景 (短冷却时间 50ms，用于验证 System.currentTimeMillis())
         fastCooldownConfig = new StepConfig(
-                50.0, 1.0, 0.5, 10.0, 0.0, 100.0, 50L, ActionDirection.DIRECT
+                50.0, 1.0, 0.5, 10.0, 0.0, 100.0, 50L, 0.0,ActionDirection.DIRECT
         );
 
     }

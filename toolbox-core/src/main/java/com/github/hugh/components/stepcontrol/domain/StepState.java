@@ -1,6 +1,5 @@
 package com.github.hugh.components.stepcontrol.domain;
 
-import com.github.hugh.components.stepcontrol.enums.ActionDirection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
