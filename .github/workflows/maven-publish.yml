@@ -15,13 +15,13 @@ jobs:
           java-version: '17'
           server-id: central
           # Nexus用户名环境变量
-          server-username: MAVEN_USERNAME
+          server-username-env-var: MAVEN_CENTRAL_USERNAME
           # Nexus密码环境变量
-          server-password: MAVEN_CENTRAL_TOKEN
+          server-password-env-var: MAVEN_CENTRAL_TOKEN
           # gpg私钥
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           # gpg短密码环境变量
-          gpg-passphrase: GPG_PASSPHRASE
+          gpg-passphrase-env-var: GPG_PASSPHRASE
       # 显式指定使用 Maven 3.9.9，避开 3.10.0 的 bug
       - name: Set up Maven
         uses: stCarolas/setup-maven@v5
