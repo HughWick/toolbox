@@ -59,4 +59,25 @@ public class StepResult {
     public static StepResult execute(double newOutput, double delta, StepReason reason) {
         return new StepResult(true, newOutput, delta, reason);
     }
+
+    /**
+     * 快捷判断：本次计算是否维持原状态（跳过调节）
+     */
+    public boolean isSkipped() {
+        return !this.needAction;
+    }
+
+    /**
+     * 快捷判断：是否是因为达到死区稳态而跳过
+     */
+    public boolean isWithinDeadBand() {
+        return this.reason == StepReason.WITHIN_DEAD_BAND;
+    }
+
+    /**
+     * 快捷判断：是否因为物理限幅达到极值（防饱和阻断）
+     */
+    public boolean isSaturated() {
+        return this.reason == StepReason.OUTPUT_SATURATED;
+    }
 }

@@ -165,46 +165,48 @@ public class StepControlLoop {
      * @param nowMs  当前系统时间戳 (毫秒)
      * @return 控制执行决策结果
      */
-    public static synchronized StepResult compute(StepState state, StepConfig config, double pv, long nowMs) {
-        // 1. 节流判断（Cooldown）
-        // 规避执行器响应滞后期间的高频连续动作，保证物理系统稳定收敛
-        if (nowMs - state.getLastAdjustTimestamp() < config.getCooldownMs()) {
-            return StepResult.skip(state.getCurrentOutput(), StepReason.COOLDOWN_ACTIVE);
+    public static StepResult compute(StepState state, StepConfig config, double pv, long nowMs) {
+        synchronized (state) {
+            // 1. 节流判断（Cooldown）
+            // 规避执行器响应滞后期间的高频连续动作，保证物理系统稳定收敛
+            if (nowMs - state.getLastAdjustTimestamp() < config.getCooldownMs()) {
+                return StepResult.skip(state.getCurrentOutput(), StepReason.COOLDOWN_ACTIVE);
+            }
+            // 2. 自适应增益学习（Auto-Tuning Online Identification）
+            // 当未显式配置增益（或显式声明自适应）时，通过历史两次动作动态辨识物理对象的增益 K_plant
+            learnPlantGainIfNecessary(state, config, pv);
+            // 3. 计算控制误差 e (Error)
+            // REVERSE (反作用，如加热/调光): 测量值低于设定值，需加大输出 (SP - PV)
+            // DIRECT  (正作用，如制冷/泄压): 测量值高于设定值，需加大输出 (PV - SP)
+            double error = (config.getDirection() == ActionDirection.REVERSE)
+                    ? (config.getSetPoint() - pv)
+                    : (pv - config.getSetPoint());
+            // 4. 死区容差过滤（Deadband Filtering）
+            // 误差落在容差范围内时判定为已达标，停止输出，消除震荡与机械磨损
+            if (Math.abs(error) <= config.getDeadBand()) {
+                return StepResult.skip(state.getCurrentOutput(), StepReason.WITHIN_DEAD_BAND);
+            }
+            // 5. 步进计算（结合固定增益或自适应黄金阻尼）
+            double delta = calculateDelta(state, config, error);
+            // 6. 最大步进限幅（Slew Rate Limiting）
+            // 限制单次计算周期的最大变化量绝对值（|ΔOutput| <= maxStep）
+            double maxStep = config.getMaxStep();
+            delta = Math.max(-maxStep, Math.min(maxStep, delta));
+            // 7. 目标输出极值约束与防饱和（Output Clamping & Anti-Windup）
+            double nextOutput = state.getCurrentOutput() + delta;
+            nextOutput = Math.max(config.getOutputMin(), Math.min(config.getOutputMax(), nextOutput));
+            // 8. 物理极限拦截与真实生效量校验
+            double actualDelta = nextOutput - state.getCurrentOutput();
+            if (Double.compare(nextOutput, state.getCurrentOutput()) == 0) {
+                return StepResult.skip(state.getCurrentOutput(), StepReason.OUTPUT_SATURATED);
+            }
+            // 9. 更新状态上下文并输出执行指令
+            state.setLastRecordedPV(pv);
+            state.setLastActionOutput(state.getCurrentOutput());
+            state.setCurrentOutput(nextOutput);
+            state.setLastAdjustTimestamp(nowMs);
+            return StepResult.execute(nextOutput, actualDelta, StepReason.ADJUSTED_OK);
         }
-        // 2. 自适应增益学习（Auto-Tuning Online Identification）
-        // 当未显式配置增益（或显式声明自适应）时，通过历史两次动作动态辨识物理对象的增益 K_plant
-        learnPlantGainIfNecessary(state, config, pv);
-        // 3. 计算控制误差 e (Error)
-        // REVERSE (反作用，如加热/调光): 测量值低于设定值，需加大输出 (SP - PV)
-        // DIRECT  (正作用，如制冷/泄压): 测量值高于设定值，需加大输出 (PV - SP)
-        double error = (config.getDirection() == ActionDirection.REVERSE)
-                ? (config.getSetPoint() - pv)
-                : (pv - config.getSetPoint());
-        // 4. 死区容差过滤（Deadband Filtering）
-        // 误差落在容差范围内时判定为已达标，停止输出，消除震荡与机械磨损
-        if (Math.abs(error) <= config.getDeadBand()) {
-            return StepResult.skip(state.getCurrentOutput(), StepReason.WITHIN_DEAD_BAND);
-        }
-        // 5. 步进计算（结合固定增益或自适应黄金阻尼）
-        double delta = calculateDelta(state, config, error);
-        // 6. 最大步进限幅（Slew Rate Limiting）
-        // 限制单次计算周期的最大变化量绝对值（|ΔOutput| <= maxStep）
-        double maxStep = config.getMaxStep();
-        delta = Math.max(-maxStep, Math.min(maxStep, delta));
-        // 7. 目标输出极值约束与防饱和（Output Clamping & Anti-Windup）
-        double nextOutput = state.getCurrentOutput() + delta;
-        nextOutput = Math.max(config.getOutputMin(), Math.min(config.getOutputMax(), nextOutput));
-        // 8. 物理极限拦截与真实生效量校验
-        double actualDelta = nextOutput - state.getCurrentOutput();
-        if (Double.compare(nextOutput, state.getCurrentOutput()) == 0) {
-            return StepResult.skip(state.getCurrentOutput(), StepReason.OUTPUT_SATURATED);
-        }
-        // 9. 更新状态上下文并输出执行指令
-        state.setLastRecordedPV(pv);
-        state.setLastActionOutput(state.getCurrentOutput());
-        state.setCurrentOutput(nextOutput);
-        state.setLastAdjustTimestamp(nowMs);
-        return StepResult.execute(nextOutput, actualDelta, StepReason.ADJUSTED_OK);
     }
 
     /**
