@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.hughwick</groupId>
     <artifactId>toolbox-parent</artifactId>
-    <version>3.0.30</version>
+    <version>3.0.31</version>
     <packaging>pom</packaging>
     <name>Toolbox parent</name>
     <description>Toolbox 是一个高效、便捷的 Java 工具类库集合</description>
