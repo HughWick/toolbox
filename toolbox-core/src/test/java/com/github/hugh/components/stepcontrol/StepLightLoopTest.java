@@ -41,7 +41,7 @@ class StepLightLoopTest {
 
         // 2. 业务规则配置 (目标 535 lux，容差 ±15 lux，反作用调节：天黑加力)
         StepConfig config = StepConfig.of(targetSP, 15.0, ActionDirection.REVERSE);
-
+//        config.setMaxStep(40.0);
         // 【关键技巧】：单测环境将冷却节流置 0，允许连续计算，完全无需暴露 nowMs 也不用 Thread.sleep
         config.setCooldownMs(0L);
 

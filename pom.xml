@@ -59,7 +59,7 @@
         <mybatis-plus.version>3.5.8</mybatis-plus.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
         <redis.version>3.7.1</redis.version>
-        <caffeine.version>3.1.8</caffeine.version>
+        <caffeine.version>3.2.4</caffeine.version>
         <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
         <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
         <swagger-core-jakarta.version>2.2.34</swagger-core-jakarta.version>

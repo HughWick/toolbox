@@ -254,13 +254,34 @@ public class StepControlLoop {
         // 分支 B: 未配置 Gain，走自适应动态阻尼模式
         Double plantGain = state.getEstimatedPlantGain();
         if (plantGain == null || plantGain <= 1e-4) {
-            // 【冷启动安全探测阶段】：尚未学习到环境增益，采用微小安全试探步进（不超 maxStep 的 1/3，最大 5.0）
-            double probeStep = Math.min(5.0, config.getMaxStep() / 3.0);
+            // 【冷启动安全探测阶段】：尚未学习到环境增益
+            // 放大初始探测步长（上限为 maxStep 的 50%，但不超过 15.0%），加速首轮破局
+            double probeStep = Math.min(15.0, config.getMaxStep() * 0.5);
             return Math.signum(error) * probeStep;
         } else {
-            // 【黄金闭环阶段】：利用真实辨识物理增益，施加 0.7 欠增益阻尼（消除单位差异，无超调逼近）
-            double adaptiveKp = 0.7 / plantGain;
-            return error * adaptiveKp;
+            // 【黄金闭环阶段】：利用真实辨识物理增益
+            double fullStep = error / plantGain;
+            // 动态阻尼（非线性增益）机制 (Dynamic Damping Scheduling)
+            // 根据误差占比，动态决定是激进逼近还是保守防震荡
+            double errorRatio = 0.0;
+            if (Math.abs(config.getSetPoint()) > 1e-4) {
+                errorRatio = Math.abs(error) / Math.abs(config.getSetPoint());
+            } else {
+                // 兜底：若设定值为 0，用绝对死区容差倍数衡量
+                errorRatio = Math.abs(error) > (config.getDeadBand() * 4) ? 1.0 : 0.0;
+            }
+            double dampingFactor;
+            if (errorRatio > 0.15) {
+                // 误差极大 (偏离 > 15%)：全速激进逼近，阻尼 1.0 消除尾部拖延现象
+                dampingFactor = 1.0;
+            } else if (errorRatio > 0.05) {
+                // 误差中等 (偏离 5%~15%)：平滑降速
+                dampingFactor = 0.85;
+            } else {
+                // 接近死区：退回 0.7 保守阻尼，防止测量噪声导致越界超调
+                dampingFactor = 0.7;
+            }
+            return fullStep * dampingFactor;
         }
     }
 
