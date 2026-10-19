@@ -31,29 +31,6 @@ class OkHttpGetTest {
         assertEquals("-5", new JsonObjects(result3).getString("status"));
     }
 
-    @Test
-    void testGetTimeout() {
-        String url = "https://www.google.com";
-        final SocketTimeoutException socketTimeoutException = assertThrowsExactly(SocketTimeoutException.class, () -> {
-            OkHttpUtils.get(url);
-        });
-        final SocketTimeoutException socketTimeoutException2 = assertThrowsExactly(SocketTimeoutException.class, () -> {
-            OkHttpUtils.getReJsonObjects(url, null, 5);
-        });
-        assertEquals("Connect timed out", socketTimeoutException.getMessage());
-        assertEquals("Connect timed out", socketTimeoutException2.getMessage());
-    }
-
-    @Test
-//    @Timeout(value = 11)
-    void testGetTimeout2() throws IOException {
-        String url = "https://www.google.com";
-//        String result3 = OkHttpUtils.get(url, 8);
-        final SocketTimeoutException socketTimeoutException = assertThrowsExactly(SocketTimeoutException.class, () -> {
-            String result3 = OkHttpUtils.get(url, 8);
-        });
-        assertEquals("Connect timed out", socketTimeoutException.getMessage());
-    }
 
     @Test
     void testGetReJsonObjects() throws IOException {

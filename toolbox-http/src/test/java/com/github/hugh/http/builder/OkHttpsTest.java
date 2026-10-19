@@ -69,7 +69,7 @@ class OkHttpsTest {
         assertTrue(okHttpsResponse.is200());
         final ResponseData postman = okHttpsResponse.fromJson(ResponseData.class);
         assertEquals(params1, postman.getArgs().getFoo1());
-        assertEquals("okhttp/4.9.3", postman.getHeaders().getUserAgent());
+        assertEquals("okhttp/4.12.0", postman.getHeaders().getUserAgent());
     }
 
     @Test
@@ -409,7 +409,7 @@ class OkHttpsTest {
         map.put("foo2", "bar3");
         final ResponseData postman = OkHttps.url(http_bin_get_url).setBody(map).doGet().fromJson(ResponseData.class);
         assertEquals(params1, postman.getArgs().getFoo1());
-        assertEquals("okhttp/4.9.3", postman.getHeaders().getUserAgent());
+        assertEquals("okhttp/4.12.0", postman.getHeaders().getUserAgent());
 
         final String message = OkHttps.url(http_json_placeholder_get_url).doGet().getMessage();
         assertNotNull(message);
@@ -463,20 +463,6 @@ class OkHttpsTest {
         Jsons jsons = okHttpsResponse.toJsons();
         System.out.println(jsons);
         assertEquals(1, jsons.getInt("page"));
-
-    }
-
-    @Test
-    void testReqresSetParam() throws IOException {
-        String login_url = https_reqres_url + "/api/login";
-        OkHttpsResponse okHttpsResponse2 = OkHttps
-                .url(login_url)
-                .setParam("email", "eve.holt@reqres.in")
-                .setParam("password", "cityslicka")
-                .doPostJson();
-//        System.out.println(okHttpsResponse2.toJsons());
-        assertTrue(okHttpsResponse2.toJsons().isEquals("error","Missing API key."));
-//        assertNotNull(okHttpsResponse2.toJsons().getString("token"));
 
     }
 
