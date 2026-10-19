@@ -182,66 +182,54 @@ public class FileUtils {
     /**
      * 格式化文件大小显示，默认包含单位，根据文件大小返回相应的大小字符串（带单位）。
      *
-     * @param fileSize 文件大小
+     * @param fileSize 文件大小（字节）
      * @return String 格式化后的文件大小：XX MB、XX GB
      * @since 2.2.2
      */
     public static String formatFileSize(long fileSize) {
-        return formatFileSize(fileSize, true);
+        // 直接委托给 FileSizeUtils 的字节默认方法
+        return FileSizeUtils.formatFileSize(fileSize);
     }
 
     /**
      * 格式化文件大小显示，返回相应的大小字符串（带单位）。
      *
-     * @param fileSize    文件大小
+     * @param fileSize    文件大小（字节）
      * @param includeUnit 是否包含单位（true 包含单位，false 不包含单位）
      * @return 格式化后的文件大小字符串
      * @since 2.7.15
      */
     public static String formatFileSize(long fileSize, boolean includeUnit) {
-        if (fileSize <= 0) {
-            return "0" + (includeUnit ? " B" : "");
-        }
-        // 定义单位
-        String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
-        // 计算单位级别 (0=B, 1=KB, 2=MB...)
-        int digitGroups = (int) (Math.log10(fileSize) / Math.log10(1024));
-        // 防止超出 TB 范围
-        if (digitGroups >= units.length) {
-            digitGroups = units.length - 1;
-        }
-        // 如果单位是 B (digitGroups == 0)，直接打印整数，不需要 DecimalFormat
-        if (digitGroups == 0) {
-            return fileSize + (includeUnit ? StrPool.SPACE + units[0] : StrPool.EMPTY);
-        }
-        // 如果单位大于 B，计算数值
-        double value = fileSize / Math.pow(1024, digitGroups);
-        DecimalFormat df = new DecimalFormat("#.##");
-        return df.format(value) + (includeUnit ? StrPool.SPACE + units[digitGroups] : StrPool.EMPTY);
+        // 委托给 FileSizeUtils，明确指定单位为字节（SizeUnit.B）
+        return FileSizeUtils.formatFileSize(fileSize, FileSizeUtils.SizeUnit.B, includeUnit);
     }
 
     /**
      * 文件大小换算
      *
      * @param file 文件
-     * @return String 格式化后的文件大小：XX MB、XX GB
+     * @return String 格式化后的文件大小：XX MB、XX GB；如果文件不存在或不是文件则返回 "-1"
      * @since 2.2.2
      */
     public static String formatFileSize(File file) {
-        if (!file.exists() || !file.isFile()) {
+        // 保持原有的前置校验契约（原逻辑不存在或不是文件时返回 "-1"）
+        if (file == null || !file.exists() || !file.isFile()) {
             return "-1";
         }
-        return formatFileSize(file.length());
+        return FileSizeUtils.formatFileSize(file.length());
     }
 
     /**
      * 根据文件路径，格式化文件大小显示，返回相应的大小字符串（带单位）。
      *
      * @param path 文件路径
-     * @return String 格式化后的文件大小：XX MB、XX GB
+     * @return String 格式化后的文件大小：XX MB、XX GB；如果路径非法则返回 "-1"
      * @since 2.2.2
      */
     public static String formatFileSize(String path) {
+        if (path == null || path.trim().isEmpty()) {
+            return "-1";
+        }
         return formatFileSize(new File(path));
     }
 
