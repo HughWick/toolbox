@@ -1,5 +1,6 @@
 package com.github.hugh.util.file;
 
+import com.github.hugh.constant.StrPool;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,9 +11,6 @@ import java.text.DecimalFormat;
  * 文件大小格式化工具类
  */
 public class FileSizeUtils {
-
-    private static final String SPACE = " ";
-    private static final String EMPTY = "";
 
     /**
      * 文件大小单位枚举
@@ -51,7 +49,7 @@ public class FileSizeUtils {
      */
     public static String formatFileSize(double size, SizeUnit unit, boolean includeUnit) {
         if (size <= 0) {
-            return "0" + (includeUnit ? SPACE + "B" : EMPTY);
+            return "0" + (includeUnit ? StrPool.SPACE + "B" : StrPool.EMPTY);
         }
 
         // 计算该数值对应的总字节数（使用 double 避免溢出）
@@ -69,12 +67,12 @@ public class FileSizeUtils {
 
         // 如果是 B，保留整数显示
         if (unitIndex == 0) {
-            return Math.round(bytes) + (includeUnit ? SPACE + units[0] : EMPTY);
+            return Math.round(bytes) + (includeUnit ? StrPool.SPACE + units[0] : StrPool.EMPTY);
         }
 
         // 大于 B 则保留最多 2 位小数
         DecimalFormat df = new DecimalFormat("#.##");
-        return df.format(bytes) + (includeUnit ? SPACE + units[unitIndex] : EMPTY);
+        return df.format(bytes) + (includeUnit ? StrPool.SPACE + units[unitIndex] : StrPool.EMPTY);
     }
 
     /**
