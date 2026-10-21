@@ -50,14 +50,18 @@ class StepControlLoopStaticAndSnapshotTest {
 
         // 当前照度 390 lux，离目标 435 lux 相差 45 lux (> 死区 15)
         // 因为快照中已经有 estimatedPlantGain = 30.0，因此它【不会】走 5% 的冷启动试探步，
-        // 而是直接走黄金阻尼计算: delta = 45 * (0.7 / 30.0) = 1.05%
+        // 而是直接走底层黄金阻尼计算: delta = 45 * (0.85 / 30.0) = 1.275%
         long now = 12000L; // 满足冷却
         StepResult result = loop.compute(390.0, now);
 
         assertTrue(result.isNeedAction(), "应立即触发动作");
-        assertEquals(1.05, result.getDelta(), 1e-2, "由于已有快照增益，应直接走黄金阻尼(1.05%)而不是冷启动(5%)！");
-        assertEquals(9.05, result.getNewOutput(), 1e-2);
-        assertEquals(9.05, loop.getCurrentOutput(), 1e-2, "快照对象的内部开度应被同步更新");
+
+        // 【调整项 1】：步长预期改为 1.275
+        assertEquals(1.275, result.getDelta(), 1e-2, "由于已有快照增益，应直接走黄金阻尼(1.275%)而不是冷启动(5%)！");
+
+        // 【调整项 2】：开度更新为 8.0 + 1.275 = 9.275
+        assertEquals(9.275, result.getNewOutput(), 1e-2);
+        assertEquals(9.275, loop.getCurrentOutput(), 1e-2, "快照对象的内部开度应被同步更新");
     }
 
     // =========================================================================

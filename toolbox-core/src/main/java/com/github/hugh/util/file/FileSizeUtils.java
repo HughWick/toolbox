@@ -12,6 +12,7 @@ import java.text.DecimalFormat;
  */
 public class FileSizeUtils {
 
+    private FileSizeUtils() {}
     /**
      * 文件大小单位枚举
      */
@@ -35,8 +36,8 @@ public class FileSizeUtils {
      * @param unit 源数值的单位（如 SizeUnit.KB, SizeUnit.MB）
      * @return 格式化后的字符串
      */
-    public static String formatFileSize(double size, SizeUnit unit) {
-        return formatFileSize(size, unit, true);
+    public static String format(double size, SizeUnit unit) {
+        return format(size, unit, true);
     }
 
     /**
@@ -47,7 +48,7 @@ public class FileSizeUtils {
      * @param includeUnit 是否包含单位（true 包含单位，false 不包含单位）
      * @return 格式化后的文件大小字符串
      */
-    public static String formatFileSize(double size, SizeUnit unit, boolean includeUnit) {
+    public static String format(double size, SizeUnit unit, boolean includeUnit) {
         if (size <= 0) {
             return "0" + (includeUnit ? StrPool.SPACE + "B" : StrPool.EMPTY);
         }
@@ -82,8 +83,8 @@ public class FileSizeUtils {
      * @return String 格式化后的文件大小：XX MB、XX GB
      * @since 2.2.2
      */
-    public static String formatFileSize(long fileSize) {
-        return formatFileSize((double) fileSize, SizeUnit.B, true);
+    public static String format(long fileSize) {
+        return format((double) fileSize, SizeUnit.B, true);
     }
 
     /**
@@ -94,8 +95,8 @@ public class FileSizeUtils {
      * @return 格式化后的文件大小字符串
      * @since 2.7.15
      */
-    public static String formatFileSize(long fileSize, boolean includeUnit) {
-        return formatFileSize((double) fileSize, SizeUnit.B, includeUnit);
+    public static String format(long fileSize, boolean includeUnit) {
+        return format((double) fileSize, SizeUnit.B, includeUnit);
     }
 
     /**
@@ -105,11 +106,11 @@ public class FileSizeUtils {
      * @return String 格式化后的文件大小：XX MB、XX GB
      * @since 2.2.2
      */
-    public static String formatFileSize(File file) {
+    public static String format(File file) {
         if (file == null || !file.exists() || !file.isFile()) {
             return "-1";
         }
-        return formatFileSize(file.length());
+        return format(file.length());
     }
 
     /**
@@ -119,10 +120,10 @@ public class FileSizeUtils {
      * @return String 格式化后的文件大小：XX MB、XX GB
      * @since 2.2.2
      */
-    public static String formatFileSize(String path) {
+    public static String format(String path) {
         if (path == null || path.trim().isEmpty()) {
             return "-1";
         }
-        return formatFileSize(new File(path));
+        return format(new File(path));
     }
 }

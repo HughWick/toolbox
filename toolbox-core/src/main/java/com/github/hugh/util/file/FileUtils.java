@@ -180,60 +180,6 @@ public class FileUtils {
     }
 
     /**
-     * 格式化文件大小显示，默认包含单位，根据文件大小返回相应的大小字符串（带单位）。
-     *
-     * @param fileSize 文件大小（字节）
-     * @return String 格式化后的文件大小：XX MB、XX GB
-     * @since 2.2.2
-     */
-    public static String formatFileSize(long fileSize) {
-        // 直接委托给 FileSizeUtils 的字节默认方法
-        return FileSizeUtils.formatFileSize(fileSize);
-    }
-
-    /**
-     * 格式化文件大小显示，返回相应的大小字符串（带单位）。
-     *
-     * @param fileSize    文件大小（字节）
-     * @param includeUnit 是否包含单位（true 包含单位，false 不包含单位）
-     * @return 格式化后的文件大小字符串
-     * @since 2.7.15
-     */
-    public static String formatFileSize(long fileSize, boolean includeUnit) {
-        // 委托给 FileSizeUtils，明确指定单位为字节（SizeUnit.B）
-        return FileSizeUtils.formatFileSize(fileSize, FileSizeUtils.SizeUnit.B, includeUnit);
-    }
-
-    /**
-     * 文件大小换算
-     *
-     * @param file 文件
-     * @return String 格式化后的文件大小：XX MB、XX GB；如果文件不存在或不是文件则返回 "-1"
-     * @since 2.2.2
-     */
-    public static String formatFileSize(File file) {
-        // 保持原有的前置校验契约（原逻辑不存在或不是文件时返回 "-1"）
-        if (file == null || !file.exists() || !file.isFile()) {
-            return "-1";
-        }
-        return FileSizeUtils.formatFileSize(file.length());
-    }
-
-    /**
-     * 根据文件路径，格式化文件大小显示，返回相应的大小字符串（带单位）。
-     *
-     * @param path 文件路径
-     * @return String 格式化后的文件大小：XX MB、XX GB；如果路径非法则返回 "-1"
-     * @since 2.2.2
-     */
-    public static String formatFileSize(String path) {
-        if (path == null || path.trim().isEmpty()) {
-            return "-1";
-        }
-        return formatFileSize(new File(path));
-    }
-
-    /**
      * 读取文件内容并返回字符串形式的文件内容。
      *
      * @param filePath 文件路径
