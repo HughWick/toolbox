@@ -107,9 +107,13 @@ class IpResolverTest {
         String ip4 = "39.144.190.72";
         final String str4 = IpResolver.on(ip4).getComplete();
         assertNull(str4);
-        // 真实地址：湖南省怀化
+        // 真实地址：湖南-怀化
         String ip5 = "111.55.103.223";
         final String str5 = IpResolver.on(ip5).getCity();
         assertNull(str5);
+        // 实际：湖南-邵阳
+        String ip6 = "111.55.102.164";
+        final String str6 = IpResolver.on(ip6).getCity();
+        assertNull(str6);
     }
 }
